@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050706"><title>APEX | لوحة المدير</title>
+<style>
+:root{color-scheme:dark;--gold:#e9bd55;--green:#00c9a7;--bg:#070a08;--panel:#111713;--line:#574722}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#10251e,#070a08 55%);color:#f8f2df;font-family:Tahoma,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.wrap{max-width:1100px;margin:auto;padding:22px}.head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:12px 0 22px}.brand{font:bold 30px Georgia;color:var(--gold)}.panel{background:#101612;border:1px solid var(--line);border-radius:18px;padding:22px;margin:22px 0;box-shadow:0 15px 35px #0005}.hidden{display:none!important}h1,h2{color:#ffe8a0}.muted{color:#bcb8a9;line-height:1.8}.field{width:100%;padding:13px;border:1px solid #65532b;border-radius:10px;background:#080d0a;color:white;margin:7px 0 14px}.btn{background:linear-gradient(110deg,#b77c1b,#ffe58a,#c28a25);border:0;border-radius:30px;padding:12px 22px;color:#171006;font-weight:bold}.btn2{background:#0b100d;color:#f5d778;border:1px solid var(--gold);border-radius:30px;padding:10px 17px}.tabs{display:flex;gap:10px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.item{border:1px solid #3d392a;border-radius:12px;padding:14px;margin:10px 0;background:#0b100d}.item small{color:#bcb8a9}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.status{color:var(--green);min-height:24px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:550px}td,th{text-align:right;padding:11px;border-bottom:1px solid #3d392a}th{color:var(--gold)}@media(max-width:650px){.grid{grid-template-columns:1fr}.wrap{padding:13px}.panel{padding:15px}}
+</style></head>
+<body><div class="wrap">
+<header class="head"><div class="brand">APEX 👑</div><a href="./" class="btn2">العودة للمتجر</a></header>
+<section id="login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير المعتمد، وسنرسل رابط دخول آمن لمرة واحدة إلى بريدك.</p><input id="email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="email"><button id="send" class="btn">إرسال رابط الدخول إلى بريدي</button><p id="loginmsg" class="status" role="status"></p></section>
+<section id="dashboard" class="hidden">
+<div class="panel row"><div><h1>لوحة تحكم المدير</h1><p id="who" class="muted"></p></div><button id="logout" class="btn2">تسجيل الخروج</button></div>
+<div class="panel"><div class="tabs"><button class="btn2" data-tab="products">المنتجات والأسعار</button><button class="btn2" data-tab="orders">الطلبات</button></div>
+<div id="products">
+<h2>إدارة المنتجات</h2><div class="grid"><div><label>اسم المنتج</label><input id="pname" class="field" placeholder="اسم المنتج"><label>القسم</label><input id="pcat" class="field" placeholder="القسم"><label>السعر (ريال)</label><input id="pprice" class="field" type="number" min="0" step=".01" placeholder="السعر"></div><div><label>رابط الصورة</label><input id="pimage" class="field" placeholder="https://..."><label>الوصف</label><textarea id="pdesc" class="field" rows="4" placeholder="وصف المنتج"></textarea><button id="saveproduct" class="btn">حفظ المنتج</button><button id="cancelEdit" class="btn2 hidden">إلغاء التعديل</button></div></div><p id="pmsg" class="status"></p><div id="productlist"></div>
+</div>
+<div id="orders" class="hidden"><h2>طلبات العملاء</h2><p class="muted">يمكن تحديث حالة الطلب وإضافة رقم تتبع أرامكس.</p><div id="orderlist"></div></div>
+</div></section>
+</div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
+const owner='apex.1.shopping@gmail.com';
+const $=id=>document.getElementById(id);
+let editing=null;
+function message(id,text){$(id).textContent=text}
+async function checkSession(){
+ const {data:{session}}=await supabase.auth.getSession();
+ if(!session){$('login').classList.remove('hidden');$('dashboard').classList.add('hidden');return}
+ if((session.user.email||'').toLowerCase()!==owner){await supabase.auth.signOut();message('loginmsg','هذا البريد غير مصرح له بدخول لوحة الإدارة.');return}
+ const {data,error}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();
+ if(error||!data){await supabase.auth.signOut();$('login').classList.remove('hidden');message('loginmsg','لم يتم اعتماد هذا الحساب كمدير. تحقق من البريد ثم أعد المحاولة.');return}
+ $('login').classList.add('hidden');$('dashboard').classList.remove('hidden');$('who').textContent='تم تسجيل الدخول: '+session.user.email;loadProducts();loadOrders();
+}
+$('send').onclick=async()=>{const email=$('email').value.trim().toLowerCase();if(email!==owner){message('loginmsg','البريد غير مصرح له.');return}message('loginmsg','جارٍ إرسال رابط الدخول...');const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}});message('loginmsg',error?'تعذر الإرسال: '+error.message:'تم إرسال رابط الدخول. افتح بريدك واضغط الرابط لإكمال الدخول.')};
+$('logout').onclick=async()=>{await supabase.auth.signOut();location.reload()};
+supabase.auth.onAuthStateChange(()=>setTimeout(checkSession,0));
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;$('products').classList.toggle('hidden',p!=='products');$('orders').classList.toggle('hidden',p!=='orders')});
+async function loadProducts(){const {data,error}=await supabase.from('apex_products').select('*').order('created_at',{ascending:false});if(error){message('pmsg','تعذر تحميل المنتجات: '+error.message);return}$('productlist').innerHTML=(data||[]).map(p=>'<div class="item row"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.category||'')+' · '+(p.price??'بدون سعر')+' ر.س · '+(p.active?'نشط':'مخفي')+'</small></div><div><button class="btn2" data-edit="'+p.id+'">تعديل</button> <button class="btn2" data-toggle="'+p.id+'" data-active="'+p.active+'">'+(p.active?'إخفاء':'تفعيل')+'</button></div></div>').join('')||'<p class="muted">لا توجد منتجات في قاعدة البيانات بعد.</p>';
+ $('productlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProduct(data.find(p=>p.id==b.dataset.edit)));$('productlist').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle,b.dataset.active==='true'))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function editProduct(p){editing=p.id;$('pname').value=p.name;$('pcat').value=p.category;$('pprice').value=p.price??'';$('pimage').value=p.image_url;$('pdesc').value=p.description;$('cancelEdit').classList.remove('hidden');message('pmsg','تعديل المنتج رقم '+p.id)}
+$('cancelEdit').onclick=()=>{editing=null;['pname','pcat','pprice','pimage','pdesc'].forEach(id=>$(id).value='');$('cancelEdit').classList.add('hidden');message('pmsg','')};
+$('saveproduct').onclick=async()=>{const name=$('pname').value.trim();if(!name){message('pmsg','اكتب اسم المنتج أولاً.');return}const row={name,category:$('pcat').value.trim(),price:$('pprice').value?Number($('pprice').value):null,image_url:$('pimage').value.trim(),description:$('pdesc').value.trim(),updated_at:new Date().toISOString()};const q=editing?supabase.from('apex_products').update(row).eq('id',editing):supabase.from('apex_products').insert(row);const {error}=await q;if(error){message('pmsg','فشل الحفظ: '+error.message);return}message('pmsg','تم حفظ المنتج في قاعدة البيانات.');$('cancelEdit').click();loadProducts()};
+async function toggleProduct(id,active){const {error}=await supabase.from('apex_products').update({active:!active}).eq('id',id);if(error)message('pmsg','تعذر التحديث: '+error.message);loadProducts()}
+async function loadOrders(){const {data,error}=await supabase.from('apex_orders').select('*').order('created_at',{ascending:false});if(error){$('orderlist').textContent='تعذر تحميل الطلبات: '+error.message;return}$('orderlist').innerHTML=(data||[]).map(o=>'<div class="item"><div class="row"><b>طلب #'+o.id+' — '+esc(o.customer_name)+'</b><small>'+new Date(o.created_at).toLocaleString('ar-SA')+'</small></div><p class="muted">الجوال: '+esc(o.phone)+'<br>العنوان: '+esc(o.address)+'<br>المنتجات: '+esc(JSON.stringify(o.items))+'<br>ملاحظات: '+esc(o.notes)+'</p><div class="grid"><select class="field" id="st'+o.id+'"><option value="new">جديد</option><option value="confirmed">مؤكد</option><option value="processing">قيد التجهيز</option><option value="shipped">تم الشحن</option><option value="delivered">تم التسليم</option><option value="cancelled">ملغي</option></select><input class="field" id="tr'+o.id+'" placeholder="رقم تتبع أرامكس" value="'+esc(o.aramex_tracking_number||'')+'"></div><button class="btn2" data-order="'+o.id+'">حفظ تحديث الطلب</button></div>').join('')||'<p class="muted">لا توجد طلبات حتى الآن.</p>';(data||[]).forEach(o=>{$('st'+o.id).value=o.status});$('orderlist').querySelectorAll('[data-order]').forEach(b=>b.onclick=async()=>{const id=b.dataset.order;const {error}=await supabase.from('apex_orders').update({status:$('st'+id).value,aramex_tracking_number:$('tr'+id).value,updated_at:new Date().toISOString()}).eq('id',id);b.textContent=error?'فشل الحفظ':'تم الحفظ';if(!error)loadOrders()})}
+checkSession();
+</script></body></html>
