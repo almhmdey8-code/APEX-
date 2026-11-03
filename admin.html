@@ -42,7 +42,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
 const owner='apex.1.shopping@gmail.com';
 const $=id=>document.getElementById(id);
-let editing=null,editingBanner=null,editingPayment=null;\nfunction updateKpis(ps,os){$('kProducts').textContent=ps.length;$('kActive').textContent=ps.filter(p=>p.active).length;$('kOrders').textContent=os.length;$('kNew').textContent=os.filter(o=>o.status==='new').length;}\nwindow.apexProducts=[];window.apexOrders=[];\n$('refreshAll').onclick=()=>{loadProducts();loadOrders();loadBanners();loadPayments();};\n$('adminSearch').addEventListener('input',()=>{const q=$('adminSearch').value.trim().toLowerCase();document.querySelectorAll('#productlist .item,#orderlist .item').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'':'none');});
+let editing=null,editingBanner=null,editingPayment=null;
+function updateKpis(ps,os){$('kProducts').textContent=ps.length;$('kActive').textContent=ps.filter(p=>p.active).length;$('kOrders').textContent=os.length;$('kNew').textContent=os.filter(o=>o.status==='new').length;}
+window.apexProducts=[];window.apexOrders=[];
+$('refreshAll').onclick=()=>{loadProducts();loadOrders();loadBanners();loadPayments();};
+$('adminSearch').addEventListener('input',()=>{const q=$('adminSearch').value.trim().toLowerCase();document.querySelectorAll('#productlist .item,#orderlist .item').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'':'none');});
 function message(id,text){$(id).textContent=text}
 async function uploadImage(inputId,targetId,msgId){
  const file=$(inputId).files?.[0];if(!file)return;
