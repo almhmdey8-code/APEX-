@@ -1,5 +1,5 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة متجر APEX</title><style>*{box-sizing:border-box}body{margin:0;background:#080b09;color:#f8f2df;font-family:Tahoma,Arial,sans-serif}#adminWorkspace{max-width:1150px;margin:0 auto;padding:18px;background:#080b09;color:#f8f2df}#adminWorkspace .wrap{max-width:1100px;margin:auto;padding:12px}#adminWorkspace .panel{background:#101612;border:1px solid #80672e;border-radius:18px;padding:22px;margin:22px 0}#adminWorkspace .field{width:100%;padding:13px;border:1px solid #98752f;border-radius:10px;background:#080d0a;color:white;margin:7px 0 14px}#adminWorkspace .btn{background:linear-gradient(110deg,#b77c1b,#ffe58a,#c28a25);border:0;border-radius:30px;padding:12px 22px;color:#171006;font-weight:bold;cursor:pointer}#adminWorkspace .btn2,#adminWorkspace .tabs button{display:inline-block;background:#0b100d;color:#f5d778;border:1px solid #b78b35;border-radius:30px;padding:10px 17px;cursor:pointer;text-decoration:none}#adminWorkspace .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#adminWorkspace .item{border:1px solid #80672e;border-radius:12px;padding:14px;margin:10px 0;background:#0b100d}#adminWorkspace .row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}#adminWorkspace .muted{color:#bcb8a9;line-height:1.8}#adminWorkspace h1,#adminWorkspace h2{color:#ffe8a0}#adminWorkspace .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}#adminWorkspace .kpi{background:linear-gradient(145deg,#1b241d,#0b100d);border:1px solid #80672e;border-radius:16px;padding:17px}#adminWorkspace .kpi span{display:block;color:#bdb69f;font-size:13px}#adminWorkspace .kpi b{display:block;color:#ffe8a0;font-size:27px;margin-top:5px}#adminWorkspace .head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}#adminWorkspace .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}#adminWorkspace .dash-tools{display:flex;gap:10px;align-items:center}#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select{font:inherit}#adminWorkspace .status{color:#e9bd55;line-height:1.7}@media(max-width:650px){#adminWorkspace .grid{grid-template-columns:1fr}#adminWorkspace .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .panel{padding:15px}#adminWorkspace .dash-tools{display:block}}</style></head><body><section id="adminWorkspace" class="apex-admin-hidden" aria-label="إدارة المتجر"><div class="wrap">
-<header class="head"><div class="brand">APEX 👑</div><a class="btn2" href="./">العودة إلى المتجر</a></header>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>لوحة إدارة APEX</title><style>*{box-sizing:border-box}body{margin:0;background:#080b09;color:#f8f2df;font-family:Tahoma,Arial,sans-serif}.apex-admin-hidden{display:none!important}#adminWorkspace{display:block!important;max-width:1200px;margin:auto;padding:18px;min-height:100vh;background:#080b09}#adminWorkspace .wrap{max-width:1160px;margin:auto;padding:10px}#adminWorkspace #adm_login{width:min(480px,100%);margin:9vh auto;padding:28px;background:#101612;border:1px solid #b78b35;border-radius:20px;box-shadow:0 12px 40px #000}#adminWorkspace #adm_dashboard{width:100%}#adminWorkspace .head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}#adminWorkspace .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}#adminWorkspace .tabs button{padding:14px 10px;border:1px solid #a47b2e;border-radius:12px;background:#151d17;color:#ffe6a0;font-weight:bold}#adminWorkspace .tabs button:hover{background:#8e671f;color:#fff}#adminWorkspace .panel{background:#101612;border:1px solid #66552e;border-radius:16px;padding:20px;margin:16px 0}#adminWorkspace .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#adminWorkspace .field{width:100%;padding:12px;border:1px solid #80672e;border-radius:10px;background:#080d0a;color:white;margin:7px 0 14px}#adminWorkspace .btn,#adminWorkspace .btn2{padding:11px 18px;border-radius:12px;cursor:pointer;font-weight:bold}#adminWorkspace .btn{background:linear-gradient(110deg,#b77c1b,#ffe58a,#c28a25);border:0;color:#171006}#adminWorkspace .btn2{background:#0b100d;color:#f5d778;border:1px solid #b78b35}#adminWorkspace .item{border:1px solid #80672e;border-radius:12px;padding:14px;margin:10px 0;background:#0b100d}#adminWorkspace .row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}#adminWorkspace .muted{color:#bcb8a9;line-height:1.8}#adminWorkspace h1,#adminWorkspace h2{color:#ffe8a0}#adminWorkspace .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}#adminWorkspace .kpi{background:#151d17;border:1px solid #80672e;border-radius:14px;padding:16px}#adminWorkspace .kpi span{display:block;color:#bdb69f;font-size:13px}#adminWorkspace .kpi b{display:block;color:#ffe8a0;font-size:26px;margin-top:5px}#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select{font:inherit}@media(max-width:650px){#adminWorkspace .tabs{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .grid{grid-template-columns:1fr}#adminWorkspace .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .panel{padding:14px}}</style></head><body><section id="adminWorkspace" class="apex-admin-hidden" aria-label="إدارة المتجر"><div class="wrap">
+<header class="head"><div class="brand">APEX 👑</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="username"><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
 <section id="adm_dashboard" class="apex-admin-hidden">
 <div class="panel row"><div><h1>لوحة تحكم المدير</h1><p id="adm_who" class="muted"></p></div><button id="adm_logout" class="btn2">تسجيل الخروج</button></div>
@@ -14,126 +14,86 @@
 </div></section><script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
-let cart=[],selectedPayment='',customerSession=null;
-const favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));
-function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}
-function toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
+const owner='apex.1.shopping@gmail.com';
 const $=id=>document.getElementById(id);
+let editing=null,editingBanner=null,editingPayment=null;
+function updateKpis(ps,os){$('adm_kProducts').textContent=ps.length;$('adm_kActive').textContent=ps.filter(p=>p.active).length;$('adm_kOrders').textContent=os.length;$('adm_kNew').textContent=os.filter(o=>o.status==='new').length;}
+window.apexProducts=[];window.apexOrders=[];
+$('adm_refreshAll').onclick=()=>{loadProducts();loadOrders();loadBanners();loadPayments();};
+$('adm_adminSearch').addEventListener('input',()=>{const q=$('adm_adminSearch').value.trim().toLowerCase();document.querySelectorAll('#adm_productlist .item,#adm_orderlist .item').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'':'none');});
+function message(id,text){$(id).textContent=text}
+async function uploadImage(inputId,targetId,msgId){
+ const file=$(inputId).files?.[0];if(!file)return;
+ if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)||file.size>5*1024*1024){message(msgId,'اختر صورة JPG أو PNG أو WEBP أو GIF بحجم لا يتجاوز 5MB.');$(inputId).value='';return}
+ message(msgId,'جارٍ رفع الصورة...');
+ const ext=file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+ const path=Date.now()+'-'+crypto.randomUUID()+'.'+ext;
+ const {error}=await supabase.storage.from('apex-store').upload(path,file,{cacheControl:'3600',upsert:false,contentType:file.type});
+ if(error){message(msgId,'تعذر رفع الصورة: '+error.message);return}
+ const {data}=supabase.storage.from('apex-store').getPublicUrl(path);
+ $(targetId).value=data.publicUrl;message(msgId,'تم رفع الصورة. احفظ العنصر لتثبيت الرابط.');
+}
+$('adm_pfile').addEventListener('change',()=>uploadImage('pfile','pimage','pmsg'));
+$('adm_bfile').addEventListener('change',()=>uploadImage('bfile','bimage','bmsg'));
+let checkingAdminSession=false;
+async function checkSession(){
+ if(checkingAdminSession)return;
+ checkingAdminSession=true;
+ try{
+  const {data,error:sessionError}=await supabase.auth.getSession();
+  if(sessionError)throw sessionError;
+  const session=data.session;
+  if(!session){
+   $('adm_login').classList.remove('apex-admin-hidden');
+   $('adm_dashboard').classList.add('apex-admin-hidden');
+   return;
+  }
+  if((session.user.email||'').toLowerCase()!==owner){
+   $('adm_dashboard').classList.add('apex-admin-hidden');
+   $('adm_login').classList.remove('apex-admin-hidden');
+   message('adm_loginmsg','الجلسة الحالية ليست حساب المدير. أدخل بريد المدير للمتابعة.');
+   return;
+  }
+  const {data:admin,error}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();
+  if(error)throw error;
+  if(!admin){
+   $('adm_dashboard').classList.add('apex-admin-hidden');
+   $('adm_login').classList.remove('apex-admin-hidden');
+   message('adm_loginmsg','هذا الحساب غير موجود في قائمة المديرين.');
+   return;
+  }
+  $('adm_login').classList.add('apex-admin-hidden');
+  $('adm_dashboard').classList.remove('apex-admin-hidden');
+  $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email;
+  await Promise.all([loadProducts(),loadOrders()]);
+ }catch(error){
+  $('adm_dashboard').classList.add('apex-admin-hidden');
+  $('adm_login').classList.remove('apex-admin-hidden');
+  message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
+ }finally{checkingAdminSession=false}
+}
+$('adm_send').onclick=async()=>{const email=$('adm_email').value.trim().toLowerCase(),password=$('adm_password').value,button=$('adm_send'),msg=$('adm_loginmsg');if(email!==owner){message('adm_loginmsg','فشل تسجيل الدخول: البريد غير مصرح له.');return}if(!password){message('adm_loginmsg','فشل تسجيل الدخول: أدخل كلمة المرور.');return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';message('adm_loginmsg','جارٍ التحقق من بيانات المدير...');try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error){message('adm_loginmsg','فشل تسجيل الدخول: '+error.message);return}message('adm_loginmsg','تم تسجيل الدخول بنجاح، جارٍ فتح لوحة الإدارة...');await checkSession()}catch(error){message('adm_loginmsg','فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}};
+$('adm_logout').onclick=async()=>{await supabase.auth.signOut();$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
+supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});\ncheckSession();
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;['products','banners','payments','orders'].forEach(id=>$(id).classList.toggle('apex-admin-hidden',id!==p));if(p==='banners')loadBanners();if(p==='payments')loadPayments()});
+async function loadProducts(){const {data,error}=await supabase.from('apex_products').select('*').order('created_at',{ascending:false});if(error){message('pmsg','تعذر تحميل المنتجات: '+error.message);return}window.apexProducts=data||[];updateKpis(window.apexProducts,window.apexOrders);$('adm_productlist').innerHTML=(data||[]).map(p=>'<div class="item row"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.category||'')+' · مخزون: '+(p.stock??0)+' · '+(p.price??'بدون سعر')+' ر.س · '+(p.active?'نشط':'مخفي')+'</small></div><div><button class="btn2" data-edit="'+p.id+'">تعديل</button> <button class="btn2" data-delete="'+p.id+'">حذف</button> <button class="btn2" data-toggle="'+p.id+'" data-active="'+p.active+'">'+(p.active?'إخفاء':'تفعيل')+'</button></div></div>').join('')||'<p class="muted">لا توجد منتجات في قاعدة البيانات بعد.</p>';
+ $('adm_productlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProduct(data.find(p=>p.id==b.dataset.edit)));$('adm_productlist').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.delete));$('adm_productlist').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle,b.dataset.active==='true'))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-async function loadStoreProducts(){
- const box=$('products');if(!box)return;
- const {data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,active').eq('active',true).order('created_at',{ascending:false});
- if(error){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل المنتجات. يرجى المحاولة لاحقاً.</p>';console.error(error);return}
- const products=data||[];
- if(!products.length){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#c9bd9a;padding:35px">لا توجد منتجات متاحة حالياً. نعمل على إضافة منتجات جديدة قريباً.</p>';return}
- box.innerHTML=products.map(p=>{
-  const image=/^https:\/\//i.test(p.image_url||'')?p.image_url:'';
-  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">متاح للطلب</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3><p>'+esc(p.description||'')+'</p><div class="product-price">'+(p.price!==null&&p.price!==undefined?Number(p.price).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س':'السعر غير محدد')+'</div><div class="productfoot"><span class="offer">اطلبه الآن</span><button class="add" type="button" data-add="'+esc(p.name)+'">أضف للسلة ＋</button></div></article>';
- }).join('');
- box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
- box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
- saveFavorites();
- const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
- const catbox=document.querySelector('.categories');
- catbox.innerHTML='<button class="cat active" data-cat="الكل">الكل</button>'+cats.map(x=>'<button class="cat" data-cat="'+esc(x)+'">'+esc(x)+'</button>').join('');
- bindCategoryFilters();
- filterProducts();
-}
-function bindCategoryFilters(){
- document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelector('.cat.active')?.classList.remove('active');b.classList.add('active');filterProducts();
- }));
-}
-async function loadStoreBanners(){
- const box=$('storeBanners');if(!box)return;
- const {data,error}=await supabase.from('apex_banners').select('id,title,subtitle,image_url,link_url').eq('active',true).order('sort_order',{ascending:true});
- if(error){box.hidden=true;console.warn('تعذر تحميل البنرات',error.message);return}
- box.innerHTML=(data||[]).filter(x=>x.image_url).map(x=>{
-  const inner='<img src="'+esc(x.image_url)+'" alt="'+esc(x.title)+'" loading="lazy"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle)+'</p></div>';
-  return x.link_url?'<a class="store-banner" href="'+esc(x.link_url)+'" target="_blank" rel="noopener">'+inner+'</a>':'<article class="store-banner">'+inner+'</article>';
- }).join('');
- if(!box.children.length)box.hidden=true;
-}
-async function loadPaymentMethods(){
- const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type').eq('enabled',true).order('sort_order',{ascending:true});
- if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً. يمكنك إرسال الطلب دون اختيار طريقة.</p>';return}
- const methods=data||[];
- if(!methods.length){box.innerHTML='<p style="color:#aaa">سيتم التواصل معك لتأكيد طريقة الدفع.</p>';return}
- box.innerHTML='<p style="color:#e9bd55">اختر طريقة الدفع</p>'+methods.map(m=>'<label class="paychoice"><input type="radio" name="paymentMethod" value="'+m.id+'"> <b>'+esc(m.name)+'</b>'+(m.method_type==='gateway'?' <small>غير متاحة للدفع الإلكتروني حالياً؛ سيتم التواصل لتأكيدها.</small>':(m.instructions?'<small>'+esc(m.instructions)+'</small>':'') )+'</label>').join('');
-}
-function add(n){cart.push(n);renderCart();$('count').textContent=cart.length}
-function renderCart(){$('cartitems').innerHTML=cart.length?cart.map((n,i)=>'<div class="cartrow"><span>'+esc(n)+'</span><button class="add" data-remove="'+i+'">حذف</button></div>').join(''):'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
-function removeItem(i){cart.splice(i,1);$('count').textContent=cart.length;renderCart()}
-function openCart(){$('cartpanel').classList.add('show');renderCart()}
-function closeCart(){$('cartpanel').classList.remove('show')}
-function showAccountSection(name){['profile','orders','shipping','transit'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name})}
-async function refreshCustomer(session){
- customerSession=session||null;
- $('accountIdentity').textContent='';$('accountIdentity').hidden=true;
- $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
- if(!session)return;
- const meta=session.user.user_metadata||{};
- $('accountIdentity').textContent='';$('accountIdentity').hidden=true;$('customer').value=meta.full_name||$('customer').value;$('profileName').value=meta.full_name||'';
- $('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('customer').value=meta.full_name||$('customer').value;
- const {data,error}=await supabase.from('apex_orders').select('id,created_at,status,items,aramex_tracking_number').eq('user_id',session.user.id).order('created_at',{ascending:false});
- if(error){const fail='<p>تعذر تحميل الطلبات: '+esc(error.message)+'</p>';$('myOrders').innerHTML=fail;$('shippingOrders').innerHTML=fail;$('transitOrders').innerHTML=fail;return}
- const orders=data||[];
- const card=o=>'<div class="item" style="margin:9px 0;padding:12px;border:1px solid var(--line);border-radius:12px"><b>طلب #'+esc(o.id)+'</b><p>'+new Date(o.created_at).toLocaleString('ar-SA')+'</p><p>الحالة: '+esc(({new:'جديد',confirmed:'مؤكد',processing:'قيد التجهيز',shipped:'قيد الشحن',delivered:'تم التسليم',cancelled:'ملغي'})[o.status]||o.status)+'</p><p>المنتجات: '+esc(JSON.stringify(o.items))+'</p>'+(o.aramex_tracking_number?'<p>رقم التتبع: '+esc(o.aramex_tracking_number)+'</p>':'')+'</div>';
- $('myOrders').innerHTML=orders.map(card).join('')||'<p>لا توجد طلبات مرتبطة بحسابك.</p>';
- const shipping=orders.filter(o=>['processing','shipped','delivered'].includes(o.status)||!!o.aramex_tracking_number);
- $('shippingOrders').innerHTML=shipping.map(card).join('')||'<p>لا توجد طلبات شحن حالياً.</p>';
- const transit=orders.filter(o=>o.status==='shipped');
- $('transitOrders').innerHTML=transit.map(card).join('')||'<p>لا توجد طلبات قيد الشحن حالياً.</p>';
- showAccountSection('profile');
-}
-function openAccount(){$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
-function closeAccount(){$('accountpanel').classList.remove('show')}
-async function customerSignIn(){const email=$('accountEmail').value.trim(),password=$('accountPassword').value,button=document.querySelector('#accountAuth button[onclick="customerSignIn()"]'),msg=$('accountMsg');if(!email||!password){msg.textContent='أدخل البريد الإلكتروني وكلمة المرور.';msg.style.color='#ff7777';return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';msg.textContent='جارٍ التحقق من بياناتك...';msg.style.color='#e9bd55';try{const {data,error}=await supabase.auth.signInWithPassword({email,password});if(error){msg.textContent='فشل تسجيل الدخول: '+error.message;msg.style.color='#ff7777';return}msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';await refreshCustomer(data.session)}catch(error){msg.textContent='فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.';msg.style.color='#ff7777'}finally{button.disabled=false;button.textContent='دخول'}}
-async function customerSignUp(){const email=$('accountEmail').value.trim(),password=$('accountPassword').value,name=$('accountName').value.trim();if(!name||password.length<6){$('accountMsg').textContent='أدخل الاسم وكلمة مرور من 6 أحرف على الأقل.';return}const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name}}});$('accountMsg').textContent=error?'تعذر إنشاء الحساب: '+error.message:'تم إنشاء الحساب. إذا طُلب تأكيد البريد، افتح رسالة التأكيد ثم سجّل الدخول.';if(data.session)refreshCustomer(data.session)}
-async function saveNewPassword(){const password=$('newPassword').value;if(password.length<6){$('accountMsg').textContent='كلمة المرور يجب أن تكون 6 أحرف على الأقل.';return}const {error}=await supabase.auth.updateUser({password});$('accountMsg').textContent=error?'تعذر تحديث كلمة المرور: '+error.message:'تم تحديث كلمة المرور بنجاح.';if(!error){$('passwordRecovery').hidden=true;$('newPassword').value=''}}
-async function customerReset(){const email=$('accountEmail').value.trim();if(!email){$('accountMsg').textContent='أدخل بريدك الإلكتروني أولاً.';return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});$('accountMsg').textContent=error?'تعذر إرسال رابط الاستعادة: '+error.message:'إذا كان البريد مسجلاً، ستصلك رسالة لاستعادة كلمة المرور.'}
-async function saveProfile(){const {error}=await supabase.auth.updateUser({data:{full_name:$('profileName').value.trim(),phone:$('profilePhone').value.trim()}});$('profileMsg').textContent=error?'تعذر حفظ البيانات: '+error.message:'تم حفظ إعدادات الحساب.'}
-async function customerSignOut(){await supabase.auth.signOut();refreshCustomer(null);$('accountMsg').textContent='تم تسجيل الخروج.'}
-supabase.auth.getSession().then(({data})=>refreshCustomer(data.session));
-supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){$('passwordRecovery').hidden=false;$('accountpanel').classList.add('show')}refreshCustomer(session)});
-let deliveryCoords=null;
-function selectDeliveryLocation(){
- if(!navigator.geolocation){$('locationStatus').textContent='جهازك أو المتصفح لا يدعم تحديد الموقع.';return}
- $('locationStatus').textContent='جارٍ تحديد موقعك...';
- navigator.geolocation.getCurrentPosition(pos=>{
-  deliveryCoords={lat:pos.coords.latitude,lng:pos.coords.longitude};
-  const mapUrl='https://www.google.com/maps?q='+deliveryCoords.lat+','+deliveryCoords.lng;
-  $('locationMapLink').href=mapUrl;$('locationMapLink').hidden=false;
-  $('locationStatus').textContent='تم تحديد موقعك بنجاح وسيُرفق مع الطلب.';
- },err=>{
-  $('locationStatus').textContent=err.code===1?'يرجى السماح للمتصفح بالوصول إلى موقعك ثم المحاولة.':'تعذر تحديد الموقع؛ اكتب العنوان يدوياً.';
- },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
-}
-async function sendOrder(){
- if(!cart.length){alert('أضف منتجاً إلى السلة أولاً');return}
- const name=$('customer').value.trim(),phone=$('phone').value.trim(),address=$('notes').value.trim();
- const shipping=$('shippingMethod').value;
- if(!name||!phone){alert('يرجى إدخال الاسم ورقم الجوال.');return}
- if(shipping==='توصيل إلى المنزل'&&!address&&!deliveryCoords){alert('حدد موقع التوصيل على الخريطة أو اكتب عنوانك.');return}
- const picked=document.querySelector('input[name="paymentMethod"]:checked');
- const methods=document.querySelectorAll('input[name="paymentMethod"]');
- if(methods.length&&!picked){alert('يرجى اختيار طريقة الدفع');return}
- let paymentName='';
- if(picked){const label=picked.closest('label');paymentName=label?.querySelector('b')?.textContent||''}
- const mapUrl=deliveryCoords?'https://www.google.com/maps?q='+deliveryCoords.lat+','+deliveryCoords.lng:'';
- const orderAddress=[address,mapUrl?'موقع الخريطة: '+mapUrl:''].filter(Boolean).join(' | ')||'استلام بالتنسيق مع المتجر';
- const orderNotes='طريقة الشحن: '+shipping+'\nطريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+(mapUrl?'\nموقع الخريطة: '+mapUrl:'')+(address?'\nملاحظات العنوان: '+address:'');
- const {error}=await supabase.from('apex_orders').insert({user_id:customerSession?.user?.id||null,customer_name:name,phone,address:orderAddress,items:cart.map(name=>({name})),notes:orderNotes});
- if(error){alert('تعذر إرسال الطلب حالياً: '+error.message);return}
- alert('تم استلام طلبك بنجاح. ستتواصل معك الإدارة لتأكيد طريقة الشحن والتكلفة.');
- cart=[];$('count').textContent='0';renderCart();closeCart();
-}
-window.selectDeliveryLocation=selectDeliveryLocation;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.closeAccount=closeAccount;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.customerSignOut=customerSignOut;
-bindCategoryFilters();
-$('search').addEventListener('input',filterProducts);
-$('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
-$('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
-function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(p.querySelector('[data-fav]')?.dataset.fav)))?'':'none'})}
-loadStoreBanners();loadPaymentMethods();loadStoreProducts();
+async function deleteProduct(id){if(!confirm('حذف المنتج نهائياً؟'))return;const {error}=await supabase.from('apex_products').delete().eq('id',id);message('pmsg',error?'تعذر الحذف: '+error.message:'تم حذف المنتج');if(!error)loadProducts()}
+function editProduct(p){editing=p.id;$('adm_pname').value=p.name;$('adm_pcat').value=p.category;$('adm_pprice').value=p.price??'';$('adm_pimage').value=p.image_url;$('adm_pdesc').value=p.description;$('adm_pstock').value=p.stock??0;$('adm_cancelEdit').classList.remove('apex-admin-hidden');message('pmsg','تعديل المنتج رقم '+p.id)}
+$('adm_cancelEdit').onclick=()=>{editing=null;['pname','pcat','pprice','pimage','pdesc'].forEach(id=>$(id).value='');$('adm_pstock').value=0;$('adm_pfile').value='';$('adm_cancelEdit').classList.add('apex-admin-hidden');message('pmsg','')};
+$('adm_saveproduct').onclick=async()=>{const name=$('adm_pname').value.trim(),description=$('adm_pdesc').value.trim(),priceValue=$('adm_pprice').value.trim();if(!name){message('pmsg','اكتب اسم المنتج أولاً.');return}if(!description){message('pmsg','اكتب وصف المنتج ليظهر للعملاء.');return}if(priceValue===''||!Number.isFinite(Number(priceValue))||Number(priceValue)<0){message('pmsg','أدخل سعراً صحيحاً للمنتج بالريال السعودي.');return}const row={name,category:$('adm_pcat').value.trim(),price:Number(priceValue),image_url:$('adm_pimage').value.trim(),description,stock:Math.max(0,Math.floor(Number($('adm_pstock').value||0))),updated_at:new Date().toISOString()};const q=editing?supabase.from('apex_products').update(row).eq('id',editing):supabase.from('apex_products').insert(row);const {error}=await q;if(error){message('pmsg','فشل الحفظ: '+error.message);return}message('pmsg','تم حفظ المنتج في قاعدة البيانات.');$('adm_cancelEdit').click();loadProducts()};
+async function toggleProduct(id,active){const {error}=await supabase.from('apex_products').update({active:!active}).eq('id',id);if(error)message('pmsg','تعذر التحديث: '+error.message);loadProducts()}
+async function loadOrders(){const {data,error}=await supabase.from('apex_orders').select('*').order('created_at',{ascending:false});if(error){$('adm_orderlist').textContent='تعذر تحميل الطلبات: '+error.message;return}window.apexOrders=data||[];updateKpis(window.apexProducts,window.apexOrders);$('adm_orderlist').innerHTML=(data||[]).map(o=>'<div class="item"><div class="row"><b>طلب #'+o.id+' — '+esc(o.customer_name)+'</b><small>'+new Date(o.created_at).toLocaleString('ar-SA')+'</small></div><p class="muted">الجوال: '+esc(o.phone)+'<br>العنوان: '+esc(o.address)+'<br>المنتجات: '+esc(JSON.stringify(o.items))+'<br>ملاحظات: '+esc(o.notes)+'</p><div class="grid"><select class="field" id="st'+o.id+'"><option value="new">جديد</option><option value="confirmed">مؤكد</option><option value="processing">قيد التجهيز</option><option value="shipped">تم الشحن</option><option value="delivered">تم التسليم</option><option value="cancelled">ملغي</option></select><input class="field" id="tr'+o.id+'" placeholder="رقم تتبع أرامكس" value="'+esc(o.aramex_tracking_number||'')+'"></div><button class="btn2" data-order="'+o.id+'">حفظ تحديث الطلب</button></div>').join('')||'<p class="muted">لا توجد طلبات حتى الآن.</p>';(data||[]).forEach(o=>{$('st'+o.id).value=o.status});$('adm_orderlist').querySelectorAll('[data-order]').forEach(b=>b.onclick=async()=>{const id=b.dataset.order;const {error}=await supabase.from('apex_orders').update({status:$('st'+id).value,aramex_tracking_number:$('tr'+id).value,updated_at:new Date().toISOString()}).eq('id',id);b.textContent=error?'فشل الحفظ':'تم الحفظ';if(!error)loadOrders()})}
+
+let bannersCache=[];
+async function loadBanners(){const {data,error}=await supabase.from('apex_banners').select('*').order('sort_order').order('id');if(error){message('bmsg','تعذر تحميل البنرات: '+error.message);return}bannersCache=data||[];$('adm_bannerlist').innerHTML=bannersCache.map(b=>'<div class="item row"><div><b>'+esc(b.title)+'</b><br><small>'+esc(b.subtitle)+' · '+(b.active?'نشط':'مخفي')+'</small></div><div><button class="btn2" data-be="'+b.id+'">تعديل</button> <button class="btn2" data-bd="'+b.id+'">حذف</button></div></div>').join('')||'<p class="muted">لا توجد بنرات.</p>';$('adm_bannerlist').querySelectorAll('[data-be]').forEach(x=>x.onclick=()=>{const b=bannersCache.find(z=>z.id==x.dataset.be);editingBanner=b.id;$('adm_btitle').value=b.title;$('adm_bsubtitle').value=b.subtitle;$('adm_bimage').value=b.image_url;$('adm_blink').value=b.link_url;$('adm_border').value=b.sort_order;$('adm_bactive').checked=b.active;$('adm_cancelbanner').classList.remove('apex-admin-hidden')});$('adm_bannerlist').querySelectorAll('[data-bd]').forEach(x=>x.onclick=async()=>{if(!confirm('حذف البنر؟'))return;const {error}=await supabase.from('apex_banners').delete().eq('id',x.dataset.bd);message('bmsg',error?error.message:'تم الحذف');if(!error)loadBanners()})}
+$('adm_savebanner').onclick=async()=>{const row={title:$('adm_btitle').value.trim(),subtitle:$('adm_bsubtitle').value.trim(),image_url:$('adm_bimage').value.trim(),link_url:$('adm_blink').value.trim(),sort_order:Number($('adm_border').value||0),active:$('adm_bactive').checked,updated_at:new Date().toISOString()};if(!row.image_url){message('bmsg','أدخل رابط الصورة');return}const q=editingBanner?supabase.from('apex_banners').update(row).eq('id',editingBanner):supabase.from('apex_banners').insert(row);const {error}=await q;message('bmsg',error?'فشل الحفظ: '+error.message:'تم حفظ البنر');if(!error){$('adm_cancelbanner').click();loadBanners()}};
+$('adm_cancelbanner').onclick=()=>{editingBanner=null;['btitle','bsubtitle','bimage','blink'].forEach(id=>$(id).value='');$('adm_border').value=0;$('adm_bactive').checked=true;$('adm_cancelbanner').classList.add('apex-admin-hidden')};
+let paymentsCache=[];
+async function loadPayments(){const {data,error}=await supabase.from('apex_payment_methods').select('*').order('sort_order').order('id');if(error){message('paymsg','تعذر تحميل الطرق: '+error.message);return}paymentsCache=data||[];$('adm_paymentlist').innerHTML=paymentsCache.map(p=>'<div class="item row"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.method_type)+' · '+(p.enabled?'مفعلة':'معطلة')+'</small></div><div><button class="btn2" data-pe="'+p.id+'">تعديل</button> <button class="btn2" data-pd="'+p.id+'">حذف</button></div></div>').join('')||'<p class="muted">لا توجد طرق دفع.</p>';$('adm_paymentlist').querySelectorAll('[data-pe]').forEach(x=>x.onclick=()=>{const p=paymentsCache.find(z=>z.id==x.dataset.pe);editingPayment=p.id;$('adm_payname').value=p.name;$('adm_paytype').value=p.method_type;$('adm_payinstructions').value=p.instructions;$('adm_payorder').value=p.sort_order;$('adm_payenabled').checked=p.enabled;$('adm_cancelpayment').classList.remove('apex-admin-hidden')});$('adm_paymentlist').querySelectorAll('[data-pd]').forEach(x=>x.onclick=async()=>{if(!confirm('حذف طريقة الدفع؟'))return;const {error}=await supabase.from('apex_payment_methods').delete().eq('id',x.dataset.pd);message('paymsg',error?error.message:'تم الحذف');if(!error)loadPayments()})}
+$('adm_savepayment').onclick=async()=>{const row={name:$('adm_payname').value.trim(),method_type:$('adm_paytype').value,instructions:$('adm_payinstructions').value.trim(),sort_order:Number($('adm_payorder').value||0),enabled:$('adm_payenabled').checked,updated_at:new Date().toISOString()};if(!row.name){message('paymsg','أدخل اسم الطريقة');return}const q=editingPayment?supabase.from('apex_payment_methods').update(row).eq('id',editingPayment):supabase.from('apex_payment_methods').insert(row);const {error}=await q;message('paymsg',error?'فشل الحفظ: '+error.message:'تم حفظ الطريقة');if(!error){$('adm_cancelpayment').click();loadPayments()}};
+$('adm_cancelpayment').onclick=()=>{editingPayment=null;['payname','payinstructions'].forEach(id=>$(id).value='');$('adm_paytype').value='manual';$('adm_payorder').value=0;$('adm_payenabled').checked=false;$('adm_cancelpayment').classList.add('apex-admin-hidden')};
+
+checkSession();
 </script></body></html>
