@@ -66,7 +66,26 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 #adminWorkspace .tabs{display:flex;gap:10px;flex-wrap:wrap}#adminWorkspace .status{color:var(--green);min-height:24px}
 #adminWorkspace .tablewrap{overflow:auto}#adminWorkspace table{width:100%;border-collapse:collapse;min-width:550px}#adminWorkspace td,#adminWorkspace th{text-align:right;padding:11px;border-bottom:1px solid #3d392a}#adminWorkspace th{color:var(--gold)}
 @media(max-width:720px){#adminWorkspace .grid{grid-template-columns:1fr}#adminWorkspace .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .panel{padding:14px}}
-.price-undetermined{font-size:11px;color:#c9bd9a;font-weight:600}.cart-icon{width:38px;height:34px;padding:0;display:grid;place-items:center;font-size:17px;line-height:1}</style></head>
+.price-undetermined{font-size:11px;color:#c9bd9a;font-weight:600}.cart-icon{width:38px;height:34px;padding:0;display:grid;place-items:center;font-size:17px;line-height:1}</style><style>
+/* Compact storefront cards and product tiles */
+.products{gap:10px!important;grid-template-columns:repeat(auto-fill,minmax(145px,1fr))!important}
+.product{padding:9px!important;border-radius:13px!important;min-width:0!important}
+.product img{height:135px!important;object-fit:contain!important}
+.product h3{font-size:13px!important;line-height:1.35!important;margin:7px 0 4px!important}
+.product p{font-size:11px!important;line-height:1.4!important;margin:3px 0!important}
+.product-price{font-size:13px!important}
+.productfoot{gap:5px!important;margin-top:7px!important}
+.product .fav{width:30px!important;height:30px!important}
+.product button,.product .btn{font-size:11px!important;padding:7px 9px!important;min-height:32px!important}
+@media(max-width:600px){
+.products{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.product{padding:7px!important}
+.product img{height:112px!important}
+.product h3{font-size:12px!important}
+.product p{font-size:10px!important}
+.product button,.product .btn{font-size:10px!important;padding:6px 7px!important}
+}
+</style></head>
 <body>
 <header class="topbar"><button class="outline" aria-label="فتح الحساب" title="فتح الحساب" onclick="openAccount()">🔓</button><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
