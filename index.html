@@ -28,6 +28,12 @@ footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;colo
 @media(max-width:420px){.topbar{height:70px;padding:0 10px}.brand{font-size:27px}.crown{font-size:25px}.outline{padding:8px 11px;font-size:13px}.actions{gap:6px}.products{gap:9px}.product{padding:7px}.product img{height:130px}.product h3{font-size:14px}.product p{font-size:12px}.add{padding:7px 9px;font-size:12px}}
 
 .banner-strip{max-width:1200px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.store-banner{position:relative;display:block;min-height:190px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#101612}.store-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}.store-banner div{position:relative;padding:25px;text-shadow:0 2px 8px #000}.store-banner h2{color:var(--gold2);margin:0 0 8px}.store-banner p{margin:0;color:#fff}.paychoice{display:block;color:#f5e9c8;text-align:right;border:1px solid #69552d;border-radius:10px;padding:12px;margin:8px 0}.paychoice input{width:auto;margin-left:8px}.paychoice small{display:block;color:#aaa;margin:5px 24px 0}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto 18px}
+.toolbar select,.toolbar button{border:1px solid var(--line);border-radius:24px;background:#0b100d;color:#f5e9c8;padding:10px 15px;font:inherit}
+.product .fav{position:absolute;left:17px;top:17px;width:38px;height:38px;border:1px solid #e9bd55;border-radius:50%;background:#080a08d9;color:#ffe8a0;font-size:20px}
+.product .fav.on{background:#e9bd55;color:#171006}
+.luxury-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:90;background:#10251e;border:1px solid var(--gold);border-radius:30px;padding:11px 20px;color:#ffe8a0;box-shadow:0 10px 35px #0009}
 </style></head>
 <body>
 <header class="topbar"><button class="outline" onclick="openAccount()">👤 حسابي</button><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
@@ -36,7 +42,7 @@ footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;colo
 <main><div class="sectionhead"><div class="rule">━━━━ ◈ ━━━━</div><h2>منتجاتنا</h2><p>عروض مميزة ومنتجات مختارة لأجلك — بدون عرض الأسعار</p></div>
 <div class="categories"><button class="cat active" data-cat="الكل">الكل</button><button class="cat" data-cat="الإلكترونيات">الإلكترونيات</button><button class="cat" data-cat="الأزياء">الأزياء</button><button class="cat" data-cat="الأجهزة المنزلية">الأجهزة المنزلية</button><button class="cat" data-cat="الجمال والعناية">الجمال والعناية</button></div>
 <div style="max-width:520px;margin:0 auto 25px"><input id="search" placeholder="ابحث عن منتج..." style="width:100%;padding:13px 18px;border-radius:30px;border:1px solid var(--line);background:#0b100d;color:white;font:inherit"></div>
-<div class="products" id="products"><p id="productsLoading" style="grid-column:1/-1;text-align:center;color:#e9bd55">جارٍ تحميل المنتجات...</p></div>
+<div class="toolbar"><span>اكتشف مجموعتك المفضلة</span><select id="sortProducts"><option value="new">الأحدث أولاً</option><option value="az">الاسم: أ إلى ي</option></select><button id="showFavorites">♡ المفضلة <b id="favCount">0</b></button></div><div class="products" id="products"><p id="productsLoading" style="grid-column:1/-1;text-align:center;color:#e9bd55">جارٍ تحميل المنتجات...</p></div>
 
 <section class="about" id="aramex"><h2>الشحن عبر أرامكس</h2><p>بعد استلام رقم التتبع من المتجر، يمكنك متابعة شحنتك مباشرة عبر أرامكس.</p><a class="goldbtn" style="display:inline-block;text-decoration:none;margin:8px" href="https://www.aramex.com/sa/en/track/shipments" target="_blank" rel="noopener">تتبع شحنتك عبر أرامكس</a></section><section class="about" id="policies" style="text-align:right">
 <h2 style="text-align:center">معلومات وسياسات المتجر</h2>
@@ -56,7 +62,7 @@ footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;colo
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
-let cart=[],selectedPayment='',customerSession=null;
+let cart=[],selectedPayment='',customerSession=null;\nconst favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));\nfunction saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}\nfunction toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function loadStoreProducts(){
@@ -67,9 +73,9 @@ async function loadStoreProducts(){
  if(!products.length){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#c9bd9a;padding:35px">لا توجد منتجات متاحة حالياً. نعمل على إضافة منتجات جديدة قريباً.</p>';return}
  box.innerHTML=products.map(p=>{
   const image=/^https:\/\//i.test(p.image_url||'')?p.image_url:'';
-  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'"><span class="tag">متاح للطلب</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3><p>'+esc(p.description||'')+'</p><div class="productfoot"><span class="offer">اطلبه الآن</span><button class="add" type="button" data-add="'+esc(p.name)+'">أضف للسلة ＋</button></div></article>';
+  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">متاح للطلب</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3><p>'+esc(p.description||'')+'</p><div class="productfoot"><span class="offer">اطلبه الآن</span><button class="add" type="button" data-add="'+esc(p.name)+'">أضف للسلة ＋</button></div></article>';
  }).join('');
- box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
+ box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));\n box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));\n saveFavorites();
  const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
  const catbox=document.querySelector('.categories');
  catbox.innerHTML='<button class="cat active" data-cat="الكل">الكل</button>'+cats.map(x=>'<button class="cat" data-cat="'+esc(x)+'">'+esc(x)+'</button>').join('');
@@ -140,7 +146,7 @@ async function sendOrder(){
 }
 window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.closeAccount=closeAccount;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.customerSignOut=customerSignOut;
 bindCategoryFilters();
-$('search').addEventListener('input',filterProducts);
-function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)?'':'none'})}
+$('search').addEventListener('input',filterProducts);\n$('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>$('sortProducts').value==='az'?x.dataset.name.localeCompare(y.dataset.name,'ar'):0);cards.forEach(x=>$('products').appendChild(x));});\n$('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
+function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(p.querySelector('[data-fav]')?.dataset.fav)))?'':'none'})}
 loadStoreBanners();loadPaymentMethods();loadStoreProducts();
 </script></body></html>
