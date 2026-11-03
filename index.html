@@ -44,11 +44,13 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 .field{border-color:#98752f;background:linear-gradient(145deg,#100f0b,#070806);border-radius:13px}
 .product-price{margin:8px 5px 13px;color:#ffe39a;font-size:20px;font-weight:900;text-shadow:0 0 14px #b9872e}
 .product:hover{box-shadow:0 0 30px #d6a83c55;border-color:#ffe7a0}
+@media(max-width:600px){.cartpanel{padding:8px;align-items:flex-start}.cartbox{padding:16px;width:100%;max-height:94vh;margin:8px 0}.account-layout{grid-template-columns:1fr!important}.account-menu{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px!important}.account-menu button{font-size:12px;padding:9px 5px}.cartbox input,.cartbox textarea{font-size:16px}}
 </style></head>
 <body>
 <header class="topbar"><button class="outline" aria-label="فتح الحساب" title="فتح الحساب" onclick="openAccount()">🔓</button><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
-<section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>\n<section class="hero"><div class="heroart">💎</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>متجر APEX الإلكتروني</h1><p>اختيارات مميزة .. وتجربة تسوق تليق بك</p><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تسوق الآن　➜</button></div></section>
-<main><div class="sectionhead"><div class="rule">━━━━ ◈ ━━━━</div><h2>منتجاتنا</h2><p>عروض مميزة ومنتجات مختارة لأجلك — بدون عرض الأسعار</p></div>
+<section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
+<section class="hero"><div class="heroart">💎</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>متجر APEX الإلكتروني</h1><p>اختيارات مميزة .. وتجربة تسوق تليق بك</p><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تسوق الآن　➜</button></div></section>
+<main><div class="sectionhead"><div class="rule">━━━━ ◈ ━━━━</div><h2>منتجاتنا</h2><p>منتجات مختارة بعناية مع وصف واضح وسعر بالريال السعودي</p></div>
 <div class="categories"><button class="cat active" data-cat="الكل">الكل</button><button class="cat" data-cat="الإلكترونيات">الإلكترونيات</button><button class="cat" data-cat="الأزياء">الأزياء</button><button class="cat" data-cat="الأجهزة المنزلية">الأجهزة المنزلية</button><button class="cat" data-cat="الجمال والعناية">الجمال والعناية</button></div>
 <div style="max-width:520px;margin:0 auto 25px"><input id="search" placeholder="ابحث عن منتج..." style="width:100%;padding:13px 18px;border-radius:30px;border:1px solid var(--line);background:#0b100d;color:white;font:inherit"></div>
 <div class="toolbar"><span>اكتشف مجموعتك المفضلة</span><select id="sortProducts"><option value="new">الأحدث أولاً</option><option value="az">الاسم: أ إلى ي</option><option value="price-low">السعر: الأقل أولاً</option><option value="price-high">السعر: الأعلى أولاً</option></select><button id="showFavorites">♡ المفضلة <b id="favCount">0</b></button></div><div class="products" id="products"><p id="productsLoading" style="grid-column:1/-1;text-align:center;color:#e9bd55">جارٍ تحميل المنتجات...</p></div>
@@ -57,7 +59,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 <h2 style="text-align:center">معلومات وسياسات المتجر</h2>
 <div style="max-width:850px;margin:auto;color:#ded8c9;line-height:2">
 <h3 style="color:var(--gold)">طريقة الطلب</h3><p>اختر المنتجات وأضفها إلى السلة، ثم أدخل اسمك ورقم جوالك وعنوانك. سيتم إرسال تفاصيل طلبك إلى إدارة المتجر للتواصل معك وتأكيد التوفر والسعر قبل اعتماد الطلب.</p>
-<h3 style="color:var(--gold)">الأسعار والدفع</h3><p>لا تُعرض الأسعار على صفحات المنتجات. يتم تزويد العميل بالسعر النهائي وتكاليف التوصيل قبل تأكيد الطلب. لا يتم تحصيل أي مبلغ من خلال الموقع حاليًا، ولا تعتبر رسالة البريد تأكيدًا نهائيًا للشراء.</p>
+<h3 style="color:var(--gold)">الأسعار والدفع</h3><p>تظهر أسعار المنتجات بالريال السعودي على صفحات المتجر. يتم توضيح تكاليف التوصيل وأي رسوم إضافية للعميل قبل تأكيد الطلب. لا يتم تحصيل أي مبلغ من خلال الموقع حاليًا، ولا تعتبر رسالة البريد تأكيدًا نهائيًا للشراء.</p>
 <h3 style="color:var(--gold)">الشحن والتوصيل</h3><p>يتم تحديد شركة الشحن والمدة والرسوم حسب المدينة وطبيعة المنتج، وإبلاغ العميل بها قبل تأكيد الطلب.</p>
 <h3 style="color:var(--gold)">الاستبدال والاسترجاع</h3><p>يتم توضيح شروط الاستبدال والاسترجاع للعميل قبل إتمام الشراء، وفق الأنظمة المعمول بها في المملكة العربية السعودية. يرجى التواصل مع خدمة العملاء لأي طلب أو استفسار.</p>
 <h3 style="color:var(--gold)">الخصوصية</h3><p>تُستخدم بيانات الاسم ورقم الجوال والعنوان لغرض متابعة الطلب والتواصل بشأنه فقط. يُرجى عدم إرسال بيانات البطاقات البنكية أو كلمات المرور عبر البريد أو نموذج الطلب.</p>
@@ -71,7 +73,10 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
-let cart=[],selectedPayment='',customerSession=null;\nconst favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));\nfunction saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}\nfunction toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
+let cart=[],selectedPayment='',customerSession=null;
+const favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));
+function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}
+function toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function loadStoreProducts(){
@@ -84,7 +89,9 @@ async function loadStoreProducts(){
   const image=/^https:\/\//i.test(p.image_url||'')?p.image_url:'';
   return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">متاح للطلب</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3><p>'+esc(p.description||'')+'</p><div class="product-price">'+(p.price!==null&&p.price!==undefined?Number(p.price).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س':'السعر غير محدد')+'</div><div class="productfoot"><span class="offer">اطلبه الآن</span><button class="add" type="button" data-add="'+esc(p.name)+'">أضف للسلة ＋</button></div></article>';
  }).join('');
- box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));\n box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));\n saveFavorites();
+ box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
+ box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
+ saveFavorites();
  const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
  const catbox=document.querySelector('.categories');
  catbox.innerHTML='<button class="cat active" data-cat="الكل">الكل</button>'+cats.map(x=>'<button class="cat" data-cat="'+esc(x)+'">'+esc(x)+'</button>').join('');
@@ -164,7 +171,9 @@ async function sendOrder(){
 }
 window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.closeAccount=closeAccount;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.customerSignOut=customerSignOut;
 bindCategoryFilters();
-$('search').addEventListener('input',filterProducts);\n$('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});\n$('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
+$('search').addEventListener('input',filterProducts);
+$('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
+$('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
 function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(p.querySelector('[data-fav]')?.dataset.fav)))?'':'none'})}
 loadStoreBanners();loadPaymentMethods();loadStoreProducts();
 </script></body></html>
