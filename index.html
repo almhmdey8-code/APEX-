@@ -26,10 +26,12 @@ main{max-width:1250px;margin:auto;padding:25px 20px 90px}.sectionhead{text-align
 footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;color:#aaa}footer strong{display:block;font:900 36px Georgia;color:var(--gold);letter-spacing:3px}
 @media(max-width:800px){.hero{grid-template-columns:1fr;min-height:520px;text-align:center;padding:30px 18px;gap:0}.heroart{font-size:130px}.herotext h1{font-size:34px}.features{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product img{height:155px}.menu{display:block}}
 @media(max-width:420px){.topbar{height:70px;padding:0 10px}.brand{font-size:27px}.crown{font-size:25px}.outline{padding:8px 11px;font-size:13px}.actions{gap:6px}.products{gap:9px}.product{padding:7px}.product img{height:130px}.product h3{font-size:14px}.product p{font-size:12px}.add{padding:7px 9px;font-size:12px}}
+
+.banner-strip{max-width:1200px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.store-banner{position:relative;display:block;min-height:190px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#101612}.store-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}.store-banner div{position:relative;padding:25px;text-shadow:0 2px 8px #000}.store-banner h2{color:var(--gold2);margin:0 0 8px}.store-banner p{margin:0;color:#fff}.paychoice{display:block;color:#f5e9c8;text-align:right;border:1px solid #69552d;border-radius:10px;padding:12px;margin:8px 0}.paychoice input{width:auto;margin-left:8px}.paychoice small{display:block;color:#aaa;margin:5px 24px 0}
 </style></head>
 <body>
 <header class="topbar"><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
-<section class="hero"><div class="heroart">💎</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>متجر APEX الإلكتروني</h1><p>اختيارات مميزة .. وتجربة تسوق تليق بك</p><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تسوق الآن　➜</button></div></section>
+<section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>\n<section class="hero"><div class="heroart">💎</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>متجر APEX الإلكتروني</h1><p>اختيارات مميزة .. وتجربة تسوق تليق بك</p><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تسوق الآن　➜</button></div></section>
 <section class="features"><div class="feature"><b>♧</b><span>دفع آمن ومتعدد الطرق</span></div><div class="feature"><b>🚚</b><span>شحن سريع لكل المناطق</span></div><div class="feature"><b>✧</b><span>منتجات مختارة بعناية</span></div><div class="feature"><b>♧</b><span>دعم فني وخدمة عملاء</span></div></section>
 <main><div class="sectionhead"><div class="rule">━━━━ ◈ ━━━━</div><h2>منتجاتنا</h2><p>عروض مميزة ومنتجات مختارة لأجلك — بدون عرض الأسعار</p></div>
 <div class="categories"><button class="cat active" data-cat="الكل">الكل</button><button class="cat" data-cat="الإلكترونيات">الإلكترونيات</button><button class="cat" data-cat="الأزياء">الأزياء</button><button class="cat" data-cat="الأجهزة المنزلية">الأجهزة المنزلية</button><button class="cat" data-cat="الجمال والعناية">الجمال والعناية</button></div>
@@ -59,16 +61,53 @@ footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;colo
 <section class="about" id="contact"><h2>إدارة المتجر وخدمة العملاء</h2><p>للاستفسارات ومتابعة الطلبات والتواصل مع إدارة APEX</p><p dir="ltr" style="font-weight:800;color:#ffe6a0;font-size:18px"><a href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a class="goldbtn" style="display:inline-block;text-decoration:none" href="mailto:apex.1.shopping@gmail.com?subject=استفسار%20لمتجر%20APEX">تواصل مع خدمة العملاء</a></section>
 <section class="about"><h2>APEX 👑</h2><p>أكثر من مجرد متجر .. إنه أسلوب حياة</p><p>تسوق بثقة، واختر ما يناسبك من مجموعتنا المتجددة.</p></section></main>
 <footer><strong>APEX 👑</strong><p><a href="./admin.html" style="color:#e9bd55;border:1px solid #e9bd55;border-radius:25px;padding:8px 18px;display:inline-block">دخول المدير 🔐</a></p><p>إدارة المتجر وخدمة العملاء: <a dir="ltr" href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a href="#policies">سياسات المتجر</a>　|　<a href="mailto:apex.1.shopping@gmail.com">خدمة العملاء</a><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
-<div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><textarea id="notes" rows="3" placeholder="المدينة والعنوان أو ملاحظات الطلب"></textarea><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
-<script>
-let cart=[];
-function add(n){cart.push(n);renderCart();document.getElementById('count').textContent=cart.length}
-function renderCart(){document.getElementById('cartitems').innerHTML=cart.length?cart.map((n,i)=>'<div class="cartrow"><span>'+n+'</span><button class="add" onclick="removeItem('+i+')">حذف</button></div>').join(''):'السلة فارغة'}
-function removeItem(i){cart.splice(i,1);document.getElementById('count').textContent=cart.length;renderCart()}
-function openCart(){document.getElementById('cartpanel').classList.add('show');renderCart()}
-function closeCart(){document.getElementById('cartpanel').classList.remove('show')}
-function sendOrder(){if(!cart.length){alert('أضف منتجاً إلى السلة أولاً');return}let name=document.getElementById('customer').value.trim(),phone=document.getElementById('phone').value.trim();if(!name||!phone){alert('يرجى إدخال الاسم ورقم الجوال');return}let body='الاسم: '+name+'\nالجوال: '+phone+'\nالمنتجات: '+cart.join('، ')+'\nالعنوان والملاحظات: '+document.getElementById('notes').value;location.href='mailto:apex.1.shopping@gmail.com?subject='+encodeURIComponent('طلب جديد من متجر APEX')+'&body='+encodeURIComponent(body)}
+<div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><textarea id="notes" rows="3" placeholder="المدينة والعنوان أو ملاحظات الطلب"></textarea><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
+let cart=[],selectedPayment='';
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadStoreBanners(){
+ const box=$('storeBanners');if(!box)return;
+ const {data,error}=await supabase.from('apex_banners').select('id,title,subtitle,image_url,link_url').eq('active',true).order('sort_order',{ascending:true});
+ if(error){box.hidden=true;console.warn('تعذر تحميل البنرات',error.message);return}
+ box.innerHTML=(data||[]).filter(x=>x.image_url).map(x=>{
+  const inner='<img src="'+esc(x.image_url)+'" alt="'+esc(x.title)+'" loading="lazy"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle)+'</p></div>';
+  return x.link_url?'<a class="store-banner" href="'+esc(x.link_url)+'" target="_blank" rel="noopener">'+inner+'</a>':'<article class="store-banner">'+inner+'</article>';
+ }).join('');
+ if(!box.children.length)box.hidden=true;
+}
+async function loadPaymentMethods(){
+ const box=$('paymentChoices');if(!box)return;
+ const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type').eq('enabled',true).order('sort_order',{ascending:true});
+ if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً. يمكنك إرسال الطلب دون اختيار طريقة.</p>';return}
+ const methods=data||[];
+ if(!methods.length){box.innerHTML='<p style="color:#aaa">سيتم التواصل معك لتأكيد طريقة الدفع.</p>';return}
+ box.innerHTML='<p style="color:#e9bd55">اختر طريقة الدفع</p>'+methods.map(m=>'<label class="paychoice"><input type="radio" name="paymentMethod" value="'+m.id+'"> <b>'+esc(m.name)+'</b>'+(m.method_type==='gateway'?' <small>غير متاحة للدفع الإلكتروني حالياً؛ سيتم التواصل لتأكيدها.</small>':(m.instructions?'<small>'+esc(m.instructions)+'</small>':'') )+'</label>').join('');
+}
+function add(n){cart.push(n);renderCart();$('count').textContent=cart.length}
+function renderCart(){$('cartitems').innerHTML=cart.length?cart.map((n,i)=>'<div class="cartrow"><span>'+esc(n)+'</span><button class="add" data-remove="'+i+'">حذف</button></div>').join(''):'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
+function removeItem(i){cart.splice(i,1);$('count').textContent=cart.length;renderCart()}
+function openCart(){$('cartpanel').classList.add('show');renderCart()}
+function closeCart(){$('cartpanel').classList.remove('show')}
+async function sendOrder(){
+ if(!cart.length){alert('أضف منتجاً إلى السلة أولاً');return}
+ const name=$('customer').value.trim(),phone=$('phone').value.trim(),address=$('notes').value.trim();
+ if(!name||!phone||!address){alert('يرجى إدخال الاسم ورقم الجوال والعنوان');return}
+ const picked=document.querySelector('input[name="paymentMethod"]:checked');
+ const methods=document.querySelectorAll('input[name="paymentMethod"]');
+ if(methods.length&&!picked){alert('يرجى اختيار طريقة الدفع');return}
+ let paymentName='';
+ if(picked){const label=picked.closest('label');paymentName=label?.querySelector('b')?.textContent||''}
+ const {error}=await supabase.from('apex_orders').insert({customer_name:name,phone,address,items:cart.map(name=>({name})),notes:'طريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+'\n'+address});
+ if(error){alert('تعذر إرسال الطلب حالياً: '+error.message);return}
+ alert('تم استلام طلبك بنجاح. ستتواصل معك الإدارة لتأكيد السعر وطريقة الدفع.');
+ cart=[];$('count').textContent='0';renderCart();closeCart();
+}
+window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;
 document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.querySelector('.cat.active').classList.remove('active');b.classList.add('active');filterProducts()}));
-document.getElementById('search').addEventListener('input',filterProducts);
-function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=document.getElementById('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)?'':'none'})}
+$('search').addEventListener('input',filterProducts);
+function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)?'':'none'})}
+loadStoreBanners();loadPaymentMethods();
 </script></body></html>
