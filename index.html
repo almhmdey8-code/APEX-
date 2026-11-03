@@ -58,8 +58,11 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 @media(max-width:600px){.cartpanel{padding:8px;align-items:flex-start}.cartbox{padding:16px;width:100%;max-height:94vh;margin:8px 0}.account-layout{grid-template-columns:1fr!important}.account-menu{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px!important}.account-menu button{font-size:12px;padding:9px 5px}.cartbox input,.cartbox textarea{font-size:16px}}
 
 .apex-admin-hidden{display:none!important}
-#adminWorkspace{max-width:1150px;margin:35px auto;padding:16px;border:1px solid var(--gold);border-radius:22px;background:#080b09;color:#f8f2df;font-family:Tahoma,Arial,sans-serif}
-#adminWorkspace .wrap{max-width:1100px;margin:auto;padding:12px}
+#adminWorkspace{position:fixed;inset:0;z-index:9999;overflow-y:auto;max-width:none;margin:0;padding:18px;border:0;border-radius:0;background:rgba(0,0,0,.94);backdrop-filter:blur(8px);color:#f8f2df;font-family:Tahoma,Arial,sans-serif}
+#adminWorkspace .wrap{width:min(1100px,100%);min-height:100%;margin:0 auto;padding:12px}
+#adminWorkspace #adm_login{width:min(520px,100%);margin:8vh auto 30px;padding:26px;background:#0b100d;border:1px solid var(--gold);border-radius:22px;box-shadow:0 0 45px #000}
+#adminWorkspace #adm_login h1,#adminWorkspace #adm_login .muted{text-align:center}
+#adminWorkspace #adm_login .field,#adminWorkspace #adm_login #adm_send{width:100%}
 #adminWorkspace .panel{background:#101612;border:1px solid #80672e;border-radius:18px;padding:22px;margin:22px 0}
 #adminWorkspace .field{width:100%;padding:13px;border:1px solid #98752f;border-radius:10px;background:#080d0a;color:white;margin:7px 0 14px}
 #adminWorkspace .btn{background:linear-gradient(110deg,#b77c1b,#ffe58a,#c28a25);border:0;border-radius:30px;padding:12px 22px;color:#171006;font-weight:bold}
@@ -248,9 +251,8 @@ function toggleAdminWorkspace(forceOpen){
  if(open){history.replaceState(null,'',location.pathname+location.search+'#adminWorkspace');}
  else if(location.hash==='#adminWorkspace'){history.replaceState(null,'',location.pathname+location.search);}
 }
-window.addEventListener('DOMContentLoaded',()=>{
- if(location.hash==='#adminWorkspace')toggleAdminWorkspace(true);
-});
+if(location.hash==='#adminWorkspace')toggleAdminWorkspace(true);
+window.addEventListener('hashchange',()=>{if(location.hash==='#adminWorkspace')toggleAdminWorkspace(true)});
 </script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
@@ -313,7 +315,7 @@ async function checkSession(){
   message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
  }finally{checkingAdminSession=false}
 }
-$('adm_send').onclick=async()=>{const email=$('adm_email').value.trim().toLowerCase(),password=$('adm_password').value,button=$('adm_send'),msg=$('adm_loginmsg');if(email!==owner){message('adm_loginmsg','فشل تسجيل الدخول: البريد غير مصرح له.');return}if(!password){message('adm_loginmsg','فشل تسجيل الدخول: أدخل كلمة المرور.');return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';message('adm_loginmsg','جارٍ التحقق من بيانات المدير...');try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error){message('adm_loginmsg','فشل تسجيل الدخول: '+error.message);return}message('adm_loginmsg','تم تسجيل الدخول بنجاح، جارٍ فتح لوحة الإدارة...');await checkSession()}catch(error){message('adm_loginmsg','فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}};
+$('adm_send').onclick=async()=>{const email=$('adm_email').value.trim().toLowerCase(),password=$('adm_password').value,button=$('adm_send'),msg=$('adm_loginmsg');if(email!==owner){message('adm_loginmsg','فشل تسجيل الدخول: البريد غير مصرح له.');return}if(!password){message('adm_loginmsg','فشل تسجيل الدخول: أدخل كلمة المرور.');return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';message('adm_loginmsg','جارٍ التحقق من بيانات المدير...');try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error){message('adm_loginmsg','فشل تسجيل الدخول: '+error.message);return}message('adm_loginmsg','تم تسجيل الدخول بنجاح، جارٍ فتح لوحة الإدارة...');toggleAdminWorkspace(true);await checkSession()}catch(error){message('adm_loginmsg','فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}};
 $('adm_logout').onclick=async()=>{await supabase.auth.signOut();$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
 supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});\ncheckSession();
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;['products','banners','payments','orders'].forEach(id=>$(id).classList.toggle('apex-admin-hidden',id!==p));if(p==='banners')loadBanners();if(p==='payments')loadPayments()});
