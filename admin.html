@@ -102,6 +102,57 @@
 #adminWorkspace .quick-icon{font-size:28px!important}
 #adminWorkspace .quick-heading{font-size:19px!important}
 }
+</style><style id="apex-final-compact">
+/* Strong compact sizing pass for the admin home screen */
+#adminWorkspace{padding:0!important}
+#adminWorkspace .wrap{max-width:1180px!important;padding:0 14px 18px!important}
+#adminWorkspace .head{height:88px!important;min-height:88px!important;padding:6px 14px!important}
+#adminWorkspace .brand{font-size:42px!important;letter-spacing:2px!important}
+#adminWorkspace .brand:before{font-size:17px!important}
+#adminWorkspace .dashboard-hero{top:12px!important;right:14px!important}
+#adminWorkspace .dashboard-hero>div{gap:8px!important}
+#adminWorkspace .dashboard-title{font-size:17px!important;margin:0 0 3px!important}
+#adminWorkspace .admin-avatar{width:38px!important;height:38px!important;font-size:20px!important}
+#adminWorkspace #adm_who{font-size:10px!important}
+#adminWorkspace .kpis{gap:9px!important;margin:10px 0 12px!important}
+#adminWorkspace .kpi{height:78px!important;min-height:78px!important;padding:6px!important;border-width:1px!important;border-radius:12px!important}
+#adminWorkspace .kpi span{font-size:12px!important;line-height:1.2!important}
+#adminWorkspace .kpi b{font-size:22px!important;margin-top:3px!important}
+#adminWorkspace .tabs{margin:0 0 12px!important;border-radius:11px!important}
+#adminWorkspace .tabs button{min-height:42px!important;height:42px!important;padding:5px 9px!important;font-size:12px!important;border-radius:0!important}
+#adminWorkspace .quick-section{margin:10px 0 14px!important;padding:0!important}
+#adminWorkspace .quick-heading{font-size:19px!important;margin:5px 0 10px!important;gap:10px!important}
+#adminWorkspace .quick-grid{gap:9px!important}
+#adminWorkspace .quick-card{height:88px!important;min-height:88px!important;padding:7px!important;border-width:1px!important;border-radius:12px!important;font-size:12px!important;gap:5px!important}
+#adminWorkspace .quick-icon{font-size:24px!important;line-height:1!important}
+#adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders,#adminWorkspace #adm_customers{padding:12px!important;margin-top:9px!important;border-radius:12px!important}
+#adminWorkspace h2{font-size:18px!important}
+#adminWorkspace label{font-size:12px!important}
+#adminWorkspace input,#adminWorkspace select,#adminWorkspace textarea{min-height:34px!important;padding:7px 9px!important;font-size:12px!important}
+#adminWorkspace .btn,#adminWorkspace .btn2{min-height:34px!important;padding:6px 10px!important;font-size:12px!important}
+@media(max-width:700px){
+#adminWorkspace .wrap{padding:0 8px 14px!important}
+#adminWorkspace .head{height:78px!important;min-height:78px!important;padding:5px 8px!important}
+#adminWorkspace .brand{font-size:31px!important;letter-spacing:1px!important}
+#adminWorkspace .brand:before{font-size:13px!important}
+#adminWorkspace .head>.btn2{min-width:65px!important;min-height:29px!important;padding:4px 6px!important;font-size:10px!important}
+#adminWorkspace .dashboard-hero{top:9px!important;right:8px!important}
+#adminWorkspace .dashboard-title{font-size:13px!important}
+#adminWorkspace .admin-avatar{width:30px!important;height:30px!important;font-size:16px!important}
+#adminWorkspace #adm_who{font-size:8px!important;max-width:105px!important}
+#adminWorkspace .kpis{gap:6px!important;margin:8px 0 9px!important}
+#adminWorkspace .kpi{height:66px!important;min-height:66px!important;padding:4px!important;border-radius:9px!important}
+#adminWorkspace .kpi span{font-size:10px!important}
+#adminWorkspace .kpi b{font-size:18px!important}
+#adminWorkspace .tabs{margin-bottom:9px!important}
+#adminWorkspace .tabs button{flex:0 0 auto!important;min-width:90px!important;height:36px!important;min-height:36px!important;font-size:10px!important;padding:4px 6px!important}
+#adminWorkspace .quick-section{margin:8px 0 10px!important}
+#adminWorkspace .quick-heading{font-size:16px!important;margin:4px 0 8px!important}
+#adminWorkspace .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+#adminWorkspace .quick-card{height:72px!important;min-height:72px!important;border-radius:9px!important;font-size:11px!important;padding:5px!important;gap:3px!important}
+#adminWorkspace .quick-icon{font-size:19px!important}
+#adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders,#adminWorkspace #adm_customers{padding:9px!important;margin-top:7px!important}
+}
 </style></head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX 👑</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="username"><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
