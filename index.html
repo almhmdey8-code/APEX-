@@ -164,7 +164,7 @@ async function refreshCustomer(session){
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  if(!session)return;
  const meta=session.user.user_metadata||{};
- $('accountIdentity').textContent='مسجل الدخول: '+session.user.email;$('customer').value=meta.full_name||$('customer').value;$('profileName').value=meta.full_name||'';
+ $('accountIdentity').textContent='';$('accountIdentity').hidden=true;$('customer').value=meta.full_name||$('customer').value;$('profileName').value=meta.full_name||'';
  $('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('customer').value=meta.full_name||$('customer').value;
  const {data,error}=await supabase.from('apex_orders').select('id,created_at,status,items,aramex_tracking_number').eq('user_id',session.user.id).order('created_at',{ascending:false});
  if(error){const fail='<p>تعذر تحميل الطلبات: '+esc(error.message)+'</p>';$('myOrders').innerHTML=fail;$('shippingOrders').innerHTML=fail;$('transitOrders').innerHTML=fail;return}
