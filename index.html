@@ -66,7 +66,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 #adminWorkspace .tabs{display:flex;gap:10px;flex-wrap:wrap}#adminWorkspace .status{color:var(--green);min-height:24px}
 #adminWorkspace .tablewrap{overflow:auto}#adminWorkspace table{width:100%;border-collapse:collapse;min-width:550px}#adminWorkspace td,#adminWorkspace th{text-align:right;padding:11px;border-bottom:1px solid #3d392a}#adminWorkspace th{color:var(--gold)}
 @media(max-width:720px){#adminWorkspace .grid{grid-template-columns:1fr}#adminWorkspace .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .panel{padding:14px}}
-</style></head>
+.price-undetermined{font-size:11px;color:#c9bd9a;font-weight:600}.cart-icon{width:38px;height:34px;padding:0;display:grid;place-items:center;font-size:17px;line-height:1}</style></head>
 <body>
 <header class="topbar"><button class="outline" aria-label="فتح الحساب" title="فتح الحساب" onclick="openAccount()">🔓</button><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
@@ -109,7 +109,7 @@ async function loadStoreProducts(){
  box.innerHTML=products.map(p=>{
   const image=/^https:\/\//i.test(p.image_url||'')?p.image_url:'';
   const demo=p.price===null||p.price===undefined;
-  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3>'+'</article>';
+  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3>'+(demo?'<div class="productfoot"><small class="price-undetermined">السعر غير محدد</small><button class="add cart-icon" type="button" data-add="'+esc(p.name)+'" aria-label="إضافة المنتج إلى السلة" title="إضافة المنتج إلى السلة">🛒+</button></div>':'')+'</article>';
  }).join('');
  box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
  box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
