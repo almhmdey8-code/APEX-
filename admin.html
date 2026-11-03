@@ -9,7 +9,7 @@
 </style></head>
 <body><div class="wrap">
 <header class="head"><div class="brand">APEX 👑</div><a href="./" class="btn2">العودة للمتجر</a></header>
-<section id="login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير المعتمد، وسنرسل رابط دخول آمن لمرة واحدة إلى بريدك.</p><input id="email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="email"><button id="send" class="btn">إرسال رابط الدخول إلى بريدي</button><p id="loginmsg" class="status" role="status"></p></section>
+<section id="login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="username"><input id="password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="send" class="btn">تسجيل الدخول</button><p id="loginmsg" class="status" role="status"></p></section>
 <section id="dashboard" class="hidden">
 <div class="panel row"><div><h1>لوحة تحكم المدير</h1><p id="who" class="muted"></p></div><button id="logout" class="btn2">تسجيل الخروج</button></div>
 <div class="panel"><div class="tabs"><button class="btn2" data-tab="products">المنتجات والأسعار</button><button class="btn2" data-tab="orders">الطلبات</button></div>
@@ -34,7 +34,7 @@ async function checkSession(){
  if(error||!data){await supabase.auth.signOut();$('login').classList.remove('hidden');message('loginmsg','لم يتم اعتماد هذا الحساب كمدير. تحقق من البريد ثم أعد المحاولة.');return}
  $('login').classList.add('hidden');$('dashboard').classList.remove('hidden');$('who').textContent='تم تسجيل الدخول: '+session.user.email;loadProducts();loadOrders();
 }
-$('send').onclick=async()=>{const email=$('email').value.trim().toLowerCase();if(email!==owner){message('loginmsg','البريد غير مصرح له.');return}message('loginmsg','جارٍ إرسال رابط الدخول...');const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}});message('loginmsg',error?'تعذر الإرسال: '+error.message:'تم إرسال رابط الدخول. افتح بريدك واضغط الرابط لإكمال الدخول.')};
+$('send').onclick=async()=>{const email=$('email').value.trim().toLowerCase();const password=$('password').value;if(email!==owner){message('loginmsg','البريد غير مصرح له.');return}if(!password){message('loginmsg','أدخل كلمة المرور.');return}$('send').disabled=true;message('loginmsg','جارٍ التحقق من بيانات المدير...');const {error}=await supabase.auth.signInWithPassword({email,password});$('send').disabled=false;if(error){message('loginmsg','تعذر تسجيل الدخول: '+error.message);return}await checkSession()};
 $('logout').onclick=async()=>{await supabase.auth.signOut();location.reload()};
 supabase.auth.onAuthStateChange(()=>setTimeout(checkSession,0));
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;$('products').classList.toggle('hidden',p!=='products');$('orders').classList.toggle('hidden',p!=='orders')});
