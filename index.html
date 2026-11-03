@@ -6,6 +6,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* Admin workspace opens as a full-screen modal like the customer account panel */
+#adminWorkspace{position:fixed;inset:0;z-index:80;overflow-y:auto;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);padding:18px}
+#adminWorkspace>.wrap{width:min(1100px,100%);margin:0 auto;min-height:100%;padding:12px}
+#adminWorkspace #adm_login{width:min(520px,100%);margin:8vh auto 30px;padding:26px;border-radius:22px;background:#0b100d;border:1px solid var(--gold);box-shadow:0 0 45px #000}
+#adminWorkspace #adm_login h1{text-align:center;color:var(--gold2)}
+#adminWorkspace #adm_login .muted{text-align:center;color:#cfc5a8}
+#adminWorkspace #adm_login .field{display:block;width:100%;margin:12px 0;padding:13px;color:#fff}
+#adminWorkspace #adm_login #adm_send{width:100%;margin-top:12px}
+#adminWorkspace .head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+#adminWorkspace.apex-admin-hidden{display:none!important}
+
 :root{--gold:#e9bd55;--gold2:#fff0a8;--green:#00c9a7;--bg:#050706;--panel:#0d1210;--line:rgba(233,189,85,.48)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fff;font-family:'Cairo',Tahoma,Arial;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 15% 25%,rgba(0,183,148,.13),transparent 35%),radial-gradient(ellipse at 90% 65%,rgba(218,163,48,.10),transparent 35%),linear-gradient(150deg,#080b09,#030504 65%)}
@@ -228,7 +239,19 @@ $('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.da
 function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(p.querySelector('[data-fav]')?.dataset.fav)))?'':'none'})}
 loadStoreBanners();loadPaymentMethods();loadStoreProducts();
 </script>
-<script>function toggleAdminWorkspace(){const el=document.getElementById('adminWorkspace');el.classList.toggle('apex-admin-hidden');if(!el.classList.contains('apex-admin-hidden'))el.scrollIntoView({behavior:'smooth'});}</script>
+<script>
+function toggleAdminWorkspace(forceOpen){
+ const el=document.getElementById('adminWorkspace');
+ const open=typeof forceOpen==='boolean'?forceOpen:el.classList.contains('apex-admin-hidden');
+ el.classList.toggle('apex-admin-hidden',!open);
+ document.body.style.overflow=open?'hidden':'';
+ if(open){history.replaceState(null,'',location.pathname+location.search+'#adminWorkspace');}
+ else if(location.hash==='#adminWorkspace'){history.replaceState(null,'',location.pathname+location.search);}
+}
+window.addEventListener('DOMContentLoaded',()=>{
+ if(location.hash==='#adminWorkspace')toggleAdminWorkspace(true);
+});
+</script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
