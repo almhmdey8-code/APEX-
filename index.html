@@ -234,17 +234,46 @@ async function uploadImage(inputId,targetId,msgId){
 }
 $('adm_pfile').addEventListener('change',()=>uploadImage('pfile','pimage','pmsg'));
 $('adm_bfile').addEventListener('change',()=>uploadImage('bfile','bimage','bmsg'));
+let checkingAdminSession=false;
 async function checkSession(){
- const {data:{session}}=await supabase.auth.getSession();
- if(!session){$('adm_login').classList.remove('apex-admin-hidden');$('adm_dashboard').classList.add('apex-admin-hidden');return}
- if((session.user.email||'').toLowerCase()!==owner){await supabase.auth.signOut();message('loginmsg','هذا البريد غير مصرح له بدخول لوحة الإدارة.');return}
- const {data,error}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();
- if(error||!data){$('adm_login').classList.remove('apex-admin-hidden');message('loginmsg','لم يتم اعتماد هذا الحساب كمدير. تحقق من البريد ثم أعد المحاولة.');return}
- $('adm_login').classList.add('apex-admin-hidden');$('adm_dashboard').classList.remove('apex-admin-hidden');$('adm_who').textContent='تم تسجيل الدخول: '+session.user.email;loadProducts();loadOrders();
+ if(checkingAdminSession)return;
+ checkingAdminSession=true;
+ try{
+  const {data,error:sessionError}=await supabase.auth.getSession();
+  if(sessionError)throw sessionError;
+  const session=data.session;
+  if(!session){
+   $('adm_login').classList.remove('apex-admin-hidden');
+   $('adm_dashboard').classList.add('apex-admin-hidden');
+   return;
+  }
+  if((session.user.email||'').toLowerCase()!==owner){
+   $('adm_dashboard').classList.add('apex-admin-hidden');
+   $('adm_login').classList.remove('apex-admin-hidden');
+   message('adm_loginmsg','الجلسة الحالية ليست حساب المدير. أدخل بريد المدير للمتابعة.');
+   return;
+  }
+  const {data:admin,error}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();
+  if(error)throw error;
+  if(!admin){
+   $('adm_dashboard').classList.add('apex-admin-hidden');
+   $('adm_login').classList.remove('apex-admin-hidden');
+   message('adm_loginmsg','هذا الحساب غير موجود في قائمة المديرين.');
+   return;
+  }
+  $('adm_login').classList.add('apex-admin-hidden');
+  $('adm_dashboard').classList.remove('apex-admin-hidden');
+  $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email;
+  await Promise.all([loadProducts(),loadOrders()]);
+ }catch(error){
+  $('adm_dashboard').classList.add('apex-admin-hidden');
+  $('adm_login').classList.remove('apex-admin-hidden');
+  message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
+ }finally{checkingAdminSession=false}
 }
-$('adm_send').onclick=async()=>{const email=$('adm_email').value.trim().toLowerCase(),password=$('adm_password').value,button=$('adm_send'),msg=$('adm_loginmsg');if(email!==owner){message('loginmsg','فشل تسجيل الدخول: البريد غير مصرح له.');return}if(!password){message('loginmsg','فشل تسجيل الدخول: أدخل كلمة المرور.');return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';message('loginmsg','جارٍ التحقق من بيانات المدير...');try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error){message('loginmsg','فشل تسجيل الدخول: '+error.message);return}message('loginmsg','تم تسجيل الدخول بنجاح، جارٍ فتح لوحة الإدارة...');await checkSession()}catch(error){message('loginmsg','فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}};
+$('adm_send').onclick=async()=>{const email=$('adm_email').value.trim().toLowerCase(),password=$('adm_password').value,button=$('adm_send'),msg=$('adm_loginmsg');if(email!==owner){message('adm_loginmsg','فشل تسجيل الدخول: البريد غير مصرح له.');return}if(!password){message('adm_loginmsg','فشل تسجيل الدخول: أدخل كلمة المرور.');return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';message('adm_loginmsg','جارٍ التحقق من بيانات المدير...');try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error){message('adm_loginmsg','فشل تسجيل الدخول: '+error.message);return}message('adm_loginmsg','تم تسجيل الدخول بنجاح، جارٍ فتح لوحة الإدارة...');await checkSession()}catch(error){message('adm_loginmsg','فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}};
 $('adm_logout').onclick=async()=>{await supabase.auth.signOut();$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
-supabase.auth.onAuthStateChange(()=>setTimeout(checkSession,0));
+supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});\ncheckSession();
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;['products','banners','payments','orders'].forEach(id=>$(id).classList.toggle('apex-admin-hidden',id!==p));if(p==='banners')loadBanners();if(p==='payments')loadPayments()});
 async function loadProducts(){const {data,error}=await supabase.from('apex_products').select('*').order('created_at',{ascending:false});if(error){message('pmsg','تعذر تحميل المنتجات: '+error.message);return}window.apexProducts=data||[];updateKpis(window.apexProducts,window.apexOrders);$('adm_productlist').innerHTML=(data||[]).map(p=>'<div class="item row"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.category||'')+' · مخزون: '+(p.stock??0)+' · '+(p.price??'بدون سعر')+' ر.س · '+(p.active?'نشط':'مخفي')+'</small></div><div><button class="btn2" data-edit="'+p.id+'">تعديل</button> <button class="btn2" data-delete="'+p.id+'">حذف</button> <button class="btn2" data-toggle="'+p.id+'" data-active="'+p.active+'">'+(p.active?'إخفاء':'تفعيل')+'</button></div></div>').join('')||'<p class="muted">لا توجد منتجات في قاعدة البيانات بعد.</p>';
  $('adm_productlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProduct(data.find(p=>p.id==b.dataset.edit)));$('adm_productlist').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.delete));$('adm_productlist').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle,b.dataset.active==='true'))}
