@@ -30,7 +30,7 @@ footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;colo
 .banner-strip{max-width:1200px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.store-banner{position:relative;display:block;min-height:190px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#101612}.store-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}.store-banner div{position:relative;padding:25px;text-shadow:0 2px 8px #000}.store-banner h2{color:var(--gold2);margin:0 0 8px}.store-banner p{margin:0;color:#fff}.paychoice{display:block;color:#f5e9c8;text-align:right;border:1px solid #69552d;border-radius:10px;padding:12px;margin:8px 0}.paychoice input{width:auto;margin-left:8px}.paychoice small{display:block;color:#aaa;margin:5px 24px 0}
 </style></head>
 <body>
-<header class="topbar"><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
+<header class="topbar"><button class="outline" onclick="openAccount()">👤 حسابي</button><button class="outline" onclick="openCart()">🛒 السلة <b id="count">0</b></button><a class="brand" href="#"><span class="crown">👑</span> APEX</a><div class="actions"><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">☰</button></div></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>\n<section class="hero"><div class="heroart">💎</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>متجر APEX الإلكتروني</h1><p>اختيارات مميزة .. وتجربة تسوق تليق بك</p><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تسوق الآن　➜</button></div></section>
 <section class="features"><div class="feature"><b>♧</b><span>دفع آمن ومتعدد الطرق</span></div><div class="feature"><b>🚚</b><span>شحن سريع لكل المناطق</span></div><div class="feature"><b>✧</b><span>منتجات مختارة بعناية</span></div><div class="feature"><b>♧</b><span>دعم فني وخدمة عملاء</span></div></section>
 <main><div class="sectionhead"><div class="rule">━━━━ ◈ ━━━━</div><h2>منتجاتنا</h2><p>عروض مميزة ومنتجات مختارة لأجلك — بدون عرض الأسعار</p></div>
@@ -61,11 +61,11 @@ footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;colo
 <section class="about" id="contact"><h2>إدارة المتجر وخدمة العملاء</h2><p>للاستفسارات ومتابعة الطلبات والتواصل مع إدارة APEX</p><p dir="ltr" style="font-weight:800;color:#ffe6a0;font-size:18px"><a href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a class="goldbtn" style="display:inline-block;text-decoration:none" href="mailto:apex.1.shopping@gmail.com?subject=استفسار%20لمتجر%20APEX">تواصل مع خدمة العملاء</a></section>
 <section class="about"><h2>APEX 👑</h2><p>أكثر من مجرد متجر .. إنه أسلوب حياة</p><p>تسوق بثقة، واختر ما يناسبك من مجموعتنا المتجددة.</p></section></main>
 <footer><strong>APEX 👑</strong><p><a href="./admin.html" style="color:#e9bd55;border:1px solid #e9bd55;border-radius:25px;padding:8px 18px;display:inline-block">دخول المدير 🔐</a></p><p>إدارة المتجر وخدمة العملاء: <a dir="ltr" href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a href="#policies">سياسات المتجر</a>　|　<a href="mailto:apex.1.shopping@gmail.com">خدمة العملاء</a><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
-<div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><textarea id="notes" rows="3" placeholder="المدينة والعنوان أو ملاحظات الطلب"></textarea><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
+<div class="cartpanel" id="accountpanel" onclick="if(event.target===this)closeAccount()"><div class="cartbox"><button class="close" onclick="closeAccount()">×</button><h2>حساب العميل</h2><div id="accountAuth"><input id="accountEmail" type="email" placeholder="البريد الإلكتروني"><input id="accountPassword" type="password" placeholder="كلمة المرور"><input id="accountName" placeholder="الاسم الكامل"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="goldbtn" onclick="customerSignIn()">دخول</button><button class="add" onclick="customerSignUp()">إنشاء حساب</button><button class="add" onclick="customerReset()">نسيت كلمة المرور؟</button></div><p id="accountMsg" style="color:#e9bd55"></p></div><div id="accountData" hidden><p id="accountIdentity"></p><h3>إعدادات الحساب</h3><input id="profileName" placeholder="الاسم الكامل"><input id="profilePhone" placeholder="رقم الجوال"><button class="add" onclick="saveProfile()">حفظ البيانات</button><h3>طلباتي</h3><div id="myOrders">جارٍ التحميل...</div><button class="add" onclick="customerSignOut()">تسجيل الخروج</button><p id="profileMsg" style="color:#e9bd55"></p></div></div></div><div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><textarea id="notes" rows="3" placeholder="المدينة والعنوان أو ملاحظات الطلب"></textarea><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
-let cart=[],selectedPayment='';
+let cart=[],selectedPayment='',customerSession=null;
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function loadStoreBanners(){
@@ -91,6 +91,25 @@ function renderCart(){$('cartitems').innerHTML=cart.length?cart.map((n,i)=>'<div
 function removeItem(i){cart.splice(i,1);$('count').textContent=cart.length;renderCart()}
 function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
+async function refreshCustomer(session){
+ customerSession=session||null;
+ $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
+ if(!session)return;
+ const meta=session.user.user_metadata||{};
+ $('accountIdentity').textContent='مسجل الدخول: '+session.user.email;
+ $('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';
+ const {data,error}=await supabase.from('apex_orders').select('id,created_at,status,items,aramex_tracking_number').eq('user_id',session.user.id).order('created_at',{ascending:false});
+ $('myOrders').innerHTML=error?'<p>تعذر تحميل الطلبات: '+esc(error.message)+'</p>':(data||[]).map(o=>'<div class="item"><b>طلب #'+o.id+'</b><p>'+new Date(o.created_at).toLocaleString('ar-SA')+'</p><p>الحالة: '+esc(o.status)+'</p><p>المنتجات: '+esc(JSON.stringify(o.items))+'</p>'+(o.aramex_tracking_number?'<p>تتبع أرامكس: '+esc(o.aramex_tracking_number)+'</p>':'')+'</div>').join('')||'<p>لا توجد طلبات مرتبطة بحسابك.</p>';
+}
+function openAccount(){$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
+function closeAccount(){$('accountpanel').classList.remove('show')}
+async function customerSignIn(){const email=$('accountEmail').value.trim(),password=$('accountPassword').value;const {data,error}=await supabase.auth.signInWithPassword({email,password});$('accountMsg').textContent=error?'تعذر الدخول: '+error.message:'تم تسجيل الدخول';if(!error)refreshCustomer(data.session)}
+async function customerSignUp(){const email=$('accountEmail').value.trim(),password=$('accountPassword').value,name=$('accountName').value.trim();if(!name||password.length<6){$('accountMsg').textContent='أدخل الاسم وكلمة مرور من 6 أحرف على الأقل.';return}const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name}}});$('accountMsg').textContent=error?'تعذر إنشاء الحساب: '+error.message:'تم إنشاء الحساب. إذا طُلب تأكيد البريد، افتح رسالة التأكيد ثم سجّل الدخول.';if(data.session)refreshCustomer(data.session)}
+async function customerReset(){const email=$('accountEmail').value.trim();if(!email){$('accountMsg').textContent='أدخل بريدك الإلكتروني أولاً.';return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});$('accountMsg').textContent=error?'تعذر إرسال رابط الاستعادة: '+error.message:'إذا كان البريد مسجلاً، ستصلك رسالة لاستعادة كلمة المرور.'}
+async function saveProfile(){const {error}=await supabase.auth.updateUser({data:{full_name:$('profileName').value.trim(),phone:$('profilePhone').value.trim()}});$('profileMsg').textContent=error?'تعذر حفظ البيانات: '+error.message:'تم حفظ إعدادات الحساب.'}
+async function customerSignOut(){await supabase.auth.signOut();refreshCustomer(null);$('accountMsg').textContent='تم تسجيل الخروج.'}
+supabase.auth.getSession().then(({data})=>refreshCustomer(data.session));
+supabase.auth.onAuthStateChange((_event,session)=>refreshCustomer(session));
 async function sendOrder(){
  if(!cart.length){alert('أضف منتجاً إلى السلة أولاً');return}
  const name=$('customer').value.trim(),phone=$('phone').value.trim(),address=$('notes').value.trim();
@@ -100,12 +119,12 @@ async function sendOrder(){
  if(methods.length&&!picked){alert('يرجى اختيار طريقة الدفع');return}
  let paymentName='';
  if(picked){const label=picked.closest('label');paymentName=label?.querySelector('b')?.textContent||''}
- const {error}=await supabase.from('apex_orders').insert({customer_name:name,phone,address,items:cart.map(name=>({name})),notes:'طريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+'\n'+address});
+ const {error}=await supabase.from('apex_orders').insert({user_id:customerSession?.user?.id||null,customer_name:name,phone,address,items:cart.map(name=>({name})),notes:'طريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+'\n'+address});
  if(error){alert('تعذر إرسال الطلب حالياً: '+error.message);return}
  alert('تم استلام طلبك بنجاح. ستتواصل معك الإدارة لتأكيد السعر وطريقة الدفع.');
  cart=[];$('count').textContent='0';renderCart();closeCart();
 }
-window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;
+window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.closeAccount=closeAccount;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveProfile=saveProfile;window.customerSignOut=customerSignOut;
 document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.querySelector('.cat.active').classList.remove('active');b.classList.add('active');filterProducts()}));
 $('search').addEventListener('input',filterProducts);
 function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)?'':'none'})}
