@@ -66,6 +66,42 @@
 #adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders,#adminWorkspace #adm_customers{padding:26px;border:1px solid #a77c2d;border-radius:20px;background:#100c07;margin-top:18px}
 #adminWorkspace .field{background:#080603}
 @media(max-width:700px){#adminWorkspace .head{height:130px;padding:10px 12px!important}#adminWorkspace .brand{font-size:42px}#adminWorkspace .head>.btn2{min-width:86px;padding:8px;font-size:13px}#adminWorkspace .dashboard-hero{top:18px;right:12px}#adminWorkspace .dashboard-title{font-size:18px}#adminWorkspace .admin-avatar{width:48px;height:48px;font-size:28px}#adminWorkspace #adm_who{font-size:11px;max-width:135px}#adminWorkspace .kpis{gap:9px;margin:14px 0}#adminWorkspace .kpi{height:112px;border-radius:17px;padding:8px}#adminWorkspace .kpi span{font-size:13px}#adminWorkspace .kpi b{font-size:25px}#adminWorkspace .tabs button{flex-basis:118px;min-height:58px;font-size:14px}#adminWorkspace .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#adminWorkspace .quick-card{height:132px;border-radius:18px;font-size:16px}#adminWorkspace .quick-heading{font-size:22px;gap:10px}}
+</style><style>
+/* Compact dashboard sizing while retaining the approved black/gold design */
+#adminWorkspace .wrap{max-width:1450px!important;padding:0 2vw 24px!important}
+#adminWorkspace .head{height:125px!important}
+#adminWorkspace .brand{font-size:clamp(40px,5.8vw,76px)!important}
+#adminWorkspace .dashboard-hero{top:20px!important}
+#adminWorkspace .dashboard-title{font-size:clamp(20px,2vw,29px)!important}
+#adminWorkspace .admin-avatar{width:60px!important;height:60px!important;font-size:34px!important}
+#adminWorkspace .kpis{gap:16px!important;margin:18px 0!important}
+#adminWorkspace .kpi{height:145px!important;border-radius:20px!important;padding:12px!important}
+#adminWorkspace .kpi span{font-size:clamp(15px,1.5vw,21px)!important}
+#adminWorkspace .kpi b{font-size:clamp(27px,2.5vw,37px)!important}
+#adminWorkspace .tabs{margin-bottom:18px!important;border-radius:16px!important}
+#adminWorkspace .tabs button{min-height:64px!important;font-size:clamp(14px,1.45vw,20px)!important}
+#adminWorkspace .quick-section{margin:16px 0 22px!important}
+#adminWorkspace .quick-heading{font-size:clamp(22px,2vw,30px)!important;margin:8px 0 16px!important}
+#adminWorkspace .quick-grid{gap:14px!important}
+#adminWorkspace .quick-card{height:150px!important;border-radius:20px!important;padding:12px 8px!important;font-size:clamp(15px,1.45vw,20px)!important;gap:9px!important}
+#adminWorkspace .quick-icon{font-size:clamp(29px,2.8vw,40px)!important}
+#adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders,#adminWorkspace #adm_customers{padding:20px!important;margin-top:14px!important}
+@media(max-width:700px){
+#adminWorkspace .head{height:112px!important}
+#adminWorkspace .brand{font-size:36px!important}
+#adminWorkspace .dashboard-hero{top:14px!important}
+#adminWorkspace .dashboard-title{font-size:16px!important}
+#adminWorkspace .admin-avatar{width:42px!important;height:42px!important;font-size:24px!important}
+#adminWorkspace .kpis{gap:8px!important;margin:12px 0!important}
+#adminWorkspace .kpi{height:96px!important;border-radius:14px!important}
+#adminWorkspace .kpi span{font-size:12px!important}
+#adminWorkspace .kpi b{font-size:22px!important}
+#adminWorkspace .tabs button{flex-basis:105px!important;min-height:50px!important;font-size:13px!important}
+#adminWorkspace .quick-grid{gap:8px!important}
+#adminWorkspace .quick-card{height:112px!important;border-radius:15px!important;font-size:14px!important}
+#adminWorkspace .quick-icon{font-size:28px!important}
+#adminWorkspace .quick-heading{font-size:19px!important}
+}
 </style></head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX 👑</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="username"><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
