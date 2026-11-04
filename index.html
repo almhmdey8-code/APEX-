@@ -293,6 +293,8 @@ function closeAccount(){$('accountpanel').classList.remove('show')}
    authenticated=true;
    msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';
    await refreshCustomer(data.session);
+   $('accountpanel').classList.add('show');
+   $('accountForm').hidden=true;
   }catch(error){
    console.error('APEX LOGIN ERROR:',error);
    const reason=error?.message||String(error);
