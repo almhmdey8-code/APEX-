@@ -263,7 +263,7 @@ async function loadStoreBanners(){
 }
 async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code').eq('enabled',true).eq('method_type','manual').order('sort_order',{ascending:true});
+ const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code').eq('enabled',true).eq('orders_enabled',true).eq('method_type','manual').order('sort_order',{ascending:true});
  if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
  const methods=(data||[]).filter(m=>m.country_code===storeCurrencyCountry);
  const manual=methods.map(m=>'<label class="paychoice"><input type="radio" name="paymentMethod" value="'+m.id+'"> <b>'+esc(m.name)+'</b>'+(m.instructions?'<small>'+esc(m.instructions)+'</small>':'')+'</label>').join('');
