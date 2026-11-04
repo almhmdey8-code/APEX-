@@ -271,11 +271,46 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 .customer-account-nav button b{font-size:23px;line-height:1.1}.customer-account-nav button small{font-size:10px;color:#f5e8c4;font-weight:900}
 .customer-account-nav button:active,.customer-account-nav button:focus-visible{background:#c99a362b;outline:1px solid #d8b65f}
 @media(max-width:380px){.customer-account-nav{gap:1px;padding:6px 2px}.customer-account-nav button b{font-size:20px}.customer-account-nav button small{font-size:9px}}
-</style><style>.products-description-below{margin:24px auto 36px;text-align:center;color:#b8b5a9;font-size:14px;line-height:1.9;max-width:850px;padding:14px 18px;border-top:1px solid #8e6d2e;border-bottom:1px solid #8e6d2e}</style></head>
+</style><style>.products-description-below{margin:24px auto 36px;text-align:center;color:#b8b5a9;font-size:14px;line-height:1.9;max-width:850px;padding:14px 18px;border-top:1px solid #8e6d2e;border-bottom:1px solid #8e6d2e}</style><style>
+/* Final APEX compact layout and single-source navigation */
+.store-bottom-nav,.customer-account-nav,.user-bottom-nav{display:none!important}
+#accountpanel .account-content{max-width:1040px;padding:10px clamp(10px,2vw,22px) 24px}
+#accountpanel .account-head{height:62px}
+#accountpanel .account-gem-hero{min-height:112px;padding:13px 18px;margin:9px 0;border-radius:15px}
+#accountpanel .account-gem{font-size:58px}
+#accountpanel .account-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:9px 0}
+#accountpanel .account-menu button{min-height:56px;border-radius:11px!important;font-size:11px!important;padding:7px 4px!important}
+#accountpanel .account-panel-card{padding:12px;margin:8px 0;border-radius:14px}
+#accountpanel .account-panel-card h3{font-size:16px;margin-bottom:8px}
+#accountpanel .account-panel-card input,#accountpanel .account-panel-card select{padding:9px 11px;margin:4px 0;font-size:13px}
+#accountpanel .account-panel-card button{min-height:34px;padding:7px 12px;font-size:12px}
+#accountpanel .user-service-title{margin:13px 2px 8px}
+#accountpanel .user-services{gap:7px}
+#accountpanel .user-services button{min-height:74px;padding:9px 10px;border-radius:12px}
+#accountpanel .user-services b{font-size:19px}
+#accountpanel .user-services span{font-size:11px}
+#accountpanel .user-services small{font-size:9px}
+#accountpanel .user-wallet{min-height:78px;padding:11px 14px;border-radius:14px}
+#accountpanel .user-wallet h3{font-size:16px}
+#accountpanel .user-wallet>strong{font-size:21px}
+#accountpanel .account-section-heading{margin-bottom:8px;padding-bottom:7px}
+#accountpanel .account-section-title{font-size:16px}
+#accountpanel .account-profile-summary{padding:8px 10px;margin:6px 0 10px}
+#accountpanel .account-profile-summary p{font-size:12px;margin:5px 0}
+@media(max-width:560px){
+ #accountpanel .account-head{height:56px}
+ #accountpanel .account-gem-hero{min-height:92px;padding:10px}
+ #accountpanel .account-gem{font-size:46px}
+ #accountpanel .account-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ #accountpanel .account-menu button{min-height:52px;font-size:10px!important}
+ #accountpanel .user-services{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #accountpanel .account-panel-card{padding:10px}
+}
+</style></head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
-<section class="hero apex-hero"><div class="heroart" aria-hidden="true">🛍️</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>تسوّق الآن</h1><p>اكتشف منتجات مختارة بعناية<br>بأفضل الأسعار وتجربة تليق بك</p><div class="hero-caption">مع متجر <b>APEX</b></div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تصفح المنتجات　🛒</button></div></section><section class="category-showcase" aria-label="تسوق حسب القسم"><button class="category-tile" onclick="document.querySelector('.cat[data-cat=&quot;الإلكترونيات&quot;]').click()"><span>🎧</span><b>الإلكترونيات</b></button><button class="category-tile" onclick="document.querySelector('.cat[data-cat=&quot;الأزياء&quot;]').click()"><span>⌚</span><b>أزياء وملابس</b></button><button class="category-tile" onclick="document.querySelector('.cat[data-cat=&quot;الأجهزة المنزلية&quot;]').click()"><span>🛋️</span><b>المنزل والمطبخ</b></button><button class="category-tile" onclick="document.querySelector('.cat[data-cat=&quot;الجمال والعناية&quot;]').click()"><span>✨</span><b>الجمال والعناية</b></button></section>
+<section class="hero apex-hero"><div class="heroart" aria-hidden="true">🛍️</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>تسوّق الآن</h1><p>اكتشف منتجات مختارة بعناية<br>بأفضل الأسعار وتجربة تليق بك</p><div class="hero-caption">مع متجر <b>APEX</b></div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تصفح المنتجات　🛒</button></div></section><section class="category-showcase" aria-label="تسوق حسب القسم"><button class="category-tile" onclick="filterCategory('الإلكترونيات')"><span>🎧</span><b>الإلكترونيات</b></button><button class="category-tile" onclick="filterCategory('الأزياء')"><span>⌚</span><b>أزياء وملابس</b></button><button class="category-tile" onclick="filterCategory('الأجهزة المنزلية')"><span>🛋️</span><b>المنزل والمطبخ</b></button><button class="category-tile" onclick="filterCategory('الجمال والعناية')"><span>✨</span><b>الجمال والعناية</b></button></section>
 <main>
 <div class="categories" id="storeCategories"><button class="cat active" data-cat="الكل">الكل</button><button class="cat" data-cat="الإلكترونيات">الإلكترونيات</button><button class="cat" data-cat="الأزياء">الأزياء</button><button class="cat" data-cat="الأجهزة المنزلية">الأجهزة المنزلية</button><button class="cat" data-cat="الجمال والعناية">الجمال والعناية</button></div>
 <div style="max-width:520px;margin:0 auto 25px"><input id="search" placeholder="ابحث عن منتج..." style="width:100%;padding:13px 18px;border-radius:30px;border:1px solid var(--line);background:#0b100d;color:white;font:inherit"></div>
@@ -295,15 +330,9 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 </div></section>
 <section class="about" id="contact"><h2>إدارة المتجر وخدمة العملاء</h2><p>للاستفسارات ومتابعة الطلبات والتواصل مع إدارة APEX</p><p dir="ltr" style="font-weight:800;color:#ffe6a0;font-size:18px"><a href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a class="goldbtn" style="display:inline-block;text-decoration:none" href="mailto:apex.1.shopping@gmail.com?subject=استفسار%20لمتجر%20APEX">تواصل مع خدمة العملاء</a></section>
 <section class="about"><h2>APEX 👑</h2><p>أكثر من مجرد متجر .. إنه أسلوب حياة</p><p>تسوق بثقة، واختر ما يناسبك من مجموعتنا المتجددة.</p></section></main>
-<nav class="store-bottom-nav" aria-label="التنقل الرئيسي"><button type="button" onclick="openCustomerProfile()"><b>♙</b><small>حسابي</small></button><button type="button" onclick="document.getElementById('showFavorites').click();document.getElementById('products').scrollIntoView({behavior:'smooth'})"><b>♡</b><small>المفضلة</small></button><button type="button" onclick="openCart()"><b>🛒</b><small>السلة</small></button><button type="button" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"><b>▦</b><small>المنتجات</small></button><button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})"><b>⌂</b><small>الرئيسية</small></button></nav><footer><strong>APEX 👑</strong><p>إدارة المتجر وخدمة العملاء: <a dir="ltr" href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a href="#policies">سياسات المتجر</a>　|　<a href="mailto:apex.1.shopping@gmail.com">خدمة العملاء</a>　|　<a href="admin.html">دخول المدير</a><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
+<footer><strong>APEX 👑</strong><p>إدارة المتجر وخدمة العملاء: <a dir="ltr" href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a href="#policies">سياسات المتجر</a>　|　<a href="mailto:apex.1.shopping@gmail.com">خدمة العملاء</a>　|　<a href="admin.html">دخول المدير</a><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
 <div class="cartpanel" id="accountpanel" onclick="if(event.target===this)closeAccount()"><div class="cartbox account-shell"><header class="account-head"><button type="button" class="account-profile-shortcut" onclick="closeAccount()" aria-label="إغلاق بطاقة الحساب" title="إغلاق">×</button><div class="account-brand">👑 APEX<small>SHOP SMART · LIVE BETTER</small></div><span style="font-size:27px;color:#f5d879">♢</span></header><div class="account-content"><div id="passwordRecovery" hidden class="account-panel-card"><h3>تعيين كلمة مرور جديدة</h3><input id="newPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)"><button class="goldbtn" onclick="saveNewPassword()">حفظ كلمة المرور</button></div><div id="accountData" hidden>
-<nav class="customer-account-nav" aria-label="تنقل حساب العميل">
-<button type="button" onclick="customerNavAccount()"><b>♙</b><small>حسابي</small></button>
-<button type="button" onclick="customerNavFavorites()"><b>♡</b><small>المفضلة</small></button>
-<button type="button" onclick="customerNavCart()"><b>🛒</b><small>السلة</small></button>
-<button type="button" onclick="customerNavProducts()"><b>▦</b><small>المنتجات</small></button>
-<button type="button" onclick="customerNavHome()"><b>⌂</b><small>الرئيسية</small></button>
-</nav>
+
 <div class="user-hub">
 <header class="user-hub-top"><div><small>APEX MEMBER AREA</small><h2>حسابي</h2></div></header>
 <section class="user-diamond-hero"><div class="user-hero-copy"><span>مرحباً بك في عالم APEX</span><h1>تجربتك، <em>بمستوى النخبة</em></h1><p>تابع حسابك وطلباتك وخدماتك من مكان واحد.</p></div><div class="user-diamond">◆<i>✦</i></div><div class="user-glow"></div></section>
@@ -312,8 +341,7 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 <button onclick="showAccountSection('orders')"><b>▤</b><span>طلباتي</span></button>
 <button onclick="showAccountSection('wallet')"><b>◈</b><span>المحفظة</span></button>
 <button onclick="showAccountSection('referrals')"><b>♧</b><span>دعوة الأصدقاء</span></button>
-<button onclick="customerNavFavorites()"><b>♡</b><span>المفضلة</span></button>
-<button onclick="closeAccount();openCart()"><b>⌖</b><span>عناوين الشحن</span></button>
+
 </div>
 <section class="user-wallet" role="button" tabindex="0" onclick="showAccountSection('wallet')"><div><small>APEX WALLET</small><h3>محفظتي</h3><p>الرصيد المتاح</p></div><strong id="walletBalanceSummary">0.00 <small>ر.س</small></strong><span class="wallet-gem">◇</span><small class="wallet-note">شحن الرصيد والشراء من المحفظة</small></section>
 <div class="user-service-title"><h3>خدمات الحساب</h3><span>كل ما تحتاجه في مكان واحد</span></div>
@@ -322,7 +350,7 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 <button onclick="showAccountSection('transit')"><b>⇢</b><span>قيد الشحن</span><small>حالة التوصيل</small></button>
 <button onclick="showAccountSection('notifications');loadCustomerNotifications()"><b>♧</b><span>الإشعارات</span><small>آخر التحديثات</small></button>
 <button onclick="location.href='mailto:apex.1.shopping@gmail.com'"><b>✉</b><span>الدعم والمساعدة</span><small>تواصل معنا</small></button>
-<button onclick="showAccountSection('profile')"><b>⚙</b><span>إعدادات الحساب</span><small>بياناتك الشخصية</small></button>
+
 
 </div>
 <section id="accountSection-profile" class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">✦ بيانات الحساب</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div class="account-profile-summary"><p>الاسم: <strong id="accountDisplayName">—</strong></p><p>البريد الإلكتروني: <strong id="accountDisplayEmail" dir="ltr">—</strong></p><p>رقم الجوال: <strong id="accountDisplayPhone" dir="ltr">—</strong></p><p>الموقع: <strong id="accountDisplayLocation">—</strong></p></div><h4 style="color:#f4d98a">تعديل بيانات الحساب</h4><label for="profileName">تعديل الاسم</label><input id="profileName" autocomplete="name" placeholder="الاسم الكامل"><label for="profilePhone">تعديل الرقم</label><input id="profilePhone" type="tel" autocomplete="tel" placeholder="رقم الجوال"><label for="profileAddress">تعديل الموقع / العنوان</label><input id="profileAddress" autocomplete="street-address" placeholder="المدينة أو العنوان"><button class="add" type="button" onclick="saveProfile()">حفظ البيانات</button><p id="profileMsg" style="color:#e9bd55"></p><div style="border-top:1px solid #6c552c;margin-top:15px;padding-top:12px"><h4 style="color:#f4d98a">تعديل البريد الإلكتروني</h4><p id="profileCurrentEmail" dir="ltr" style="color:#c9bd9a"></p><input id="profileEmailNew" type="email" autocomplete="email" placeholder="البريد الإلكتروني الجديد"><button class="add" type="button" onclick="saveProfileEmail()">تحديث البريد الإلكتروني</button><p id="profileEmailMsg" style="color:#e9bd55"></p></div><button type="button" class="user-logout" style="width:100%;margin-top:18px" onclick="customerSignOut()">تسجيل الخروج</button></section>
@@ -339,7 +367,7 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 <section id="accountSection-referrals" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♧ دعوة الأصدقاء والمكافآت</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><p style="color:#bbb;font-size:12px">شارك كودك مع أصدقائك، وكل 5 دعوات مؤهلة تمنحك 50 ريالاً في محفظتك.</p>
 <div style="border:1px solid #8e6d2e;border-radius:14px;padding:14px;text-align:center;background:#0b0b08"><small style="color:#c9a34d">كود الدعوة الخاص بك</small><div id="myReferralCode" style="font-size:27px;color:#f2d37d;font-weight:900;letter-spacing:2px">جارٍ التحميل...</div><button class="add" type="button" onclick="copyMyReferralCode()">نسخ كود الدعوة</button></div>
 <div style="margin-top:16px;display:flex;justify-content:space-between;gap:8px"><b>تقدمك نحو المكافأة</b><strong id="referralProgressText">0 / 5</strong></div><div style="height:9px;background:#29251a;border-radius:20px;overflow:hidden;margin:9px 0"><div id="referralProgressBar" style="height:100%;width:0;background:linear-gradient(90deg,#987022,#f5d879);border-radius:20px"></div></div><h3 id="referralRemaining" style="color:#f2d37d">تبقى 5 أشخاص</h3><p id="referralRewardStatus" style="color:#aaa;font-size:12px"></p><div id="referralHistory"></div></section>
-<nav class="user-bottom-nav"><button type="button" onclick="closeAccount();window.location.replace(window.location.pathname+'?apexrefresh='+Date.now()+'#products')">⌂<small>الرئيسية</small></button><button type="button" onclick="showAccountSection('orders')">▤<small>طلباتي</small></button><button type="button" onclick="document.getElementById('showFavorites').click()">♡<small>المفضلة</small></button><button type="button" onclick="location.href='mailto:apex.1.shopping@gmail.com'">✉<small>الدعم</small></button><button type="button" onclick="openMoreAccount()">☰<small>المزيد</small></button></nav>
+
 </div></div></div></div><div id="deliveryMapModal" role="dialog" aria-modal="true" aria-labelledby="deliveryMapTitle"><div class="delivery-map-card"><h3 id="deliveryMapTitle" style="margin:2px 0;color:#f2d37d">تحديد موقع التوصيل</h3><p id="deliveryMapMessage" style="font-size:13px;color:#ddd;margin:6px 0">جارٍ تحديد موقعك تلقائياً…</p><div id="deliveryMap"></div><p style="font-size:12px;color:#bbb">يمكنك تحريك العلامة إلى موقع المنزل بدقة، ثم اضغط «موافقة» لاعتماد الموقع.</p><div class="delivery-map-actions"><button type="button" onclick="confirmDeliveryLocation()">موافقة واعتماد الموقع</button><button type="button" class="secondary" onclick="closeDeliveryMap()">إلغاء</button></div></div></div><div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><label for="shippingMethod" style="display:block;color:var(--gold);margin:10px 0 5px">طريقة الشحن</label><select id="shippingMethod" style="width:100%;padding:12px;border:1px solid var(--gold);border-radius:10px;background:#101612;color:#fff;margin-bottom:10px"><option value="توصيل إلى المنزل">توصيل إلى المنزل</option><option value="استلام بالتنسيق مع المتجر">استلام بالتنسيق مع المتجر</option></select><textarea id="notes" rows="3" placeholder="المدينة والحي والشارع أو ملاحظات إضافية (اختياري)"></textarea><button type="button" class="goldbtn" style="width:100%;margin:5px 0" onclick="selectDeliveryLocation()">📍 تحديد موقع التوصيل على الخريطة</button><p id="locationStatus" style="font-size:12px;color:#aaa">حدد موقعك لإرساله مع الطلب، أو اكتب عنوانك في الحقل أعلاه.</p><a id="locationMapLink" hidden target="_blank" rel="noopener" style="color:var(--gold)">عرض الموقع المحدد على الخريطة</a><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
@@ -401,12 +429,12 @@ function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('
 function removeItem(i){cart.splice(i,1);$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0);renderCart()}
 function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
-function showAccountSection(name){['profile','orders','shipping','transit','wallet','referrals','notifications'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name})}
+function showAccountSection(name){const allowed=['profile','orders','shipping','transit','wallet','referrals','notifications'];if(!allowed.includes(name))return;allowed.forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name});const target=$('accountSection-'+name);if(target)target.scrollIntoView({behavior:'smooth',block:'nearest'})}
 function showAccountHome(){['profile','orders','shipping','transit','wallet','referrals','notifications'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=true});const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavAccount(){showAccountHome();const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
-function customerNavFavorites(){closeAccount();$('showFavorites').click();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavFavorites(){closeAccount();$('showFavorites').dataset.only='1';filterProducts();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavCart(){closeAccount();openCart()}
-function customerNavProducts(){closeAccount();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavProducts(){closeAccount();$('showFavorites').dataset.only='0';document.querySelector('.cat.active')?.classList.remove('active');document.querySelector('.cat[data-cat="الكل"]')?.classList.add('active');filterProducts();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavHome(){closeAccount();window.scrollTo({top:0,behavior:'smooth'})}
 
 
@@ -461,7 +489,13 @@ async function loadCustomerNotifications(){if(!customerSession){$('customerNotif
 async function refreshCustomer(session){
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
- if(!session)return;
+ $('storefrontAuth').hidden=!!session;
+ if(!session){
+  $('accountForm').hidden=false;
+  $('authLoginFields').hidden=false;
+  $('authSignupFields').hidden=true;
+  return;
+ }
  const meta=session.user.user_metadata||{};
  const country=String(meta.country||'').toUpperCase();const nextCountry=(country==='YE'||country.includes('YEMEN')||country.includes('اليمن'))?'YE':'SA';if(storeCurrencyCountry!==nextCountry){storeCurrencyCountry=nextCountry;loadStoreProducts();loadPaymentMethods();}
  $('customer').value=meta.full_name||$('customer').value;$('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('profileAddress').value=meta.address||'';$('profileEmailNew').value='';$('accountDisplayName').textContent=meta.full_name||'غير محدد';$('accountDisplayEmail').textContent=session.user.email||'غير متوفر';$('accountDisplayPhone').textContent=meta.phone||'غير محدد';$('accountDisplayLocation').textContent=[meta.address,meta.country].filter(Boolean).join('، ')||'غير محدد';$('profileCurrentEmail').textContent='البريد الحالي: '+(session.user.email||'غير متوفر');
@@ -478,9 +512,9 @@ async function refreshCustomer(session){
  $('shippingOrders').innerHTML=shipping.map(card).join('')||'<p>لا توجد طلبات شحن حالياً.</p>';
  const transit=orders.filter(o=>o.status==='shipped');
  $('transitOrders').innerHTML=transit.map(card).join('')||'<p>لا توجد طلبات قيد الشحن حالياً.</p>';
- showAccountSection('profile');
+ showAccountHome();
 }
-async async function openCustomerProfile(){$('accountpanel').classList.add('customer-profile-card-mode','show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
+async function openCustomerProfile(){$('accountpanel').classList.add('customer-profile-card-mode','show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
 function openAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
 async function openMoreAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session){showAccountSection('orders');$('accountSection-orders').scrollIntoView({behavior:'smooth',block:'start'})}}
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode')}
@@ -559,12 +593,13 @@ async function sendOrder(){
  }
  cart=[];$('count').textContent='0';renderCart();closeCart();
 }
-window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.loadCustomerNotifications=loadCustomerNotifications;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
+window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.loadCustomerNotifications=loadCustomerNotifications;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
 bindCategoryFilters();
 $('search').addEventListener('input',filterProducts);
 $('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
 $('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
-function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(p.querySelector('[data-fav]')?.dataset.fav)))?'':'none'})}
+function filterProducts(){const active=document.querySelector('.cat.active');const cat=active?.dataset.cat||'الكل',q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{const favorite=p.querySelector('[data-fav]')?.dataset.fav;p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(favorite)))?'':'none'})}
+function filterCategory(name){const button=[...document.querySelectorAll('.cat')].find(x=>x.dataset.cat===name);if(button)button.click();else{document.querySelector('.cat[data-cat="الكل"]')?.click();toast('هذا القسم غير متاح حالياً');}$('products').scrollIntoView({behavior:'smooth',block:'start'})}
 loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
 </script>
 
