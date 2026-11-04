@@ -419,10 +419,12 @@ async function sendOrder(){
   if(error||!data?.success){alert('تعذر الشراء من المحفظة: '+(data?.error||error?.message||'خطأ غير معروف'));return}
   alert('تم الدفع من المحفظة واستلام طلبك رقم #'+data.order_id+'.');await loadCustomerWallet(customerSession);
  }else{
-  const orderItems=cart.map(x=>({id:x.id,name:x.name,quantity:x.quantity,unit_price_sar:x.price}));
-  const {error}=await supabase.from('apex_orders').insert({user_id:customerSession?.user?.id||null,customer_name:name,phone,address:orderAddress,items:orderItems,notes:orderNotes});
-  if(error){alert('تعذر إرسال الطلب حالياً: '+error.message);return}
-  alert('تم استلام طلبك بنجاح. ستتواصل معك الإدارة لتأكيد طريقة الشحن والتكلفة.');
+  if(!customerSession?.user){alert('سجل الدخول أولاً لإرسال الطلب ومتابعته من حسابك.');openAccount();return}
+  const paymentMethodId=Number(picked?.value);
+  if(!Number.isSafeInteger(paymentMethodId)||paymentMethodId<=0){alert('اختر وسيلة دفع متاحة للطلبات.');return}
+  const {data,error}=await supabase.functions.invoke('apex-create-order',{body:{customer_name:name,phone,address:orderAddress,notes:orderNotes,shipping_method:shipping,items,payment_method_id:paymentMethodId,request_id:crypto.randomUUID()}});
+  if(error||!data?.success){alert('تعذر إنشاء الطلب: '+(data?.error||error?.message||'خطأ غير معروف'));return}
+  alert('تم استلام طلبك رقم #'+data.order_id+'. حالة الدفع: بانتظار التأكيد. لن يتم اعتبار الطلب مدفوعاً قبل التحقق.');
  }
  cart=[];$('count').textContent='0';renderCart();closeCart();
 }
