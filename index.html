@@ -224,6 +224,8 @@ function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([.
 function toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function formatStorePrice(amount){const n=Number(amount||0);return storeCurrencyCountry==='YE'?(n*storeExchangeRate).toLocaleString('ar-YE',{maximumFractionDigits:0})+' ر.ي':n.toFixed(2)+' ر.س'}
+async function loadStoreCurrency(){const {data,error}=await supabase.from('apex_store_settings').select('exchange_rate').eq('setting_key','currency').maybeSingle();if(!error&&data?.exchange_rate>0)storeExchangeRate=Number(data.exchange_rate);await loadStoreProducts()}
 async function loadStoreProducts(){
  const box=$('products');if(!box)return;
  const {data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,active').eq('active',true).order('created_at',{ascending:false});
@@ -233,7 +235,7 @@ async function loadStoreProducts(){
  box.innerHTML=products.map(p=>{
   const image=/^https:\/\//i.test(p.image_url||'')?p.image_url:'';
   const demo=p.price===null||p.price===undefined;
-  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3>'+(demo?'<div class="productfoot"><small class="price-undetermined">السعر غير محدد</small><button class="add cart-icon" type="button" data-add="'+esc(p.name)+'" aria-label="إضافة المنتج إلى السلة" title="إضافة المنتج إلى السلة">🛒+</button></div>':'')+'</article>';
+  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3><div class="productfoot"><strong class="product-price">'+(demo?'السعر غير محدد':formatStorePrice(p.price))+'</strong>'+(demo?'':'<button class="add cart-icon" type="button" data-add="'+esc(p.name)+'" aria-label="إضافة المنتج إلى السلة" title="إضافة المنتج إلى السلة">🛒+</button>')+'</div></article>';
  }).join('');
  box.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
  box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
@@ -326,6 +328,7 @@ async function refreshCustomer(session){
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  if(!session)return;
  const meta=session.user.user_metadata||{};
+ const country=String(meta.country||'').toUpperCase();const nextCountry=(country==='YE'||country.includes('YEMEN')||country.includes('اليمن'))?'YE':'SA';if(storeCurrencyCountry!==nextCountry){storeCurrencyCountry=nextCountry;loadStoreProducts();}
  $('customer').value=meta.full_name||$('customer').value;$('profileName').value=meta.full_name||'';
  $('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('customer').value=meta.full_name||$('customer').value;
  await loadCustomerWallet(session);
@@ -418,7 +421,7 @@ $('search').addEventListener('input',filterProducts);
 $('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
 $('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
 function filterProducts(){let cat=document.querySelector('.cat.active').dataset.cat,q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(p.querySelector('[data-fav]')?.dataset.fav)))?'':'none'})}
-loadStoreBanners();loadPaymentMethods();loadStoreProducts();
+loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
 </script>
 
 </body></html>
