@@ -310,7 +310,7 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
-<section class="hero apex-hero"><div class="heroart" aria-hidden="true">🛍️</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>تسوّق الآن</h1><p>اكتشف منتجات مختارة بعناية<br>بأفضل الأسعار وتجربة تليق بك</p><div class="hero-caption">مع متجر <b>APEX</b></div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تصفح المنتجات　🛒</button></div></section><section class="category-showcase" aria-label="تسوق حسب القسم"><button class="category-tile" onclick="filterCategory('الإلكترونيات')"><span>🎧</span><b>الإلكترونيات</b></button><button class="category-tile" onclick="filterCategory('الأزياء')"><span>⌚</span><b>أزياء وملابس</b></button><button class="category-tile" onclick="filterCategory('الأجهزة المنزلية')"><span>🛋️</span><b>المنزل والمطبخ</b></button><button class="category-tile" onclick="filterCategory('الجمال والعناية')"><span>✨</span><b>الجمال والعناية</b></button></section>
+<section class="hero apex-hero"><div class="heroart" aria-hidden="true">🛍️</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>تسوّق الآن</h1><p>اكتشف منتجات مختارة بعناية<br>بأفضل الأسعار وتجربة تليق بك</p><div class="hero-caption">مع متجر <b>APEX</b></div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تصفح المنتجات　🛒</button></div></section>
 <main>
 <div class="categories" id="storeCategories"><button class="cat active" data-cat="الكل">الكل</button><button class="cat" data-cat="الإلكترونيات">الإلكترونيات</button><button class="cat" data-cat="الأزياء">الأزياء</button><button class="cat" data-cat="الأجهزة المنزلية">الأجهزة المنزلية</button><button class="cat" data-cat="الجمال والعناية">الجمال والعناية</button></div>
 <div style="max-width:520px;margin:0 auto 25px"><input id="search" placeholder="ابحث عن منتج..." style="width:100%;padding:13px 18px;border-radius:30px;border:1px solid var(--line);background:#0b100d;color:white;font:inherit"></div>
@@ -490,6 +490,7 @@ async function refreshCustomer(session){
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
+ $('.account-entry').hidden=!session;
  if(!session){
   $('accountForm').hidden=false;
   $('authLoginFields').hidden=false;
@@ -514,7 +515,7 @@ async function refreshCustomer(session){
  $('transitOrders').innerHTML=transit.map(card).join('')||'<p>لا توجد طلبات قيد الشحن حالياً.</p>';
  showAccountHome();
 }
-async function openCustomerProfile(){$('accountpanel').classList.add('customer-profile-card-mode','show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
+async function openCustomerProfile(){$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
 function openAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
 async function openMoreAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session){showAccountSection('orders');$('accountSection-orders').scrollIntoView({behavior:'smooth',block:'start'})}}
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode')}
