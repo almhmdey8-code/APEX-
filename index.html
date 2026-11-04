@@ -279,7 +279,7 @@ function showAccountSection(name){['profile','orders','shipping','transit','wall
 
 let walletPaymentMethods=[];
 function walletMoney(v){return Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س'}
-function walletMethodChanged(){const m=walletPaymentMethods.find(x=>String(x.id)===$('walletPaymentMethod').value);$('walletPaymentInstructions').textContent=m?.instructions||''}
+function walletMethodChanged(){const m=walletPaymentMethods.find(x=>String(x.id)===$('walletPaymentMethod').value);if(!m){$('walletPaymentInstructions').textContent='';return}const details=[m.instructions,m.account_holder?'اسم المستفيد: '+m.account_holder:'',m.account_number?'رقم الحساب/المحفظة: '+m.account_number:'',m.account_iban?'IBAN: '+m.account_iban:''].filter(Boolean);$('walletPaymentInstructions').textContent=details.join('\n')}
 async function loadCustomerWallet(session){
  try{
   const uid=session.user.id;
@@ -290,7 +290,7 @@ async function loadCustomerWallet(session){
    supabase.from('apex_referral_signups').select('status,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_wallet_topups').select('id,amount_sar,payment_method_name,status,created_at,admin_note').eq('user_id',uid).order('created_at',{ascending:false}).limit(20),
-   supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,wallet_topup_enabled').eq('enabled',true).eq('wallet_topup_enabled',true).order('sort_order')
+   supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,wallet_topup_enabled,account_holder,account_number,account_iban,integration_status').eq('enabled',true).eq('wallet_topup_enabled',true).order('sort_order')
   ]);
   if(w.error)throw w.error;
   const bal=Number(w.data?.balance_sar||0);$('walletBalance').textContent=walletMoney(bal);$('walletBalanceSummary').innerHTML=walletMoney(bal).replace(' ر.س',' <small>ر.س</small>');
@@ -303,7 +303,7 @@ async function loadCustomerWallet(session){
   if(methods.error)throw methods.error;
   const customerCountry=String(session.user.user_metadata?.country||'').toLowerCase();const countryCode=(customerCountry.includes('اليمن')||customerCountry.includes('yemen')||customerCountry==='ye')?'YE':'SA';walletPaymentMethods=(methods.data||[]).filter(x=>x.method_type==='manual'&&x.country_code===countryCode);
   $('walletPaymentMethod').innerHTML='<option value="">اختر وسيلة الدفع</option>'+walletPaymentMethods.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');
-  $('walletPaymentInstructions').textContent=walletPaymentMethods.length?'اختر وسيلة الدفع لعرض تعليماتها.':countryCode==='YE'?'لا توجد وسيلة تحويل يمنية مفعلة حالياً. سيقوم المدير بتفعيلها من لوحة الإدارة.':'وسائل الدفع السعودية الإلكترونية قيد الربط الآمن، ولن يُضاف الرصيد قبل تأكيد الدفع.';
+  $('walletPaymentInstructions').textContent=walletPaymentMethods.length?'اختر وسيلة الدفع لعرض بيانات التحويل وتعليماتها.':countryCode==='YE'?'لا توجد وسيلة تحويل يمنية مفعلة حالياً. سيقوم المدير بإضافة بيانات الحساب وتفعيلها.':'وسائل الدفع السعودية الإلكترونية مجهزة في لوحة المدير، وتنتظر بيانات مزود الدفع واختبار الربط الآمن.';
   if(c.error)throw c.error;$('myReferralCode').textContent=c.data?.code||'سيتم إنشاء كودك تلقائياً';
   if(r.error)throw r.error;
   const count=(r.data||[]).filter(x=>x.status==='confirmed').length,progress=count===0?0:(count%5===0?5:count%5),remaining=5-progress;
