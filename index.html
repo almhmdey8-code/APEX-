@@ -348,7 +348,14 @@ main{max-width:1320px;padding:26px clamp(12px,2.5vw,28px) 75px}.sectionhead{marg
 }
 #storefrontAuth[hidden]{display:none!important}
 </style>
-</head>
+<style id="apex-product-multi-gallery">
+.product-gallery{width:100%;margin:0 auto 12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.product-gallery>.product-main-image{display:block;width:100%;height:190px;object-fit:contain;border-radius:12px;background:#fff}
+.product-thumbs{width:100%;display:flex;justify-content:center;gap:7px;flex-wrap:wrap}
+.product-thumb{width:43px;height:43px;padding:2px;border:1px solid #80672e;border-radius:8px;background:#17130b;overflow:hidden;cursor:pointer}
+.product-thumb.active{border:2px solid #f2c65d;box-shadow:0 0 8px #d8a83b88}
+.product-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:5px}
+</style></head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
@@ -426,17 +433,23 @@ function formatStorePrice(amount){const n=Number(amount||0);return storeCurrency
 async function loadStoreCurrency(){const {data,error}=await supabase.from('apex_store_settings').select('exchange_rate').eq('setting_key','currency').maybeSingle();if(!error&&data?.exchange_rate>0)storeExchangeRate=Number(data.exchange_rate);await loadStoreProducts()}
 async function loadStoreProducts(){
  const box=$('products');if(!box)return;
- const {data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,active').eq('active',true).order('created_at',{ascending:false});
+ const {data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,image_urls,active').eq('active',true).order('created_at',{ascending:false});
  if(error){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل المنتجات. يرجى المحاولة لاحقاً.</p>';console.error(error);return}
  const products=data||[];
  if(!products.length){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#c9bd9a;padding:35px">لا توجد منتجات متاحة حالياً. نعمل على إضافة منتجات جديدة قريباً.</p>';return}
  box.innerHTML=products.map(p=>{
-  const image=/^https:\/\//i.test(p.image_url||'')?p.image_url:'';
+  const images=[...new Set([...(Array.isArray(p.image_urls)?p.image_urls:[]),p.image_url].filter(x=>/^https:\/\//i.test(x||'')))].slice(0,5);
+  const image=images[0]||'';
+  const gallery=image?'<div class="product-gallery"><img class="product-main-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">'+(images.length>1?'<div class="product-thumbs">'+images.map((src,n)=>'<button type="button" class="product-thumb '+(n===0?'active':'')+'" data-product-image="'+esc(src)+'" aria-label="عرض الصورة '+(n+1)+'"><img loading="lazy" src="'+esc(src)+'" alt=""></button>').join('')+'</div>':'')+'</div>':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>';
   const demo=p.price===null||p.price===undefined;
-  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+(image?'<img loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>')+'<h3>'+esc(p.name)+'</h3><div class="productfoot"><strong class="product-price">'+(demo?'السعر غير محدد':formatStorePrice(p.price))+'</strong>'+(demo?'':'<button class="add cart-icon" type="button" data-add-id="'+esc(p.id)+'" data-add-name="'+esc(p.name)+'" data-add-price="'+Number(p.price)+'" aria-label="إضافة المنتج إلى السلة" title="إضافة المنتج إلى السلة">🛒+</button>')+'</div></article>';
+  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+gallery+'<h3>'+esc(p.name)+'</h3><div class="productfoot"><strong class="product-price">'+(demo?'السعر غير محدد':formatStorePrice(p.price))+'</strong>'+(demo?'':'<button class="add cart-icon" type="button" data-add-id="'+esc(p.id)+'" data-add-name="'+esc(p.name)+'" data-add-price="'+Number(p.price)+'" aria-label="إضافة المنتج إلى السلة" title="إضافة المنتج إلى السلة">🛒+</button>')+'</div></article>';
  }).join('');
  box.querySelectorAll('[data-add-id]').forEach(b=>b.addEventListener('click',()=>add(Number(b.dataset.addId),b.dataset.addName,Number(b.dataset.addPrice))));
  box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
+ box.querySelectorAll('[data-product-image]').forEach(b=>b.addEventListener('click',()=>{
+  const gallery=b.closest('.product-gallery'),main=gallery?.querySelector('.product-main-image');if(!main)return;
+  main.src=b.dataset.productImage;gallery.querySelectorAll('.product-thumb').forEach(x=>x.classList.toggle('active',x===b));
+ }));
  saveFavorites();
  const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
  const catbox=document.querySelector('.categories');
