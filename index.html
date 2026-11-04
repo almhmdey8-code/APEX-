@@ -151,13 +151,13 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 /* Visible customer sign-up and login directly above the product list */
 .storefront-auth-title{text-align:center;color:#f7d77c;margin:0 0 5px;font-size:22px}.storefront-auth-subtitle{text-align:center;color:#d8cba8;margin:0 0 14px;font-size:13px}.storefront-auth-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.storefront-auth-option{min-height:58px;border:1px solid #d5a83c;border-radius:14px;background:linear-gradient(145deg,#2a210f,#090807);color:#ffe6a0;font:800 15px Cairo,Tahoma,sans-serif;cursor:pointer}.storefront-auth-option:active{transform:scale(.98)}.storefront-auth #accountAuth{width:100%;margin:12px 0 0;padding:0;border:0;background:transparent;box-shadow:none}.storefront-auth #accountForm{max-width:520px;margin:auto}.storefront-auth-actions{display:flex;gap:8px;flex-wrap:wrap}.storefront-auth-actions button{flex:1;min-width:130px}
 
-.storefront-auth-wrap{max-width:900px;margin:0 auto 22px;padding:0 18px}
+.storefront-auth-wrap{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;max-width:none;margin:0;padding:16px;background:rgba(0,0,0,.82);backdrop-filter:blur(5px)}.storefront-auth-wrap[hidden]{display:none!important}.storefront-auth-wrap>.storefront-auth{width:min(520px,100%);max-height:90vh;overflow:auto}
 .storefront-auth{border:1px solid #c99a36;border-radius:20px;padding:17px;background:linear-gradient(145deg,#17130b,#070807 72%);box-shadow:0 12px 28px #0009,inset 0 1px 0 #fff2}
 .storefront-auth #accountAuth{width:100%;margin:0}
 .storefront-auth #accountAuth h2{margin:0 0 7px}
 .storefront-auth #accountAuth input{width:100%;border:1px solid #8b6a2d;border-radius:11px;background:#080808;color:#fff;padding:12px 13px;margin:6px 0;font:inherit}
 .storefront-auth #accountAuth button{margin:7px 4px 0 0}.storefront-forgot-row{text-align:right;margin:4px 2px 0}.storefront-forgot{border:0;background:transparent;color:#d8ba70;text-decoration:underline;padding:5px 0;font:14px Cairo,Tahoma,sans-serif;cursor:pointer}
-.storefront-auth #accountMsg{min-height:22px;margin:9px 0 0}.login-entry{font:700 12px Cairo,Tahoma,sans-serif;white-space:nowrap;padding:8px 11px}@media(max-width:600px){.login-entry{font-size:10px;padding:7px 8px}}
+.storefront-auth #accountMsg{min-height:22px;margin:9px 0 0}
 @media(max-width:600px){.storefront-auth-wrap{padding:0 10px}.storefront-auth{padding:12px}.account-entry{font-size:11px;padding:8px 10px!important}}
 </style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -308,7 +308,7 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 }
 </style></head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="outline login-entry" type="button" onclick="openCustomerProfile()">تسجيل الدخول</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
 <section class="hero apex-hero"><div class="heroart" aria-hidden="true">🛍️</div><div class="herotext"><div class="eyebrow">APEX • PREMIUM COLLECTION</div><h1>تسوّق الآن</h1><p>اكتشف منتجات مختارة بعناية<br>بأفضل الأسعار وتجربة تليق بك</p><div class="hero-caption">مع متجر <b>APEX</b></div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">تصفح المنتجات　🛒</button></div></section>
 <main>
@@ -495,7 +495,7 @@ async function refreshCustomer(session){
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
- $('.login-entry').hidden=!!session;$('.account-entry').hidden=!session;
+ $('.account-entry').hidden=!session;
  if(!session){
   $('accountForm').hidden=false;
   $('authLoginFields').hidden=false;
@@ -537,7 +537,7 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
    await apexSecurityEvent('login_success',{method:identity.includes('@')?'email':'phone'});
    msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';
    await refreshCustomer(data.session);
-   $('accountpanel').classList.add('show');
+   $('accountpanel').classList.remove('show');
    $('accountForm').hidden=true;
   }catch(error){
    console.error('APEX LOGIN ERROR:',error);
