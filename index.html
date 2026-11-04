@@ -290,7 +290,7 @@ async function loadCustomerWallet(session){
    supabase.from('apex_referral_signups').select('status,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_wallet_topups').select('id,amount_sar,payment_method_name,status,created_at,admin_note').eq('user_id',uid).order('created_at',{ascending:false}).limit(20),
-   supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code').eq('enabled',true).order('sort_order')
+   supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,wallet_topup_enabled').eq('enabled',true).eq('wallet_topup_enabled',true).order('sort_order')
   ]);
   if(w.error)throw w.error;
   const bal=Number(w.data?.balance_sar||0);$('walletBalance').textContent=walletMoney(bal);$('walletBalanceSummary').innerHTML=walletMoney(bal).replace(' ر.س',' <small>ر.س</small>');
