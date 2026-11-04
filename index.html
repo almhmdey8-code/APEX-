@@ -539,7 +539,7 @@ async function loadCustomerNotifications(){if(!customerSession){$('customerNotif
 async function refreshCustomer(session){
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
- $('storefrontAuth').hidden=false; // إبقاء زري الدخول وإنشاء الحساب ظاهرين حتى بعد تسجيل الدخول
+ $('storefrontAuth').hidden=!!session;
  $('.account-entry').hidden=!session;
  if(!session){
   $('accountForm').hidden=false;
