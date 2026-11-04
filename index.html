@@ -558,8 +558,8 @@ async function refreshCustomer(session){
  const latestOrder=orders[0],currentMeta=customerSession?.user?.user_metadata||{};
  if(latestOrder&&(!currentMeta.full_name||!currentMeta.phone||!currentMeta.address)){
   const orderAddress=String(latestOrder.address||'');
-  const mapMatch=orderAddress.match(/https?:\\/\\/www\\.google\\.com\\/maps\\?q=([-\\d.]+),([-\\d.]+)/i);
-  const cleanAddress=orderAddress.split(/\\s*\\|\\s*موقع الخريطة:/)[0].trim();
+  const mapMatch=orderAddress.match(/https?:\/\/www\.google\.com\/maps\?q=([-\d.]+),([-\d.]+)/i);
+  const cleanAddress=orderAddress.split(/\s*\|\s*موقع الخريطة:/)[0].trim();
   const recovered={...(currentMeta.full_name?{}:{full_name:latestOrder.customer_name||''}),...(currentMeta.phone?{}:{phone:latestOrder.phone||''}),...(currentMeta.address?{}:{address:cleanAddress})};
   if(mapMatch&&!Number.isFinite(Number(currentMeta.latitude))) {recovered.latitude=Number(mapMatch[1]);recovered.longitude=Number(mapMatch[2]);}
   if(Object.values(recovered).some(Boolean)){
