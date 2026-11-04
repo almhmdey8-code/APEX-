@@ -194,7 +194,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 <div class="user-services">
 <button onclick="showAccountSection('shipping')"><b>♧</b><span>طلبات الشحن</span><small>متابعة الشحنات</small></button>
 <button onclick="showAccountSection('transit')"><b>⇢</b><span>قيد الشحن</span><small>حالة التوصيل</small></button>
-<button onclick="toast('لا توجد إشعارات جديدة حالياً')"><b>♧</b><span>الإشعارات</span><small>آخر التحديثات</small></button>
+<button onclick="showAccountSection('notifications');loadCustomerNotifications()"><b>♧</b><span>الإشعارات</span><small>آخر التحديثات</small></button>
 <button onclick="location.href='mailto:apex.1.shopping@gmail.com'"><b>✉</b><span>الدعم والمساعدة</span><small>تواصل معنا</small></button>
 <button onclick="showAccountSection('profile')"><b>⚙</b><span>إعدادات الحساب</span><small>بياناتك الشخصية</small></button>
 <button onclick="customerSignOut()"><b>↗</b><span>تسجيل الخروج</span><small>إنهاء الجلسة</small></button>
@@ -202,7 +202,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 <section id="accountSection-profile" class="account-panel-card"><h3 class="account-section-title">✦ بيانات الحساب</h3><input id="profileName" placeholder="الاسم الكامل"><input id="profilePhone" placeholder="رقم الجوال"><button class="add" onclick="saveProfile()">حفظ البيانات</button><p id="profileMsg" style="color:#e9bd55"></p></section>
 <section id="accountSection-orders" hidden class="account-panel-card"><h3 class="account-section-title">♢ طلباتي</h3><div id="myOrders">جارٍ تحميل الطلبات...</div></section>
 <section id="accountSection-shipping" hidden class="account-panel-card"><h3 class="account-section-title">♢ طلبات الشحن</h3><div id="shippingOrders">جارٍ تحميل طلبات الشحن...</div></section>
-<section id="accountSection-transit" hidden class="account-panel-card"><h3 class="account-section-title">♢ الطلبات قيد الشحن</h3><div id="transitOrders">جارٍ تحميل الطلبات...</div></section>
+<section id="accountSection-transit" hidden class="account-panel-card"><h3 class="account-section-title">♢ الطلبات قيد الشحن</h3><div id="transitOrders">جارٍ تحميل الطلبات...</div></section><section id="accountSection-notifications" hidden class="account-panel-card"><h3 class="account-section-title">♧ إشعارات الحساب</h3><div id="customerNotifications">جارٍ تحميل الإشعارات...</div></section>
 <section id="accountSection-wallet" hidden class="account-panel-card"><h3 class="account-section-title">◈ محفظة APEX</h3>
 <div style="border:1px solid #8e6d2e;border-radius:14px;padding:15px;background:#0b0b08;margin-bottom:14px"><small style="color:#c9a34d">الرصيد المتاح</small><div id="walletBalance" style="font-size:30px;color:#f2d37d;font-weight:900">0.00 ر.س</div><p style="color:#aaa;font-size:12px;margin:4px 0">اشحن رصيدك مرة واحدة واستخدمه للشراء لاحقاً.</p></div>
 <h4 style="color:#f4d98a">شحن رصيد الشراء بالمحفظة</h4><label for="walletTopupAmount">مبلغ الشحن بالريال السعودي</label><input id="walletTopupAmount" type="number" min="1" step="0.01" placeholder="أدخل مبلغ الشحن">
@@ -274,7 +274,7 @@ function renderCart(){$('cartitems').innerHTML=cart.length?cart.map((n,i)=>'<div
 function removeItem(i){cart.splice(i,1);$('count').textContent=cart.length;renderCart()}
 function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
-function showAccountSection(name){['profile','orders','shipping','transit','wallet','referrals'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name})}
+function showAccountSection(name){['profile','orders','shipping','transit','wallet','referrals','notifications'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name})}
 
 let walletPaymentMethods=[];
 function walletMoney(v){return Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س'}
@@ -323,6 +323,7 @@ async function requestWalletTopup(){
 }
 function copyMyReferralCode(){const code=$('myReferralCode').textContent;if(!/^APEX\d{4}$/.test(code))return;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(()=>toast('تم نسخ كود الدعوة')).catch(()=>toast('تعذر نسخ الكود'));else toast('كود الدعوة: '+code)}
 
+async function loadCustomerNotifications(){if(!customerSession){$('customerNotifications').innerHTML='<p>سجل الدخول لعرض إشعاراتك.</p>';return}const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').order('created_at',{ascending:false}).limit(30);if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};$('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث حالة الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>'}
 async function refreshCustomer(session){
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
