@@ -263,11 +263,12 @@ async function loadStoreBanners(){
 }
 async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type').eq('enabled',true).order('sort_order',{ascending:true});
- if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً. يمكنك إرسال الطلب دون اختيار طريقة.</p>';return}
- const methods=data||[];
- if(!methods.length){box.innerHTML='<p style="color:#aaa">سيتم التواصل معك لتأكيد طريقة الدفع.</p>';return}
- box.innerHTML='<p style="color:#e9bd55">اختر طريقة الدفع</p>'+methods.map(m=>'<label class="paychoice"><input type="radio" name="paymentMethod" value="'+m.id+'"> <b>'+esc(m.name)+'</b>'+(m.method_type==='gateway'?' <small>غير متاحة للدفع الإلكتروني حالياً؛ سيتم التواصل لتأكيدها.</small>':(m.instructions?'<small>'+esc(m.instructions)+'</small>':'') )+'</label>').join('');
+ const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code').eq('enabled',true).eq('method_type','manual').order('sort_order',{ascending:true});
+ if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
+ const methods=(data||[]).filter(m=>m.country_code===storeCurrencyCountry);
+ const manual=methods.map(m=>'<label class="paychoice"><input type="radio" name="paymentMethod" value="'+m.id+'"> <b>'+esc(m.name)+'</b>'+(m.instructions?'<small>'+esc(m.instructions)+'</small>':'')+'</label>').join('');
+ const wallet='<label class="paychoice"><input type="radio" name="paymentMethod" value="wallet"> <b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></label>';
+ box.innerHTML='<p style="color:#e9bd55">اختر طريقة الدفع</p>'+wallet+manual;
 }
 function add(id,name,price){const found=cart.find(x=>x.id===id);if(found)found.quantity+=1;else cart.push({id,name,price,quantity:1});renderCart();$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0)}
 function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('cartitems').innerHTML=cart.length?cart.map((x,i)=>'<div class="cartrow"><span>'+esc(x.name)+' × '+x.quantity+'<small style="display:block;color:#c9bd9a">'+formatStorePrice(x.price*x.quantity)+'</small></span><button class="add" data-remove="'+i+'">حذف</button></div>').join('')+'<div style="text-align:left;color:#f2d37d;font-weight:800;padding:10px">الإجمالي التقريبي: '+formatStorePrice(total)+'</div>':'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
@@ -329,7 +330,7 @@ async function refreshCustomer(session){
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  if(!session)return;
  const meta=session.user.user_metadata||{};
- const country=String(meta.country||'').toUpperCase();const nextCountry=(country==='YE'||country.includes('YEMEN')||country.includes('اليمن'))?'YE':'SA';if(storeCurrencyCountry!==nextCountry){storeCurrencyCountry=nextCountry;loadStoreProducts();}
+ const country=String(meta.country||'').toUpperCase();const nextCountry=(country==='YE'||country.includes('YEMEN')||country.includes('اليمن'))?'YE':'SA';if(storeCurrencyCountry!==nextCountry){storeCurrencyCountry=nextCountry;loadStoreProducts();loadPaymentMethods();}
  $('customer').value=meta.full_name||$('customer').value;$('profileName').value=meta.full_name||'';
  $('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('customer').value=meta.full_name||$('customer').value;
  await loadCustomerWallet(session);
