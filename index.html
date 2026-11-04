@@ -265,6 +265,12 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 body{padding-bottom:82px}main{padding-bottom:35px}
 }
 @media(max-width:380px){.apex-head-actions .iconbtn{width:38px;height:38px}.apex-topbar .brand{font-size:26px}.apex-cart-button{min-width:61px}.category-tile b{font-size:9px}}
+</style><style>
+.customer-account-nav{position:sticky;top:0;z-index:8;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin:-4px -4px 15px;padding:8px 4px;background:linear-gradient(100deg,#050505,#171105,#050505);border:1px solid #c99a36;border-radius:16px;box-shadow:0 5px 18px #000b}
+.customer-account-nav button{min-width:0;min-height:58px;border:0;border-radius:10px;background:transparent;color:#f4d477;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.customer-account-nav button b{font-size:23px;line-height:1.1}.customer-account-nav button small{font-size:10px;color:#f5e8c4;font-weight:900}
+.customer-account-nav button:active,.customer-account-nav button:focus-visible{background:#c99a362b;outline:1px solid #d8b65f}
+@media(max-width:380px){.customer-account-nav{gap:1px;padding:6px 2px}.customer-account-nav button b{font-size:20px}.customer-account-nav button small{font-size:9px}}
 </style></head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
@@ -288,8 +294,15 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 </div></section>
 <section class="about" id="contact"><h2>إدارة المتجر وخدمة العملاء</h2><p>للاستفسارات ومتابعة الطلبات والتواصل مع إدارة APEX</p><p dir="ltr" style="font-weight:800;color:#ffe6a0;font-size:18px"><a href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a class="goldbtn" style="display:inline-block;text-decoration:none" href="mailto:apex.1.shopping@gmail.com?subject=استفسار%20لمتجر%20APEX">تواصل مع خدمة العملاء</a></section>
 <section class="about"><h2>APEX 👑</h2><p>أكثر من مجرد متجر .. إنه أسلوب حياة</p><p>تسوق بثقة، واختر ما يناسبك من مجموعتنا المتجددة.</p></section></main>
-<nav class="store-bottom-nav" aria-label="التنقل الرئيسي"><button onclick="window.scrollTo({top:0,behavior:'smooth'})"><b>⌂</b><small>الرئيسية</small></button><button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"><b>▦</b><small>المنتجات</small></button><button onclick="openCart()"><b>🛒</b><small>السلة</small></button><button onclick="document.getElementById('showFavorites').click()"><b>♡</b><small>المفضلة</small></button><button onclick="openCustomerProfile()"><b>♙</b><small>حسابي</small></button></nav><footer><strong>APEX 👑</strong><p>إدارة المتجر وخدمة العملاء: <a dir="ltr" href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a href="#policies">سياسات المتجر</a>　|　<a href="mailto:apex.1.shopping@gmail.com">خدمة العملاء</a>　|　<a href="admin.html">دخول المدير</a><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
+<nav class="store-bottom-nav" aria-label="التنقل الرئيسي"><button type="button" onclick="openCustomerProfile()"><b>♙</b><small>حسابي</small></button><button type="button" onclick="document.getElementById('showFavorites').click();document.getElementById('products').scrollIntoView({behavior:'smooth'})"><b>♡</b><small>المفضلة</small></button><button type="button" onclick="openCart()"><b>🛒</b><small>السلة</small></button><button type="button" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"><b>▦</b><small>المنتجات</small></button><button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})"><b>⌂</b><small>الرئيسية</small></button></nav><footer><strong>APEX 👑</strong><p>إدارة المتجر وخدمة العملاء: <a dir="ltr" href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p><a href="#policies">سياسات المتجر</a>　|　<a href="mailto:apex.1.shopping@gmail.com">خدمة العملاء</a>　|　<a href="admin.html">دخول المدير</a><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
 <div class="cartpanel" id="accountpanel" onclick="if(event.target===this)closeAccount()"><div class="cartbox account-shell"><header class="account-head"><button type="button" class="account-profile-shortcut" onclick="closeAccount()" aria-label="إغلاق بطاقة الحساب" title="إغلاق">×</button><div class="account-brand">👑 APEX<small>SHOP SMART · LIVE BETTER</small></div><span style="font-size:27px;color:#f5d879">♢</span></header><div class="account-content"><div id="passwordRecovery" hidden class="account-panel-card"><h3>تعيين كلمة مرور جديدة</h3><input id="newPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)"><button class="goldbtn" onclick="saveNewPassword()">حفظ كلمة المرور</button></div><div id="accountData" hidden>
+<nav class="customer-account-nav" aria-label="تنقل حساب العميل">
+<button type="button" onclick="customerNavAccount()"><b>♙</b><small>حسابي</small></button>
+<button type="button" onclick="customerNavFavorites()"><b>♡</b><small>المفضلة</small></button>
+<button type="button" onclick="customerNavCart()"><b>🛒</b><small>السلة</small></button>
+<button type="button" onclick="customerNavProducts()"><b>▦</b><small>المنتجات</small></button>
+<button type="button" onclick="customerNavHome()"><b>⌂</b><small>الرئيسية</small></button>
+</nav>
 <div class="user-hub">
 <header class="user-hub-top"><div><small>APEX MEMBER AREA</small><h2>حسابي</h2></div></header>
 <section class="user-diamond-hero"><div class="user-hero-copy"><span>مرحباً بك في عالم APEX</span><h1>تجربتك، <em>بمستوى النخبة</em></h1><p>تابع حسابك وطلباتك وخدماتك من مكان واحد.</p></div><div class="user-diamond">◆<i>✦</i></div><div class="user-glow"></div></section>
@@ -298,7 +311,7 @@ body{padding-bottom:82px}main{padding-bottom:35px}
 <button onclick="showAccountSection('orders')"><b>▤</b><span>طلباتي</span></button>
 <button onclick="showAccountSection('wallet')"><b>◈</b><span>المحفظة</span></button>
 <button onclick="showAccountSection('referrals')"><b>♧</b><span>دعوة الأصدقاء</span></button>
-<button onclick="document.getElementById('showFavorites').click()"><b>♡</b><span>المفضلة</span></button>
+<button onclick="customerNavFavorites()"><b>♡</b><span>المفضلة</span></button>
 <button onclick="closeAccount();openCart()"><b>⌖</b><span>عناوين الشحن</span></button>
 </div>
 <section class="user-wallet" role="button" tabindex="0" onclick="showAccountSection('wallet')"><div><small>APEX WALLET</small><h3>محفظتي</h3><p>الرصيد المتاح</p></div><strong id="walletBalanceSummary">0.00 <small>ر.س</small></strong><span class="wallet-gem">◇</span><small class="wallet-note">شحن الرصيد والشراء من المحفظة</small></section>
@@ -389,6 +402,12 @@ function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
 function showAccountSection(name){['profile','orders','shipping','transit','wallet','referrals','notifications'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name})}
 function showAccountHome(){['profile','orders','shipping','transit','wallet','referrals','notifications'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=true});const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavAccount(){showAccountHome();const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavFavorites(){closeAccount();$('showFavorites').click();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavCart(){closeAccount();openCart()}
+function customerNavProducts(){closeAccount();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavHome(){closeAccount();window.scrollTo({top:0,behavior:'smooth'})}
+
 
 let walletPaymentMethods=[];
 function walletMoney(v){return Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س'}
