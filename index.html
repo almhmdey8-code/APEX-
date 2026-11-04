@@ -287,7 +287,7 @@ async function loadCustomerWallet(session){
    supabase.from('apex_referral_signups').select('status,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_wallet_topups').select('id,amount_sar,payment_method_name,status,created_at,admin_note').eq('user_id',uid).order('created_at',{ascending:false}).limit(20),
-   supabase.from('apex_payment_methods').select('id,name,instructions,method_type').eq('enabled',true).order('sort_order')
+   supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code').eq('enabled',true).order('sort_order')
   ]);
   if(w.error)throw w.error;
   const bal=Number(w.data?.balance_sar||0);$('walletBalance').textContent=walletMoney(bal);$('walletBalanceSummary').innerHTML=walletMoney(bal).replace(' ر.س',' <small>ر.س</small>');
@@ -298,9 +298,9 @@ async function loadCustomerWallet(session){
   const sts={pending:'بانتظار مراجعة المدير',approved:'تم اعتماد الشحن',rejected:'مرفوض',cancelled:'ملغي'};
   $('walletTopupHistory').innerHTML=(topups.data||[]).map(x=>'<div class="item" style="margin:7px 0;padding:10px"><b>طلب شحن #'+x.id+'</b><p>'+walletMoney(x.amount_sar)+' · '+esc(x.payment_method_name)+'</p><p style="color:#e9bd55">'+(sts[x.status]||x.status)+'</p>'+(x.admin_note?'<small>'+esc(x.admin_note)+'</small>':'')+'</div>').join('')||'<p style="color:#aaa">لا توجد طلبات شحن.</p>';
   if(methods.error)throw methods.error;
-  walletPaymentMethods=(methods.data||[]).filter(x=>x.method_type==='manual');
+  const customerCountry=String(session.user.user_metadata?.country||'').toLowerCase();const countryCode=(customerCountry.includes('اليمن')||customerCountry.includes('yemen')||customerCountry==='ye')?'YE':'SA';walletPaymentMethods=(methods.data||[]).filter(x=>x.method_type==='manual'&&x.country_code===countryCode);
   $('walletPaymentMethod').innerHTML='<option value="">اختر وسيلة الدفع</option>'+walletPaymentMethods.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');
-  $('walletPaymentInstructions').textContent=walletPaymentMethods.length?'اختر وسيلة الدفع لعرض تعليماتها.':'لا توجد وسيلة شحن مفعلة حالياً. سيقوم المدير بتفعيل وسائل الشحن من لوحة الإدارة.';
+  $('walletPaymentInstructions').textContent=walletPaymentMethods.length?'اختر وسيلة الدفع لعرض تعليماتها.':countryCode==='YE'?'لا توجد وسيلة تحويل يمنية مفعلة حالياً. سيقوم المدير بتفعيلها من لوحة الإدارة.':'وسائل الدفع السعودية الإلكترونية قيد الربط الآمن، ولن يُضاف الرصيد قبل تأكيد الدفع.';
   if(c.error)throw c.error;$('myReferralCode').textContent=c.data?.code||'سيتم إنشاء كودك تلقائياً';
   if(r.error)throw r.error;
   const count=(r.data||[]).filter(x=>x.status==='confirmed').length,progress=count===0?0:(count%5===0?5:count%5),remaining=5-progress;
