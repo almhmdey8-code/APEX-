@@ -326,6 +326,28 @@ main{max-width:1320px;padding:26px clamp(12px,2.5vw,28px) 75px}.sectionhead{marg
 @media(max-width:650px){.topbar.apex-topbar{height:66px;padding-inline:9px}.apex-topbar .brand{font-size:25px;gap:4px}.apex-topbar .brand small{font-size:7px}.apex-head-actions{gap:5px}.apex-head-actions .iconbtn{width:36px;height:36px}.apex-cart-button{padding:8px 10px!important;font-size:12px}.apex-hero{grid-template-columns:1fr;min-height:440px;padding:26px 17px 34px;gap:4px;text-align:center;background-position:58% center}.apex-hero .heroart{font-size:clamp(92px,28vw,138px);line-height:1.1}.apex-hero .herotext h1{font-size:30px;margin:5px 0}.apex-hero .herotext p{font-size:14px;line-height:1.9}.apex-hero .hero-caption{font-size:11px}.apex-hero .goldbtn{font-size:14px;padding:10px 19px}.features{gap:8px;padding:14px 10px}.features .feature{min-height:80px;padding:10px 7px;border-radius:13px}.features .feature b{font-size:20px}.features .feature span{font-size:11px}main{padding:18px 10px 55px}.categories{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;padding:3px 1px 9px;scrollbar-width:thin}.cat{flex:0 0 auto;padding:8px 13px;font-size:12px}.toolbar{gap:8px;padding:9px;margin-bottom:12px}.toolbar span{font-size:12px}.toolbar select,.toolbar button{padding:8px 10px;font-size:11px}.products{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.product{padding:7px!important;border-radius:13px!important}.product img{height:125px!important}.product h3{font-size:12px!important}.product p{font-size:10px!important;min-height:32px}.product-price{font-size:14px!important}.product .fav{width:29px!important;height:29px!important;top:12px;left:12px}.product .add,.product button{font-size:10px!important;padding:7px 8px!important}.sectionhead h2{font-size:25px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style>
+
+<style id="apex-login-button-position-fix">
+/* Keep customer sign-in visible in the storefront, centered immediately above products */
+#storefrontAuth:not([hidden]){
+  position:relative!important;inset:auto!important;z-index:2!important;
+  display:block!important;width:100%;max-width:100%;margin:18px auto 24px!important;
+  padding:0 14px!important;background:transparent!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+#storefrontAuth>.storefront-auth{
+  width:min(520px,100%)!important;max-height:none!important;overflow:visible!important;
+  margin:0 auto!important;padding:14px!important;
+}
+#storefrontAuth .storefront-auth-options{
+  width:min(360px,100%)!important;margin:0 auto!important;
+  display:grid!important;grid-template-columns:1fr!important;gap:9px!important;
+}
+#storefrontAuth .storefront-auth-option{
+  width:100%!important;min-height:52px!important;display:block!important;
+}
+#storefrontAuth[hidden]{display:none!important}
+</style>
 </head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
