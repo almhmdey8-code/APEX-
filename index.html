@@ -537,8 +537,12 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
    await apexSecurityEvent('login_success',{method:identity.includes('@')?'email':'phone'});
    msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';
    await refreshCustomer(data.session);
-   $('accountpanel').classList.remove('show');
+   // Successful sign-in returns the customer to the storefront, not the account dashboard.
+   closeAccount();
+   $('accountData').hidden=true;
+   $('storefrontAuth').hidden=true;
    $('accountForm').hidden=true;
+   window.scrollTo({top:0,behavior:'smooth'});
   }catch(error){
    console.error('APEX LOGIN ERROR:',error);
    const reason=error?.message||String(error);
