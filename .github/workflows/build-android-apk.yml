@@ -27,13 +27,6 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Prepare storefront assets
-        run: |
-          mkdir -p android/app/src/main/assets
-          cp index.html admin.html privacy.html android/app/src/main/assets/
-          test -s android/app/src/main/assets/index.html
-          test -s android/app/src/main/assets/admin.html
-          test -s android/app/src/main/assets/privacy.html
       - name: Build APK
         run: gradle --no-daemon -p android assembleRelease
       - name: Verify APK
