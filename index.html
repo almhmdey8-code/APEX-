@@ -427,9 +427,9 @@ function getReferralVisitorId(){
 }
 async function captureReferralVisit(){
  const params=new URLSearchParams(location.search),incoming=(params.get('ref')||'').trim().toUpperCase();
- if(/^APEX\\d{4}$/.test(incoming))localStorage.setItem('apex_pending_referral_code',incoming);
+ if(/^APEX\d{4}$/.test(incoming))localStorage.setItem('apex_pending_referral_code',incoming);
  const code=(incoming||localStorage.getItem('apex_pending_referral_code')||'').toUpperCase();
- if(!/^APEX\\d{4}$/.test(code))return;
+ if(!/^APEX\d{4}$/.test(code))return;
  try{await supabase.rpc('apex_track_referral_visit',{p_code:code,p_visitor_id:getReferralVisitorId(),p_landing_path:location.pathname})}
  catch(e){console.warn('APEX referral visit tracking unavailable:',e?.message||e)}
 }
@@ -597,7 +597,7 @@ async function requestWalletTopup(){
  catch(e){$('walletTopupMessage').textContent='تعذر إرسال طلب الشحن: '+(e.message||'خطأ')}
  finally{b.disabled=false;b.textContent='إرسال طلب الشحن'}
 }
-function copyMyReferralCode(){const code=$('myReferralCode').textContent;if(!/^APEX\\d{4}$/.test(code))return;const link=buildReferralLink(code);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(link).then(()=>toast('تم نسخ رابط الدعوة الخاص بك')).catch(()=>toast('تعذر نسخ الرابط'));else toast(link)}
+function copyMyReferralCode(){const code=$('myReferralCode').textContent;if(!/^APEX\d{4}$/.test(code))return;const link=buildReferralLink(code);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(link).then(()=>toast('تم نسخ رابط الدعوة الخاص بك')).catch(()=>toast('تعذر نسخ الرابط'));else toast(link)}
 function copyMyReferralLink(){copyMyReferralCode()}
 
 async function loadCustomerNotifications(){if(!customerSession){$('customerNotifications').innerHTML='<p>سجل الدخول لعرض إشعاراتك.</p>';return}const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').order('created_at',{ascending:false}).limit(30);if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};$('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث حالة الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>'}
