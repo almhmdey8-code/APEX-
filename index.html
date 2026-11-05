@@ -72,7 +72,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 .account-back-button{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 15px;border:1px solid #d7b35e;border-radius:22px;background:linear-gradient(135deg,#2b210d,#090908);color:#f6d981;font:800 13px inherit;cursor:pointer;box-shadow:0 2px 10px #d4a83a22}
 .account-back-button:active{transform:scale(.97);background:linear-gradient(120deg,#956214,#f5d879);color:#171006}
 
-.apex-about-full{text-align:right;color:#e8e2d2;line-height:1.95;font-size:14px}.apex-about-full h2{color:#ffe8a0;font-size:21px;text-align:center;margin:8px 0 14px}.apex-about-full h3{color:#f3cf72;font-size:17px;margin:23px 0 8px;padding-bottom:6px;border-bottom:1px solid #8e6d2e}.apex-about-full p{color:#d8d2c4;margin:9px 0}.apex-about-full ul{padding-right:23px;margin:8px 0}.apex-about-full li{padding:3px 0;color:#e8e2d2}.apex-about-full .apex-about-signoff{text-align:center;color:#ffe8a0;font-size:16px;margin-top:24px;padding:13px 8px;border:1px solid #8e6d2e;border-radius:12px;background:linear-gradient(120deg,#211707,#090908)}
+.apex-about-full{text-align:right;color:#e8e2d2;line-height:1.95;font-size:14px}.apex-about-full h2{color:#ffe8a0;font-size:18px;text-align:center;line-height:1.5;margin:7px 0 11px}.apex-about-full h3{color:#f3cf72;font-size:17px;margin:23px 0 8px;padding-bottom:6px;border-bottom:1px solid #8e6d2e}.apex-about-full p{color:#d8d2c4;margin:9px 0}.apex-about-full ul{padding-right:23px;margin:8px 0}.apex-about-full li{padding:3px 0;color:#e8e2d2}.apex-about-full .apex-about-signoff{text-align:center;color:#ffe8a0;font-size:14px;line-height:1.6;margin-top:20px;padding:13px 8px;border:1px solid #8e6d2e;border-radius:12px;background:linear-gradient(120deg,#211707,#090908)}
 </style><style>
 /* Compact storefront cards and product tiles */
 .products{gap:10px!important;grid-template-columns:repeat(auto-fill,minmax(145px,1fr))!important}
@@ -648,8 +648,27 @@ async function requestWalletTopup(){
  catch(e){$('walletTopupMessage').textContent='تعذر إرسال طلب الشحن: '+(e.message||'خطأ')}
  finally{b.disabled=false;b.textContent='إرسال طلب الشحن'}
 }
-function copyMyReferralCode(){const code=$('myReferralCode').textContent;if(!/^APEX\d{4}$/.test(code))return;const link=buildReferralLink(code);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(link).then(()=>toast('تم نسخ رابط الدعوة الخاص بك')).catch(()=>toast('تعذر نسخ الرابط'));else toast(link)}
-function copyMyReferralLink(){copyMyReferralCode()}
+async function copyMyReferralCode(){
+ const code=String($('myReferralCode')?.textContent||'').trim().toUpperCase();
+ if(!/^APEX\\d{4}$/.test(code)){toast('انتظر حتى يتم تحميل كود الدعوة');return}
+ const link=buildReferralLink(code);
+ try{
+  if(navigator.clipboard?.writeText&&window.isSecureContext){await navigator.clipboard.writeText(link)}
+  else{
+   const field=document.createElement('textarea');
+   field.value=link;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';field.style.left='-9999px';
+   document.body.appendChild(field);field.focus();field.select();field.setSelectionRange(0,field.value.length);
+   const copied=document.execCommand('copy');field.remove();
+   if(!copied)throw new Error('clipboard_unavailable');
+  }
+  toast('تم نسخ رابط الدعوة الخاص بك');
+ }catch(error){
+  const field=document.createElement('textarea');field.value=link;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.focus();field.select();
+  toast('تعذر النسخ التلقائي؛ اضغط مطولاً على الرابط لنسخه');
+  field.addEventListener('blur',()=>field.remove(),{once:true});
+ }
+}
+function copyMyReferralLink(){return copyMyReferralCode()}
 
 async function loadCustomerNotifications(){if(!customerSession){$('customerNotifications').innerHTML='<p>سجل الدخول لعرض إشعاراتك.</p>';return}const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').order('created_at',{ascending:false}).limit(30);if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};$('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث حالة الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>'}
 async function refreshCustomer(session){
