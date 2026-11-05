@@ -324,7 +324,6 @@ async function uploadImage(inputId,targetId,msgId){
  const {data}=supabase.storage.from('apex-store').getPublicUrl(path);
  $(targetId).value=data.publicUrl;message(msgId,'تم رفع الصورة. احفظ العنصر لتثبيت الرابط.');
 }
-$('adm_pfile').addEventListener('change',()=>uploadImage('pfile','pimage','pmsg'));
 async function uploadProductImages(){
  const input=$('adm_pfiles'),files=[...(input.files||[])];if(!files.length)return;
  const current=[...new Set($('adm_pimages').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean))];
