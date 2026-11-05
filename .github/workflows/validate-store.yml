@@ -26,10 +26,10 @@ jobs:
           const fs = require('fs');
           for (const file of ['index.html', 'admin.html']) {
             const html = fs.readFileSync(file, 'utf8');
-            const blocks = [...html.matchAll(/<script\\b(?=[^>]*\\btype\\s*=\\s*["']module["'])[^>]*>([\\s\\S]*?)<\\/script\\s*>/gi)];
+            const blocks = [...html.matchAll(/<script\b(?=[^>]*\btype\s*=\s*["']module["'])[^>]*>([\s\S]*?)<\/script\s*>/gi)];
             const inlineBlocks = blocks.filter(match => {
               const openingTag = match[0].slice(0, match[0].indexOf('>') + 1);
-              return !/\\bsrc\\s*=/.test(openingTag) && match[1].trim();
+              return !/\bsrc\s*=/.test(openingTag) && match[1].trim();
             });
             inlineBlocks.forEach((match, index) => {
               fs.writeFileSync('/tmp/' + file.replace('.html', '') + '-' + index + '.mjs', match[1]);
