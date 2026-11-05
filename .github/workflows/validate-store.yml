@@ -23,11 +23,11 @@ jobs:
           const fs = require('fs');
           for (const file of ['index.html', 'admin.html']) {
             const html = fs.readFileSync(file, 'utf8');
-            const blocks = [...html.matchAll(/<script\\b(?=[^>]*\\btype\\s*=\\s*["']module["'])[^>]*>([\\s\\S]*?)<\\/script\\s*>/gi)];
+            const blocks = [...html.matchAll(/<script\b(?=[^>]*\btype\s*=\s*["']module["'])[^>]*>([\s\S]*?)<\/script\s*>/gi)];
             if (!blocks.length) throw new Error('Module script missing in ' + file);
-            const inlineBlocks = blocks.filter(match => !/\\bsrc\\s*=/.test(match[0]) && match[1].trim());
+            const inlineBlocks = blocks.filter(match => !/\bsrc\s*=/.test(match[0]) && match[1].trim());
             if (!inlineBlocks.length) throw new Error('No inline module script found in ' + file);
-            const ids = [...html.matchAll(/\\bid=["']([^"']+)["']/g)].map(x => x[1]);
+            const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(x => x[1]);
             const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
             if (duplicates.length) throw new Error(file + ' duplicate IDs: ' + [...new Set(duplicates)].join(', '));
             inlineBlocks.forEach((match, index) => {
