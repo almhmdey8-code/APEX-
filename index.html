@@ -650,7 +650,7 @@ async function requestWalletTopup(){
 }
 async function copyMyReferralCode(){
  const code=String($('myReferralCode')?.textContent||'').trim().toUpperCase();
- if(!/^APEX\\d{4}$/.test(code)){toast('انتظر حتى يتم تحميل كود الدعوة');return}
+ if(!/^APEX\d{4}$/.test(code)){toast('انتظر حتى يتم تحميل كود الدعوة');return}
  const link=buildReferralLink(code);
  try{
   if(navigator.clipboard?.writeText&&window.isSecureContext){await navigator.clipboard.writeText(link)}
