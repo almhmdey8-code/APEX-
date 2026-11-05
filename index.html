@@ -355,7 +355,34 @@ main{max-width:1320px;padding:26px clamp(12px,2.5vw,28px) 75px}.sectionhead{marg
 .product-thumb{width:43px;height:43px;padding:2px;border:1px solid #80672e;border-radius:8px;background:#17130b;overflow:hidden;cursor:pointer}
 .product-thumb.active{border:2px solid #f2c65d;box-shadow:0 0 8px #d8a83b88}
 .product-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:5px}
-</style></head>
+</style><style id="apex-royal-glass-v1">
+:root{--apx-gold:#f5d889;--apx-gold-hi:#fff6d7;--apx-gold-deep:#8d6420;--apx-glass:rgba(255,255,255,.065);--apx-glass2:rgba(12,19,16,.72);--apx-edge:rgba(255,225,157,.68)}
+body{background-color:#030605!important;background-image:radial-gradient(ellipse at 12% 12%,rgba(0,116,91,.22),transparent 32%),radial-gradient(ellipse at 88% 18%,rgba(191,145,49,.17),transparent 30%),radial-gradient(ellipse at 50% 100%,rgba(0,77,59,.16),transparent 45%),linear-gradient(145deg,#050807,#090b09 52%,#020403)!important}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.23;background:linear-gradient(118deg,transparent 0 38%,rgba(255,255,255,.045) 39%,transparent 40% 70%,rgba(255,224,159,.035) 71%,transparent 72%)}
+.topbar{background:linear-gradient(115deg,rgba(8,13,11,.82),rgba(30,25,14,.76),rgba(5,10,8,.84))!important;border-bottom:1px solid var(--apx-edge)!important;backdrop-filter:blur(26px) saturate(170%)!important;box-shadow:0 10px 38px #0009,inset 0 1px 0 #fff3}
+.brand{background:linear-gradient(110deg,#9d6e24,#fff0b5 38%,#d3a647 62%,#fff5d0 78%,#8e611c);background-clip:text;-webkit-background-clip:text;color:transparent!important;text-shadow:0 4px 24px #d4a34455!important;filter:drop-shadow(0 0 12px #d4a34455)}
+.hero{border-bottom:1px solid var(--apx-edge)!important;background-color:#080d0a!important}
+.hero:before{content:"";position:absolute;inset:12px;border:1px solid rgba(255,231,179,.5);clip-path:polygon(0 0,calc(100% - 42px) 0,100% 42px,100% 100%,42px 100%,0 calc(100% - 42px));pointer-events:none;z-index:2;box-shadow:inset 0 0 45px #fff1}
+.hero:after{background:linear-gradient(115deg,rgba(3,9,7,.22),rgba(4,7,5,.76)),radial-gradient(ellipse at 22% 48%,rgba(0,222,178,.22),transparent 34%),linear-gradient(0deg,#050706 0%,transparent 28%)!important}
+.feature,.product,.about,.store-banner,.cartbox,.cartbox input,.cartbox textarea,.cartbox select,.account-menu button,.panel,.kpi,.item,.field,.paychoice{background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.025) 38%,rgba(8,15,12,.78) 100%)!important;border:1px solid var(--apx-edge)!important;backdrop-filter:blur(22px) saturate(155%)!important;box-shadow:0 18px 44px #0009,inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,220,150,.12)!important;position:relative}
+.feature:before,.product:before,.about:before,.store-banner:before,.cartbox:before,.panel:before,.item:before,.kpi:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(130deg,rgba(255,255,255,.15),transparent 23% 75%,rgba(255,222,151,.08));opacity:.65}
+.feature,.product,.about,.store-banner,.cartbox,.panel,.item,.kpi{border-radius:20px!important}
+.product{overflow:hidden}
+.product:after,.feature:after,.about:after,.cartbox:after,.panel:after{content:"";position:absolute;top:0;right:0;width:34px;height:34px;pointer-events:none;background:linear-gradient(135deg,rgba(255,246,214,.95),rgba(196,146,55,.68) 45%,transparent 47%);clip-path:polygon(0 0,100% 0,100% 100%);opacity:.72}
+.product:hover,.feature:hover{transform:translateY(-5px);border-color:#fff0bd!important;box-shadow:0 22px 55px #000b,0 0 26px #d7aa4b44,inset 0 1px 0 #fff7!important}
+.product img{border:1px solid rgba(255,228,167,.42);box-shadow:inset 0 0 20px #0008,0 7px 22px #0008}
+.goldbtn,.add,.outline,.iconbtn,.cat,.toolbar select,.toolbar button{border:1px solid #fff0bc!important;background:linear-gradient(125deg,#805617 0%,#d2a044 22%,#fff0b5 48%,#c48c2d 72%,#765016 100%)!important;color:#1b1305!important;box-shadow:0 8px 24px #c18b3444,inset 0 1px 0 #fff9,inset 0 -2px 0 #68430c!important}
+.goldbtn{border-radius:12px 22px 12px 22px!important}
+.add,.outline{border-radius:10px 18px 10px 18px!important}
+.cat{background:rgba(255,255,255,.055)!important;color:#f8e8bc!important;backdrop-filter:blur(12px)}
+.cat.active,.cat:hover{background:linear-gradient(125deg,#805617,#fff0b5,#c48c2d)!important;color:#1b1305!important}
+.cartpanel{backdrop-filter:blur(18px) saturate(130%)}
+.cartbox{background:linear-gradient(145deg,rgba(28,34,29,.96),rgba(5,9,7,.97))!important}
+footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid var(--apx-edge)!important}
+@media(max-width:800px){.hero:before{inset:7px}.feature,.product{backdrop-filter:blur(15px) saturate(145%)!important}}
+@media(prefers-reduced-motion:no-preference){.brand{animation:apxGlow 5s ease-in-out infinite alternate}@keyframes apxGlow{from{filter:drop-shadow(0 0 7px #d4a34444)}to{filter:drop-shadow(0 0 17px #f5d88988)}}}
+</style>
+</head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
