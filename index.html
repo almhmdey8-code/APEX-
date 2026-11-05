@@ -576,13 +576,19 @@ async function refreshCustomer(session){
  }
  const hist=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').in('order_id',orders.map(o=>o.id)).order('created_at',{ascending:false});
  const historyByOrder={};(hist.data||[]).forEach(h=>(historyByOrder[h.order_id]??=[]).push(h));
- const statusNames={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليمه لشركة الشحن',delivered:'تم التسليم',cancelled:'ملغي'};
- const card=o=>'<div class="item" style="margin:9px 0;padding:12px;border:1px solid var(--line);border-radius:12px"><b>طلب #'+esc(o.id)+'</b><p>'+new Date(o.created_at).toLocaleString('ar-SA')+'</p><p>الحالة: '+esc(statusNames[o.status]||o.status)+'</p>'+(o.total_sar!==null&&o.total_sar!==undefined?'<p>الإجمالي: '+Number(o.total_sar).toFixed(2)+' ر.س · الدفع: '+esc(o.payment_method||'عند التأكيد')+'</p>':'')+'<p>المنتجات: '+esc(JSON.stringify(o.items))+'</p>'+(o.carrier?'<p>شركة الشحن: '+esc(o.carrier)+'</p>':'')+(o.aramex_tracking_number?'<p>رقم التتبع: '+esc(o.aramex_tracking_number)+'</p>':'')+((historyByOrder[o.id]||[]).length?'<div style="border-top:1px solid var(--line);padding-top:8px"><b>سجل التحديثات</b>'+(historyByOrder[o.id]||[]).map(h=>'<p style="font-size:12px;color:#c9bd9a">• '+esc(statusNames[h.status]||h.status)+' — '+new Date(h.created_at).toLocaleString('ar-SA')+(h.note?' · '+esc(h.note):'')+'</p>').join('')+'</div>':'')+'</div>';
- $('myOrders').innerHTML=orders.map(card).join('')||'<p>لا توجد طلبات مرتبطة بحسابك.</p>';
- const shipping=orders.filter(o=>['processing','shipped','delivered'].includes(o.status)||!!o.aramex_tracking_number);
- $('shippingOrders').innerHTML=shipping.map(card).join('')||'<p>لا توجد طلبات شحن حالياً.</p>';
+ const statusNames={new:'تم استلام الطلب — بانتظار التأكيد',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'قيد الشحن مع شركة التوصيل',delivered:'تم التسليم للعميل',cancelled:'ملغي'};
+ const card=o=>{
+  const address=String(o.address||'');
+  const mapMatch=address.match(/https?:\\/\\/www\\.google\\.com\\/maps\\?q=([-\\d.]+),([-\\d.]+)/i);
+  const cleanAddress=address.replace(/\\s*\\|\\s*موقع الخريطة:\\s*https?:\\/\\/\\S+/i,'').trim();
+  const history=historyByOrder[o.id]||[];
+  return '<div class="item" style="margin:9px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#15130d,#080a08)"><b style="color:#f5d879">طلب #'+esc(o.id)+'</b><p>'+new Date(o.created_at).toLocaleString('ar-SA')+'</p><p><b>حالة الطلب:</b> '+esc(statusNames[o.status]||o.status||'قيد المراجعة')+'</p>'+(o.shipping_status?'<p><b>تحديث الشحن:</b> '+esc(o.shipping_status)+'</p>':'')+(o.total_sar!==null&&o.total_sar!==undefined?'<p>الإجمالي: '+Number(o.total_sar).toFixed(2)+' ر.س · الدفع: '+esc(o.payment_method||'بانتظار التأكيد')+'</p>':'')+'<p><b>المنتجات:</b> '+esc((Array.isArray(o.items)?o.items:[]).map(x=>'منتج '+(x.id||'')+' × '+(x.quantity||1)).join('، ')||'تفاصيل الطلب متاحة لدى المتجر')+'</p>'+(cleanAddress?'<p><b>عنوان التوصيل:</b> '+esc(cleanAddress)+'</p>':'')+(mapMatch?'<p><a target="_blank" rel="noopener" style="color:#f5d879" href="https://www.google.com/maps?q='+mapMatch[1]+','+mapMatch[2]+'">📍 عرض إحداثيات موقع التوصيل</a></p>':'')+(o.carrier?'<p><b>شركة الشحن:</b> '+esc(o.carrier)+'</p>':'')+(o.aramex_tracking_number?'<p><b>رقم التتبع:</b> <span dir="ltr">'+esc(o.aramex_tracking_number)+'</span></p>':'')+(history.length?'<div style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><b style="color:#f5d879">آخر تحديثات الطلب والشحن</b>'+history.map(h=>'<p style="font-size:12px;color:#c9bd9a">• '+esc(statusNames[h.status]||h.status)+' — '+new Date(h.created_at).toLocaleString('ar-SA')+(h.note?' · '+esc(h.note):'')+'</p>').join('')+'</div>':'<p style="font-size:12px;color:#c9bd9a">ستظهر هنا تحديثات الطلب والشحن عند تسجيلها من إدارة المتجر.</p>')+'</div>';
+ };
+ $('myOrders').innerHTML=orders.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات.</p>';
+ const shipping=orders.filter(o=>o.status!=='cancelled');
+ $('shippingOrders').innerHTML=shipping.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات شحن.</p>';
  const transit=orders.filter(o=>o.status==='shipped');
- $('transitOrders').innerHTML=transit.map(card).join('')||'<p>لا توجد طلبات قيد الشحن حالياً.</p>';
+ $('transitOrders').innerHTML=transit.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات قيد الشحن.</p>';
  showAccountHome();
 }
 async function openCustomerProfile(){$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
