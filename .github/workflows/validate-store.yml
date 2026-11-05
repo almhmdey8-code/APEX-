@@ -25,7 +25,10 @@ jobs:
             const html = fs.readFileSync(file, 'utf8');
             const blocks = [...html.matchAll(/<script\b(?=[^>]*\btype\s*=\s*["']module["'])[^>]*>([\s\S]*?)<\/script\s*>/gi)];
             if (!blocks.length) throw new Error('Module script missing in ' + file);
-            const inlineBlocks = blocks.filter(match => !/\bsrc\s*=/.test(match[0]) && match[1].trim());
+            const inlineBlocks = blocks.filter(match => {
+              const openingTag = match[0].slice(0, match[0].indexOf('>') + 1);
+              return !/\bsrc\s*=/.test(openingTag) && match[1].trim();
+            });
             if (!inlineBlocks.length) throw new Error('No inline module script found in ' + file);
             const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(x => x[1]);
             const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
