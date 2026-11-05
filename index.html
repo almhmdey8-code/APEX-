@@ -663,9 +663,7 @@ async function copyMyReferralCode(){
   }
   toast('تم نسخ رابط الدعوة الخاص بك');
  }catch(error){
-  const field=document.createElement('textarea');field.value=link;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.focus();field.select();
-  toast('تعذر النسخ التلقائي؛ اضغط مطولاً على الرابط لنسخه');
-  field.addEventListener('blur',()=>field.remove(),{once:true});
+  window.prompt('انسخ رابط الدعوة الخاص بك:',link);
  }
 }
 function copyMyReferralLink(){return copyMyReferralCode()}
