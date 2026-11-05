@@ -53,6 +53,10 @@ public final class MainActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return openExternal(Uri.parse(url));
             }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                view.evaluateJavascript("(function(){document.querySelectorAll('a[target=_blank]').forEach(function(a){a.target='_self';});})();", null);
+            }
         });
 
         webView.setWebChromeClient(new WebChromeClient() {
