@@ -581,3 +581,59 @@ $('adm_cancelpayment').onclick=()=>{editingPayment=null;['payname','payinstructi
 
 checkSession();
 </script></body></html>
+<style id="apex-payment-vertical-cards">
+/* Payment methods: full-width vertical cards, one method per row */
+#adminWorkspace .payment-country-layout{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+}
+#adminWorkspace .payment-country-panel{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+#adminWorkspace .payment-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:12px;
+  width:100%;
+}
+#adminWorkspace .payment-card{
+  width:100%;
+  min-height:150px;
+  padding:18px 20px;
+  border-radius:17px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:14px;
+  background:linear-gradient(145deg,rgba(31,42,32,.96),rgba(9,14,10,.98));
+  border:1px solid rgba(224,184,91,.62);
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 8px 20px rgba(0,0,0,.24);
+}
+#adminWorkspace .payment-card-head{
+  align-items:center;
+  gap:14px;
+}
+#adminWorkspace .payment-card-title{font-size:18px;line-height:1.5}
+#adminWorkspace .payment-card-meta{font-size:13px;line-height:1.9}
+#adminWorkspace .payment-card-actions{
+  display:flex;
+  width:100%;
+  gap:9px;
+}
+#adminWorkspace .payment-card-actions button{
+  flex:1 1 0;
+  min-height:42px;
+}
+@media(max-width:760px){
+  #adminWorkspace .payment-country-layout{grid-template-columns:minmax(0,1fr)}
+  #adminWorkspace .payment-card{min-height:145px;padding:16px}
+  #adminWorkspace .payment-card-title{font-size:17px}
+  #adminWorkspace .payment-card-meta{font-size:12px}
+}
+@media(max-width:420px){
+  #adminWorkspace .payment-card-actions{flex-direction:column}
+  #adminWorkspace .payment-card-actions button{width:100%}
+}
+</style>
