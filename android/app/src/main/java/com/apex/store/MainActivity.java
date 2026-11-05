@@ -90,14 +90,14 @@ public final class MainActivity extends Activity {
             }
         });
 
-        if (state == null) webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
+        if (state == null) webView.loadUrl("https://almhmdey8-code.github.io/APEX-/");
         else webView.restoreState(state);
     }
 
     private boolean openExternal(Uri uri) {
         String scheme = uri.getScheme() == null ? "" : uri.getScheme();
         String host = uri.getHost() == null ? "" : uri.getHost();
-        if ("https".equalsIgnoreCase(scheme) && "appassets.androidplatform.net".equalsIgnoreCase(host)) return false;
+        if ("https".equalsIgnoreCase(scheme) && "almhmdey8-code.github.io".equalsIgnoreCase(host) && uri.getPath() != null && uri.getPath().startsWith("/APEX-/")) return false;
         if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)
                 || "mailto".equalsIgnoreCase(scheme) || "tel".equalsIgnoreCase(scheme)
                 || "geo".equalsIgnoreCase(scheme)) {
