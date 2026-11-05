@@ -412,7 +412,7 @@ main{max-width:1320px;padding:26px clamp(12px,2.5vw,28px) 75px}.sectionhead{marg
 <section id="accountSection-management" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">👑 إدارة المتجر وخدمة العملاء</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p>للاستفسارات ومتابعة الطلبات والتواصل مع إدارة APEX</p><p dir="ltr" style="font-weight:800;color:#ffe6a0;font-size:18px"><a href="mailto:apex.1.shopping@gmail.com">apex.1.shopping@gmail.com</a></p></section>
 <section id="accountSection-about" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">عن APEX 👑</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p>أكثر من مجرد متجر .. إنه أسلوب حياة</p><p>تسوق بثقة، واختر ما يناسبك من مجموعتنا المتجددة.</p></section>
 <section id="accountSection-referrals" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♧ دعوة الأصدقاء والمكافآت</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><p style="color:#bbb;font-size:12px">شارك كودك مع أصدقائك، وكل 5 دعوات مؤهلة تمنحك 50 ريالاً في محفظتك.</p>
-<div style="border:1px solid #8e6d2e;border-radius:14px;padding:14px;text-align:center;background:#0b0b08"><small style="color:#c9a34d">كود الدعوة الخاص بك</small><div id="myReferralCode" style="font-size:27px;color:#f2d37d;font-weight:900;letter-spacing:2px">جارٍ التحميل...</div><button class="add" type="button" onclick="copyMyReferralCode()">نسخ كود الدعوة</button></div>
+<div style="border:1px solid #8e6d2e;border-radius:14px;padding:14px;text-align:center;background:#0b0b08"><small style="color:#c9a34d">كود الدعوة الخاص بك</small><div id="myReferralCode" style="font-size:27px;color:#f2d37d;font-weight:900;letter-spacing:2px">جارٍ التحميل...</div><button class="add" type="button" onclick="copyMyReferralCode()">نسخ كود</button></div>
 <div style="margin-top:16px;display:flex;justify-content:space-between;gap:8px"><b>تقدمك نحو المكافأة</b><strong id="referralProgressText">0 / 5</strong></div><div style="height:9px;background:#29251a;border-radius:20px;overflow:hidden;margin:9px 0"><div id="referralProgressBar" style="height:100%;width:0;background:linear-gradient(90deg,#987022,#f5d879);border-radius:20px"></div></div><h3 id="referralRemaining" style="color:#f2d37d">تبقى 5 أشخاص</h3><p id="referralRewardStatus" style="color:#aaa;font-size:12px"></p><div id="referralHistory"></div></section>
 
 </div></div></div></div><div id="deliveryMapModal" role="dialog" aria-modal="true" aria-labelledby="deliveryMapTitle"><div class="delivery-map-card"><h3 id="deliveryMapTitle" style="margin:2px 0;color:#f2d37d">تحديد موقع التوصيل</h3><p id="deliveryMapMessage" style="font-size:13px;color:#ddd;margin:6px 0">جارٍ تحديد موقعك تلقائياً…</p><div id="deliveryMap"></div><p style="font-size:12px;color:#bbb">يمكنك تحريك العلامة إلى موقع المنزل بدقة، ثم اضغط «موافقة» لاعتماد الموقع.</p><div class="delivery-map-actions"><button type="button" onclick="confirmDeliveryLocation()">موافقة واعتماد الموقع</button><button type="button" class="secondary" onclick="closeDeliveryMap()">إلغاء</button></div></div></div><div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><label for="shippingMethod" style="display:block;color:var(--gold);margin:10px 0 5px">طريقة الشحن</label><select id="shippingMethod" style="width:100%;padding:12px;border:1px solid var(--gold);border-radius:10px;background:#101612;color:#fff;margin-bottom:10px"><option value="توصيل إلى المنزل">توصيل إلى المنزل</option><option value="استلام بالتنسيق مع المتجر">استلام بالتنسيق مع المتجر</option></select><textarea id="notes" rows="3" placeholder="المدينة والحي والشارع أو ملاحظات إضافية (اختياري)"></textarea><button type="button" class="goldbtn" style="width:100%;margin:5px 0" onclick="selectDeliveryLocation()">📍 تحديد موقع التوصيل على الخريطة</button><p id="locationStatus" style="font-size:12px;color:#aaa">حدد موقعك لإرساله مع الطلب، أو اكتب عنوانك في الحقل أعلاه.</p><a id="locationMapLink" hidden target="_blank" rel="noopener" style="color:var(--gold)">عرض الموقع المحدد على الخريطة</a><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
@@ -533,6 +533,35 @@ async function loadCustomerWallet(session){
   $('referralHistory').innerHTML=(r.data||[]).map((x,i)=>'<p style="color:#aaa;font-size:12px">دعوة '+(i+1)+' · '+(x.status==='confirmed'?'مؤهلة':'قيد التحقق')+'</p>').join('');
  }catch(e){console.error('APEX WALLET LOAD ERROR:',e);$('walletTopupMessage').textContent='تعذر تحميل بعض بيانات المحفظة: '+(e.message||'خطأ')}
 }
+async function loadCustomerReferral(session){
+ const codeEl=$('myReferralCode');
+ codeEl.textContent='جارٍ التحميل...';
+ if(!session?.user?.id){codeEl.textContent='سجّل الدخول لعرض كودك';return}
+ try{
+  const uid=session.user.id;
+  const {data:codeRow,error:codeError}=await supabase.from('apex_referral_codes').select('code').eq('user_id',uid).maybeSingle();
+  if(codeError)throw codeError;
+  codeEl.textContent=codeRow?.code||'لم يتم إنشاء كود الدعوة';
+  const [signups,rewards]=await Promise.all([
+   supabase.from('apex_referral_signups').select('status,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
+   supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false})
+  ]);
+  if(signups.error)throw signups.error;
+  if(rewards.error)throw rewards.error;
+  const count=(signups.data||[]).filter(x=>x.status==='confirmed').length;
+  const progress=count%5,remaining=progress===0?5:5-progress;
+  $('referralProgressText').textContent=progress+' / 5';
+  $('referralProgressBar').style.width=(progress*20)+'%';
+  $('referralRemaining').textContent=count>0&&progress===0?'اكتملت المكافأة!':'تبقى '+remaining+' أشخاص';
+  const earned=(rewards.data||[]).reduce((sum,x)=>sum+Number(x.reward_amount_sar||0),0);
+  $('referralRewardStatus').textContent='الدعوات المؤهلة: '+count+' · إجمالي المكافآت: '+walletMoney(earned);
+  $('referralHistory').innerHTML=(signups.data||[]).map((x,i)=>'<p style="color:#aaa;font-size:12px">دعوة '+(i+1)+' · '+(x.status==='confirmed'?'مؤهلة':'قيد التحقق')+'</p>').join('')||'<p style="color:#aaa;font-size:12px">لم تتم إضافة دعوات بعد.</p>';
+ }catch(e){
+  console.error('APEX REFERRAL LOAD ERROR:',e);
+  codeEl.textContent='تعذر تحميل كود الدعوة';
+  $('referralRewardStatus').textContent='تعذر تحميل بيانات الدعوات: '+(e.message||'خطأ');
+ }
+}
 async function requestWalletTopup(){
  const amount=Number($('walletTopupAmount').value),methodId=$('walletPaymentMethod').value;
  if(!Number.isFinite(amount)||amount<=0||!methodId){$('walletTopupMessage').textContent='أدخل مبلغ الشحن واختر وسيلة الدفع.';return}
@@ -561,6 +590,8 @@ async function refreshCustomer(session){
  const meta=session.user.user_metadata||{};
  const country=String(meta.country||'').toUpperCase();const nextCountry=(country==='YE'||country.includes('YEMEN')||country.includes('اليمن'))?'YE':'SA';if(storeCurrencyCountry!==nextCountry){storeCurrencyCountry=nextCountry;loadStoreProducts();loadPaymentMethods();}
  $('customer').value=meta.full_name||'';$('phone').value=meta.phone||'';$('notes').value=meta.address||'';$('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('profileAddress').value=meta.address||'';$('profileEmailNew').value='';$('accountDisplayName').textContent=meta.full_name||'غير محدد';$('accountDisplayEmail').textContent=session.user.email||'غير متوفر';$('accountDisplayPhone').textContent=meta.phone||'غير محدد';$('accountDisplayCountry').textContent=meta.country==='SA'?'السعودية':meta.country==='YE'?'اليمن':meta.country||'غير محدد';$('accountDisplayLocation').textContent=meta.address||'غير محدد';const savedLat=Number(meta.latitude),savedLng=Number(meta.longitude),hasSavedMap=Number.isFinite(savedLat)&&Number.isFinite(savedLng)&&Math.abs(savedLat)<=90&&Math.abs(savedLng)<=180;if(hasSavedMap){deliveryCoords={lat:savedLat,lng:savedLng};$('accountDisplayMapLocation').href='https://www.google.com/maps?q='+savedLat+','+savedLng;$('accountDisplayMapLocation').hidden=false;$('accountDisplayMapMissing').hidden=true;$('locationMapLink').href='https://www.google.com/maps?q='+savedLat+','+savedLng;$('locationMapLink').hidden=false;$('locationStatus').textContent='تم تحميل موقع التوصيل المحفوظ. يمكنك تغييره عند الحاجة.'}else{$('accountDisplayMapLocation').hidden=true;$('accountDisplayMapMissing').hidden=false;deliveryCoords=null}$('profileCurrentEmail').textContent='البريد الحالي: '+(session.user.email||'غير متوفر');
+ // تحميل كود الدعوة مستقلاً عن المحفظة حتى لا يبقى معلقاً بسبب استعلام آخر.
+ loadCustomerReferral(session);
  // تحميل المحفظة بشكل مستقل حتى لا يعلّق عرض الطلبات إذا تأخر أحد استعلاماتها.
  loadCustomerWallet(session);
  const {data,error}=await supabase.from('apex_orders').select('id,created_at,status,items,aramex_tracking_number,total_sar,payment_method,payment_status,shipping_status,carrier,customer_name,phone,address').eq('user_id',session.user.id).order('created_at',{ascending:false});
