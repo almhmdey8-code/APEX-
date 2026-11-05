@@ -503,7 +503,7 @@ function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('
 function removeItem(i){cart.splice(i,1);$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0);renderCart()}
 function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
-function showAccountSection(name){const allowed=['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'];if(!allowed.includes(name))return;allowed.forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name});const target=$('accountSection-'+name);if(target)target.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function showAccountSection(name){const allowed=['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'];if(!allowed.includes(name))return;allowed.forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name});const target=$('accountSection-'+name);if(target)target.scrollIntoView({behavior:'smooth',block:'nearest'});if(name==='referrals'&&customerSession?.user?.id)loadCustomerReferral(customerSession)}
 function showAccountHome(){['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=true});const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavAccount(){showAccountHome();const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavFavorites(){closeAccount();$('showFavorites').dataset.only='1';filterProducts();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
@@ -551,15 +551,19 @@ async function loadCustomerWallet(session){
 }
 async function loadCustomerReferral(session){
  const codeEl=$('myReferralCode');
- codeEl.textContent='جارٍ التحميل...';
+ const linkEl=$('myReferralLink');
+ codeEl.textContent='جارٍ تحميل كود الدعوة...';
+ if(linkEl)linkEl.textContent='';
  if(!session?.user?.id){codeEl.textContent='سجّل الدخول لعرض كودك';return}
  try{
   const uid=session.user.id;
   const {data:codeRow,error:codeError}=await supabase.from('apex_referral_codes').select('code').eq('user_id',uid).maybeSingle();
   if(codeError)throw codeError;
   const code=codeRow?.code||'';
-  codeEl.textContent=code||'لم يتم إنشاء كود الدعوة';
-  if(code)$('myReferralLink').textContent=buildReferralLink(code);
+  if(!code)throw new Error('لا يوجد كود مرتبط بحسابك في قاعدة البيانات.');
+  codeEl.textContent=code;
+  linkEl.textContent=buildReferralLink(code);
+  linkEl.style.display='block';
   const [signups,rewards,visits]=await Promise.all([
    supabase.from('apex_referral_signups').select('status,created_at,referred_name').eq('referrer_id',uid).order('created_at',{ascending:false}),
    supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
@@ -586,6 +590,7 @@ async function loadCustomerReferral(session){
  }catch(e){
   console.error('APEX REFERRAL LOAD ERROR:',e);
   codeEl.textContent='تعذر تحميل كود الدعوة';
+  if(linkEl)linkEl.textContent='تحقق من اتصال الحساب ثم افتح قسم الدعوات مجدداً.';
   $('referralRewardStatus').textContent='تعذر تحميل بيانات الدعوات: '+(e.message||'خطأ');
  }
 }
