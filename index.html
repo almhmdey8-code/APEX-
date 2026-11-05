@@ -358,11 +358,80 @@ main{max-width:1320px;padding:26px clamp(12px,2.5vw,28px) 75px}.sectionhead{marg
 .product-thumb.active{border:2px solid #f2c65d;box-shadow:0 0 8px #d8a83b88}
 .product-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:5px}
 </style><style id="apex-privacy-consent-style">.privacy-consent{display:flex;align-items:center;justify-content:center;gap:7px;margin:8px 0 12px!important;font-size:11px!important;font-weight:500;color:#bdb39b!important}.privacy-consent input{width:14px!important;height:14px!important;margin:0!important;accent-color:#d9b65c}.privacy-consent a{color:#f2d37d;text-decoration:underline;text-underline-offset:3px}</style>
+<style>
+/* APEX 2026 — refined jewel-glass storefront */
+:root{--apx-ink:#070a08;--apx-glass:rgba(16,22,18,.72);--apx-edge:rgba(244,207,114,.38);--apx-glow:rgba(12,207,170,.16)}
+html{scroll-padding-top:96px}
+body{background-color:var(--apx-ink)}
+.topbar.apex-topbar{height:76px;padding-inline:clamp(14px,5vw,76px);background:rgba(5,8,6,.78);border-bottom:1px solid var(--apx-edge);box-shadow:0 12px 38px #0007;backdrop-filter:blur(22px) saturate(145%)}
+.brand{display:flex;align-items:center;gap:9px;font-size:clamp(27px,4vw,39px);line-height:1}
+.brand>span:last-child{display:flex;flex-direction:column;gap:4px}
+.brand small{font:700 8px/1.2 'Cairo',sans-serif;letter-spacing:3px;color:#d8bd79;text-align:center}
+.brand .crown{font-size:27px;filter:drop-shadow(0 3px 8px #d7ad4c88)}
+.apex-head-actions{gap:9px}
+.apex-topbar .iconbtn,.apex-topbar .outline{background:linear-gradient(145deg,rgba(34,40,31,.92),rgba(7,10,8,.88));border:1px solid var(--apx-edge);color:#ffe8a5;box-shadow:inset 0 1px #ffffff18,0 7px 22px #0005}
+.apex-topbar .iconbtn{width:42px;height:42px}
+.apex-topbar .apex-cart-button{padding:10px 17px}
+.apex-hero{isolation:isolate;min-height:clamp(440px,54vw,610px);grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);padding:clamp(35px,6vw,82px) clamp(20px,7vw,105px);gap:clamp(15px,4vw,65px);background-position:center;background-size:cover}
+.apex-hero:before{content:"";position:absolute;inset:18px;border:1px solid rgba(255,229,157,.22);border-radius:30px;pointer-events:none;z-index:0;box-shadow:inset 0 0 55px #0005}
+.apex-hero:after{z-index:0;background:linear-gradient(90deg,rgba(3,7,5,.2),rgba(3,7,5,.76)),radial-gradient(ellipse at 72% 50%,rgba(0,208,171,.22),transparent 42%),linear-gradient(0deg,#050706 0%,transparent 32%)}
+.apex-hero .heroart{font-family:Georgia,serif;font-size:clamp(105px,19vw,230px);font-weight:900;letter-spacing:-.08em;color:#8cebd6;-webkit-text-stroke:1px #f3d47e;text-shadow:0 4px 0 #176c5c,0 12px 35px #000,0 0 70px #00c9a7;filter:drop-shadow(0 0 26px #00c9a755)}
+.apex-hero .herotext{max-width:610px;padding:clamp(18px,3vw,34px);border:1px solid rgba(255,230,167,.25);border-radius:28px;background:linear-gradient(135deg,rgba(7,13,10,.76),rgba(15,20,16,.43));box-shadow:0 22px 65px #0008,inset 0 1px #fff2;backdrop-filter:blur(16px)}
+.apex-hero .eyebrow{font-size:11px;letter-spacing:2px;color:#7ee4ce}
+.apex-hero .herotext h1{font-size:clamp(31px,4.5vw,55px);line-height:1.35;margin:12px 0 15px}
+.apex-hero .herotext p{font-size:clamp(14px,1.7vw,18px);line-height:2;color:#e8e4d7}
+.apex-hero .hero-caption{display:inline-flex;margin-top:8px;padding:7px 13px;border:1px solid rgba(0,201,167,.35);border-radius:30px;background:#063c303d;color:#a9f3e3;font-size:12px}
+.apex-hero .goldbtn{min-height:48px;padding:11px 27px;font-size:16px}
+.apex-value-strip{max-width:1160px;margin:-25px auto 25px;padding:0 18px;position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.apex-value-strip article{display:flex;align-items:center;gap:13px;min-height:86px;padding:15px 18px;border:1px solid var(--apx-edge);border-radius:19px;background:linear-gradient(135deg,rgba(26,34,27,.94),rgba(8,12,9,.94));box-shadow:0 14px 35px #0007,inset 0 1px #fff2;backdrop-filter:blur(15px)}
+.apex-value-strip article>span{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#f8dfa0,#a97822);color:#171006;font-size:24px;box-shadow:0 5px 18px #d7ae4c35}
+.apex-value-strip b,.apex-value-strip small{display:block}
+.apex-value-strip b{color:#ffe9ae;font-size:14px}
+.apex-value-strip small{margin-top:3px;color:#c6c5b9;font-size:11px;line-height:1.6}
+#storefrontAuth{max-width:1050px;margin:26px auto 38px;padding-inline:18px}
+.storefront-auth{border:1px solid var(--apx-edge)!important;border-radius:22px!important;background:linear-gradient(135deg,rgba(21,30,23,.85),rgba(7,10,8,.88))!important;box-shadow:0 16px 40px #0006,inset 0 1px #fff2}
+main{padding-top:15px}
+#storeCategories{scroll-margin-top:100px}
+#search{outline:none;transition:border-color .2s,box-shadow .2s}
+#search:focus,.field:focus,input:focus,textarea:focus,select:focus{border-color:#f4d27c!important;box-shadow:0 0 0 3px rgba(244,210,124,.13);outline:none}
+.sectionhead h2,.about h2{letter-spacing:.2px}
+.product,.feature,.about{backdrop-filter:blur(12px)}
+.product{border-radius:18px!important;background:linear-gradient(145deg,rgba(27,34,27,.96),rgba(7,10,8,.96))!important}
+.product img{background:linear-gradient(145deg,#1c261f,#090d0a)}
+.product .add{border-radius:24px}
+.about{border-radius:25px;background:radial-gradient(ellipse at 50% 0%,rgba(0,201,167,.12),transparent 58%),linear-gradient(145deg,#121911,#080b09)}
+footer{background:linear-gradient(180deg,transparent,rgba(15,20,16,.8));padding:38px 16px}
+button,a,[role=button]{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid #ffe7a0!important;outline-offset:3px}
+@media(max-width:760px){
+ .topbar.apex-topbar{height:68px;padding-inline:10px}
+ .apex-hero{min-height:unset;grid-template-columns:1fr;gap:4px;padding:30px 17px 48px;text-align:center;background-position:55% center}
+ .apex-hero:before{inset:9px;border-radius:22px}
+ .apex-hero .heroart{font-size:clamp(100px,31vw,145px);margin:0 auto 5px}
+ .apex-hero .herotext{margin:auto;padding:19px 15px;border-radius:21px}
+ .apex-hero .herotext h1{font-size:32px}
+ .apex-hero .herotext p{font-size:14px}
+ .apex-value-strip{margin:-22px auto 18px;grid-template-columns:1fr;gap:8px;max-width:520px}
+ .apex-value-strip article{min-height:68px;padding:10px 14px}
+ .apex-value-strip article>span{width:38px;height:38px;flex-basis:38px}
+ #storefrontAuth{margin:18px auto 28px}
+}
+@media(prefers-reduced-motion:no-preference){
+ .apex-hero .heroart{animation:apexFloat 6s ease-in-out infinite}
+ @keyframes apexFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
-<section class="hero apex-hero"><div class="heroart" aria-label="شعار APX">APX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">أول متجر إلكتروني يُدار بالذكاء الاصطناعي</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
+<section class="hero apex-hero"><div class="heroart" aria-label="شعار APX">APX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">تسوّق بثقة، واكتشف اختيارات تليق بك</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
+<section class="apex-value-strip" aria-label="مميزات تجربة APEX">
+  <article><span>✧</span><div><b>اختيارات متنوعة</b><small>اكتشف منتجات تناسب احتياجاتك</small></div></article>
+  <article><span>◇</span><div><b>تجربة سهلة</b><small>تصفّح وابحث وأضف إلى سلتك بسلاسة</small></div></article>
+  <article><span>♙</span><div><b>مساحتك الخاصة</b><small>تابع حسابك وطلباتك من مكان واحد</small></div></article>
+</section>
 <section id="storefrontAuth" class="storefront-auth-wrap"><div class="storefront-auth"><div class="storefront-auth-options"><button type="button" class="storefront-auth-option" onclick="document.getElementById('accountAuth').hidden=false;document.getElementById('accountForm').hidden=false;document.getElementById('authLoginFields').hidden=false;document.getElementById('authSignupFields').hidden=true;document.getElementById('accountMsg').textContent='';">تسجيل الدخول</button><button type="button" class="storefront-auth-option" onclick="document.getElementById('accountAuth').hidden=false;document.getElementById('accountForm').hidden=false;document.getElementById('authLoginFields').hidden=true;document.getElementById('authSignupFields').hidden=false;document.getElementById('signupStep1').hidden=false;document.getElementById('signupStep2').hidden=true;document.getElementById('signupStep3').hidden=true;document.getElementById('accountMsg').textContent='';">إنشاء حساب</button></div><div id="accountAuth" class="account-panel-card account-auth-card"><div id="accountForm" hidden><div id="authLoginFields"><input id="accountEmail" type="text" autocomplete="username" placeholder="البريد الإلكتروني أو رقم الهاتف"><input id="accountPassword" type="password" placeholder="كلمة المرور"><button id="accountAuthAction" class="goldbtn" type="button" onclick="customerSignIn()">تسجيل الدخول</button><div class="storefront-forgot-row"><button type="button" class="storefront-forgot" onclick="customerReset()">نسيت كلمة المرور</button></div></div><div id="authSignupFields" hidden><div id="signupStep1"><input id="signupEmail" type="email" autocomplete="email" placeholder="البريد الإلكتروني"><label class="privacy-consent"><input id="signupPrivacyConsent" type="checkbox" required><span>أوافق على <a href="privacy.html" target="_blank" rel="noopener">سياسة الخصوصية</a></span></label><button class="goldbtn" type="button" onclick="sendSignupCode()">طلب كود التحقق</button></div><div id="signupStep2" hidden><p>تم إرسال الكود إلى بريدك الإلكتروني. أدخل الكود هنا</p><input id="signupCode" inputmode="numeric" maxlength="6" placeholder="رمز التحقق"><button class="goldbtn" type="button" onclick="verifySignupCode()">تأكيد الكود</button></div><div id="signupStep3" hidden><p style="color:#7ee0a1">تم التحقق بنجاح</p><input id="signupName" autocomplete="name" placeholder="الاسم الكامل"><input id="signupPhone" type="tel" autocomplete="tel" placeholder="رقم الجوال"><input id="signupPassword" type="password" placeholder="كلمة المرور"><input id="signupConfirm" type="password" placeholder="تأكيد كلمة المرور"><select id="signupCountry"><option value="">اختر الدولة</option><option value="SA">السعودية</option><option value="YE">اليمن</option></select><input id="signupReferralCode" placeholder="كود الدعوة (اختياري)"><input id="signupAddress" placeholder="العنوان"><label style="display:flex;align-items:center;gap:9px;margin:12px 0;color:#e9bd55"><input id="signupMarketingOptIn" type="checkbox"> أوافق على استقبال عروض APEX والتحديثات عبر البريد الإلكتروني (اختياري).</label><button class="add" type="button" onclick="pickSignupLocation()">تحديد الموقع على الخريطة</button><p id="signupLocation">لم يتم تحديد الموقع</p><button class="goldbtn" type="button" onclick="finishSignup()">إكمال إنشاء الحساب</button></div></div><p id="accountMsg" style="color:#e9bd55"></p></div></div></div></section>
 
 <main>
