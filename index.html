@@ -549,10 +549,10 @@ async function loadCustomerReferral(session){
   if(signups.error)throw signups.error;
   if(rewards.error)throw rewards.error;
   const count=(signups.data||[]).filter(x=>x.status==='confirmed').length;
-  const progress=count%5,remaining=progress===0?5:5-progress;
+  const progress=count===0?0:(count%5===0?5:count%5),remaining=5-progress;
   $('referralProgressText').textContent=progress+' / 5';
   $('referralProgressBar').style.width=(progress*20)+'%';
-  $('referralRemaining').textContent=count>0&&progress===0?'اكتملت المكافأة!':'تبقى '+remaining+' أشخاص';
+  $('referralRemaining').textContent=remaining===0?'اكتملت المكافأة!':'تبقى '+remaining+' أشخاص';
   const earned=(rewards.data||[]).reduce((sum,x)=>sum+Number(x.reward_amount_sar||0),0);
   $('referralRewardStatus').textContent='الدعوات المؤهلة: '+count+' · إجمالي المكافآت: '+walletMoney(earned);
   $('referralHistory').innerHTML=(signups.data||[]).map((x,i)=>'<p style="color:#aaa;font-size:12px">دعوة '+(i+1)+' · '+(x.status==='confirmed'?'مؤهلة':'قيد التحقق')+'</p>').join('')||'<p style="color:#aaa;font-size:12px">لم تتم إضافة دعوات بعد.</p>';
