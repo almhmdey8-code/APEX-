@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - hardening/pre-release-2026-11-05
       - fix/apex-store-ui-audit
   pull_request:
     branches:
@@ -17,22 +18,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Check storefront and admin scripts
+      - name: Validate storefront integration
+        run: node scripts/validate-store.mjs
+      - name: Check storefront and admin JavaScript syntax
         run: |
           node <<'NODE'
           const fs = require('fs');
           for (const file of ['index.html', 'admin.html']) {
             const html = fs.readFileSync(file, 'utf8');
-            const blocks = [...html.matchAll(/<script\b(?=[^>]*\btype\s*=\s*["']module["'])[^>]*>([\s\S]*?)<\/script\s*>/gi)];
-            if (!blocks.length) throw new Error('Module script missing in ' + file);
+            const blocks = [...html.matchAll(/<script\\b(?=[^>]*\\btype\\s*=\\s*["']module["'])[^>]*>([\\s\\S]*?)<\\/script\\s*>/gi)];
             const inlineBlocks = blocks.filter(match => {
               const openingTag = match[0].slice(0, match[0].indexOf('>') + 1);
-              return !/\bsrc\s*=/.test(openingTag) && match[1].trim();
+              return !/\\bsrc\\s*=/.test(openingTag) && match[1].trim();
             });
-            if (!inlineBlocks.length) throw new Error('No inline module script found in ' + file);
-            const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(x => x[1]);
-            const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
-            if (duplicates.length) throw new Error(file + ' duplicate IDs: ' + [...new Set(duplicates)].join(', '));
             inlineBlocks.forEach((match, index) => {
               fs.writeFileSync('/tmp/' + file.replace('.html', '') + '-' + index + '.mjs', match[1]);
             });
