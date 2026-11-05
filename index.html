@@ -463,7 +463,7 @@ document.addEventListener('contextmenu',function(e){
 </script>
 </head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
 <section class="hero apex-hero"><div class="heroart" aria-label="شعار APX">APX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">تسوّق بثقة، واكتشف اختيارات تليق بك</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
 <section class="apex-value-strip" aria-label="مميزات تجربة APEX">
@@ -780,7 +780,7 @@ async function refreshCustomer(session){
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
- $('.account-entry').hidden=!session;
+ $('account-entry').hidden=!session;
  if(!session){
   $('accountForm').hidden=false;
   $('authLoginFields').hidden=false;
