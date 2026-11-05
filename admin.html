@@ -230,7 +230,19 @@
 #adminWorkspace .payment-card .payment-status{font-size:11px;font-weight:800;border-radius:20px;padding:4px 9px;background:#302719;color:#f4d78a;white-space:nowrap}
 #adminWorkspace .payment-card .payment-status.off{background:#292929;color:#d1d1d1}
 @media(max-width:650px){#adminWorkspace .payment-grid{grid-template-columns:1fr}#adminWorkspace .payment-card{padding:11px}}
-</style></head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
+</style><style id="apex-royal-glass-admin-v1">
+#adminWorkspace{background:radial-gradient(ellipse at 85% 0%,rgba(190,143,50,.2),transparent 38%),radial-gradient(ellipse at 5% 35%,rgba(0,124,91,.18),transparent 35%),rgba(3,7,5,.96)!important;backdrop-filter:blur(28px) saturate(160%)!important}
+#adminWorkspace .head,#adminWorkspace .dashboard-hero,#adminWorkspace .panel,#adminWorkspace .kpi,#adminWorkspace .item,#adminWorkspace #adm_login,#adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders{background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.025) 38%,rgba(8,15,12,.84) 100%)!important;border:1px solid rgba(255,225,157,.7)!important;backdrop-filter:blur(24px) saturate(165%)!important;box-shadow:0 18px 48px #000b,inset 0 1px 0 #fff4,inset 0 -1px 0 #f4d58a22!important;position:relative;overflow:hidden}
+#adminWorkspace .head:before,#adminWorkspace .dashboard-hero:before,#adminWorkspace .panel:before,#adminWorkspace .kpi:before,#adminWorkspace .item:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(130deg,#fff2,transparent 25% 76%,#f4d58a12)}
+#adminWorkspace .head:after,#adminWorkspace .dashboard-hero:after{border-color:#ffe6a6!important;opacity:.48}
+#adminWorkspace .brand{background:linear-gradient(110deg,#9d6e24,#fff0b5 38%,#d3a647 62%,#fff5d0 78%,#8e611c);background-clip:text;-webkit-background-clip:text;color:transparent!important;text-shadow:none!important}
+#adminWorkspace .tabs{background:rgba(255,255,255,.045)!important;border:1px solid rgba(255,225,157,.5)!important;backdrop-filter:blur(18px)}
+#adminWorkspace .tabs button,#adminWorkspace .btn,#adminWorkspace .btn2{border:1px solid #fff0bc!important;border-radius:10px 18px 10px 18px!important;background:linear-gradient(125deg,#805617 0%,#d2a044 22%,#fff0b5 48%,#c48c2d 72%,#765016 100%)!important;color:#1b1305!important;box-shadow:0 8px 24px #c18b3444,inset 0 1px 0 #fff9!important}
+#adminWorkspace .field,#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select{background:rgba(5,10,8,.76)!important;border:1px solid rgba(255,225,157,.58)!important;color:#fff8e8!important;backdrop-filter:blur(12px)}
+#adminWorkspace h1,#adminWorkspace h2{color:#fff0bc!important;text-shadow:0 0 20px #d6a84c44}
+@media(max-width:650px){#adminWorkspace{padding:12px!important}#adminWorkspace .head{padding:16px!important}}
+</style>
+</head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button><p id="adm_who" class="muted admin-login-status" aria-live="polite"></p></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" value="apex.1.shopping@gmail.com" autocomplete="username"><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
 <section id="adm_dashboard" class="apex-admin-hidden">
