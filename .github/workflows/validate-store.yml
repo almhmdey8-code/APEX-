@@ -5,6 +5,7 @@ on:
       - main
       - hardening/pre-release-2026-11-05
       - fix/apex-store-ui-audit
+      - fix/apex-order-validation
   pull_request:
     branches:
       - main
