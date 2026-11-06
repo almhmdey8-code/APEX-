@@ -39,7 +39,7 @@ before(async () => {
       methodType: "manual", ordersEnabled: true, countryCode: "SA"
     });
     await setDoc(doc(db, "paymentMethods", "unsafe"), {
-      name: "Unsafe", enabled: true, secretKey: "must-never-be-readable"
+      name: "Unsafe", enabled: true, publicConfig: { apiSecret: "must-never-be-readable" }
     });
     await setDoc(doc(db, "paymentWebhookEvents", "event-1"), { eventId: "evt-1" });
   });
@@ -97,6 +97,7 @@ test("payment webhooks remain private; admin claim is required", async () => {
   const customer = env.authenticatedContext("customer-1").firestore();
   const admin = env.authenticatedContext("admin-1", { admin: true }).firestore();
   await assertFails(getDoc(doc(customer, "paymentWebhookEvents", "event-1")));
-  await assertSucceeds(getDoc(doc(admin, "paymentWebhookEvents", "event-1")));
+  await assertFails(getDoc(doc(admin, "paymentWebhookEvents", "event-1")));
+  await assertFails(setDoc(doc(admin, "paymentWebhookEvents", "event-2"), { eventId: "evt-2" }));
   await assertSucceeds(setDoc(doc(admin, "products", "103"), { active: true, name: "Admin product" }));
 });
