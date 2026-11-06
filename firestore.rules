@@ -64,9 +64,8 @@ service cloud.firestore {
         resource.data.keys().hasOnly([
           'legacyId', 'name', 'instructions', 'methodType', 'enabled',
           'sortOrder', 'countryCode', 'methodCode', 'walletTopupEnabled',
-          'gatewayProvider', 'ordersEnabled', 'accountHolder',
-          'accountNumber', 'accountIban', 'publicConfig', 'integrationStatus',
-          'createdAt', 'updatedAt', '_migration'
+          'ordersEnabled', 'accountHolder',
+          'accountNumber', 'accountIban', 'createdAt', 'updatedAt', '_migration'
         ])) || isAdmin();
       allow write: if isAdmin();
     }
@@ -147,13 +146,13 @@ service cloud.firestore {
     // Financial provider sessions, webhook payloads, shipping jobs, and telemetry
     // remain server-only. Cron auth material is never readable from client apps.
     match /privateGatewayTransactions/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if false;
     }
     match /paymentWebhookEvents/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if false;
     }
     match /shippingJobs/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if false;
     }
     match /securityEvents/{id} {
       allow read, write: if isAdmin();
