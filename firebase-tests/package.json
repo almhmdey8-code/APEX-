@@ -1,0 +1,12 @@
+{
+  "name": "apex-firebase-rules-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test firestore.rules.test.mjs"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^12.4.0"
+  }
+}
