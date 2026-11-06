@@ -1,0 +1,39 @@
+name: Firebase Firestore Rules Tests
+
+on:
+  push:
+    branches:
+      - firebase-migration-prep
+    paths:
+      - "firestore.rules"
+      - "firebase.json"
+      - "firebase-tests/**"
+      - ".github/workflows/firebase-rules-tests.yml"
+  pull_request:
+    paths:
+      - "firestore.rules"
+      - "firebase.json"
+      - "firebase-tests/**"
+      - ".github/workflows/firebase-rules-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  firestore-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Firebase rules test dependencies
+        working-directory: firebase-tests
+        run: npm install --no-audit --no-fund
+      - name: Install Firebase CLI
+        run: npm install --global firebase-tools
+      - name: Run Firestore emulator tests
+        run: firebase emulators:exec --project apex-firestore-rules-test --only firestore "npm test"
+        working-directory: firebase-tests
