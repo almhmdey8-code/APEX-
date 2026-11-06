@@ -22,7 +22,7 @@ function proxy(functionName) {
       if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
       const authorization = req.get("authorization");
-      if (!authorization || !/^Bearer\\s+\\S+$/i.test(authorization)) {
+      if (!authorization || !/^Bearer\s+\S+$/i.test(authorization)) {
         return res.status(401).json({ error: "يجب تسجيل الدخول" });
       }
 
