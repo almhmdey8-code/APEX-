@@ -75,3 +75,13 @@
 
 ## النشر
 لا تشغّل `firebase deploy` في هذه المرحلة. ملف `firebase.json` يعرّف قواعد Firestore فقط، والقواعد مغلقة افتراضياً. إعداد Hosting غير مضاف حتى لا يتغير استضافة GitHub Pages الحالية.
+
+
+## تدقيق إضافي للواجهتين
+بعد استخراج الاستدعاءات مباشرة من نسختي الواجهتين في الفرع الأساسي، تأكدت القائمة التالية:
+- جداول لوحة المدير الإضافية: `apex_admins`, `apex_email_settings`, `apex_security_events`, `apex_shipping_providers`.
+- وظائف Edge المشار إليها من الواجهتين: `apex-ai-guard`, `apex-create-order`, `apex-store-assistant`, `apex-wallet-checkout`, `apex-admin-customers`, `apex-email-campaign`.
+- RPC لوحة المدير: `apex_admin_refund_order_to_wallet`, `apex_admin_review_wallet_topup`.
+- مخزن الملفات المستخدم: `apex-store`.
+
+شجرة المستودع الحالية تحتوي على مصدر Edge Function واحد فقط هو `supabase/functions/apex-store-assistant/index.ts`. بقية الأسماء أعلاه مستدعاة من الواجهات لكن مصادرها غير موجودة في المستودع الحالي. يجب استعادتها من مشروع Supabase قبل إعادة تنفيذها؛ لا يجوز إنشاء بدائل تخمينية لعمليات المال أو الإدارة.
