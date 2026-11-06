@@ -27,10 +27,13 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Validate migration script
+        working-directory: migration
+        run: node --check import-firestore.js
       - name: Import Supabase tables into Firestore
         working-directory: migration
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_URL: https://ulzxdvtzziydhuvennzw.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GCLOUD_PROJECT: apex-3c12f
         run: node import-firestore.js --apply
