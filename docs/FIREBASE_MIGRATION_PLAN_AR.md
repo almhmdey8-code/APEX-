@@ -58,7 +58,7 @@
 عمليات المحفظة، استرداد الأموال، إنشاء الطلبات، مراجعة الشحنات، ومكافآت الدعوات يجب أن تبقى في وظائف خادمية ذات تحقق من المستخدم، وتحقق من الأسعار والمخزون، ومنع التكرار (idempotency)، وسجل تدقيق.
 
 ## عناصر تمنع إكمال النقل الآمن حتى الآن
-1. تم استرجاع نسخ المصدر الحية للوظائف الست النشطة من مشروع Supabase إلى `supabase/functions/` على فرع الترحيل (wallet-checkout v7، create-order v7، admin-customers v7، ai-guard v9، email-campaign v8، store-assistant v10). يجب مراجعتها وتحويلها إلى Cloud Functions؛ وجودها في Git لا يعني أنها أصبحت تعمل على Firebase.
+1. تم التحقق مباشرة من مشروع Supabase النشط `ulzxdvtzziydhuvennzw` واسترجاع/مطابقة مصادر الوظائف الست النشطة في `supabase/functions/` على فرع الترحيل: wallet-checkout v7، create-order v7، admin-customers v7، ai-guard v9، email-campaign v8، store-assistant v10. هذه مصادر Supabase الأصلية وليست بعدُ Cloud Functions.
 2. ملفات migrations القديمة التي تنشئ المخطط الكامل وسياسات RLS ليست محفوظة في المستودع. تم التحقق مباشرة من مخطط قاعدة البيانات الحية، لكن يجب حفظ migrations الأصلية أو توثيق schema كامل قابل لإعادة البناء قبل الترحيل النهائي.
 3. لم تُنشأ بعد نسخة تصدير آمنة من بيانات Supabase أو تقرير مطابقة counts/checksums قابل لإعادة التشغيل.
 4. لم يتم تأكيد تفعيل Firestore وAuthentication وStorage وCloud Functions في مشروع Firebase، ولا تتوفر في جلسة العمل الحالية وصلة إدارية مباشرة لتنفيذ إعدادات Firebase أو النشر.
@@ -73,6 +73,9 @@
 6. تحويل واجهتي `index.html` و`admin.html` إلى Firebase في تغيير منفصل بعد اجتياز الاختبارات.
 7. إبقاء Supabase متاحاً للرجوع حتى اعتماد Firebase نهائياً.
 
+## نتيجة اختبار القواعد
+اكتمل تشغيل GitHub Actions رقم `42292247193` بنجاح على commit `3e8cd1266d9cf9cc783e3e7f07f73c6dffebcfe1`؛ نجحت خطوات تثبيت Node وJava 21 وFirebase CLI وتشغيل اختبارات Firestore Emulator. هذا يثبت اختبارات القواعد الحالية فقط، ولا يثبت اكتمال نقل وظائف الخادم أو البيانات أو الواجهة.
+
 ## النشر
 لا تشغّل `firebase deploy` في هذه المرحلة. ملف `firebase.json` يعرّف قواعد Firestore فقط، والقواعد مغلقة افتراضياً. إعداد Hosting غير مضاف حتى لا يتغير استضافة GitHub Pages الحالية.
 
@@ -84,4 +87,4 @@
 - RPC لوحة المدير: `apex_admin_refund_order_to_wallet`, `apex_admin_review_wallet_topup`.
 - مخزن الملفات المستخدم: `apex-store`.
 
-شجرة المستودع الحالية تحتوي على مصدر Edge Function واحد فقط هو `supabase/functions/apex-store-assistant/index.ts`. بقية الأسماء أعلاه مستدعاة من الواجهات لكن مصادرها غير موجودة في المستودع الحالي. يجب استعادتها من مشروع Supabase قبل إعادة تنفيذها؛ لا يجوز إنشاء بدائل تخمينية لعمليات المال أو الإدارة.
+**تصحيح حالة الشجرة:** شجرة `firebase-migration-prep` الحالية تحتوي فعلياً على ملفات المصدر الستة تحت `supabase/functions/`، وقد تم التحقق من وجودها ومطابقة أسماءها وإصداراتها مع مشروع Supabase الحي. العبارة السابقة التي تقول إن الشجرة تحتوي وظيفة واحدة فقط أصبحت قديمة ومتعارضة مع الجرد الحالي.
