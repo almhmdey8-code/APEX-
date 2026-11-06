@@ -566,7 +566,7 @@ function askApexAssistantQuick(text){
  $('apexAiInput').value=text;sendApexAssistantMessage();
 }
 function clearApexAssistantSession(){
- apexAssistantMessages=[];$('apexAiHandoff').hidden=true;$('apexAiStatus').textContent='';
+ apexAssistantMessages=[];apexAssistantInitialized=false;$('apexAiHandoff').hidden=true;$('apexAiStatus').textContent='';
  renderApexAssistantMessages();$('apexAiInput').focus();
 }
 async function sendApexAssistantMessage(){
@@ -655,6 +655,11 @@ function copyMyReferralCode(){const code=$('myReferralCode').textContent;if(!/^A
 
 async function loadCustomerNotifications(){if(!customerSession){$('customerNotifications').innerHTML='<p>سجل الدخول لعرض إشعاراتك.</p>';return}const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').order('created_at',{ascending:false}).limit(30);if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};$('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث حالة الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>'}
 async function refreshCustomer(session){
+ if(customerSession?.user?.id && customerSession.user.id !== (session?.user?.id||null)){
+  apexAssistantMessages=[];apexAssistantInitialized=false;
+  if($('apexAiMessages'))renderApexAssistantMessages();
+  if($('apexAiHandoff'))$('apexAiHandoff').hidden=true;
+ }
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
@@ -738,7 +743,7 @@ async function saveNewPassword(){const password=$('newPassword').value;if(passwo
 async function customerReset(){const email=$('accountEmail').value.trim();if(!email){$('accountMsg').textContent='أدخل بريدك الإلكتروني أولاً.';return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});$('accountMsg').textContent=error?'تعذر إرسال رابط الاستعادة: '+error.message:'إذا كان البريد مسجلاً، ستصلك رسالة لاستعادة كلمة المرور.'}
 async function saveProfile(){const meta=customerSession?.user?.user_metadata||{},name=$('profileName').value.trim()||meta.full_name||'',phone=$('profilePhone').value.trim()||meta.phone||'',address=$('profileAddress').value.trim()||meta.address||'',button=$('accountSection-profile').querySelector('button[onclick="saveProfile()"]');if(!name&&!phone&&!address){$('profileMsg').textContent='أدخل البيانات التي تريد تعديلها.';return}button.disabled=true;button.textContent='جارٍ الحفظ…';try{const {data,error}=await supabase.auth.updateUser({data:{full_name:name,phone,address}});if(error)throw error;if(data?.user)customerSession={...customerSession,user:data.user};$('customer').value=name||$('customer').value;$('phone').value=phone||$('phone').value;$('notes').value=address||$('notes').value;$('accountDisplayName').textContent=name||'غير محدد';$('accountDisplayPhone').textContent=phone||'غير محدد';$('accountDisplayLocation').textContent=address||'غير محدد';$('profileMsg').textContent='تم حفظ بيانات الحساب على الخادم بنجاح.'}catch(e){$('profileMsg').textContent='تعذر حفظ البيانات: '+(e.message||'خطأ')}finally{button.disabled=false;button.textContent='حفظ البيانات'}}
 async function saveProfileEmail(){const email=$('profileEmailNew').value.trim(),msg=$('profileEmailMsg'),button=$('accountSection-profile').querySelector('button[onclick="saveProfileEmail()"]');if(!email||!email.includes('@')){msg.textContent='أدخل بريداً إلكترونياً صحيحاً.';return}if(email.toLowerCase()===String(customerSession?.user?.email||'').toLowerCase()){msg.textContent='هذا هو بريدك الحالي بالفعل.';return}button.disabled=true;button.textContent='جارٍ الإرسال…';try{const {error}=await supabase.auth.updateUser({email});if(error)throw error;msg.textContent='تم طلب تغيير البريد. افتح رسالة التأكيد المرسلة إلى البريد الجديد لإكمال التحديث.';$('profileEmailNew').value=''}catch(e){msg.textContent='تعذر طلب تغيير البريد: '+(e.message||'خطأ')}finally{button.disabled=false;button.textContent='تحديث البريد الإلكتروني'}}
-async function customerSignOut(){await supabase.auth.signOut();refreshCustomer(null);$('accountMsg').textContent='تم تسجيل الخروج.'}
+async function customerSignOut(){apexAssistantMessages=[];apexAssistantInitialized=false;if($('apexAiMessages'))renderApexAssistantMessages();if($('apexAiHandoff'))$('apexAiHandoff').hidden=true;await supabase.auth.signOut();refreshCustomer(null);$('accountMsg').textContent='تم تسجيل الخروج.'}
 supabase.auth.getSession().then(({data})=>refreshCustomer(data.session));
 supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){$('passwordRecovery').hidden=false;$('accountpanel').classList.add('show')}queueMicrotask(()=>refreshCustomer(session))});window.addEventListener('pageshow',async()=>{const {data,error}=await supabase.auth.getSession();if(!error)refreshCustomer(data.session)});
 let deliveryCoords=null;
