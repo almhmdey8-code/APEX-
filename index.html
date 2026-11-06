@@ -461,6 +461,30 @@ document.addEventListener('contextmenu',function(e){
   e.preventDefault();
 },true);
 </script>
+<style>
+.apex-ai-card{border-color:#d5a83c!important}
+.apex-ai-intro{color:#d7c99f;line-height:1.9;font-size:13px}
+.apex-ai-messages{height:min(48vh,440px);min-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid #80672e;border-radius:16px;background:radial-gradient(ellipse at 15% 0%,#30230e 0%,#0b0d0b 45%,#050605 100%);scroll-behavior:smooth}
+.apex-ai-welcome{align-self:flex-start;max-width:88%;display:flex;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid #98752f;border-radius:15px 15px 15px 4px;background:#17150f;color:#f7e7b5;line-height:1.8}
+.apex-ai-welcome span{font-size:13px;color:#cfc5a9}
+.apex-ai-message{max-width:88%;padding:10px 13px;border-radius:15px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}
+.apex-ai-message small{display:block;font-size:10px;opacity:.72;margin-bottom:4px}
+.apex-ai-user{align-self:flex-end;background:linear-gradient(135deg,#6f4c13,#b78b32);color:#fff8df;border:1px solid #f0d17a;border-radius:15px 15px 4px 15px}
+.apex-ai-bot{align-self:flex-start;background:#151812;color:#f4edda;border:1px solid #655127;border-radius:15px 15px 15px 4px}
+.apex-ai-quick{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.apex-ai-quick button,.apex-ai-footer button{border:1px solid #8e6d2e;border-radius:22px;padding:7px 11px;background:#100f0c;color:#f4d98a;font-size:11px}
+.apex-ai-compose{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.apex-ai-compose textarea{width:100%;resize:vertical;min-height:54px;max-height:130px;padding:12px;border:1px solid #98752f;border-radius:13px;background:#080908;color:#fff;font:inherit;font-size:14px}
+.apex-ai-compose .goldbtn{margin:0;padding:11px 17px;font-size:14px}
+.apex-ai-compose button:disabled{opacity:.55;cursor:wait}
+.apex-ai-footer{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;color:#a9a18d;font-size:10px}
+.apex-ai-handoff{margin-top:12px;padding:12px;border:1px solid #8e6d2e;border-radius:12px;background:#15130d;color:#f2d37d}
+.apex-ai-handoff p{margin:0 0 8px}
+.apex-ai-handoff a{display:inline-block;color:#fff0b8;text-decoration:underline;font-weight:800}
+.apex-ai-status{min-height:20px;color:#d7bd75;font-size:11px}
+@media(max-width:560px){.apex-ai-messages{height:43vh;min-height:220px;padding:9px}.apex-ai-message,.apex-ai-welcome{max-width:94%}.apex-ai-compose .goldbtn{padding:10px 12px}.apex-ai-footer{align-items:flex-start;flex-direction:column}}
+
+</style>
 </head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
@@ -499,7 +523,7 @@ document.addEventListener('contextmenu',function(e){
 <button onclick="showAccountSection('shipping')"><b>♧</b><span>طلبات الشحن</span><small>متابعة الشحنات</small></button>
 <button onclick="showAccountSection('transit')"><b>⇢</b><span>قيد الشحن</span><small>حالة التوصيل</small></button>
 <button onclick="showAccountSection('notifications');loadCustomerNotifications()"><b>♧</b><span>الإشعارات</span><small>آخر التحديثات</small></button>
-<button onclick="showAccountSection('support')"><b>✉</b><span>الدعم والمساعدة</span><small>تواصل مع خدمة العملاء</small></button>
+<button onclick="showAccountSection('support')"><b>✉</b><span>المساعد المباشر APEX AI</span><small>تواصل مع خدمة العملاء</small></button>
 <button onclick="showAccountSection('policies')"><b>▤</b><span>سياسات المتجر</span><small>الطلب والشحن والخصوصية</small></button>
 <button onclick="showAccountSection('about')"><b>✦</b><span>عن APEX</span><small>تعرف على APEX ورؤيتها</small></button>
 <button onclick="showAccountSection('profile')"><b>♙</b><span>تعديل بياناتك</span><small>الاسم والجوال والعنوان والبريد</small></button>
@@ -516,7 +540,7 @@ document.addEventListener('contextmenu',function(e){
 <p id="walletPaymentInstructions" style="white-space:pre-wrap;color:#d7c99f;font-size:12px"></p><label for="walletCustomerReference">رقم الحوالة أو مرجع الدفع (اختياري)</label><input id="walletCustomerReference" placeholder="رقم العملية أو الحوالة">
 <button class="add" type="button" onclick="requestWalletTopup()">إرسال طلب الشحن</button><p id="walletTopupMessage" style="color:#e9bd55"></p><p style="color:#aaa;font-size:11px;line-height:1.8">لن يُضاف الرصيد إلا بعد مراجعة المدير وتأكيد استلام المبلغ.</p>
 <h4 style="color:#f4d98a;margin-top:18px">طلبات الشحن</h4><div id="walletTopupHistory">لا توجد طلبات شحن.</div><h4 style="color:#f4d98a;margin-top:18px">سجل المحفظة</h4><div id="walletTransactions">لا توجد عمليات بعد.</div></section>
-<section id="accountSection-support" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">✉ خدمة العملاء</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p>يمكنك متابعة طلباتك وتحديث بياناتك من حسابك. لأي استفسار، استخدم تفاصيل الطلب ليتابع فريق APEX طلبك.</p></section>
+<section id="accountSection-support" hidden class="account-panel-card apex-ai-card"><div class="account-section-heading"><h3 class="account-section-title">✦ المساعد المباشر APEX AI</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p class="apex-ai-intro">مساعدك العربي لفهم المنتجات والأسعار والمخزون والطلبات والشحن والدفع واستخدام المتجر.</p><div id="apexAiMessages" class="apex-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"><div class="apex-ai-welcome"><b>مرحباً بك في APEX 👑</b><span>اسألني عن منتجات المتجر أو حسابك أو طلباتك، وسأساعدك بالمعلومات الفعلية المتاحة.</span></div></div><div class="apex-ai-quick"><button type="button" onclick="askApexAssistantQuick('كيف أنشئ حساباً جديداً في المتجر؟')">إنشاء حساب</button><button type="button" onclick="askApexAssistantQuick('كيف أتابع طلبي؟')">متابعة طلب</button><button type="button" onclick="askApexAssistantQuick('ما المنتجات المتوفرة حالياً؟')">المنتجات المتوفرة</button><button type="button" onclick="askApexAssistantQuick('ما طرق الدفع المتاحة؟')">طرق الدفع</button></div><div class="apex-ai-compose"><textarea id="apexAiInput" rows="2" maxlength="1500" placeholder="اكتب سؤالك عن متجر APEX..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendApexAssistantMessage()}"></textarea><button id="apexAiSend" type="button" class="goldbtn" onclick="sendApexAssistantMessage()">إرسال</button></div><div class="apex-ai-footer"><span>المساعد مخصص لمتجر APEX فقط. لا ترسل كلمات المرور أو بيانات البطاقات.</span><button type="button" onclick="clearApexAssistantSession()">محادثة جديدة</button></div><div id="apexAiHandoff" class="apex-ai-handoff" hidden><p>يمكن لفريق خدمة العملاء متابعة طلبك مباشرة.</p><a href="mailto:apex.1.shopping@gmail.com?subject=طلب%20مساعدة%20من%20مساعد%20APEX">التواصل مع موظف خدمة العملاء</a></div><p id="apexAiStatus" class="apex-ai-status" aria-live="polite"></p></section>
 <section id="accountSection-policies" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">سياسات المتجر</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><div style="color:#ded8c9;line-height:2"><h3 style="color:var(--gold)">طريقة الطلب</h3><p>اختر المنتجات وأضفها إلى السلة، ثم أدخل اسمك ورقم جوالك وعنوانك. سيتم إرسال تفاصيل طلبك إلى إدارة المتجر للتواصل معك وتأكيد التوفر والسعر قبل اعتماد الطلب.</p><h3 style="color:var(--gold)">الأسعار والدفع</h3><p>تظهر أسعار المنتجات بالريال السعودي على صفحات المتجر. يتم توضيح تكاليف التوصيل وأي رسوم إضافية للعميل قبل تأكيد الطلب. لا يتم تحصيل أي مبلغ من خلال الموقع حاليًا، ولا تعتبر رسالة البريد تأكيدًا نهائيًا للشراء.</p><h3 style="color:var(--gold)">الشحن والتوصيل</h3><p>يتم تحديد شركة الشحن والمدة والرسوم حسب المدينة وطبيعة المنتج، وإبلاغ العميل بها قبل تأكيد الطلب.</p><h3 style="color:var(--gold)">الاستبدال والاسترجاع</h3><p>يتم توضيح شروط الاستبدال والاسترجاع للعميل قبل إتمام الشراء، وفق الأنظمة المعمول بها في المملكة العربية السعودية.</p><h3 style="color:var(--gold)">الخصوصية</h3><p>تُستخدم بيانات الاسم ورقم الجوال والعنوان لغرض متابعة الطلب والتواصل بشأنه فقط. يُرجى عدم إرسال بيانات البطاقات البنكية أو كلمات المرور عبر البريد أو نموذج الطلب.</p><p style="font-size:12px;color:#aaa">هذه صياغة أولية للمعلومات والسياسات، ويجب مراجعتها واعتماد تفاصيلها التجارية والقانونية قبل بدء البيع الفعلي.</p></div></section>
 <section id="accountSection-management" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">مساعدة المتجر</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p>لإدارة طلباتك وبيانات حسابك، استخدم أقسام حساب العميل. لا تُعرض أدوات الإدارة في حسابات العملاء.</p></section>
 <section id="accountSection-about" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">عن APEX 👑</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><div class="apex-about-full" dir="rtl">
@@ -586,6 +610,7 @@ async function apexSecurityEvent(event_type,details={}){
  }catch(error){console.warn('APEX security event could not be recorded:',error?.message||error)}
 }
 let cart=[],selectedPayment='',customerSession=null,storeCurrencyCountry='SA',storeExchangeRate=137;
+let apexAssistantMessages=[],apexAssistantBusy=false,apexAssistantInitialized=false,apexAssistantSessionVersion=0;
 const favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));
 function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}
 function toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
@@ -656,7 +681,80 @@ function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('
 function removeItem(i){cart.splice(i,1);$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0);renderCart()}
 function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
-function showAccountSection(name){const allowed=['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'];if(!allowed.includes(name))return;allowed.forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name});const target=$('accountSection-'+name);if(target)target.scrollIntoView({behavior:'smooth',block:'nearest'});if(name==='referrals'&&customerSession?.user?.id)loadCustomerReferral(customerSession)}
+
+function renderApexAssistantMessages(){
+ const box=$('apexAiMessages');if(!box)return;
+ box.replaceChildren();
+ if(!apexAssistantMessages.length){
+  const welcome=document.createElement('div');welcome.className='apex-ai-welcome';
+  const title=document.createElement('b');title.textContent='مرحباً بك في APEX 👑';
+  const body=document.createElement('span');body.textContent='اسألني عن المنتجات أو الحساب أو الطلبات والشحن والدفع.';
+  welcome.append(title,body);box.append(welcome);return;
+ }
+ apexAssistantMessages.forEach(m=>{
+  const row=document.createElement('div');row.className='apex-ai-message '+(m.role==='user'?'apex-ai-user':'apex-ai-bot');
+  const label=document.createElement('small');label.textContent=m.role==='user'?'أنت':'APEX AI';
+  const text=document.createElement('div');text.textContent=m.content;
+  row.append(label,text);box.append(row);
+ });
+ box.scrollTop=box.scrollHeight;
+}
+function initApexAssistant(){
+ if(apexAssistantInitialized)return;
+ apexAssistantInitialized=true;
+ renderApexAssistantMessages();
+ if(!customerSession&&$('apexAiStatus'))$('apexAiStatus').textContent='سجّل الدخول إلى حسابك لاستخدام المساعد ومتابعة طلباتك.';
+}
+function askApexAssistantQuick(text){
+ if(apexAssistantBusy)return;
+ const input=$('apexAiInput');if(!input)return;
+ input.value=text;sendApexAssistantMessage();
+}
+function clearApexAssistantSession(){
+ apexAssistantSessionVersion++;
+ apexAssistantMessages=[];apexAssistantInitialized=false;apexAssistantBusy=false;
+ if($('apexAiHandoff'))$('apexAiHandoff').hidden=true;
+ if($('apexAiStatus'))$('apexAiStatus').textContent='';
+ if($('apexAiSend')){$('apexAiSend').disabled=false;$('apexAiSend').textContent='إرسال';}
+ renderApexAssistantMessages();$('apexAiInput')?.focus();
+}
+async function sendApexAssistantMessage(){
+ const input=$('apexAiInput'),button=$('apexAiSend'),status=$('apexAiStatus');
+ if(!input||!button||!status)return;
+ const message=String(input.value||'').trim();
+ if(!message||apexAssistantBusy)return;
+ if(!customerSession?.user?.id){status.textContent='يرجى تسجيل الدخول أولاً.';return}
+ if(message.length>1500){status.textContent='اختصر رسالتك إلى 1500 حرف كحد أقصى.';return}
+ const requestVersion=apexAssistantSessionVersion;
+ const requestUserId=customerSession.user.id;
+ apexAssistantMessages.push({role:'user',content:message});
+ input.value='';apexAssistantBusy=true;button.disabled=true;button.textContent='جارٍ الرد...';
+ $('apexAiHandoff').hidden=true;status.textContent='APEX AI يراجع معلومات المتجر...';renderApexAssistantMessages();
+ try{
+  const {data,error}=await supabase.functions.invoke('apex-store-assistant',{body:{messages:apexAssistantMessages.slice(-12)}});
+  if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
+  if(error)throw error;
+  if(!data||typeof data.reply!=='string'||!data.reply.trim())throw new Error('تعذر الحصول على رد صالح.');
+  apexAssistantMessages.push({role:'assistant',content:data.reply.trim()});
+  if(data.handoff)$('apexAiHandoff').hidden=false;
+  status.textContent='';renderApexAssistantMessages();
+ }catch(error){
+  if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
+  console.error('APEX assistant error:',error);
+  const detail=String(error?.message||error||'').toLowerCase();
+  const fallback=detail.includes('503')||detail.includes('not configured')
+   ?'المساعد الذكي غير مهيأ حالياً. يرجى التواصل مع خدمة العملاء.'
+   :'تعذر الاتصال بالمساعد الآن. حاول مرة أخرى بعد قليل أو تواصل مع خدمة العملاء.';
+  apexAssistantMessages.push({role:'assistant',content:fallback});
+  $('apexAiHandoff').hidden=false;status.textContent='';renderApexAssistantMessages();
+ }finally{
+  if(requestVersion===apexAssistantSessionVersion){
+   apexAssistantBusy=false;button.disabled=false;button.textContent='إرسال';
+  }
+ }
+}
+
+function showAccountSection(name){const allowed=['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'];if(!allowed.includes(name))return;allowed.forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name});const target=$('accountSection-'+name);if(target)target.scrollIntoView({behavior:'smooth',block:'nearest'});if(name==='referrals'&&customerSession?.user?.id)loadCustomerReferral(customerSession);if(name==='support')initApexAssistant()}
 function showAccountHome(){['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=true});const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavAccount(){showAccountHome();const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
 function customerNavFavorites(){closeAccount();$('showFavorites').dataset.only='1';filterProducts();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
@@ -777,6 +875,15 @@ function copyMyReferralLink(){return copyMyReferralCode()}
 
 async function loadCustomerNotifications(){if(!customerSession){$('customerNotifications').innerHTML='<p>سجل الدخول لعرض إشعاراتك.</p>';return}const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').order('created_at',{ascending:false}).limit(30);if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};$('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث حالة الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>'}
 async function refreshCustomer(session){
+ const previousUserId=customerSession?.user?.id||null;
+ const nextUserId=session?.user?.id||null;
+ if(previousUserId!==nextUserId){
+  apexAssistantSessionVersion++;apexAssistantMessages=[];apexAssistantInitialized=false;apexAssistantBusy=false;
+  if($('apexAiMessages'))renderApexAssistantMessages();
+  if($('apexAiHandoff'))$('apexAiHandoff').hidden=true;
+  if($('apexAiStatus'))$('apexAiStatus').textContent='';
+  if($('apexAiSend')){$('apexAiSend').disabled=false;$('apexAiSend').textContent='إرسال';}
+ }
  customerSession=session||null;
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
@@ -928,7 +1035,7 @@ async function sendOrder(){
  }
  cart=[];$('count').textContent='0';renderCart();closeCart();
 }
-window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.copyMyReferralLink=copyMyReferralLink;window.loadCustomerNotifications=loadCustomerNotifications;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
+window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.copyMyReferralLink=copyMyReferralLink;window.loadCustomerNotifications=loadCustomerNotifications;window.askApexAssistantQuick=askApexAssistantQuick;window.sendApexAssistantMessage=sendApexAssistantMessage;window.clearApexAssistantSession=clearApexAssistantSession;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
 bindCategoryFilters();
 $('search').addEventListener('input',filterProducts);
 $('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
