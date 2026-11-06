@@ -1,0 +1,15 @@
+{
+  "name": "apex-firebase-functions",
+  "private": true,
+  "main": "src/index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/index.js && node --check src/routes.js"
+  },
+  "dependencies": {
+    "firebase-functions": "^6.3.2"
+  }
+}
