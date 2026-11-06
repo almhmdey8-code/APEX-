@@ -1,0 +1,38 @@
+name: Import APEX data to Firestore
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type IMPORT_APEX_DATA to authorize the one-time Firestore import"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    if: ${{ inputs.confirm == 'IMPORT_APEX_DATA' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: migration/package-lock.json
+      - name: Install migration dependencies
+        working-directory: migration
+        run: npm install --no-audit --no-fund
+      - name: Authenticate to Firebase
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Import Supabase tables into Firestore
+        working-directory: migration
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GCLOUD_PROJECT: apex-3c12f
+        run: node import-firestore.js --apply
