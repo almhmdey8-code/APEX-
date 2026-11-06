@@ -18,6 +18,34 @@ service cloud.firestore {
       return request.resource.data.keys().hasOnly(keys);
     }
 
+    function validCustomerProfile() {
+      return onlyKeys([
+        'fullName', 'phone', 'country', 'address', 'latitude',
+        'longitude', 'marketingOptIn', 'updatedAt'
+      ])
+      && (!('fullName' in request.resource.data) ||
+          (request.resource.data.fullName is string &&
+           request.resource.data.fullName.size() <= 120))
+      && (!('phone' in request.resource.data) ||
+          (request.resource.data.phone is string &&
+           request.resource.data.phone.size() <= 30))
+      && (!('country' in request.resource.data) ||
+          request.resource.data.country in ['SA', 'YE'])
+      && (!('address' in request.resource.data) ||
+          (request.resource.data.address is string &&
+           request.resource.data.address.size() <= 500))
+      && (!('latitude' in request.resource.data) ||
+          (request.resource.data.latitude is number &&
+           request.resource.data.latitude >= -90 &&
+           request.resource.data.latitude <= 90))
+      && (!('longitude' in request.resource.data) ||
+          (request.resource.data.longitude is number &&
+           request.resource.data.longitude >= -180 &&
+           request.resource.data.longitude <= 180))
+      && (!('marketingOptIn' in request.resource.data) ||
+          request.resource.data.marketingOptIn is bool);
+    }
+
     // Public storefront catalogue. Mutations are server/admin only.
     match /products/{productId} {
       allow read: if resource.data.active == true || isAdmin();
@@ -47,17 +75,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Customer profile: customer may edit only their own non-privileged fields.
     match /customers/{uid} {
       allow read: if owns(uid) || isAdmin();
-      allow create, update: if owns(uid) && onlyKeys([
-        'fullName', 'phone', 'country', 'address', 'latitude',
-        'longitude', 'marketingOptIn', 'updatedAt'
-      ]);
+      allow create, update: if owns(uid) && validCustomerProfile();
       allow delete: if isAdmin();
     }
 
-    // Orders are created/updated only by trusted Cloud Functions.
+    // Orders and financial state are written only by trusted Cloud Functions.
     match /orders/{orderId} {
       allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
       allow write: if isAdmin();
@@ -101,8 +125,7 @@ service cloud.firestore {
     }
 
     match /referralVisits/{visitId} {
-      allow read: if isAdmin();
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
     match /admins/{uid} {
@@ -137,7 +160,6 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Default deny for every collection not explicitly listed above.
     match /{document=**} {
       allow read, write: if false;
     }
