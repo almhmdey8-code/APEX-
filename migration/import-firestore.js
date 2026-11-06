@@ -40,6 +40,7 @@ function documentId(row, keys) {
     if (row[key] === undefined || row[key] === null) throw new Error("Missing primary-key field: " + key);
     return String(row[key]);
   });
+  if (parts.length === 1 && /^[A-Za-z0-9_-]{1,1500}$/.test(parts[0])) return parts[0];
   return Buffer.from(parts.join("\u001f"), "utf8").toString("base64url");
 }
 function sanitize(collection, doc) {
