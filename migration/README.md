@@ -18,8 +18,7 @@ source Supabase project into Firestore collections in Firebase project `apex-3c1
 ## Required GitHub Actions secrets
 
 - `FIREBASE_SERVICE_ACCOUNT`: Firebase service-account JSON (already added by owner).
-- `SUPABASE_URL`: source project URL, `https://ulzxdvtzziydhuvennzw.supabase.co`.
-- `SUPABASE_SERVICE_ROLE_KEY`: source project's service-role/secret key.
+- `SUPABASE_SERVICE_ROLE_KEY`: source project's service-role/secret key. The source URL is already set in the workflow.
 
 Add the Supabase service-role key directly in GitHub repository Actions secrets.
 Never paste it into chat, source files, issues, or logs.
