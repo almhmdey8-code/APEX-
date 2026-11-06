@@ -22,11 +22,7 @@ const TABLES = [
   ["public", "apex_wallet_topups", "walletTopups", ["id"]],
   ["public", "apex_shipping_providers", "shippingProviders", ["id"]],
   ["public", "apex_email_settings", "emailSettings", ["id"]],
-  ["public", "apex_email_cron_auth", "emailCronAuth", ["id"]],
   ["public", "apex_security_events", "securityEvents", ["id"]],
-  ["private", "apex_gateway_transactions", "privateGatewayTransactions", ["id"]],
-  ["private", "apex_payment_webhook_events", "paymentWebhookEvents", ["id"]],
-  ["private", "apex_shipping_jobs", "shippingJobs", ["id"]],
 ];
 
 const snakeToCamel = (key) => key.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
@@ -109,7 +105,8 @@ async function main() {
     sourceProject: "ulzxdvtzziydhuvennzw",
     completedAt: new Date().toISOString(),
     collections: summary,
-    note: "Data-only import. Auth users, password credentials, Storage objects, functions, secrets, and sequence state are not migrated."
+    excluded: ["private.apex_gateway_transactions", "private.apex_payment_webhook_events", "private.apex_shipping_jobs", "public.apex_email_cron_auth"],
+    note: "Public application data only. Auth users, password credentials, Storage objects, functions, secrets, private payment/webhook/shipping records, email cron auth, and sequence state are not migrated."
   };
   await db.collection("_migrationControl").doc("supabaseImport").set(manifest, { merge: false });
   process.stdout.write("Migration manifest written. " + JSON.stringify(summary) + "\n");
