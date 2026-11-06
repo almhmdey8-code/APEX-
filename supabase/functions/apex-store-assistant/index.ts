@@ -86,7 +86,7 @@ Deno.serve(async (req: Request) => {
   const [productsResult, settingsResult, paymentResult] = await Promise.all([
     supabase.from("apex_products")
       .select("id,name,category,description,price,stock,active")
-      .eq("active", true).order("created_at", { ascending: false }).limit(80),
+      .eq("active", true).order("created_at", { ascending: false }).limit(40),
     supabase.from("apex_store_settings").select("exchange_rate,base_currency,local_currency")
       .eq("setting_key", "currency").maybeSingle(),
     supabase.from("apex_payment_methods")
@@ -96,7 +96,7 @@ Deno.serve(async (req: Request) => {
   ]);
 
   const products = (productsResult.data || []).map((p: any) => ({
-    name: p.name, category: p.category, description: p.description,
+    name: p.name, category: p.category, description: String(p.description || "").slice(0, 240),
     price_sar: p.price, stock: p.stock, availability: Number(p.stock || 0) > 0 ? "متوفر" : "غير متوفر",
   }));
   const paymentMethods = (paymentResult.data || []).map((m: any) => ({
@@ -166,7 +166,7 @@ Deno.serve(async (req: Request) => {
 
   const input = [
     { role: "developer", content: systemPrompt + "\n\n" + context },
-    ...messages.slice(-12).map((m) => ({ role: m.role, content: m.content })),
+    ...messages.slice(-8).map((m) => ({ role: m.role, content: m.content })),
   ];
 
   let aiResponse: Response;
@@ -174,14 +174,18 @@ Deno.serve(async (req: Request) => {
     aiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { "Authorization": "Bearer " + openAiKey, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "gpt-6.1-sol", input, max_output_tokens: 700 }),
+      signal: AbortSignal.timeout(30000),
+      body: JSON.stringify({ model: "gpt-6.1-sol", input, max_output_tokens: 500 }),
     });
-  } catch {
+  } catch (error) {
+    console.error("APEX OpenAI request timeout or network failure:", error instanceof Error ? error.name : "unknown");
     return json({ error: "ai_provider_unreachable" }, 502);
   }
   const aiData = await aiResponse.json().catch(() => ({}));
   if (!aiResponse.ok) {
-    console.error("APEX OpenAI request failed:", aiResponse.status, aiData?.error?.code || aiData?.error?.type || "provider_error");
+    const providerCode = aiData?.error?.code || aiData?.error?.type || "provider_error";
+    console.error("APEX OpenAI request failed:", aiResponse.status, providerCode);
+    if (aiResponse.status === 401) return json({ error: "assistant_key_invalid" }, 503);
     return json({ error: "ai_provider_error" }, 502);
   }
   let reply = outputText(aiData);
