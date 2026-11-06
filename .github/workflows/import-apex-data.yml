@@ -20,8 +20,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: migration/package-lock.json
       - name: Install migration dependencies
         working-directory: migration
         run: npm install --no-audit --no-fund
