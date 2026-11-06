@@ -14,7 +14,7 @@ function upstreamUrl(baseUrl, functionName) {
   if (!Object.values(ROUTES).includes(functionName)) {
     throw new Error("Unsupported APEX function");
   }
-  return baseUrl.replace(/\\/+$/, "") + "/functions/v1/" + functionName;
+  return baseUrl.replace(/\/+$/, "") + "/functions/v1/" + functionName;
 }
 
 module.exports = { ROUTES, upstreamUrl };
