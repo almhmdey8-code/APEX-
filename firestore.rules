@@ -65,7 +65,8 @@ service cloud.firestore {
           'legacyId', 'name', 'instructions', 'methodType', 'enabled',
           'sortOrder', 'countryCode', 'methodCode', 'walletTopupEnabled',
           'gatewayProvider', 'ordersEnabled', 'accountHolder',
-          'accountNumber', 'accountIban', 'publicConfig', 'integrationStatus'
+          'accountNumber', 'accountIban', 'publicConfig', 'integrationStatus',
+          'createdAt', 'updatedAt', '_migration'
         ])) || isAdmin();
       allow write: if isAdmin();
     }
@@ -90,6 +91,16 @@ service cloud.firestore {
     match /orderStatusHistory/{historyId} {
       allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
       allow write: if isAdmin();
+    }
+
+    match /orderRefunds/{refundId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /shippingProviders/{providerId} {
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
     match /wallets/{uid} {
@@ -133,8 +144,8 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Financial provider sessions, webhook payloads, shipping jobs, email
-    // scheduler credentials, and security telemetry are server-only.
+    // Financial provider sessions, webhook payloads, shipping jobs, and telemetry
+    // remain server-only. Cron auth material is never readable from client apps.
     match /privateGatewayTransactions/{id} {
       allow read, write: if isAdmin();
     }
@@ -157,6 +168,10 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /shippingSecrets/{id} {
+      allow read, write: if false;
+    }
+
+    match /_migrationControl/{id} {
       allow read, write: if false;
     }
 
