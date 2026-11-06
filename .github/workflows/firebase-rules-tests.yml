@@ -35,5 +35,5 @@ jobs:
       - name: Install Firebase CLI
         run: npm install --global firebase-tools
       - name: Run Firestore emulator tests
-        run: firebase emulators:exec --project apex-firestore-rules-test --only firestore "npm test"
+        run: firebase --config ../firebase.json emulators:exec --project apex-firestore-rules-test --only firestore "npm test"
         working-directory: firebase-tests
