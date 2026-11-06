@@ -1,0 +1,15 @@
+{
+  "name": "apex-data-migration",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "migrate": "node import-firestore.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.57.0",
+    "firebase-admin": "13.5.0"
+  }
+}
