@@ -1,6 +1,6 @@
 # APEX Supabase → Firestore data import
 
-This is a controlled, one-time import of the 22 application tables inspected in the
+This is a controlled, one-time import of the 18 public application tables inspected in the
 source Supabase project into Firestore collections in Firebase project `apex-3c12f`.
 
 ## Safety
@@ -11,8 +11,7 @@ source Supabase project into Firestore collections in Firebase project `apex-3c1
 - It never prints credentials.
 - Payment method documents are allow-listed to omit secret-key-name metadata and
   integration test timestamps.
-- Private webhook/gateway/shipping and cron-auth records are copied only into
-  collections denied to normal clients by Firestore rules.
+- Private webhook/gateway/shipping and email cron-auth records are deliberately excluded; they require a separate server-only migration path and must not be exposed through the Data API.
 - This import does not delete or modify source Supabase data.
 
 ## Required GitHub Actions secrets
@@ -31,7 +30,7 @@ Open Actions → “Import APEX data to Firestore” → Run workflow and enter
 
 ## Not included
 
-Supabase Auth users/password hashes, Storage file bytes, Edge Function secrets,
+Supabase Auth users/password hashes, private payment/webhook/shipping records, email cron-auth records, Storage file bytes, Edge Function secrets,
 payment-provider credentials, scheduled cron jobs, database sequences, and client
 application endpoint changes. Existing Supabase remains the live production backend
 until these are separately migrated and verified. Do not switch production traffic
