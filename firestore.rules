@@ -2,9 +2,142 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Secure-by-default while the Supabase schema and access policies
-    // are being migrated. No client access is granted until each collection
-    // has an explicitly reviewed rule.
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function owns(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function onlyKeys(keys) {
+      return request.resource.data.keys().hasOnly(keys);
+    }
+
+    // Public storefront catalogue. Mutations are server/admin only.
+    match /products/{productId} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /banners/{bannerId} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Payment instructions are public storefront data only. Never store gateway
+    // credentials, webhook secrets, or private provider payloads in this collection.
+    match /paymentMethods/{methodId} {
+      allow read: if (resource.data.enabled == true &&
+        resource.data.keys().hasOnly([
+          'legacyId', 'name', 'instructions', 'methodType', 'enabled',
+          'sortOrder', 'countryCode', 'methodCode', 'walletTopupEnabled',
+          'gatewayProvider', 'ordersEnabled', 'accountHolder',
+          'accountNumber', 'accountIban', 'publicConfig', 'integrationStatus'
+        ])) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /storeSettings/{settingId} {
+      allow read: if settingId == 'currency' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Customer profile: customer may edit only their own non-privileged fields.
+    match /customers/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow create, update: if owns(uid) && onlyKeys([
+        'fullName', 'phone', 'country', 'address', 'latitude',
+        'longitude', 'marketingOptIn', 'updatedAt'
+      ]);
+      allow delete: if isAdmin();
+    }
+
+    // Orders are created/updated only by trusted Cloud Functions.
+    match /orders/{orderId} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /orderStatusHistory/{historyId} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /wallets/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /walletTransactions/{transactionId} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /walletTopups/{topupId} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /referralCodes/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /referralSignups/{signupId} {
+      allow read: if (signedIn() &&
+        (resource.data.referrerId == request.auth.uid ||
+         resource.data.referredUserId == request.auth.uid)) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /referralRewards/{rewardId} {
+      allow read: if (signedIn() && resource.data.referrerId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /referralVisits/{visitId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Financial provider sessions, webhook payloads, shipping jobs, email
+    // scheduler credentials, and security telemetry are server-only.
+    match /privateGatewayTransactions/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /paymentWebhookEvents/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /shippingJobs/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /securityEvents/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /emailSettings/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /emailCronAuth/{id} {
+      allow read, write: if false;
+    }
+    match /paymentSecrets/{id} {
+      allow read, write: if false;
+    }
+    match /shippingSecrets/{id} {
+      allow read, write: if false;
+    }
+
+    // Default deny for every collection not explicitly listed above.
     match /{document=**} {
       allow read, write: if false;
     }
