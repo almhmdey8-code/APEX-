@@ -4,6 +4,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import { logger } from "firebase-functions";
+import { randomInt } from "node:crypto";
 
 initializeApp();
 const db = getFirestore();
@@ -131,7 +132,7 @@ export const apexEmailCampaign=onCall({region:REGION,secrets:[RESEND_API_KEY]},a
   const auth=await requireAdmin(request);
   if(String(auth.token.email||"").toLowerCase()!==OWNER_EMAIL) fail("permission-denied","غير مصرح.");
   const settings=await db.doc("emailSettings/main").get();
-  if(settings.exists && settings.get("marketingCampaignsEnabled")!==true) return {email_status:"disabled"};
+  if(!settings.exists || settings.get("marketingCampaignsEnabled")!==true) return {email_status:"disabled"};
   const b=request.data||{};
   if(b.action!=="send_campaign") fail("invalid-argument","عملية غير مدعومة.");
   const subject=clean(b.subject,150),title=clean(b.title,180),content=clean(b.content,5000),image=clean(b.image_url,2000),link=clean(b.link_url,2000);
@@ -181,3 +182,48 @@ async function sendAdminMail(subject,textBody){
 async function sha256(value){const bytes=new TextEncoder().encode(value);const hash=await crypto.subtle.digest("SHA-256",bytes);return [...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,"0")).join("");}
 function safeDetails(raw){const out={};if(raw&&typeof raw==="object")for(const key of ["reason","screen","method","attempt","code"])if(raw[key]!==undefined)out[key]=clean(raw[key],120);return out;}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+
+export const apexRequestSignupOtp=onCall({region:REGION,secrets:[RESEND_API_KEY]},async request=>{
+  const email=clean(request.data?.email,254).toLowerCase();
+  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) fail("invalid-argument","أدخل بريداً إلكترونياً صحيحاً.");
+  const key=RESEND_API_KEY.value();if(!key) fail("unavailable","خدمة إرسال رمز التحقق غير مهيأة حالياً.");
+  try{await getAuth().getUserByEmail(email);fail("already-exists","هذا البريد مسجل مسبقاً. انتقل إلى تسجيل الدخول.");}
+  catch(error){if(error instanceof HttpsError)throw error;if(error.code!=="auth/user-not-found")throw error;}
+  const emailHash=await sha256(email),ref=db.doc("signupOtpChallenges/"+emailHash),now=Date.now();
+  const prior=await ref.get();
+  if(prior.exists && now-Number(prior.get("lastSentAtMs")||0)<60000) fail("resource-exhausted","انتظر دقيقة قبل طلب رمز جديد.");
+  const code=String(randomInt(0,1000000)).padStart(6,"0");
+  const salt=SECURITY_HASH_SALT.value()||"apex-signup-otp-v1";
+  await ref.set({emailHash,codeHash:await sha256(code+salt),createdAtMs:now,lastSentAtMs:now,expiresAtMs:now+10*60*1000,attempts:0,verified:false});
+  const response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from:"APEX <onboarding@resend.dev>",to:[email],subject:"رمز التحقق لإنشاء حساب APEX",text:"رمز التحقق الخاص بك: "+code+"\\nصلاحية الرمز 10 دقائق. لا تشارك الرمز مع أي شخص."})});
+  if(!response.ok){await ref.delete();logger.error("APEX signup OTP delivery failed",response.status);fail("unavailable","تعذر إرسال رمز التحقق. حاول لاحقاً.");}
+  return {sent:true,expires_in_seconds:600};
+});
+
+export const apexCompleteSignup=onCall({region:REGION,secrets:[SECURITY_HASH_SALT]},async request=>{
+  const b=request.data||{},email=clean(b.email,254).toLowerCase(),code=clean(b.code,6),password=String(b.password||"");
+  const fullName=clean(b.full_name,120),phone=clean(b.phone,30),country=b.country==="YE"?"YE":"SA",address=clean(b.address,500);
+  const latitude=Number.isFinite(b.latitude)?b.latitude:null,longitude=Number.isFinite(b.longitude)?b.longitude:null;
+  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!/^\\d{6}$/.test(code)||password.length<6||!fullName||!phone||!address) fail("invalid-argument","بيانات إنشاء الحساب غير مكتملة.");
+  if(latitude===null||longitude===null||Math.abs(latitude)>90||Math.abs(longitude)>180) fail("invalid-argument","حدد موقع التوصيل قبل إكمال التسجيل.");
+  const emailHash=await sha256(email),ref=db.doc("signupOtpChallenges/"+emailHash),salt=SECURITY_HASH_SALT.value()||"apex-signup-otp-v1";
+  await db.runTransaction(async tx=>{
+    const snap=await tx.get(ref);
+    if(!snap.exists||snap.get("verified")===true||Number(snap.get("expiresAtMs")||0)<Date.now()) fail("deadline-exceeded","رمز التحقق منتهي أو غير موجود. اطلب رمزاً جديداً.");
+    if(Number(snap.get("attempts")||0)>=5) fail("resource-exhausted","تجاوزت عدد محاولات التحقق. اطلب رمزاً جديداً.");
+    if(await sha256(code+salt)!==snap.get("codeHash")){tx.update(ref,{attempts:FieldValue.increment(1)});fail("permission-denied","رمز التحقق غير صحيح.");}
+    tx.update(ref,{verified:true,verifiedAtMs:Date.now(),usedAtMs:Date.now()});
+  });
+  let user;
+  try{
+    user=await getAuth().createUser({email,password,displayName:fullName,emailVerified:true,disabled:false});
+    await db.doc("customers/"+user.uid).set({uid:user.uid,fullName,phone,country,address,latitude,longitude,marketingOptIn:b.marketing_opt_in===true,createdAt:FieldValue.serverTimestamp(),updatedAt:FieldValue.serverTimestamp()});
+    const customToken=await getAuth().createCustomToken(user.uid);
+    await ref.delete();
+    return {customToken,user:{uid:user.uid,email:user.email,displayName:user.displayName,emailVerified:true}};
+  }catch(error){
+    if(user?.uid){try{await getAuth().deleteUser(user.uid);}catch(cleanupError){logger.error("Failed to roll back incomplete APEX signup",cleanupError);}}
+    throw error;
+  }
+});
