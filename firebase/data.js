@@ -93,3 +93,9 @@ export async function saveCustomerPreferences(uid, preferences) {
     updatedAt: serverTimestamp()
   }, { merge: true });
 }
+
+export async function loadStoreCurrencySettings() {
+  const { db } = getFirebase();
+  const snapshot = await getDoc(doc(db, "storeSettings", "currency"));
+  return snapshot.exists() ? snapshot.data() : null;
+}
