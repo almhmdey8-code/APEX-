@@ -141,7 +141,7 @@ export function createApexFirebaseCompat(){
     auth:authApi,
     from(table){return new Builder(table);},
     async rpc(name,args={}){try{const fn=rpcNames[name];if(!fn)throw new Error("Unsupported APEX operation: "+name);const result=await httpsCallable(functions,fn)(args);return {data:result.data,error:null};}catch(error){return {data:null,error};}},
-    functions:{async invoke(name,{body={}}={}){try{const fn=callableNames[name];if(!fn)throw new Error("Unsupported APEX function: "+name);const result=await httpsCallable(functions,fn)(body);return {data:result.data,error:null};}catch(error){return {data:null,error};}}},
+    functions:{async invoke(name,{body={}}={}){try{const fn=callableNames[name];if(!fn)throw new Error("Unsupported APEX function: "+name);const result=await httpsCallable(functions,fn)(body);if(name==="apex-admin-customers"&&auth.currentUser)await auth.currentUser.getIdToken(true);return {data:result.data,error:null};}catch(error){return {data:null,error};}}},
     storage:{from(bucket){return {async upload(path,file,options={}){try{const target=ref(storage,((bucket==="apex-store"?"store":bucket)+"/"+path).replace(/^\/+/, ""));await uploadBytes(target,file,{contentType:options.contentType||file.type,cacheControl:options.cacheControl||"3600"});const url=await getDownloadURL(target);publicUrls.set(path,url);return {data:{path},error:null};}catch(error){return {data:null,error};}},getPublicUrl(path){return {data:{publicUrl:publicUrls.get(path)||""}};}};}}
   };
 }
