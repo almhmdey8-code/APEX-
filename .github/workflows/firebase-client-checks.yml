@@ -1,0 +1,36 @@
+name: APEX Firebase Client Checks
+
+on:
+  pull_request:
+    paths:
+      - "firebase/**"
+      - "firestore.rules"
+      - "storage.rules"
+      - "firebase.json"
+      - ".github/workflows/firebase-client-checks.yml"
+  push:
+    branches: [firebase-native-foundation]
+    paths:
+      - "firebase/**"
+      - "firestore.rules"
+      - "storage.rules"
+      - "firebase.json"
+      - ".github/workflows/firebase-client-checks.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check Firebase client modules
+        run: |
+          node --check firebase/client.js
+          node --check firebase/auth.js
+          node --check firebase/data.js
+          node --check firebase/runtime-config.example.js
