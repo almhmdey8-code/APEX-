@@ -215,10 +215,10 @@ export const apexCompleteSignup=onCall({region:REGION,secrets:[SECURITY_HASH_SAL
   let otpValid=false;
   await db.runTransaction(async tx=>{
     const snap=await tx.get(ref);
-    if(!snap.exists||snap.get("verified")===true||Number(snap.get("expiresAtMs")||0)<Date.now()) fail("deadline-exceeded","رمز التحقق منتهي أو غير موجود. اطلب رمزاً جديداً.");
+    if(!snap.exists||snap.get("consumed")===true||Number(snap.get("expiresAtMs")||0)<Date.now()) fail("deadline-exceeded","رمز التحقق منتهي أو غير موجود. اطلب رمزاً جديداً.");
     if(Number(snap.get("attempts")||0)>=5) fail("resource-exhausted","تجاوزت عدد محاولات التحقق. اطلب رمزاً جديداً.");
-    if(await sha256(code+salt)!==snap.get("codeHash")){tx.update(ref,{attempts:FieldValue.increment(1)});return;}
-    tx.update(ref,{verified:true,verifiedAtMs:Date.now(),usedAtMs:Date.now()});
+    if(snap.get("verified")!==true||await sha256(code+salt)!==snap.get("codeHash")){tx.update(ref,{attempts:FieldValue.increment(1)});return;}
+    tx.update(ref,{consumed:true,usedAtMs:Date.now()});
     otpValid=true;
   });
   if(!otpValid) fail("permission-denied","رمز التحقق غير صحيح.");
@@ -324,4 +324,22 @@ export const apexGetPublicPaymentMethods=onCall({region:REGION},async ()=>{
 export const apexAdminBootstrap=onCall({region:REGION},async request=>{
   const auth=await requireAdmin(request);
   return {admin:true,uid:auth.uid};
+});
+
+
+export const apexVerifySignupOtp=onCall({region:REGION,secrets:[SECURITY_HASH_SALT]},async request=>{
+  const email=clean(request.data?.email,254).toLowerCase(),code=clean(request.data?.code,6);
+  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!/^\\d{6}$/.test(code))fail("invalid-argument","أدخل البريد والرمز المكوّن من 6 أرقام.");
+  const ref=db.doc("signupOtpChallenges/"+await sha256(email)),salt=SECURITY_HASH_SALT.value()||"apex-signup-otp-v1";
+  let valid=false;
+  await db.runTransaction(async tx=>{
+    const snap=await tx.get(ref);
+    if(!snap.exists||snap.get("consumed")===true||Number(snap.get("expiresAtMs")||0)<Date.now())fail("deadline-exceeded","رمز التحقق منتهي أو غير موجود. اطلب رمزاً جديداً.");
+    if(Number(snap.get("attempts")||0)>=5)fail("resource-exhausted","تجاوزت عدد محاولات التحقق. اطلب رمزاً جديداً.");
+    if(await sha256(code+salt)!==snap.get("codeHash")){tx.update(ref,{attempts:FieldValue.increment(1)});return;}
+    tx.update(ref,{verified:true,verifiedAtMs:Date.now()});
+    valid=true;
+  });
+  if(!valid)fail("permission-denied","رمز التحقق غير صحيح.");
+  return {verified:true};
 });
