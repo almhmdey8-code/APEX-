@@ -48,6 +48,9 @@ function documentId(table,row){
 function fromDocument(table,snapshot){
   const raw=normalize(snapshot.data()||{});
   raw.id=raw.legacy_id??raw.id??snapshot.id;
+  if(table==="apex_store_settings") raw.setting_key=raw.setting_key||snapshot.id;
+  if(table==="apex_email_settings") raw.id=raw.id??(snapshot.id==="main"?1:snapshot.id);
+  if(table==="apex_admins") raw.user_id=raw.user_id||snapshot.id;
   if(table==="apex_products"||table==="apex_banners"||table==="apex_payment_methods") raw.id=raw.legacy_id??(Number.isNaN(Number(snapshot.id))?snapshot.id:Number(snapshot.id));
   return raw;
 }
@@ -76,7 +79,9 @@ class Builder {
       const {db}=getFirebase(),name=collections[this.table];if(!name)throw new Error("Unsupported APEX collection: "+this.table);
       const col=collection(db,name);
       if(this.mode==="select"||this.mode==="update"||this.mode==="delete"){
-        const snap=await getDocs(col);let rows=snap.docs.map(d=>({doc:d,row:fromDocument(this.table,d)})).filter(x=>this.matches(x.row));
+        const constraints=[];
+        for(const f of this.filters){const field=this.table==="apex_admins"&&f.field==="user_id"?"uid":camel(f.field);if(f.op==="eq")constraints.push(where(field,"==",f.value));else if(f.op==="neq")constraints.push(where(field,"!=",f.value));else if(f.op==="notNull")constraints.push(where(field,"!=",null));else if(f.op==="in")constraints.push(where(field,"in",f.values.slice(0,30)));else if(f.op==="gte")constraints.push(where(field,">=",f.value));else if(f.op==="lte")constraints.push(where(field,"<=",f.value));}
+        const snap=await getDocs(constraints.length?query(col,...constraints):col);let rows=snap.docs.map(d=>({doc:d,row:fromDocument(this.table,d)})).filter(x=>this.matches(x.row));
         for(const s of this.sorts.slice().reverse())rows.sort((a,b)=>{const av=a.row[s.field],bv=b.row[s.field];const c=av===bv?0:av==null?-1:bv==null?1:av>bv?1:-1;return s.ascending?c:-c;});
         if(this.max!==null)rows=rows.slice(0,this.max);
         if(this.mode==="delete"){await Promise.all(rows.map(x=>deleteDoc(x.doc.ref)));return {data:null,error:null,count:rows.length};}
@@ -130,11 +135,12 @@ export function createApexFirebaseCompat(){
     async signOut(){try{await signOut(auth);return {error:null};}catch(error){return {error};}},
     onAuthStateChange(callback){const unsub=onAuthStateChanged(auth,async user=>{try{callback(user?"SIGNED_IN":"SIGNED_OUT",user?await sessionFor(user):null);}catch(error){console.error(error);callback(user?"SIGNED_IN":"SIGNED_OUT",null);}});return {data:{subscription:{unsubscribe:unsub}}};}
   };
+  const publicUrls=new Map();
   return {
     auth:authApi,
     from(table){return new Builder(table);},
     async rpc(name,args={}){try{const fn=rpcNames[name];if(!fn)throw new Error("Unsupported APEX operation: "+name);const result=await httpsCallable(functions,fn)(args);return {data:result.data,error:null};}catch(error){return {data:null,error};}},
     functions:{async invoke(name,{body={}}={}){try{const fn=callableNames[name];if(!fn)throw new Error("Unsupported APEX function: "+name);const result=await httpsCallable(functions,fn)(body);return {data:result.data,error:null};}catch(error){return {data:null,error};}}},
-    storage:{from(bucket){return {async upload(path,file,options={}){try{const target=ref(storage,((bucket==="apex-store"?"store":bucket)+"/"+path).replace(/^\/+/, ""));await uploadBytes(target,file,{contentType:options.contentType||file.type,cacheControl:options.cacheControl||"3600"});return {data:{path},error:null};}catch(error){return {data:null,error};}},getPublicUrl(path){return {data:{publicUrl:""},error:null,promise:getDownloadURL(ref(storage,((bucket==="apex-store"?"store":bucket)+"/"+path).replace(/^\/+/, ""))).then(publicUrl=>({data:{publicUrl}}))};}};}}
+    storage:{from(bucket){return {async upload(path,file,options={}){try{const target=ref(storage,((bucket==="apex-store"?"store":bucket)+"/"+path).replace(/^\/+/, ""));await uploadBytes(target,file,{contentType:options.contentType||file.type,cacheControl:options.cacheControl||"3600"});const url=await getDownloadURL(target);publicUrls.set(path,url);return {data:{path},error:null};}catch(error){return {data:null,error};}},getPublicUrl(path){return {data:{publicUrl:""},error:null,promise:getDownloadURL(ref(storage,((bucket==="apex-store"?"store":bucket)+"/"+path).replace(/^\/+/, ""))).then(publicUrl=>({data:{publicUrl}}))};}};}}
   };
 }
