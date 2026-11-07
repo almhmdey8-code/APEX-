@@ -190,7 +190,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",
 
 export const apexRequestSignupOtp=onCall({region:REGION,secrets:[RESEND_API_KEY,SECURITY_HASH_SALT]},async request=>{
   const email=clean(request.data?.email,254).toLowerCase();
-  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) fail("invalid-argument","أدخل بريداً إلكترونياً صحيحاً.");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fail("invalid-argument","أدخل بريداً إلكترونياً صحيحاً.");
   const key=RESEND_API_KEY.value();if(!key) fail("unavailable","خدمة إرسال رمز التحقق غير مهيأة حالياً.");
   try{await getAuth().getUserByEmail(email);fail("already-exists","هذا البريد مسجل مسبقاً. انتقل إلى تسجيل الدخول.");}
   catch(error){if(error instanceof HttpsError)throw error;if(error.code!=="auth/user-not-found")throw error;}
@@ -209,7 +209,7 @@ export const apexCompleteSignup=onCall({region:REGION,secrets:[SECURITY_HASH_SAL
   const b=request.data||{},email=clean(b.email,254).toLowerCase(),code=clean(b.code,6),password=String(b.password||"");
   const fullName=clean(b.full_name,120),phone=clean(b.phone,30),country=b.country==="YE"?"YE":"SA",address=clean(b.address,500);
   const latitude=Number.isFinite(b.latitude)?b.latitude:null,longitude=Number.isFinite(b.longitude)?b.longitude:null;
-  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!/^\\d{6}$/.test(code)||password.length<6||!fullName||!phone||!address) fail("invalid-argument","بيانات إنشاء الحساب غير مكتملة.");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!/^\d{6}$/.test(code)||password.length<6||!fullName||!phone||!address) fail("invalid-argument","بيانات إنشاء الحساب غير مكتملة.");
   if(latitude===null||longitude===null||Math.abs(latitude)>90||Math.abs(longitude)>180) fail("invalid-argument","حدد موقع التوصيل قبل إكمال التسجيل.");
   const emailHash=await sha256(email),ref=db.doc("signupOtpChallenges/"+emailHash),salt=SECURITY_HASH_SALT.value()||"apex-signup-otp-v1";
   let otpValid=false;
@@ -329,7 +329,7 @@ export const apexAdminBootstrap=onCall({region:REGION},async request=>{
 
 export const apexVerifySignupOtp=onCall({region:REGION,secrets:[SECURITY_HASH_SALT]},async request=>{
   const email=clean(request.data?.email,254).toLowerCase(),code=clean(request.data?.code,6);
-  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!/^\\d{6}$/.test(code))fail("invalid-argument","أدخل البريد والرمز المكوّن من 6 أرقام.");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!/^\d{6}$/.test(code))fail("invalid-argument","أدخل البريد والرمز المكوّن من 6 أرقام.");
   const ref=db.doc("signupOtpChallenges/"+await sha256(email)),salt=SECURITY_HASH_SALT.value()||"apex-signup-otp-v1";
   let valid=false;
   await db.runTransaction(async tx=>{
