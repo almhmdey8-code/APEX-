@@ -93,8 +93,7 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /shippingProviders/{id} {
-      allow read: if isAdmin();
-      allow write: if false;
+      allow read, write: if isAdmin();
     }
     match /securityEvents/{id} {
       allow read: if isAdmin();
