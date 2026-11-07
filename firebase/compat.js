@@ -132,7 +132,7 @@ export function createApexFirebaseCompat(){
       await setDoc(doc(db,"customers",current.uid),{uid:current.uid,...profile},{merge:true});
       return {data:{user:mapUser(current,profile)},error:null};
     }catch(error){return {data:null,error};}},
-    async resetPasswordForEmail(email){try{await sendPasswordResetEmail(auth,email.trim().toLowerCase());return {data:{},error:null};}catch(error){return {data:null,error};}},
+    async resetPasswordForEmail(email,options={}){try{const action=options.redirectTo?{url:options.redirectTo,handleCodeInApp:false}:undefined;await sendPasswordResetEmail(auth,email.trim().toLowerCase(),action);return {data:{},error:null};}catch(error){return {data:null,error};}},
     async signOut(){try{await signOut(auth);return {error:null};}catch(error){return {error};}},
     onAuthStateChange(callback){const unsub=onAuthStateChanged(auth,async user=>{try{callback(user?"SIGNED_IN":"SIGNED_OUT",user?await sessionFor(user):null);}catch(error){console.error(error);callback(user?"SIGNED_IN":"SIGNED_OUT",null);}});return {data:{subscription:{unsubscribe:unsub}}};}
   };
