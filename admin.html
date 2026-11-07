@@ -309,10 +309,11 @@ body{background:radial-gradient(ellipse at 80% -5%,rgba(183,137,48,.19),transpar
 </section>
 </div></section><script src="./firebase/runtime-config.js"></script>
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 import { isFirebaseConfigured } from './firebase/client.js';
 import { createApexFirebaseCompat } from './firebase/compat.js';
-const supabase=isFirebaseConfigured()?createApexFirebaseCompat():createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
+let supabase;
+if(isFirebaseConfigured()) supabase=createApexFirebaseCompat();
+else { const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.0'); supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR'); }
 const owner='apex.1.shopping@gmail.com';
 const $=id=>document.getElementById(id);
 let editing=null,editingBanner=null,editingPayment=null;
