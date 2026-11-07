@@ -318,3 +318,9 @@ export const apexGetPublicPaymentMethods=onCall({region:REGION},async ()=>{
   const paymentMethods=snap.docs.map(d=>{const row=d.data();return {id:row.legacyId??(Number.isNaN(Number(d.id))?d.id:Number(d.id)),...Object.fromEntries(allowed.filter(k=>Object.hasOwn(row,k)).map(k=>[k,row[k]]))};}).filter(row=>row.methodType==="manual");
   return {paymentMethods};
 });
+
+
+export const apexAdminBootstrap=onCall({region:REGION},async request=>{
+  const auth=await requireAdmin(request);
+  return {admin:true,uid:auth.uid};
+});
