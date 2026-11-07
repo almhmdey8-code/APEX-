@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050706"><title>APEX 👑 | متجر النخبة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#e9bd55;--gold2:#fff0a8;--green:#00c9a7;--bg:#050706;--panel:#0d1210;--line:rgba(233,189,85,.48)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fff;font-family:'Cairo',Tahoma,Arial;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 15% 25%,rgba(0,183,148,.13),transparent 35%),radial-gradient(ellipse at 90% 65%,rgba(218,163,48,.10),transparent 35%),linear-gradient(150deg,#080b09,#030504 65%)}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,55px);border-bottom:1px solid var(--line);background:rgba(3,5,4,.94);position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--gold);font-family:Georgia,serif;font-size:clamp(28px,5vw,46px);font-weight:900;letter-spacing:2px;text-shadow:0 0 22px #a87928}.crown{font-size:34px}
+.actions{display:flex;align-items:center;gap:12px}.outline,.iconbtn{border:1px solid var(--gold);color:var(--gold2);background:#080a08;border-radius:40px;padding:10px 17px}.iconbtn{width:45px;height:45px;padding:0;font-size:21px}.menu{display:none}
+.hero{min-height:470px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px;padding:48px clamp(18px,6vw,90px);position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.78)),url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&w=1800&q=85') center/cover}
+.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 22% 48%,rgba(0,222,178,.28),transparent 34%),linear-gradient(0deg,#050706 0%,transparent 28%)}
+.heroart{position:relative;z-index:1;text-align:center;font-size:clamp(100px,20vw,220px);line-height:1;color:#00d8b5;text-shadow:0 0 25px #00a98e,0 0 65px #007c67;filter:drop-shadow(0 20px 24px #000)}
+.herotext{position:relative;z-index:1}.eyebrow{color:var(--green);font-weight:800;letter-spacing:3px}.herotext h1{font-size:clamp(32px,5vw,58px);line-height:1.35;margin:10px 0;color:var(--gold2);text-shadow:0 0 24px #a87928}.herotext p{font-size:clamp(16px,2vw,21px);color:#e7e1d2}.goldbtn{border:1px solid #fff0a8;border-radius:40px;padding:14px 34px;background:linear-gradient(110deg,#b77c1b,#ffe58a,#c28a25);color:#161006;font-size:20px;font-weight:900;box-shadow:0 0 25px rgba(233,189,85,.38);margin-top:15px}
+.features{max-width:1200px;margin:-2px auto 0;padding:24px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.feature{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(31,29,17,.8),rgba(5,8,7,.95));padding:18px 10px;text-align:center;color:#f8e9b5}.feature b{display:block;font-size:28px;color:var(--gold)}.feature span{font-weight:700}
+main{max-width:1250px;margin:auto;padding:25px 20px 90px}.sectionhead{text-align:center;margin:35px 0 25px}.sectionhead h2{font-size:clamp(28px,4vw,42px);color:var(--gold2);margin:0}.sectionhead p{color:#b8b5a9;margin:4px}.sectionhead .rule{color:var(--gold);font-size:24px}
+.categories{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:22px 0 30px}.cat{border:1px solid var(--line);background:#0b100d;color:#e8d8a6;border-radius:30px;padding:9px 20px}.cat.active,.cat:hover{background:linear-gradient(100deg,#9c6a18,#f5d778);color:#151006}
+.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.product{border:1px solid var(--line);border-radius:22px;padding:10px;background:linear-gradient(150deg,#171a15,#080b09);position:relative;overflow:hidden;transition:.25s;box-shadow:0 8px 25px #0008}.product:hover{transform:translateY(-5px);box-shadow:0 0 25px #b98b3440;border-color:var(--gold)}.product img{width:100%;height:190px;object-fit:cover;border-radius:15px;background:#151a17}.tag{position:absolute;top:18px;right:18px;background:linear-gradient(100deg,#b77c1b,#ffe58a);color:#171006;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:900}.product h3{font-size:15px;margin:10px 5px 3px;color:#fff}.product p{font-size:13px;color:#aaa;margin:0 5px 12px;min-height:38px}.productfoot{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:0 4px 5px}.offer{color:var(--gold2);font-weight:800;font-size:13px}.add{border:1px solid var(--gold);border-radius:25px;background:#171309;color:var(--gold2);padding:8px 13px;font-size:13px;font-weight:800}.add:hover{background:var(--gold);color:#100d05}
+.about{margin:65px 0 25px;border:1px solid var(--line);border-radius:28px;padding:35px 20px;text-align:center;background:radial-gradient(ellipse at center,rgba(0,183,148,.12),transparent 65%),#080b09}.about h2{color:var(--gold);font-size:36px;margin:0}.about p{color:#d3d0c5}
+.cartpanel{display:none;position:fixed;inset:0;background:#000b;z-index:50;align-items:center;justify-content:center;padding:16px}.cartpanel.show{display:flex}.cartbox{width:min(520px,100%);max-height:90vh;overflow:auto;border:1px solid var(--gold);border-radius:22px;background:#0b100d;padding:22px;box-shadow:0 0 45px #000}.cartbox h2{color:var(--gold)}.cartrow{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #ffffff20;padding:10px 0}.close{float:left;background:none;border:0;color:var(--gold);font-size:25px}.cartbox input,.cartbox textarea{width:100%;margin:8px 0;padding:12px;border:1px solid #69552d;border-radius:9px;background:#050706;color:#fff;font:inherit}
+footer{border-top:1px solid var(--line);padding:28px 15px;text-align:center;color:#aaa}footer strong{display:block;font:900 36px Georgia;color:var(--gold);letter-spacing:3px}
+@media(max-width:800px){.hero{grid-template-columns:1fr;min-height:520px;text-align:center;padding:30px 18px;gap:0}.heroart{font-size:130px}.herotext h1{font-size:34px}.features{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product img{height:155px}.menu{display:block}}
+@media(max-width:420px){.topbar{height:70px;padding:0 10px}.brand{font-size:27px}.crown{font-size:25px}.outline{padding:8px 11px;font-size:13px}.actions{gap:6px}.products{gap:9px}.product{padding:7px}.product img{height:130px}.product h3{font-size:14px}.product p{font-size:12px}.add{padding:7px 9px;font-size:12px}}
+
+.banner-strip{max-width:1200px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.store-banner{position:relative;display:block;min-height:190px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#101612}.store-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}.store-banner div{position:relative;padding:25px;text-shadow:0 2px 8px #000}.store-banner h2{color:var(--gold2);margin:0 0 8px}.store-banner p{margin:0;color:#fff}.paychoice{display:flex;align-items:center;gap:12px;color:#f5e9c8;text-align:right;border:1px solid #69552d;border-radius:13px;padding:11px 13px;margin:8px 0;background:linear-gradient(120deg,#11150f,#080a08)}.paychoice input{width:auto;flex:0 0 auto;margin:0 0 0 3px}.paychoice .paybrand-logo{width:48px;height:48px;flex:0 0 48px;object-fit:contain;border-radius:11px;background:#fff;padding:3px;border:1px solid #d5b35d;box-shadow:0 2px 10px #0008}.paychoice .paybrand-copy{display:flex;flex-direction:column;gap:3px;min-width:0}.paychoice small{display:block;color:#aaa;margin:0;font-size:11px;line-height:1.6}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto 18px}
+.toolbar select,.toolbar button{border:1px solid var(--line);border-radius:24px;background:#0b100d;color:#f5e9c8;padding:10px 15px;font:inherit}
+.product .fav{position:absolute;left:17px;top:17px;width:38px;height:38px;border:1px solid #e9bd55;border-radius:50%;background:#080a08d9;color:#ffe8a0;font-size:20px}
+.product .fav.on{background:#e9bd55;color:#171006}
+.luxury-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:90;background:#10251e;border:1px solid var(--gold);border-radius:30px;padding:11px 20px;color:#ffe8a0;box-shadow:0 10px 35px #0009}
+/* APEX jewel-gold luxury finish */
+:root{--gold:#f3cf72;--gold2:#fff0b8;--line:rgba(236,190,76,.62)}
+body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#050605 76%)}
+.brand{color:#ffe7a0;text-shadow:0 0 10px #d5a83b,0 0 28px #a87928;letter-spacing:3px}
+.btn,.btn2,.tabs button,.goldbtn,.cat.active,.cat:hover,.tag,.add,.outline,.iconbtn,.toolbar select,.toolbar button{background:linear-gradient(135deg,#80520e 0%,#d7a83e 23%,#fff0a8 48%,#c18a28 72%,#70450b 100%);color:#1b1305;border:1px solid #ffe7a0;font-weight:900;box-shadow:0 4px 17px #b9862940,inset 0 1px 0 #fff9;transition:transform .18s,filter .18s,box-shadow .18s}
+.btn:hover,.btn2:hover,.tabs button:hover,.goldbtn:hover,.add:hover,.outline:hover,.iconbtn:hover,.toolbar button:hover{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 8px 24px #d6a83c66}
+.panel,.kpi,.item,.product,.feature,.about,.store-banner{border-color:rgba(239,196,91,.58);box-shadow:0 12px 32px #0009,inset 0 1px 0 #fff2}
+.field{border-color:#98752f;background:linear-gradient(145deg,#100f0b,#070806);border-radius:13px}
+.product-price{margin:8px 5px 13px;color:#ffe39a;font-size:20px;font-weight:900;text-shadow:0 0 14px #b9872e}
+.product:hover{box-shadow:0 0 30px #d6a83c55;border-color:#ffe7a0}
+@media(max-width:600px){.cartpanel{padding:8px;align-items:flex-start}.cartbox{padding:16px;width:100%;max-height:94vh;margin:8px 0}.account-layout{grid-template-columns:1fr!important}.account-menu{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px!important}.account-menu button{font-size:12px;padding:9px 5px}.cartbox input,.cartbox textarea{font-size:16px}}
+
+.apex-admin-hidden{display:none!important}
+#adminWorkspace{position:fixed;inset:0;z-index:9999;overflow-y:auto;max-width:none;margin:0;padding:18px;border:0;border-radius:0;background:rgba(0,0,0,.94);backdrop-filter:blur(8px);color:#f8f2df;font-family:Tahoma,Arial,sans-serif}
+#adminWorkspace .wrap{width:min(1100px,100%);min-height:100%;margin:0 auto;padding:12px}
+#adminWorkspace #adm_login{width:min(520px,100%);margin:8vh auto 30px;padding:26px;background:#0b100d;border:1px solid var(--gold);border-radius:22px;box-shadow:0 0 45px #000}
+#adminWorkspace #adm_login h1,#adminWorkspace #adm_login .muted{text-align:center}
+#adminWorkspace #adm_login .field,#adminWorkspace #adm_login #adm_send{width:100%}
+#adminWorkspace .panel{background:#101612;border:1px solid #80672e;border-radius:18px;padding:22px;margin:22px 0}
+#adminWorkspace .field{width:100%;padding:13px;border:1px solid #98752f;border-radius:10px;background:#080d0a;color:white;margin:7px 0 14px}
+#adminWorkspace .btn{background:linear-gradient(110deg,#b77c1b,#ffe58a,#c28a25);border:0;border-radius:30px;padding:12px 22px;color:#171006;font-weight:bold}
+#adminWorkspace .btn2,#adminWorkspace .tabs button{background:#0b100d;color:#f5d778;border:1px solid var(--gold);border-radius:30px;padding:10px 17px}
+#adminWorkspace .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#adminWorkspace .item{border:1px solid #80672e;border-radius:12px;padding:14px;margin:10px 0;background:#0b100d}
+#adminWorkspace .row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+#adminWorkspace .muted{color:#bcb8a9;line-height:1.8}#adminWorkspace h1,#adminWorkspace h2{color:#ffe8a0}
+#adminWorkspace .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+#adminWorkspace .kpi{background:linear-gradient(145deg,#1b241d,#0b100d);border:1px solid #80672e;border-radius:16px;padding:17px}
+#adminWorkspace .kpi span{display:block;color:#bdb69f;font-size:13px}#adminWorkspace .kpi b{display:block;color:#ffe8a0;font-size:27px;margin-top:5px}
+#adminWorkspace .tabs{display:flex;gap:10px;flex-wrap:wrap}#adminWorkspace .status{color:var(--green);min-height:24px}
+#adminWorkspace .tablewrap{overflow:auto}#adminWorkspace table{width:100%;border-collapse:collapse;min-width:550px}#adminWorkspace td,#adminWorkspace th{text-align:right;padding:11px;border-bottom:1px solid #3d392a}#adminWorkspace th{color:var(--gold)}
+@media(max-width:720px){#adminWorkspace .grid{grid-template-columns:1fr}#adminWorkspace .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .panel{padding:14px}}
+.price-undetermined{font-size:11px;color:#c9bd9a;font-weight:600}.cart-icon{width:38px;height:34px;padding:0;display:grid;place-items:center;font-size:17px;line-height:1}
+.account-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid #8e6d2e}
+#accountpanel .account-panel-card .account-section-heading h3{margin:0;flex:1}
+.account-back-button{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 15px;border:1px solid #d7b35e;border-radius:22px;background:linear-gradient(135deg,#2b210d,#090908);color:#f6d981;font:800 13px inherit;cursor:pointer;box-shadow:0 2px 10px #d4a83a22}
+.account-back-button:active{transform:scale(.97);background:linear-gradient(120deg,#956214,#f5d879);color:#171006}
+
+.apex-about-full{text-align:right;color:#e8e2d2;line-height:1.95;font-size:14px}.apex-about-full h2{color:#ffe8a0;font-size:16px;text-align:center;line-height:1.5;margin:7px 0 11px}.apex-about-full h3{color:#f3cf72;font-size:17px;margin:23px 0 8px;padding-bottom:6px;border-bottom:1px solid #8e6d2e}.apex-about-full p{color:#d8d2c4;margin:9px 0}.apex-about-full ul{padding-right:23px;margin:8px 0}.apex-about-full li{padding:3px 0;color:#e8e2d2}.apex-about-full .apex-about-signoff{text-align:center;color:#ffe8a0;font-size:13px;line-height:1.6;margin-top:20px;padding:13px 8px;border:1px solid #8e6d2e;border-radius:12px;background:linear-gradient(120deg,#211707,#090908)}.apex-about-full .apex-about-signoff strong{font-size:13px}
+</style><style>
+/* Compact storefront cards and product tiles */
+.products{gap:10px!important;grid-template-columns:repeat(auto-fill,minmax(145px,1fr))!important}
+.product{padding:9px!important;border-radius:13px!important;min-width:0!important}
+.product img{height:135px!important;object-fit:contain!important}
+.product h3{font-size:13px!important;line-height:1.35!important;margin:7px 0 4px!important}
+.product p{font-size:11px!important;line-height:1.4!important;margin:3px 0!important}
+.product-price{font-size:13px!important}
+.productfoot{gap:5px!important;margin-top:7px!important}
+.product .fav{width:30px!important;height:30px!important}
+.product button,.product .btn{font-size:11px!important;padding:7px 9px!important;min-height:32px!important}
+@media(max-width:600px){
+.products{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.product{padding:7px!important}
+.product img{height:112px!important}
+.product h3{font-size:12px!important}
+.product p{font-size:10px!important}
+.product button,.product .btn{font-size:10px!important;padding:6px 7px!important}
+}
+
+/* APEX customer dashboard — matched to the black / diamond-gold storefront */
+#accountpanel{padding:0!important;align-items:stretch!important;background:rgba(0,0,0,.94)!important}
+#accountpanel .account-shell{width:100%;height:100%;max-height:100%;overflow:auto;margin:0;border:0;border-radius:0;padding:0;background:#050505;color:#fff;position:relative;box-shadow:none}
+#accountpanel .account-head{height:76px;padding:10px clamp(14px,4vw,42px);display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #c99a36;background:linear-gradient(100deg,#080808,#1a1408,#050505)}
+#accountpanel .account-brand{font:900 30px Georgia,serif;letter-spacing:2px;color:#f7d77c;text-shadow:0 0 18px #c28a25}
+#accountpanel .account-brand small{display:block;text-align:center;font:700 9px Cairo,Tahoma;color:#ffe8a0;letter-spacing:1px}
+#accountpanel .account-head .account-profile-shortcut{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;padding:0;border:2px solid #e4bd62;border-radius:50%;background:radial-gradient(circle at 35% 25%,#f7df9b,#8d621b 58%,#171006 100%);color:#171006;font:900 23px/1 Arial,sans-serif;box-shadow:0 0 12px #d5a83c55;cursor:pointer}#accountpanel .account-head .account-profile-shortcut:focus-visible{outline:2px solid #ffe8a0;outline-offset:3px}
+#accountpanel .account-content{width:min(1120px,100%);margin:auto;padding:14px clamp(12px,3vw,28px) 35px}
+#accountpanel .account-gem-hero{min-height:155px;border:1px solid #d5a83c;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;margin:14px 0;background:radial-gradient(circle at 22% 50%,#9d741f88,transparent 32%),linear-gradient(115deg,#080808,#211707 48%,#080808);box-shadow:inset 0 0 24px #d5a83c22,0 8px 25px #000}
+#accountpanel .account-gem{font-size:clamp(54px,10vw,92px);filter:drop-shadow(0 0 16px #f4c957)}
+#accountpanel .account-gem-hero h2{margin:0;color:#f7d77c;font:900 clamp(25px,5vw,42px) Georgia,serif;text-shadow:0 0 18px #c28a25}
+#accountpanel .account-gem-hero p{margin:5px 0 0;color:#f3e6c4;font-size:14px}
+#accountpanel .account-shortcuts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:14px 0 20px}
+#accountpanel .account-menu button{min-width:0;min-height:76px;border:1px solid #d5a83c!important;border-radius:14px!important;background:linear-gradient(145deg,#211707,#080808 70%)!important;color:#ffe6a0!important;padding:9px 5px!important;font-size:12px!important;font-weight:800;box-shadow:inset 0 0 14px #d5a83c16,0 5px 15px #000}
+#accountpanel .account-menu button:focus,#accountpanel .account-menu button:hover{background:linear-gradient(135deg,#81550e,#f2d477,#80520e)!important;color:#171006!important}
+#accountpanel .account-menu button:last-child{grid-column:span 5;min-height:40px;color:#ffb6a8!important;border-color:#9c4d3d!important}
+#accountpanel .account-panel-card{border:1px solid #bd9137;border-radius:18px;background:linear-gradient(145deg,#17130b,#070707 65%);padding:16px;margin:12px 0;box-shadow:inset 0 1px 0 #fff2,0 10px 24px #0009}
+#accountpanel .account-panel-card h3{color:#f7d77c;margin:0 0 12px;font-size:19px}
+#accountpanel .account-panel-card input{width:100%;border:1px solid #8b6a2d;border-radius:11px;background:#080808;color:#fff;padding:11px 13px;margin:6px 0;font:inherit}
+#accountpanel .account-panel-card .add{background:linear-gradient(120deg,#956214,#f5d879,#956214)!important;color:#1a1204!important;border:1px solid #ffe9a0!important;border-radius:24px!important;font-weight:900}
+#accountpanel .account-auth-card{width:min(520px,100%);margin:30px auto}
+#accountpanel #accountData{padding-bottom:20px}
+#accountpanel #myOrders .item,#accountpanel #shippingOrders .item,#accountpanel #transitOrders .item{background:#0b0a07!important;border:1px solid #9b772f!important;border-radius:13px!important}
+#accountpanel .account-section-title{color:#f7d77c;border-bottom:1px solid #9d762d;padding-bottom:9px;margin:8px 0 14px}
+@media(max-width:560px){
+ #accountpanel .account-head{height:64px}
+ #accountpanel .account-brand{font-size:25px}
+ #accountpanel .account-content{padding:9px 10px 25px}
+ #accountpanel .account-gem-hero{min-height:118px;padding:13px;border-radius:15px}
+ #accountpanel .account-gem-hero p{font-size:12px}
+ #accountpanel .account-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ #accountpanel .account-menu button{min-height:65px;font-size:10px!important;padding:6px 2px!important}
+ #accountpanel .account-menu button:last-child{grid-column:span 4}
+ #accountpanel .account-panel-card{padding:12px}
+}
+ .account-profile-summary{border:1px solid #705728;border-radius:12px;padding:10px 13px;margin:8px 0 16px;background:#090a08}.account-profile-summary p{margin:8px 0;color:#c9bd9a;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.account-profile-summary strong{color:#fff0b8;overflow-wrap:anywhere}#accountpanel #accountSection-profile label{display:block;color:#d8c28c;font-size:13px;margin-top:8px}
+</style><style>
+.user-hub{max-width:850px;margin:0 auto;padding:18px 15px 90px;color:#f8f3e6}
+.user-hub-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.user-hub-top small,.user-wallet>div>small{color:#c9a34d;letter-spacing:2px;font-size:10px;font-weight:800}
+.user-hub-top h2{margin:2px 0;color:#f4d98a;font-size:27px}
+.user-logout{border:1px solid #8c6b2d;border-radius:25px;background:#100f0c;color:#e9cf88;padding:9px 13px;font-size:12px}
+.user-diamond-hero{position:relative;overflow:hidden;min-height:190px;border:1px solid rgba(222,183,91,.55);border-radius:24px;padding:25px 22px;background:radial-gradient(circle at 80% 45%,#3c3018 0,#17140e 35%,#090b0a 78%);display:flex;align-items:center;justify-content:space-between}
+.user-hero-copy{position:relative;z-index:2}.user-hero-copy>span{color:#d9b85f;font-size:12px}.user-hero-copy h1{font-size:25px;margin:9px 0;color:#fff}.user-hero-copy h1 em{color:#e9c76f;font-style:normal}.user-hero-copy p{font-size:12px;color:#bcb5a4;margin:0}
+.user-diamond{font-size:100px;line-height:1;color:#c5a04c;text-shadow:0 0 18px #d5a944,0 0 40px #8b681f;transform:rotate(0deg);position:relative;z-index:1}.user-diamond i{position:absolute;font-size:23px;top:35%;left:38%;color:#fff3c1;font-style:normal}
+.user-glow{position:absolute;width:170px;height:170px;border-radius:50%;background:#c69a3518;filter:blur(25px);right:12%;top:5%}
+.user-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}
+.user-shortcuts button,.user-services button{border:1px solid #4d4024;background:linear-gradient(145deg,#17150f,#0b0d0c);border-radius:16px;color:#eee3c4;min-height:82px;padding:12px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+.user-shortcuts b{font-size:24px;color:#e5c36c}.user-shortcuts span{font-size:11px}
+.user-wallet{position:relative;overflow:hidden;border:1px solid #8e6d2e;border-radius:20px;padding:17px 19px 12px;background:linear-gradient(110deg,#201a0e,#0c0e0c 75%);display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 12px}
+.user-wallet h3{margin:5px 0;font-size:19px;color:#f4dda0}.user-wallet p{margin:4px 0 0;color:#b7ae9a;font-size:12px}.wallet-balance-info{display:flex;flex-direction:column;align-items:flex-end;position:relative;z-index:1}.wallet-balance-info>strong{font-size:25px;line-height:1.2;color:#f2d37d;white-space:nowrap}.wallet-balance-info>strong small{font-size:12px}.wallet-gem{font-size:52px;color:#b89445;opacity:.18;position:absolute;right:46%;top:2%;pointer-events:none}.wallet-note{grid-column:1/-1;position:static;display:block;margin:2px 0 0;padding-top:7px;border-top:1px solid #8e6d2e55;color:#b7ae9a;font-size:10px;text-align:center}
+.user-service-title{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px}.user-service-title h3{margin:0;color:#f1d78c;font-size:17px}.user-service-title span{font-size:10px;color:#99917f}
+.user-services{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.user-services button{align-items:flex-start;text-align:right;padding:13px;min-height:100px}.user-services b{font-size:23px;color:#d9b65d}.user-services span{font-size:12px;font-weight:800}.user-services small{font-size:10px;color:#9c9586}
+.user-bottom-nav{position:sticky;bottom:7px;margin:20px -5px 0;padding:9px 5px;border:1px solid #665126;border-radius:18px;background:rgba(8,10,9,.96);display:flex;justify-content:space-around;backdrop-filter:blur(12px);z-index:5}.user-bottom-nav button{background:none;border:0;color:#d9bd78;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:19px}.user-bottom-nav small{font-size:9px;color:#b7ad98}
+.user-hub .account-panel-card{margin-top:15px;border-color:#6c552c;background:linear-gradient(145deg,#15130e,#090c0b);border-radius:18px;padding:17px}
+@media(max-width:420px){.user-diamond-hero{min-height:170px;padding:17px 14px}.user-hero-copy h1{font-size:20px}.user-diamond{font-size:76px}.user-shortcuts{gap:6px}.user-shortcuts button{min-height:75px}.user-shortcuts span{font-size:10px}.user-services{grid-template-columns:repeat(2,minmax(0,1fr))}.user-service-title span{font-size:9px}}
+
+/* Visible customer sign-up and login directly above the product list */
+.storefront-auth-title{text-align:center;color:#f7d77c;margin:0 0 5px;font-size:22px}.storefront-auth-subtitle{text-align:center;color:#d8cba8;margin:0 0 14px;font-size:13px}.storefront-auth-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.storefront-auth-option{min-height:58px;border:1px solid #d5a83c;border-radius:14px;background:linear-gradient(145deg,#2a210f,#090807);color:#ffe6a0;font:800 15px Cairo,Tahoma,sans-serif;cursor:pointer}.storefront-auth-option:active{transform:scale(.98)}.storefront-auth #accountAuth{width:100%;margin:12px 0 0;padding:0;border:0;background:transparent;box-shadow:none}.storefront-auth #accountForm{max-width:520px;margin:auto}.storefront-auth-actions{display:flex;gap:8px;flex-wrap:wrap}.storefront-auth-actions button{flex:1;min-width:130px}
+
+.storefront-auth-wrap{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;max-width:none;margin:0;padding:16px;background:rgba(0,0,0,.82);backdrop-filter:blur(5px)}.storefront-auth-wrap[hidden]{display:none!important}.storefront-auth-wrap>.storefront-auth{width:min(520px,100%);max-height:90vh;overflow:auto}
+.storefront-auth{border:1px solid #c99a36;border-radius:20px;padding:17px;background:linear-gradient(145deg,#17130b,#070807 72%);box-shadow:0 12px 28px #0009,inset 0 1px 0 #fff2}
+.storefront-auth #accountAuth{width:100%;margin:0}
+.storefront-auth #accountAuth h2{margin:0 0 7px}
+.storefront-auth #accountAuth input{width:100%;border:1px solid #8b6a2d;border-radius:11px;background:#080808;color:#fff;padding:12px 13px;margin:6px 0;font:inherit}
+.storefront-auth #accountAuth button{margin:7px 4px 0 0}.storefront-forgot-row{text-align:right;margin:4px 2px 0}.storefront-forgot{border:0;background:transparent;color:#d8ba70;text-decoration:underline;padding:5px 0;font:14px Cairo,Tahoma,sans-serif;cursor:pointer}
+.storefront-auth #accountMsg{min-height:22px;margin:9px 0 0}
+@media(max-width:600px){.storefront-auth-wrap{padding:0 10px}.storefront-auth{padding:12px}.account-entry{font-size:11px;padding:8px 10px!important}}
+</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<style>
+#deliveryMapModal{position:fixed;inset:0;z-index:9999;background:#000c;display:none;align-items:center;justify-content:center;padding:14px}
+#deliveryMapModal.show{display:flex}
+#deliveryMapModal .delivery-map-card{width:min(680px,100%);background:#101510;border:1px solid #9b7939;border-radius:18px;padding:14px;color:#fff;box-shadow:0 20px 70px #000}
+#deliveryMap{height:min(55vh,420px);min-height:260px;border-radius:12px;overflow:hidden;margin:12px 0}
+#deliveryMapModal .delivery-map-actions{display:flex;gap:9px}
+#deliveryMapModal button{flex:1;padding:12px;border:1px solid #9b7939;border-radius:10px;background:#d8b65f;color:#17130a;font-weight:800}
+#deliveryMapModal button.secondary{background:#242820;color:#fff}
+</style>
+<style>
+/* APEX storefront visual identity — aligned with approved black, gold and emerald concept */
+.topbar{height:88px;background:linear-gradient(100deg,#030403,#171105 48%,#030403);border-bottom:2px solid #d7aa43;box-shadow:0 5px 28px #000}
+.brand{display:flex;flex-direction:column;align-items:center;gap:0;font-size:clamp(30px,5vw,48px);line-height:.92;color:#ffe18a}
+.brand .crown{font-size:22px;line-height:1}
+.brand small{display:block;font:800 9px Cairo,sans-serif;letter-spacing:3px;text-align:center;color:#f4d477;margin-top:5px}
+.account-entry{width:auto!important;min-width:112px!important;border-radius:28px!important;padding:8px 15px!important;display:flex;align-items:center;justify-content:center;gap:7px}
+.account-entry span{font-size:14px;font-weight:900}
+.hero{min-height:440px;background-image:radial-gradient(ellipse at 20% 48%,rgba(0,220,190,.35),transparent 38%),linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,.82)),url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&w=1800&q=85');border-bottom:2px solid #c99a36}
+.heroart{color:#00e2c0;text-shadow:0 0 25px #00e2c0,0 0 70px #007e6c;filter:drop-shadow(0 15px 25px #000)}
+.herotext h1{font-family:Georgia,'Cairo',serif;font-weight:900;letter-spacing:2px}
+.feature{border-radius:50%;min-height:116px;display:flex;flex-direction:column;justify-content:center;align-items:center;max-width:150px;margin:auto;width:100%;aspect-ratio:1;padding:12px}
+.features{grid-template-columns:repeat(4,minmax(0,1fr));}
+.products{gap:13px!important}
+.product{border:1px solid #b88b31!important;border-radius:17px!important;background:linear-gradient(145deg,#17130b,#050605)!important}
+.product img{border-radius:13px}
+.product .fav{border-color:#e7bd58;color:#ffdf83}
+.user-bottom-nav{display:none}
+#accountpanel.customer-profile-card-mode{padding:14px!important;align-items:center!important;justify-content:center!important;background:rgba(0,0,0,.82)!important;backdrop-filter:blur(8px)}
+#accountpanel.customer-profile-card-mode .account-shell{width:min(540px,96vw)!important;height:auto!important;max-height:90vh!important;overflow:auto!important;margin:auto!important;border:2px solid #d6a83c!important;border-radius:28px!important;background:linear-gradient(145deg,#16130d,#050505 65%)!important;box-shadow:0 0 35px #d6a83c55,0 25px 80px #000!important}
+#accountpanel.customer-profile-card-mode .account-head{height:66px;padding:8px 16px!important;border-radius:25px 25px 0 0}
+#accountpanel.customer-profile-card-mode .account-head:after{content:"حساب العميل";order:2;color:#f5d77f;font-size:20px;font-weight:900}
+#accountpanel.customer-profile-card-mode .account-brand{display:none}
+#accountpanel.customer-profile-card-mode .account-head .account-profile-shortcut{order:1;border:0;background:transparent;color:#f5d77f;font-size:32px;box-shadow:none}
+#accountpanel.customer-profile-card-mode .account-head:before{content:"";display:none}#accountpanel.customer-profile-card-mode .user-hub{display:flex;flex-direction:column}#accountpanel.customer-profile-card-mode #accountSection-profile{order:1}#accountpanel.customer-profile-card-mode .user-wallet{order:2}#accountpanel.customer-profile-card-mode .user-shortcuts{order:3}
+#accountpanel.customer-profile-card-mode .account-content{padding:10px 13px 18px!important;width:100%!important}
+#accountpanel.customer-profile-card-mode .user-hub{padding:4px 0 10px!important;max-width:none!important}
+#accountpanel.customer-profile-card-mode .user-hub-top{display:none}
+#accountpanel.customer-profile-card-mode .user-diamond-hero{display:none}
+#accountpanel.customer-profile-card-mode .user-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0}
+#accountpanel.customer-profile-card-mode .user-shortcuts button{min-height:48px;border:1px solid #8e6c2d;border-radius:12px;background:#100e09;color:#f6d982;font-size:11px}
+#accountpanel.customer-profile-card-mode .user-wallet{min-height:95px;margin:10px 0;padding:14px;border:1px solid #8d6b2e;border-radius:16px;background:linear-gradient(110deg,#211a0d,#090909);cursor:pointer}
+#accountpanel.customer-profile-card-mode .user-service-title,#accountpanel.customer-profile-card-mode .user-services{display:none}
+#accountpanel.customer-profile-card-mode #accountSection-profile{margin-top:10px}
+#accountpanel.customer-profile-card-mode .account-profile-summary{background:#0b0b0b}
+#accountpanel.customer-profile-card-mode .account-panel-card{padding:13px;margin:10px 0;border-radius:15px}
+#accountpanel.customer-profile-card-mode .user-bottom-nav{display:none}
+#accountpanel.customer-profile-card-mode #accountAuth{width:100%;max-width:440px;margin:10px auto}
+@media(max-width:600px){
+ .topbar{height:72px;padding:0 9px}
+ .brand{font-size:29px}
+ .brand .crown{font-size:18px}
+ .brand small{font-size:7px;letter-spacing:2px}
+ .account-entry{min-width:86px!important;padding:7px 9px!important}
+ .account-entry span{font-size:12px}
+ .features{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:18px 9px}
+ .feature{min-height:75px;padding:7px;font-size:11px}
+ .feature b{font-size:22px}
+ .hero{min-height:410px}
+ .products{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #accountpanel.customer-profile-card-mode{padding:8px!important}
+ #accountpanel.customer-profile-card-mode .account-shell{width:100%!important;max-height:92vh!important;border-radius:22px!important}
+}
+</style>
+<style>.store-bottom-nav{display:none}@media(max-width:600px){body{padding-bottom:72px}.store-bottom-nav{position:fixed;z-index:35;bottom:0;left:0;right:0;height:68px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:linear-gradient(100deg,#050505,#171105,#050505);border-top:2px solid #c99a36;box-shadow:0 -8px 28px #000b}.store-bottom-nav button{height:100%;border:0;background:transparent;color:#f4d477;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:22px}.store-bottom-nav small{font-size:10px;color:#f5e8c4;font-weight:800}.store-bottom-nav button:active{color:#fff0a8;text-shadow:0 0 12px #f3cf72}}</style>
+<style>
+.apex-topbar{height:86px;padding:8px clamp(12px,3vw,34px);display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;background:linear-gradient(100deg,#020403,#100d06 52%,#020403);border-bottom:1px solid #d6ad50;box-shadow:0 5px 22px #000b}
+.apex-head-actions{justify-self:start;gap:9px}.apex-head-actions .iconbtn{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff0ad,#c18a27 62%,#5d3b0b);color:#171006;border:2px solid #ffe7a0;font-size:24px;box-shadow:0 0 16px #d5a83c55}
+.apex-topbar .brand{justify-self:center;display:flex;flex-direction:column;gap:0;text-align:center;font-size:clamp(29px,4.7vw,46px);line-height:1.02}
+.apex-topbar .brand .crown{font-size:26px;line-height:1}.apex-topbar .brand small{display:block;text-align:center;font:800 9px Cairo,sans-serif;letter-spacing:2px;color:#e8bd56;margin-top:5px}
+.apex-cart-button{justify-self:end;min-width:88px;min-height:64px;border-radius:0 0 30px 30px;padding:8px 14px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:15px!important}
+.apex-cart-button b{font-size:12px}
+.apex-hero{min-height:560px;grid-template-columns:1fr 1.08fr;padding:48px clamp(18px,5vw,70px);background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.78) 38%,rgba(0,0,0,.08) 100%),url('https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1500&q=85') center/cover;border-bottom:1px solid #d5a83c}
+.apex-hero:after{background:radial-gradient(ellipse at 8% 55%,rgba(0,190,150,.24),transparent 34%),linear-gradient(0deg,#050706 0%,transparent 22%)}
+.apex-hero .heroart{font-size:clamp(120px,22vw,230px);color:#d8a93e;text-shadow:0 0 25px #c18a27;filter:drop-shadow(0 22px 24px #000);opacity:.94}
+.apex-hero .herotext{text-align:right;max-width:560px}.apex-hero .eyebrow{letter-spacing:3px;color:#00c9a7;font-size:14px}
+.apex-hero .herotext h1{font-size:clamp(42px,6vw,68px);font-weight:900;color:#f7d77c;text-shadow:0 0 20px #a87928}
+.apex-hero .herotext p{font-size:clamp(18px,2.3vw,25px);line-height:1.9;color:#f4f0e6}
+.apex-hero .hero-caption{display:inline-block;margin:8px 0 2px;padding:7px 0;border-block:1px solid #d5a83c;color:#f2d17a;font-size:22px;font-weight:800}
+.apex-hero .goldbtn{min-width:240px;min-height:66px;border-radius:32px;font-size:22px}
+.category-showcase{max-width:1120px;margin:26px auto 10px;padding:0 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.category-tile{min-height:150px;border:1px solid #d6ad50;border-radius:20px;background:radial-gradient(circle at 50% 25%,#39301d,#090b09 72%);color:#fff0b8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px #000a,inset 0 0 18px #d6ad5020;transition:.2s}
+.category-tile:hover{transform:translateY(-4px);box-shadow:0 0 24px #d6ad5060}.category-tile span{font-size:42px;filter:drop-shadow(0 0 10px #d5a83c)}.category-tile b{font-size:14px}
+#storeCategories{gap:9px;margin:20px auto 26px}
+#storeCategories .cat{border-radius:25px;padding:9px 17px;background:#0b100d;color:#f5e9c8;border:1px solid #a7833b}
+.sectionhead{margin:42px 0 20px}.sectionhead h2{letter-spacing:.5px}
+.store-bottom-nav{display:none}
+@media(max-width:700px){
+.apex-topbar{height:82px;grid-template-columns:1fr auto 1fr;padding:7px 10px;gap:5px}
+.apex-head-actions{gap:5px}.apex-head-actions .iconbtn{width:43px;height:43px;font-size:20px}
+.apex-topbar .brand{font-size:30px}.apex-topbar .brand .crown{font-size:21px}.apex-topbar .brand small{font-size:7px;letter-spacing:1px}
+.apex-cart-button{min-width:68px;min-height:66px;padding:5px 8px!important;font-size:12px!important}
+.apex-hero{min-height:650px;grid-template-columns:1fr;gap:0;text-align:center;padding:35px 17px 45px;background:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(0,0,0,.88) 47%,#050706 100%),url('https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=85') 58% center/cover}
+.apex-hero .heroart{font-size:95px;line-height:1.1;margin:0 auto 12px}
+.apex-hero .herotext{text-align:center;margin:auto}.apex-hero .herotext h1{font-size:43px;margin:8px 0}
+.apex-hero .herotext p{font-size:17px;line-height:1.8}.apex-hero .hero-caption{font-size:18px}
+.apex-hero .goldbtn{min-width:220px;min-height:60px;font-size:19px}
+.category-showcase{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:0 10px;margin:18px auto}
+.category-tile{min-height:112px;border-radius:14px;gap:5px;padding:7px 3px}.category-tile span{font-size:30px}.category-tile b{font-size:10px;line-height:1.35}
+.store-bottom-nav{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);left:0;right:0;bottom:0;z-index:45;height:72px;padding:5px 5px calc(5px + env(safe-area-inset-bottom));background:rgba(3,4,3,.97);border-top:1px solid #d5a83c;box-shadow:0 -8px 24px #000b;backdrop-filter:blur(14px)}
+.store-bottom-nav button{border:0;background:transparent;color:#e9c66f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:22px;font-weight:800}
+.store-bottom-nav button small{font-size:10px;color:#f5e8c4;font-weight:800}.store-bottom-nav button:active{color:#fff0b8}
+body{padding-bottom:82px}main{padding-bottom:35px}
+}
+@media(max-width:380px){.apex-head-actions .iconbtn{width:38px;height:38px}.apex-topbar .brand{font-size:26px}.apex-cart-button{min-width:61px}.category-tile b{font-size:9px}}
+</style><style>
+.customer-account-nav{position:sticky;top:0;z-index:8;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin:-4px -4px 15px;padding:8px 4px;background:linear-gradient(100deg,#050505,#171105,#050505);border:1px solid #c99a36;border-radius:16px;box-shadow:0 5px 18px #000b}
+.customer-account-nav button{min-width:0;min-height:58px;border:0;border-radius:10px;background:transparent;color:#f4d477;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.customer-account-nav button b{font-size:23px;line-height:1.1}.customer-account-nav button small{font-size:10px;color:#f5e8c4;font-weight:900}
+.customer-account-nav button:active,.customer-account-nav button:focus-visible{background:#c99a362b;outline:1px solid #d8b65f}
+@media(max-width:380px){.customer-account-nav{gap:1px;padding:6px 2px}.customer-account-nav button b{font-size:20px}.customer-account-nav button small{font-size:9px}}
+</style><style>.products-description-below{margin:24px auto 36px;text-align:center;color:#b8b5a9;font-size:14px;line-height:1.9;max-width:850px;padding:14px 18px;border-top:1px solid #8e6d2e;border-bottom:1px solid #8e6d2e}</style><style>
+/* Final APEX compact layout and single-source navigation */
+.store-bottom-nav,.customer-account-nav,.user-bottom-nav{display:none!important}
+#accountpanel .account-content{max-width:1040px;padding:10px clamp(10px,2vw,22px) 24px}
+#accountpanel .account-head{height:62px}
+#accountpanel .account-gem-hero{min-height:112px;padding:13px 18px;margin:9px 0;border-radius:15px}
+#accountpanel .account-gem{font-size:58px}
+#accountpanel .account-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:9px 0}
+#accountpanel .account-menu button{min-height:56px;border-radius:11px!important;font-size:11px!important;padding:7px 4px!important}
+#accountpanel .account-panel-card{padding:12px;margin:8px 0;border-radius:14px}
+#accountpanel .account-panel-card h3{font-size:16px;margin-bottom:8px}
+#accountpanel .account-panel-card input,#accountpanel .account-panel-card select{padding:9px 11px;margin:4px 0;font-size:13px}
+#accountpanel .account-panel-card button{min-height:34px;padding:7px 12px;font-size:12px}
+#accountpanel .user-service-title{margin:13px 2px 8px}
+#accountpanel .user-services{gap:7px}
+#accountpanel .user-services button{min-height:74px;padding:9px 10px;border-radius:12px}
+#accountpanel .user-services b{font-size:19px}
+#accountpanel .user-services span{font-size:11px}
+#accountpanel .user-services small{font-size:9px}
+#accountpanel .user-wallet{min-height:78px;padding:11px 14px;border-radius:14px}
+#accountpanel .user-wallet h3{font-size:16px}
+#accountpanel .user-wallet>strong{font-size:21px}
+#accountpanel .account-section-heading{margin-bottom:8px;padding-bottom:7px}
+#accountpanel .account-section-title{font-size:16px}
+#accountpanel .account-profile-summary{padding:8px 10px;margin:6px 0 10px}
+#accountpanel .account-profile-summary p{font-size:12px;margin:5px 0}
+@media(max-width:560px){
+ #accountpanel .account-head{height:56px}
+ #accountpanel .account-gem-hero{min-height:92px;padding:10px}
+ #accountpanel .account-gem{font-size:46px}
+ #accountpanel .account-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ #accountpanel .account-menu button{min-height:52px;font-size:10px!important}
+ #accountpanel .user-services{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #accountpanel .account-panel-card{padding:10px}
+}
+</style><style id="apex-visual-refresh-2026">
+:root{--apex-emerald:#087f68;--apex-gold:#e8c36d;--apex-cream:#fff2c7}
+.topbar.apex-topbar{height:76px;padding-inline:clamp(14px,4vw,58px);background:rgba(5,7,6,.94);border-bottom:1px solid rgba(232,195,109,.55)}
+.apex-topbar .brand{display:flex;align-items:center;gap:9px;font-size:clamp(27px,4vw,40px);letter-spacing:2px}.apex-topbar .brand small{display:block;font:700 8px Cairo,sans-serif;letter-spacing:2px;text-align:center;color:#c9ad68}
+.apex-head-actions .iconbtn,.apex-cart-button{min-height:42px;border-radius:13px}
+.apex-hero{min-height:430px;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(20px,5vw,70px);padding:54px clamp(20px,7vw,100px);background-position:center;background-size:cover}
+.apex-hero .heroart{font-family:Georgia,serif;font-size:clamp(100px,17vw,205px);font-weight:900;letter-spacing:-.09em;color:#b6f5df;-webkit-text-stroke:2px #e4c36d;text-shadow:0 3px 0 #075d4d,0 10px 35px #000,0 0 50px #00b894;filter:drop-shadow(0 18px 25px #000);direction:ltr}
+.apex-hero .eyebrow{font-size:12px;letter-spacing:2px;color:#8ce5ce}.apex-hero .herotext h1{max-width:700px;font-size:clamp(31px,4.5vw,55px);line-height:1.35}.apex-hero .herotext p{font-size:clamp(15px,1.8vw,19px);line-height:2;color:#f1ead8}
+.apex-hero .hero-caption{display:inline-flex;margin-top:8px;padding:7px 13px;border:1px solid #b58b3e;border-radius:30px;background:#090c09b8;color:#f5dfa0;font-size:13px}.apex-hero .goldbtn{font-size:16px;padding:12px 25px;border-radius:13px}
+.features{max-width:1180px;gap:12px;padding:22px 18px}.features .feature{max-width:none;aspect-ratio:auto;min-height:98px;border-radius:17px;padding:15px;background:linear-gradient(145deg,#171b14,#090c09);border:1px solid rgba(232,195,109,.45);box-shadow:0 9px 24px #0007}.features .feature b{font-size:24px}
+main{max-width:1320px;padding:26px clamp(12px,2.5vw,28px) 75px}.sectionhead{margin:28px 0 20px}.categories{gap:8px;margin:18px 0 22px}.cat{padding:9px 16px;font-size:13px;transition:.2s}
+#search{min-height:48px;border-radius:14px!important;background:#0c100d!important;border-color:#8c713b!important}.toolbar{max-width:100%;padding:12px 14px;border:1px solid rgba(232,195,109,.25);border-radius:16px;background:linear-gradient(100deg,#11150f,#090b09);margin:0 auto 16px}
+.products{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:15px!important}.product{display:flex;flex-direction:column;min-width:0;padding:10px!important;border-radius:17px!important;background:linear-gradient(155deg,#171a14,#080a08 76%)!important;border:1px solid rgba(232,195,109,.38)!important;transition:transform .2s,border-color .2s,box-shadow .2s}
+.product:hover{transform:translateY(-4px);border-color:#e8c36d!important;box-shadow:0 14px 30px #000b,0 0 20px #d4a43b22!important}.product img{height:175px!important;object-fit:contain!important;background:radial-gradient(ellipse at center,#20261e,#0a0d0a)!important;border-radius:12px!important}
+.product h3{font-size:14px!important;line-height:1.6!important;margin:9px 4px 3px!important}.product p{font-size:11px!important;line-height:1.65!important;color:#c0bba9!important;min-height:36px}.product-price{font-size:16px!important;color:#ffe4a0!important}.productfoot{margin-top:auto;padding-top:8px}.product .add,.product button{border-radius:10px!important}
+.products-description-below{text-align:center;color:#bdb49b;font-size:12px;margin:20px 0}.about{border-radius:20px!important;padding:28px clamp(15px,3vw,35px)!important;background:linear-gradient(145deg,#101710,#080a08)!important}footer{background:#030504;border-top-color:#8c713b}
+@media(max-width:900px){.products{grid-template-columns:repeat(3,minmax(0,1fr))!important}.apex-hero{min-height:390px;padding-inline:28px}}
+@media(max-width:650px){.topbar.apex-topbar{height:66px;padding-inline:9px}.apex-topbar .brand{font-size:25px;gap:4px}.apex-topbar .brand small{font-size:7px}.apex-head-actions{gap:5px}.apex-head-actions .iconbtn{width:36px;height:36px}.apex-cart-button{padding:8px 10px!important;font-size:12px}.apex-hero{grid-template-columns:1fr;min-height:440px;padding:26px 17px 34px;gap:4px;text-align:center;background-position:58% center}.apex-hero .heroart{font-size:clamp(92px,28vw,138px);line-height:1.1}.apex-hero .herotext h1{font-size:30px;margin:5px 0}.apex-hero .herotext p{font-size:14px;line-height:1.9}.apex-hero .hero-caption{font-size:11px}.apex-hero .goldbtn{font-size:14px;padding:10px 19px}.features{gap:8px;padding:14px 10px}.features .feature{min-height:80px;padding:10px 7px;border-radius:13px}.features .feature b{font-size:20px}.features .feature span{font-size:11px}main{padding:18px 10px 55px}.categories{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;padding:3px 1px 9px;scrollbar-width:thin}.cat{flex:0 0 auto;padding:8px 13px;font-size:12px}.toolbar{gap:8px;padding:9px;margin-bottom:12px}.toolbar span{font-size:12px}.toolbar select,.toolbar button{padding:8px 10px;font-size:11px}.products{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.product{padding:7px!important;border-radius:13px!important}.product img{height:125px!important}.product h3{font-size:12px!important}.product p{font-size:10px!important;min-height:32px}.product-price{font-size:14px!important}.product .fav{width:29px!important;height:29px!important;top:12px;left:12px}.product .add,.product button{font-size:10px!important;padding:7px 8px!important}.sectionhead h2{font-size:25px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
+<style id="apex-login-button-position-fix">
+/* Keep customer sign-in visible in the storefront, centered immediately above products */
+#storefrontAuth:not([hidden]){
+  position:relative!important;inset:auto!important;z-index:2!important;
+  display:block!important;width:100%;max-width:100%;margin:18px auto 24px!important;
+  padding:0 14px!important;background:transparent!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+#storefrontAuth>.storefront-auth{
+  width:min(520px,100%)!important;max-height:none!important;overflow:visible!important;
+  margin:0 auto!important;padding:14px!important;
+}
+#storefrontAuth .storefront-auth-options{
+  width:min(360px,100%)!important;margin:0 auto!important;
+  display:grid!important;grid-template-columns:1fr!important;gap:9px!important;
+}
+#storefrontAuth .storefront-auth-option{
+  width:100%!important;min-height:52px!important;display:block!important;
+}
+#storefrontAuth[hidden]{display:none!important}
+</style>
+<style id="apex-product-multi-gallery">
+.product-gallery{width:100%;margin:0 auto 12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.product-gallery>.product-main-image{display:block;width:100%;height:190px;object-fit:contain;border-radius:12px;background:#fff}
+.product-thumbs{width:100%;display:flex;justify-content:center;gap:7px;flex-wrap:wrap}
+.product-thumb{width:43px;height:43px;padding:2px;border:1px solid #80672e;border-radius:8px;background:#17130b;overflow:hidden;cursor:pointer}
+.product-thumb.active{border:2px solid #f2c65d;box-shadow:0 0 8px #d8a83b88}
+.product-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:5px}
+</style><style id="apex-privacy-consent-style">.privacy-consent{display:flex;align-items:center;justify-content:center;gap:7px;margin:8px 0 12px!important;font-size:11px!important;font-weight:500;color:#bdb39b!important}.privacy-consent input{width:14px!important;height:14px!important;margin:0!important;accent-color:#d9b65c}.privacy-consent a{color:#f2d37d;text-decoration:underline;text-underline-offset:3px}</style>
+<style>
+/* APEX 2026 — refined jewel-glass storefront */
+:root{--apx-ink:#070a08;--apx-glass:rgba(16,22,18,.72);--apx-edge:rgba(244,207,114,.38);--apx-glow:rgba(12,207,170,.16)}
+html{scroll-padding-top:96px}
+body{background-color:var(--apx-ink)}
+.topbar.apex-topbar{height:76px;padding-inline:clamp(14px,5vw,76px);background:rgba(5,8,6,.78);border-bottom:1px solid var(--apx-edge);box-shadow:0 12px 38px #0007;backdrop-filter:blur(22px) saturate(145%)}
+.brand{display:flex;align-items:center;gap:9px;font-size:clamp(27px,4vw,39px);line-height:1}
+.brand>span:last-child{display:flex;flex-direction:column;gap:4px}
+.brand small{font:700 8px/1.2 'Cairo',sans-serif;letter-spacing:3px;color:#d8bd79;text-align:center}
+.brand .crown{font-size:27px;filter:drop-shadow(0 3px 8px #d7ad4c88)}
+.apex-head-actions{gap:9px}
+.apex-topbar .iconbtn,.apex-topbar .outline{background:linear-gradient(145deg,rgba(34,40,31,.92),rgba(7,10,8,.88));border:1px solid var(--apx-edge);color:#ffe8a5;box-shadow:inset 0 1px #ffffff18,0 7px 22px #0005}
+.apex-topbar .iconbtn{width:42px;height:42px}
+.apex-topbar .apex-cart-button{padding:10px 17px}
+.apex-hero{isolation:isolate;min-height:clamp(440px,54vw,610px);grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);padding:clamp(35px,6vw,82px) clamp(20px,7vw,105px);gap:clamp(15px,4vw,65px);background-position:center;background-size:cover}
+.apex-hero:before{content:"";position:absolute;inset:18px;border:1px solid rgba(255,229,157,.22);border-radius:30px;pointer-events:none;z-index:0;box-shadow:inset 0 0 55px #0005}
+.apex-hero:after{z-index:0;background:linear-gradient(90deg,rgba(3,7,5,.2),rgba(3,7,5,.76)),radial-gradient(ellipse at 72% 50%,rgba(0,208,171,.22),transparent 42%),linear-gradient(0deg,#050706 0%,transparent 32%)}
+.apex-hero .heroart{font-family:Georgia,serif;font-size:clamp(105px,19vw,230px);font-weight:900;letter-spacing:-.08em;color:#8cebd6;-webkit-text-stroke:1px #f3d47e;text-shadow:0 4px 0 #176c5c,0 12px 35px #000,0 0 70px #00c9a7;filter:drop-shadow(0 0 26px #00c9a755)}
+.apex-hero .herotext{max-width:610px;padding:clamp(18px,3vw,34px);border:1px solid rgba(255,230,167,.25);border-radius:28px;background:linear-gradient(135deg,rgba(7,13,10,.76),rgba(15,20,16,.43));box-shadow:0 22px 65px #0008,inset 0 1px #fff2;backdrop-filter:blur(16px)}
+.apex-hero .eyebrow{font-size:11px;letter-spacing:2px;color:#7ee4ce}
+.apex-hero .herotext h1{font-size:clamp(31px,4.5vw,55px);line-height:1.35;margin:12px 0 15px}
+.apex-hero .herotext p{font-size:clamp(14px,1.7vw,18px);line-height:2;color:#e8e4d7}
+.apex-hero .hero-caption{display:inline-flex;margin-top:8px;padding:7px 13px;border:1px solid rgba(0,201,167,.35);border-radius:30px;background:#063c303d;color:#a9f3e3;font-size:12px}
+.apex-hero .goldbtn{min-height:48px;padding:11px 27px;font-size:16px}
+.apex-value-strip{max-width:1160px;margin:-25px auto 25px;padding:0 18px;position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.apex-value-strip article{display:flex;align-items:center;gap:13px;min-height:86px;padding:15px 18px;border:1px solid var(--apx-edge);border-radius:19px;background:linear-gradient(135deg,rgba(26,34,27,.94),rgba(8,12,9,.94));box-shadow:0 14px 35px #0007,inset 0 1px #fff2;backdrop-filter:blur(15px)}
+.apex-value-strip article{cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;outline:none}
+.apex-value-strip article:hover,.apex-value-strip article:focus-visible{transform:translateY(-3px);border-color:#f0d17b;box-shadow:0 17px 38px #0009,0 0 18px #d7ae4c25,inset 0 1px #fff3}
+.apex-value-strip article>i{margin-inline-start:auto;color:#f2d27a;font-style:normal;font-size:18px;opacity:.85}
+.apex-value-strip article>span{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#f8dfa0,#a97822);color:#171006;font-size:24px;box-shadow:0 5px 18px #d7ae4c35}
+.apex-value-strip b,.apex-value-strip small{display:block}
+.apex-value-strip b{color:#ffe9ae;font-size:14px}
+.apex-value-strip small{margin-top:3px;color:#c6c5b9;font-size:11px;line-height:1.6}
+#storefrontAuth{max-width:1050px;margin:26px auto 38px;padding-inline:18px}
+.storefront-auth{border:1px solid var(--apx-edge)!important;border-radius:22px!important;background:linear-gradient(135deg,rgba(21,30,23,.85),rgba(7,10,8,.88))!important;box-shadow:0 16px 40px #0006,inset 0 1px #fff2}
+main{padding-top:15px}
+#storeCategories{scroll-margin-top:100px}
+#search{outline:none;transition:border-color .2s,box-shadow .2s}
+#search:focus,.field:focus,input:focus,textarea:focus,select:focus{border-color:#f4d27c!important;box-shadow:0 0 0 3px rgba(244,210,124,.13);outline:none}
+.sectionhead h2,.about h2{letter-spacing:.2px}
+.product,.feature,.about{backdrop-filter:blur(12px)}
+.product{border-radius:18px!important;background:linear-gradient(145deg,rgba(27,34,27,.96),rgba(7,10,8,.96))!important}
+.product img{background:linear-gradient(145deg,#1c261f,#090d0a)}
+.product .add{border-radius:24px}
+.about{border-radius:25px;background:radial-gradient(ellipse at 50% 0%,rgba(0,201,167,.12),transparent 58%),linear-gradient(145deg,#121911,#080b09)}
+footer{background:linear-gradient(180deg,transparent,rgba(15,20,16,.8));padding:38px 16px}
+button,a,[role=button]{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid #ffe7a0!important;outline-offset:3px}
+@media(max-width:760px){
+ .topbar.apex-topbar{height:68px;padding-inline:10px}
+ .apex-hero{min-height:unset;grid-template-columns:1fr;gap:4px;padding:30px 17px 48px;text-align:center;background-position:55% center}
+ .apex-hero:before{inset:9px;border-radius:22px}
+ .apex-hero .heroart{font-size:clamp(100px,31vw,145px);margin:0 auto 5px}
+ .apex-hero .herotext{margin:auto;padding:19px 15px;border-radius:21px}
+ .apex-hero .herotext h1{font-size:32px}
+ .apex-hero .herotext p{font-size:14px}
+ .apex-value-strip{margin:-22px auto 18px;grid-template-columns:1fr;gap:8px;max-width:520px}
+ .apex-value-strip article{min-height:68px;padding:10px 14px}
+ .apex-value-strip article>span{width:38px;height:38px;flex-basis:38px}
+ #storefrontAuth{margin:18px auto 28px}
+}
+@media(prefers-reduced-motion:no-preference){
+ .apex-hero .heroart{animation:apexFloat 6s ease-in-out infinite}
+ @keyframes apexFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+<style id="apex-no-copy">
+/* منع تحديد ونسخ نصوص واجهة المتجر مع إبقاء حقول الإدخال قابلة للتحرير */
+html,body,body *{
+  -webkit-user-select:none!important;
+  -moz-user-select:none!important;
+  -ms-user-select:none!important;
+  user-select:none!important;
+  -webkit-touch-callout:none;
+}
+input,textarea,select,[contenteditable="true"],[contenteditable=""],[contenteditable="plaintext-only"]{
+  -webkit-user-select:text!important;
+  -moz-user-select:text!important;
+  -ms-user-select:text!important;
+  user-select:text!important;
+  -webkit-touch-callout:default;
+}
+img{-webkit-user-drag:none;user-drag:none}
+</style>
+<script>
+document.addEventListener('selectstart',function(e){
+  if(e.target.closest('input,textarea,select,[contenteditable="true"],[contenteditable=""],[contenteditable="plaintext-only"]'))return;
+  e.preventDefault();
+},true);
+document.addEventListener('copy',function(e){
+  if(e.target.closest('input,textarea,[contenteditable="true"],[contenteditable=""],[contenteditable="plaintext-only"]'))return;
+  e.preventDefault();
+},true);
+document.addEventListener('cut',function(e){
+  if(e.target.closest('input,textarea,[contenteditable="true"],[contenteditable=""],[contenteditable="plaintext-only"]'))return;
+  e.preventDefault();
+},true);
+document.addEventListener('contextmenu',function(e){
+  if(e.target.closest('input,textarea,select,[contenteditable="true"],[contenteditable=""],[contenteditable="plaintext-only"]'))return;
+  e.preventDefault();
+},true);
+</script>
+<style>
+.apex-ai-card{border-color:#d5a83c!important}
+.apex-ai-intro{color:#d7c99f;line-height:1.9;font-size:13px}
+.apex-ai-messages{height:min(48vh,440px);min-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid #80672e;border-radius:16px;background:radial-gradient(ellipse at 15% 0%,#30230e 0%,#0b0d0b 45%,#050605 100%);scroll-behavior:smooth}
+.apex-ai-welcome{align-self:flex-start;max-width:88%;display:flex;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid #98752f;border-radius:15px 15px 15px 4px;background:#17150f;color:#f7e7b5;line-height:1.8}
+.apex-ai-welcome span{font-size:13px;color:#cfc5a9}
+.apex-ai-message{max-width:88%;padding:10px 13px;border-radius:15px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}
+.apex-ai-message small{display:block;font-size:10px;opacity:.72;margin-bottom:4px}
+.apex-ai-user{align-self:flex-end;background:linear-gradient(135deg,#6f4c13,#b78b32);color:#fff8df;border:1px solid #f0d17a;border-radius:15px 15px 4px 15px}
+.apex-ai-bot{align-self:flex-start;background:#151812;color:#f4edda;border:1px solid #655127;border-radius:15px 15px 15px 4px}
+.apex-ai-quick{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.apex-ai-quick button,.apex-ai-footer button{border:1px solid #8e6d2e;border-radius:22px;padding:7px 11px;background:#100f0c;color:#f4d98a;font-size:11px}
+.apex-ai-compose{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.apex-ai-compose textarea{width:100%;resize:vertical;min-height:54px;max-height:130px;padding:12px;border:1px solid #98752f;border-radius:13px;background:#080908;color:#fff;font:inherit;font-size:14px}
+.apex-ai-compose .goldbtn{margin:0;padding:11px 17px;font-size:14px}
+.apex-ai-compose button:disabled{opacity:.55;cursor:wait}
+.apex-ai-footer{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;color:#a9a18d;font-size:10px}
+.apex-ai-handoff{margin-top:12px;padding:12px;border:1px solid #8e6d2e;border-radius:12px;background:#15130d;color:#f2d37d}
+.apex-ai-handoff p{margin:0 0 8px}
+.apex-ai-handoff a{display:inline-block;color:#fff0b8;text-decoration:underline;font-weight:800}
+.apex-ai-status{min-height:20px;color:#d7bd75;font-size:11px}
+@media(max-width:560px){.apex-ai-messages{height:43vh;min-height:220px;padding:9px}.apex-ai-message,.apex-ai-welcome{max-width:94%}.apex-ai-compose .goldbtn{padding:10px 12px}.apex-ai-footer{align-items:flex-start;flex-direction:column}}
+
+</style>
+</head>
+<body>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
+<section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
+<section class="hero apex-hero"><div class="heroart" aria-label="شعار APX">APX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">تسوّق بثقة، واكتشف اختيارات تليق بك</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
+<section class="apex-value-strip" aria-label="مميزات تجربة APEX">
+  <article role="link" tabindex="0" aria-label="اكتشف المنتجات المتنوعة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'})}"><span>✧</span><div><b>اختيارات متنوعة</b><small>اكتشف منتجات تناسب احتياجاتك</small></div><i aria-hidden="true">←</i></article>
+  <article role="link" tabindex="0" aria-label="ابدأ البحث عن المنتجات" onclick="document.getElementById('search').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('search').focus(),350)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('search').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('search').focus(),350)}"><span>◇</span><div><b>تجربة سهلة</b><small>تصفّح وابحث وأضف إلى سلتك بسلاسة</small></div><i aria-hidden="true">⌕</i></article>
+  <article role="link" tabindex="0" aria-label="افتح حسابك وطلباتك" onclick="openCustomerProfile()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCustomerProfile()}"><span>♙</span><div><b>مساحتك الخاصة</b><small>تابع حسابك وطلباتك من مكان واحد</small></div><i aria-hidden="true">→</i></article>
+</section>
+<section id="storefrontAuth" class="storefront-auth-wrap"><div class="storefront-auth"><div class="storefront-auth-options"><button type="button" class="storefront-auth-option" onclick="document.getElementById('accountAuth').hidden=false;document.getElementById('accountForm').hidden=false;document.getElementById('authLoginFields').hidden=false;document.getElementById('authSignupFields').hidden=true;document.getElementById('accountMsg').textContent='';">تسجيل الدخول</button><button type="button" class="storefront-auth-option" onclick="document.getElementById('accountAuth').hidden=false;document.getElementById('accountForm').hidden=false;document.getElementById('authLoginFields').hidden=true;document.getElementById('authSignupFields').hidden=false;document.getElementById('signupStep1').hidden=false;document.getElementById('signupStep2').hidden=true;document.getElementById('signupStep3').hidden=true;document.getElementById('accountMsg').textContent='';">إنشاء حساب</button></div><div id="accountAuth" class="account-panel-card account-auth-card"><div id="accountForm" hidden><div id="authLoginFields"><input id="accountEmail" type="text" autocomplete="username" placeholder="البريد الإلكتروني أو رقم الهاتف"><input id="accountPassword" type="password" placeholder="كلمة المرور"><button id="accountAuthAction" class="goldbtn" type="button" onclick="customerSignIn()">تسجيل الدخول</button><button class="storefront-auth-option" type="button" style="width:100%;margin-top:10px" onclick="customerSignInWithGoogle()">G&nbsp; المتابعة باستخدام Google</button><div class="storefront-forgot-row"><button type="button" class="storefront-forgot" onclick="customerReset()">نسيت كلمة المرور</button></div></div><div id="authSignupFields" hidden><div id="signupStep1"><input id="signupEmail" type="email" autocomplete="email" placeholder="البريد الإلكتروني"><label class="privacy-consent"><input id="signupPrivacyConsent" type="checkbox" required><span>أوافق على <a href="privacy.html" target="_blank" rel="noopener">سياسة الخصوصية</a></span></label><button class="goldbtn" type="button" onclick="sendSignupCode()">طلب كود التحقق</button></div><div id="signupStep2" hidden><p>تم إرسال الكود إلى بريدك الإلكتروني. أدخل الكود هنا</p><input id="signupCode" inputmode="numeric" maxlength="6" placeholder="رمز التحقق"><button class="goldbtn" type="button" onclick="verifySignupCode()">تأكيد الكود</button></div><div id="signupStep3" hidden><p style="color:#7ee0a1">تم التحقق بنجاح</p><input id="signupName" autocomplete="name" placeholder="الاسم الكامل"><input id="signupPhone" type="tel" autocomplete="tel" placeholder="رقم الجوال"><input id="signupPassword" type="password" placeholder="كلمة المرور"><input id="signupConfirm" type="password" placeholder="تأكيد كلمة المرور"><select id="signupCountry"><option value="">اختر الدولة</option><option value="SA">السعودية</option><option value="YE">اليمن</option></select><input id="signupReferralCode" placeholder="كود الدعوة (اختياري)"><input id="signupAddress" placeholder="العنوان"><label style="display:flex;align-items:center;gap:9px;margin:12px 0;color:#e9bd55"><input id="signupMarketingOptIn" type="checkbox"> أوافق على استقبال عروض APEX والتحديثات عبر البريد الإلكتروني (اختياري).</label><button class="add" type="button" onclick="pickSignupLocation()">تحديد الموقع على الخريطة</button><p id="signupLocation">لم يتم تحديد الموقع</p><button class="goldbtn" type="button" onclick="finishSignup()">إكمال إنشاء الحساب</button></div></div><p id="accountMsg" style="color:#e9bd55"></p></div></div></div></section>
+
+<main>
+<div class="categories" id="storeCategories"><button class="cat active" data-cat="الكل">الكل</button><button class="cat" data-cat="الإلكترونيات">الإلكترونيات</button><button class="cat" data-cat="الأزياء">الأزياء</button><button class="cat" data-cat="الأجهزة المنزلية">الأجهزة المنزلية</button><button class="cat" data-cat="الجمال والعناية">الجمال والعناية</button></div>
+<div style="max-width:520px;margin:0 auto 25px"><input id="search" placeholder="ابحث عن منتج..." style="width:100%;padding:13px 18px;border-radius:30px;border:1px solid var(--line);background:#0b100d;color:white;font:inherit"></div>
+
+<div class="toolbar"><span>اكتشف مجموعتك المفضلة</span><select id="sortProducts"><option value="new">الأحدث أولاً</option><option value="az">الاسم: أ إلى ي</option><option value="price-low">السعر: الأقل أولاً</option><option value="price-high">السعر: الأعلى أولاً</option></select><button id="showFavorites">♡ المفضلة <b id="favCount">0</b></button></div><div class="products" id="products"><p id="productsLoading" style="grid-column:1/-1;text-align:center;color:#e9bd55">جارٍ تحميل المنتجات...</p></div>
+<p class="products-description-below">منتجات مختارة بعناية مع وصف واضح وسعر بالريال السعودي</p>
+
+</main><footer><strong>APEX 👑</strong><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
+<div class="cartpanel" id="accountpanel" onclick="if(event.target===this)closeAccount()"><div class="cartbox account-shell"><header class="account-head"><button type="button" class="account-profile-shortcut" onclick="closeAccount()" aria-label="إغلاق بطاقة الحساب" title="إغلاق">×</button><div class="account-brand">👑 APEX<small>SHOP SMART · LIVE BETTER</small></div><span style="font-size:27px;color:#f5d879">♢</span></header><div class="account-content"><div id="passwordRecovery" hidden class="account-panel-card"><h3>تعيين كلمة مرور جديدة</h3><input id="newPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)"><button class="goldbtn" onclick="saveNewPassword()">حفظ كلمة المرور</button></div><div id="accountData" hidden>
+
+<div class="user-hub">
+<header class="user-hub-top"><div><small>APEX MEMBER AREA</small><h2>حسابي</h2></div></header>
+<section class="user-diamond-hero"><div class="user-hero-copy"><span>مرحباً بك في عالم APEX</span><h1>تجربتك، <em>بمستوى النخبة</em></h1><p>تابع حسابك وطلباتك وخدماتك من مكان واحد.</p></div><div class="user-diamond">◆<i>✦</i></div><div class="user-glow"></div></section>
+<div class="user-shortcuts">
+<button onclick="showAccountSection('profile')"><b>♙</b><span>بيانات حسابي</span></button>
+<button onclick="showAccountSection('orders')"><b>▤</b><span>طلباتي</span></button>
+<button onclick="showAccountSection('wallet')"><b>◈</b><span>المحفظة</span></button>
+<button onclick="showAccountSection('referrals')"><b>♧</b><span>دعوة الأصدقاء</span></button>
+
+</div>
+<section class="user-wallet" role="button" tabindex="0" onclick="showAccountSection('wallet')"><div><small>APEX WALLET</small><h3>محفظتي</h3></div><div class="wallet-balance-info"><strong id="walletBalanceSummary">0.00 <small>ر.س</small></strong><p>الرصيد المتاح</p></div><span class="wallet-gem">◇</span><small class="wallet-note">شحن الرصيد والشراء من المحفظة</small></section>
+<div class="user-service-title"><h3>خدمات الحساب</h3><span>كل ما تحتاجه في مكان واحد</span></div>
+<div class="user-services">
+<button onclick="showAccountSection('shipping')"><b>♧</b><span>طلبات الشحن</span><small>متابعة الشحنات</small></button>
+<button onclick="showAccountSection('transit')"><b>⇢</b><span>قيد الشحن</span><small>حالة التوصيل</small></button>
+<button onclick="showAccountSection('notifications');loadCustomerNotifications()"><b>♧</b><span>الإشعارات</span><small>آخر التحديثات</small></button>
+<button onclick="showAccountSection('support')"><b>✉</b><span>المساعد المباشر APEX AI</span><small>تواصل مع خدمة العملاء</small></button>
+<button onclick="showAccountSection('policies')"><b>▤</b><span>سياسات المتجر</span><small>الطلب والشحن والخصوصية</small></button>
+<button onclick="showAccountSection('about')"><b>✦</b><span>عن APEX</span><small>تعرف على APEX ورؤيتها</small></button>
+<button onclick="showAccountSection('profile')"><b>♙</b><span>تعديل بياناتك</span><small>الاسم والجوال والعنوان والبريد</small></button>
+
+</div>
+<section id="accountSection-profile" class="account-panel-card" hidden><div class="account-section-heading"><h3 class="account-section-title">✦ بيانات الحساب</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div class="account-profile-summary"><p>الاسم: <strong id="accountDisplayName">—</strong></p><p>البريد الإلكتروني: <strong id="accountDisplayEmail" dir="ltr">—</strong></p><p>رقم الجوال: <strong id="accountDisplayPhone" dir="ltr">—</strong></p><p>الدولة: <strong id="accountDisplayCountry">—</strong></p><p>العنوان: <strong id="accountDisplayLocation">—</strong></p><p>موقع الخريطة: <a id="accountDisplayMapLocation" hidden target="_blank" rel="noopener" style="color:#e9c76f">عرض الموقع المحفوظ</a><span id="accountDisplayMapMissing">غير محدد</span></p></div><h4 style="color:#f4d98a">تعديل بيانات الحساب</h4><label for="profileName">تعديل الاسم</label><input id="profileName" autocomplete="name" placeholder="الاسم الكامل"><label for="profilePhone">تعديل الرقم</label><input id="profilePhone" type="tel" autocomplete="tel" placeholder="رقم الجوال"><label for="profileAddress">تعديل الموقع / العنوان</label><input id="profileAddress" autocomplete="street-address" placeholder="المدينة أو العنوان"><button class="add" type="button" onclick="saveProfile()">حفظ البيانات</button><p id="profileMsg" style="color:#e9bd55"></p><div style="border-top:1px solid #6c552c;margin-top:15px;padding-top:12px"><h4 style="color:#f4d98a">تعديل البريد الإلكتروني</h4><p id="profileCurrentEmail" dir="ltr" style="color:#c9bd9a"></p><input id="profileEmailNew" type="email" autocomplete="email" placeholder="البريد الإلكتروني الجديد"><button class="add" type="button" onclick="saveProfileEmail()">تحديث البريد الإلكتروني</button><p id="profileEmailMsg" style="color:#e9bd55"></p></div><button type="button" class="user-logout" style="width:100%;margin-top:18px" onclick="customerSignOut()">تسجيل الخروج</button></section>
+<section id="accountSection-orders" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♢ طلباتي</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="myOrders">جارٍ تحميل الطلبات...</div></section>
+<section id="accountSection-shipping" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♢ طلبات الشحن</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="shippingOrders"><p>لا توجد طلبات شحن.</p></div></section>
+<section id="accountSection-transit" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♢ الطلبات قيد الشحن</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="transitOrders"><p>لا توجد طلبات تم شحنها.</p></div></section><section id="accountSection-notifications" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♧ إشعارات الحساب</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="customerNotifications">جارٍ تحميل الإشعارات...</div></section>
+<section id="accountSection-wallet" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">◈ محفظة APEX</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div>
+<div style="border:1px solid #8e6d2e;border-radius:14px;padding:15px;background:#0b0b08;margin-bottom:14px"><small style="color:#c9a34d">الرصيد المتاح</small><div id="walletBalance" style="font-size:30px;color:#f2d37d;font-weight:900">0.00 ر.س</div><p style="color:#aaa;font-size:12px;margin:4px 0">اشحن رصيدك مرة واحدة واستخدمه للشراء لاحقاً.</p></div>
+<h4 style="color:#f4d98a">شحن رصيد الشراء بالمحفظة</h4><label for="walletTopupAmount">مبلغ الشحن بالريال السعودي</label><input id="walletTopupAmount" type="number" min="1" step="0.01" placeholder="أدخل مبلغ الشحن">
+<label for="walletPaymentMethod">وسيلة الدفع</label><select id="walletPaymentMethod" onchange="walletMethodChanged()" style="width:100%;padding:12px;border:1px solid #8b6a2d;border-radius:11px;background:#080808;color:#fff;font:inherit;margin:6px 0"><option value="">جارٍ تحميل وسائل الدفع...</option></select>
+<p id="walletPaymentInstructions" style="white-space:pre-wrap;color:#d7c99f;font-size:12px"></p><label for="walletCustomerReference">رقم الحوالة أو مرجع الدفع (اختياري)</label><input id="walletCustomerReference" placeholder="رقم العملية أو الحوالة">
+<button class="add" type="button" onclick="requestWalletTopup()">إرسال طلب الشحن</button><p id="walletTopupMessage" style="color:#e9bd55"></p><p style="color:#aaa;font-size:11px;line-height:1.8">لن يُضاف الرصيد إلا بعد مراجعة المدير وتأكيد استلام المبلغ.</p>
+<h4 style="color:#f4d98a;margin-top:18px">طلبات الشحن</h4><div id="walletTopupHistory">لا توجد طلبات شحن.</div><h4 style="color:#f4d98a;margin-top:18px">سجل المحفظة</h4><div id="walletTransactions">لا توجد عمليات بعد.</div></section>
+<section id="accountSection-support" hidden class="account-panel-card apex-ai-card"><div class="account-section-heading"><h3 class="account-section-title">✦ المساعد المباشر APEX AI</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p class="apex-ai-intro">مساعدك العربي لفهم المنتجات والأسعار والمخزون والطلبات والشحن والدفع واستخدام المتجر.</p><div id="apexAiMessages" class="apex-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"><div class="apex-ai-welcome"><b>مرحباً بك في APEX 👑</b><span>اسألني عن منتجات المتجر أو حسابك أو طلباتك، وسأساعدك بالمعلومات الفعلية المتاحة.</span></div></div><div class="apex-ai-quick"><button type="button" onclick="askApexAssistantQuick('كيف أنشئ حساباً جديداً في المتجر؟')">إنشاء حساب</button><button type="button" onclick="askApexAssistantQuick('كيف أتابع طلبي؟')">متابعة طلب</button><button type="button" onclick="askApexAssistantQuick('ما المنتجات المتوفرة حالياً؟')">المنتجات المتوفرة</button><button type="button" onclick="askApexAssistantQuick('ما طرق الدفع المتاحة؟')">طرق الدفع</button></div><div class="apex-ai-compose"><textarea id="apexAiInput" rows="2" maxlength="1500" placeholder="اكتب سؤالك عن متجر APEX..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendApexAssistantMessage()}"></textarea><button id="apexAiSend" type="button" class="goldbtn" onclick="sendApexAssistantMessage()">إرسال</button></div><div class="apex-ai-footer"><span>المساعد مخصص لمتجر APEX فقط. لا ترسل كلمات المرور أو بيانات البطاقات.</span><button type="button" onclick="clearApexAssistantSession()">محادثة جديدة</button></div><div id="apexAiHandoff" class="apex-ai-handoff" hidden><p>يمكن لفريق خدمة العملاء متابعة طلبك مباشرة.</p><a href="mailto:apex.1.shopping@gmail.com?subject=طلب%20مساعدة%20من%20مساعد%20APEX">التواصل مع موظف خدمة العملاء</a></div><p id="apexAiStatus" class="apex-ai-status" aria-live="polite"></p></section>
+<section id="accountSection-policies" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">سياسات المتجر</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><div style="color:#ded8c9;line-height:2"><h3 style="color:var(--gold)">طريقة الطلب</h3><p>اختر المنتجات وأضفها إلى السلة، ثم أدخل اسمك ورقم جوالك وعنوانك. سيتم إرسال تفاصيل طلبك إلى إدارة المتجر للتواصل معك وتأكيد التوفر والسعر قبل اعتماد الطلب.</p><h3 style="color:var(--gold)">الأسعار والدفع</h3><p>تظهر أسعار المنتجات بالريال السعودي على صفحات المتجر. يتم توضيح تكاليف التوصيل وأي رسوم إضافية للعميل قبل تأكيد الطلب. لا يتم تحصيل أي مبلغ من خلال الموقع حاليًا، ولا تعتبر رسالة البريد تأكيدًا نهائيًا للشراء.</p><h3 style="color:var(--gold)">الشحن والتوصيل</h3><p>يتم تحديد شركة الشحن والمدة والرسوم حسب المدينة وطبيعة المنتج، وإبلاغ العميل بها قبل تأكيد الطلب.</p><h3 style="color:var(--gold)">الاستبدال والاسترجاع</h3><p>يتم توضيح شروط الاستبدال والاسترجاع للعميل قبل إتمام الشراء، وفق الأنظمة المعمول بها في المملكة العربية السعودية.</p><h3 style="color:var(--gold)">الخصوصية</h3><p>تُستخدم بيانات الاسم ورقم الجوال والعنوان لغرض متابعة الطلب والتواصل بشأنه فقط. يُرجى عدم إرسال بيانات البطاقات البنكية أو كلمات المرور عبر البريد أو نموذج الطلب.</p><p style="font-size:12px;color:#aaa">هذه صياغة أولية للمعلومات والسياسات، ويجب مراجعتها واعتماد تفاصيلها التجارية والقانونية قبل بدء البيع الفعلي.</p></div></section>
+<section id="accountSection-management" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">مساعدة المتجر</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p>لإدارة طلباتك وبيانات حسابك، استخدم أقسام حساب العميل. لا تُعرض أدوات الإدارة في حسابات العملاء.</p></section>
+<section id="accountSection-about" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">عن APEX 👑</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><div class="apex-about-full" dir="rtl">
+<h2>أكثر من مجرد متجر… إنه أسلوب حياة</h2>
+<p><strong>APEX علامة تجارية متكاملة.</strong></p>
+<p>مرحباً بك في APEX، وجهتك للتسوق الذكي والعصري، حيث تلتقي الجودة بالتقنية، وتتحول تجربة التسوق إلى رحلة سهلة وآمنة ومميزة.</p>
+<p>نحن لا نهدف إلى أن نكون مجرد متجر إلكتروني يعرض المنتجات، بل نسعى إلى بناء منظومة تجارية متكاملة تجعل التسوق أكثر ذكاءً وراحةً وثقة، وتضع احتياجات العميل في مقدمة أولوياتنا.</p>
+<h3>رؤيتنا وأهدافنا</h3>
+<p>نسعى في APEX إلى أن نصبح من أبرز منصات التجارة الإلكترونية في المنطقة، من خلال:</p>
+<ul>
+<li>توفير مجموعة متنوعة ومتجددة من المنتجات التي تلبي احتياجات الأفراد والعائلات.</li>
+<li>تقديم تجربة تسوق سهلة وسريعة من التصفح حتى استلام الطلب.</li>
+<li>بناء الثقة والشفافية في التعامل مع كل عميل.</li>
+<li>تطوير خدمات التجارة الإلكترونية وربطها بأحدث التقنيات.</li>
+<li>توسيع نطاق التوصيل ليشمل اليمن والمملكة العربية السعودية ومختلف الدول التي تتوفر فيها خدماتنا.</li>
+</ul>
+<h3>الذكاء الاصطناعي في قلب APEX 🤖</h3>
+<p>نطمح إلى تقديم تجربة مختلفة في عالم التجارة الإلكترونية، من خلال توظيف الذكاء الاصطناعي في مراقبة وتحليل العمليات داخل المتجر.</p>
+<p>وتشمل رؤيتنا تطوير أنظمة ذكية تساعد على:</p>
+<ul>
+<li>متابعة الطلبات وتحليل مراحل تجهيزها وشحنها.</li>
+<li>رصد الأنشطة غير المعتادة ومحاولات الاحتيال.</li>
+<li>تحليل تجربة العملاء وتحسين جودة الخدمات.</li>
+<li>متابعة عمليات الدعوات والإحالات وتحليل نمو المجتمع التجاري.</li>
+<li>مساعدة الإدارة على اتخاذ قرارات أكثر دقة وسرعة.</li>
+</ul>
+<p>طموحنا أن نكون من رواد المتاجر التي تجعل الذكاء الاصطناعي جزءاً أساسياً من إدارة التجارة وخدمة العملاء.</p>
+<h3>التوصيل داخل اليمن وخارجه 🚚</h3>
+<p>نؤمن أن المسافة لا ينبغي أن تكون عائقاً أمام التسوق.</p>
+<p>لذلك نعمل على تطوير منظومة توصيل تربط العملاء بالمنتجات، بدءاً من اليمن والمملكة العربية السعودية، وصولاً إلى أسواق ودول أخرى وفقاً لتغطية شركات الشحن والخدمات المتاحة.</p>
+<p>هدفنا أن يصل طلبك إليك بسهولة، مع متابعة واضحة لحالة الطلب ومراحل الشحن.</p>
+<h3>الأمان والثقة أولاً 🔐</h3>
+<p>خصوصية العميل وأمان بياناته من أهم أولوياتنا، ونعمل على تطوير وسائل الدفع والحماية ومتابعة العمليات لضمان تجربة تسوق أكثر موثوقية.</p>
+<h3>مجتمع APEX 🌍</h3>
+<p>نحن لا نبني متجراً فقط، بل نبني مجتمعاً من العملاء والشركاء والمستخدمين الذين يشاركوننا الطموح نحو مستقبل تجاري أكثر تطوراً.</p>
+<p>ومع نظام الدعوات والمكافآت والتطوير المستمر، نسعى إلى منح كل عميل تجربة تتجاوز مجرد الشراء.</p>
+<p class="apex-about-signoff"><strong>APEX — تسوق اليوم، وكن جزءاً من تجارة المستقبل 👑</strong></p>
+<p><strong>طموحنا بلا حدود، وثقتكم هي أساس نجاحنا.</strong></p>
+</div></section>
+<section id="accountSection-referrals" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♧ دعوة الأصدقاء والمكافآت</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><p style="color:#bbb;font-size:12px">شارك كودك مع أصدقائك، وكل 5 دعوات مؤهلة تمنحك 50 ريالاً في محفظتك.</p>
+<div style="border:1px solid #8e6d2e;border-radius:14px;padding:14px;text-align:center;background:#0b0b08"><small style="color:#c9a34d">كود الدعوة الخاص بك</small><div id="myReferralCode" style="font-size:27px;color:#f2d37d;font-weight:900;letter-spacing:2px">جارٍ التحميل...</div><div id="myReferralLink" dir="ltr" style="font-size:11px;color:#b8b8b8;overflow-wrap:anywhere;margin:8px 0"></div><button class="add" type="button" onclick="copyMyReferralLink()">نسخ رابط الدعوة</button></div><p id="referralVisitStats" style="font-size:12px;color:#c9a34d;margin:12px 0">جارٍ تحميل إحصائيات الرابط...</p><div style="border:1px solid #65522b;border-radius:12px;padding:12px;margin:12px 0;background:#10100d"><b style="color:#f2d37d">تحليل أداء الدعوات</b><p id="referralAiInsight" style="font-size:12px;color:#ddd;margin:7px 0 0">جارٍ تحليل أداء رابطك...</p></div>
+<div style="margin-top:16px;display:flex;justify-content:space-between;gap:8px"><b>تقدمك نحو المكافأة</b><strong id="referralProgressText">0 / 5</strong></div><div style="height:9px;background:#29251a;border-radius:20px;overflow:hidden;margin:9px 0"><div id="referralProgressBar" style="height:100%;width:0;background:linear-gradient(90deg,#987022,#f5d879);border-radius:20px"></div></div><h3 id="referralRemaining" style="color:#f2d37d">تبقى 5 أشخاص</h3><p id="referralRewardStatus" style="color:#aaa;font-size:12px"></p><div id="referralHistory"></div></section>
+
+</div></div></div></div><div id="deliveryMapModal" role="dialog" aria-modal="true" aria-labelledby="deliveryMapTitle"><div class="delivery-map-card"><h3 id="deliveryMapTitle" style="margin:2px 0;color:#f2d37d">تحديد موقع التوصيل</h3><p id="deliveryMapMessage" style="font-size:13px;color:#ddd;margin:6px 0">جارٍ تحديد موقعك تلقائياً…</p><div id="deliveryMap"></div><p style="font-size:12px;color:#bbb">يمكنك تحريك العلامة إلى موقع المنزل بدقة، ثم اضغط «موافقة» لاعتماد الموقع.</p><div class="delivery-map-actions"><button type="button" onclick="confirmDeliveryLocation()">موافقة واعتماد الموقع</button><button type="button" class="secondary" onclick="closeDeliveryMap()">إلغاء</button></div></div></div><div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><label for="shippingMethod" style="display:block;color:var(--gold);margin:10px 0 5px">طريقة الشحن</label><select id="shippingMethod" style="width:100%;padding:12px;border:1px solid var(--gold);border-radius:10px;background:#101612;color:#fff;margin-bottom:10px"><option value="توصيل إلى المنزل">توصيل إلى المنزل</option><option value="استلام بالتنسيق مع المتجر">استلام بالتنسيق مع المتجر</option></select><textarea id="notes" rows="3" placeholder="المدينة والحي والشارع أو ملاحظات إضافية (اختياري)"></textarea><button type="button" class="goldbtn" style="width:100%;margin:5px 0" onclick="selectDeliveryLocation()">📍 تحديد موقع التوصيل على الخريطة</button><p id="locationStatus" style="font-size:12px;color:#aaa">حدد موقعك لإرساله مع الطلب، أو اكتب عنوانك في الحقل أعلاه.</p><span id="locationMapLink" hidden></span><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
+<script src="./firebase/runtime-config.js"></script>
+<script type="module">
+import { isFirebaseConfigured } from './firebase/client.js';
+import { createApexFirebaseCompat } from './firebase/compat.js';
+import { loadProducts as loadFirebaseProducts, loadBanners as loadFirebaseBanners, loadPublicPaymentMethods as loadFirebasePaymentMethods, loadStoreCurrencySettings } from './firebase/data.js';
+let supabase;
+if(isFirebaseConfigured()) supabase=createApexFirebaseCompat();
+else { const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.0'); supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}}); }
+function buildReferralLink(code){return location.origin+location.pathname+'?ref='+encodeURIComponent(code)}
+function getReferralVisitorId(){
+ let id=localStorage.getItem('apex_referral_visitor_id');
+ if(!id){id=crypto.randomUUID?crypto.randomUUID():'apx-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);localStorage.setItem('apex_referral_visitor_id',id)}
+ return id;
+}
+async function captureReferralVisit(){
+ const params=new URLSearchParams(location.search),incoming=(params.get('ref')||'').trim().toUpperCase();
+ if(/^APEX\d{4}$/.test(incoming))localStorage.setItem('apex_pending_referral_code',incoming);
+ const code=(incoming||localStorage.getItem('apex_pending_referral_code')||'').toUpperCase();
+ if(!/^APEX\d{4}$/.test(code))return;
+ try{await supabase.rpc('apex_track_referral_visit',{p_code:code,p_visitor_id:getReferralVisitorId(),p_landing_path:location.pathname})}
+ catch(e){console.warn('APEX referral visit tracking unavailable:',e?.message||e)}
+}
+captureReferralVisit();
+
+async function apexSecurityEvent(event_type,details={}){
+ try{
+  await supabase.functions.invoke('apex-ai-guard',{body:{event_type,details,source:'storefront'}});
+ }catch(error){console.warn('APEX security event could not be recorded:',error?.message||error)}
+}
+let cart=[],selectedPayment='',customerSession=null,storeCurrencyCountry='SA',storeExchangeRate=137;
+let apexAssistantMessages=[],apexAssistantBusy=false,apexAssistantInitialized=false,apexAssistantSessionVersion=0;
+const favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));
+function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}
+function toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function formatStorePrice(amount){const n=Number(amount||0);return storeCurrencyCountry==='YE'?(n*storeExchangeRate).toLocaleString('ar-YE',{maximumFractionDigits:0})+' ر.ي':n.toFixed(2)+' ر.س'}
+async function loadStoreCurrency(){if(isFirebaseConfigured()){try{const settings=await loadStoreCurrencySettings();if(settings?.exchangeRate>0)storeExchangeRate=Number(settings.exchangeRate)}catch(error){console.error('APEX Firebase currency settings:',error);$('products').innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل إعدادات المتجر من Firebase.</p>';return}}else{const {data,error}=await supabase.from('apex_store_settings').select('exchange_rate').eq('setting_key','currency').maybeSingle();if(!error&&data?.exchange_rate>0)storeExchangeRate=Number(data.exchange_rate)}await loadStoreProducts()}
+async function loadStoreProducts(){
+ const box=$('products');if(!box)return;
+ let data,error;
+ if(isFirebaseConfigured()){try{data=(await loadFirebaseProducts()).map(p=>({...p,id:p.legacyId??p.id,image_url:p.imageUrl??p.image_url,image_urls:p.imageUrls??p.image_urls,created_at:p.createdAt??p.created_at}));}catch(e){error=e}}
+ else{({data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,image_urls,active').eq('active',true).order('created_at',{ascending:false}))}
+ if(error){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل المنتجات. يرجى المحاولة لاحقاً.</p>';console.error(error);return}
+ const products=data||[];
+ if(!products.length){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#c9bd9a;padding:35px">لا توجد منتجات متاحة حالياً. نعمل على إضافة منتجات جديدة قريباً.</p>';return}
+ box.innerHTML=products.map(p=>{
+  const images=[...new Set([...(Array.isArray(p.image_urls)?p.image_urls:[]),p.image_url].filter(x=>/^https:\/\//i.test(x||'')))].slice(0,5);
+  const image=images[0]||'';
+  const gallery=image?'<div class="product-gallery"><img class="product-main-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">'+(images.length>1?'<div class="product-thumbs">'+images.map((src,n)=>'<button type="button" class="product-thumb '+(n===0?'active':'')+'" data-product-image="'+esc(src)+'" aria-label="عرض الصورة '+(n+1)+'"><img loading="lazy" src="'+esc(src)+'" alt=""></button>').join('')+'</div>':'')+'</div>':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>';
+  const demo=p.price===null||p.price===undefined;
+  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-price="'+Number(p.price||0)+'"><button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button">♡</button><span class="tag">'+(demo?'عرض تجريبي':'متاح للطلب')+'</span>'+gallery+'<h3>'+esc(p.name)+'</h3><div class="productfoot"><strong class="product-price">'+(demo?'السعر غير محدد':formatStorePrice(p.price))+'</strong>'+(demo?'':'<button class="add cart-icon" type="button" data-add-id="'+esc(p.id)+'" data-add-name="'+esc(p.name)+'" data-add-price="'+Number(p.price)+'" aria-label="إضافة المنتج إلى السلة" title="إضافة المنتج إلى السلة">🛒+</button>')+'</div></article>';
+ }).join('');
+ box.querySelectorAll('[data-add-id]').forEach(b=>b.addEventListener('click',()=>add(Number(b.dataset.addId),b.dataset.addName,Number(b.dataset.addPrice))));
+ box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
+ box.querySelectorAll('[data-product-image]').forEach(b=>b.addEventListener('click',()=>{
+  const gallery=b.closest('.product-gallery'),main=gallery?.querySelector('.product-main-image');if(!main)return;
+  main.src=b.dataset.productImage;gallery.querySelectorAll('.product-thumb').forEach(x=>x.classList.toggle('active',x===b));
+ }));
+ saveFavorites();
+ const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
+ const catbox=document.querySelector('.categories');
+ catbox.innerHTML='<button class="cat active" data-cat="الكل">الكل</button>'+cats.map(x=>'<button class="cat" data-cat="'+esc(x)+'">'+esc(x)+'</button>').join('');
+ bindCategoryFilters();
+ filterProducts();
+}
+function bindCategoryFilters(){
+ document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelector('.cat.active')?.classList.remove('active');b.classList.add('active');filterProducts();
+ }));
+}
+async function loadStoreBanners(){
+ const box=$('storeBanners');if(!box)return;
+ let data,error;
+ if(isFirebaseConfigured()){try{data=(await loadFirebaseBanners()).map(x=>({...x,id:x.legacyId??x.id,image_url:x.imageUrl??x.image_url,link_url:x.linkUrl??x.link_url,sort_order:x.sortOrder??x.sort_order}))}catch(e){error=e}}
+ else{({data,error}=await supabase.from('apex_banners').select('id,title,subtitle,image_url,link_url').eq('active',true).order('sort_order',{ascending:true}))}
+ if(error){box.hidden=true;console.warn('تعذر تحميل البنرات',error.message);return}
+ box.innerHTML=(data||[]).filter(x=>x.image_url).map(x=>{
+  const inner='<img src="'+esc(x.image_url)+'" alt="'+esc(x.title)+'" loading="lazy"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle)+'</p></div>';
+  return x.link_url?'<a class="store-banner" href="'+esc(x.link_url)+'" target="_blank" rel="noopener">'+inner+'</a>':'<article class="store-banner">'+inner+'</article>';
+ }).join('');
+ if(!box.children.length)box.hidden=true;
+}
+async function loadPaymentMethods(){
+ const box=$('paymentChoices');if(!box)return;
+ let data,error;
+ if(isFirebaseConfigured()){try{data=(await loadFirebasePaymentMethods()).map(m=>({...m,id:m.legacyId??m.id,method_type:m.methodType??m.method_type,country_code:m.countryCode??m.country_code,account_holder:m.accountHolder??m.account_holder,account_number:m.accountNumber??m.account_number,account_iban:m.accountIban??m.account_iban,sort_order:m.sortOrder??m.sort_order})).filter(m=>m.method_type==='manual')}catch(e){error=e}}
+ else{({data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,account_holder,account_number,account_iban').eq('enabled',true).eq('orders_enabled',true).eq('method_type','manual').order('sort_order',{ascending:true}))}
+ if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
+ const methods=(data||[]).filter(m=>m.country_code===storeCurrencyCountry);
+ const paymentBrandLogo=(name)=>{
+  const n=String(name||'').toLowerCase();
+  if(n.includes('الكريمي')||n.includes('كريمي'))return 'https://play-lh.googleusercontent.com/6IZttTeyjm-9x0Do0AMsmTzFOIAYnLGO08ykQRkZfwd4d5YcTFyJFhsn6wNIToHBvHrK17wz--r3kmPwpR1tSw=w240-h480';
+  if(n.includes('جيب')||n.includes('jaib')||n.includes('jeeb'))return 'https://play-lh.googleusercontent.com/DD6sJ8x9gQZ0uu84r5xD7-yUR2Ckc8CotMJmAhTrTM5pl8NEUdZA0rqBtXUqOyzoSzWC0OfuMvyvoDRRO6EpjQ=w240-h480';
+  if(n.includes('ون كاش')||n.includes('one cash')||n.includes('onecash'))return 'https://play-lh.googleusercontent.com/WqrsU_pFeqT63UuvAH8vavDeee22oJWtrp6TuVyqbWddB8EtkSToVwPUzp-arwD_3em6VnzDHF-8STWhujko1Q=w240-h480';
+  if(n.includes('عامري')||n.includes('alameri')||n.includes('amiri'))return 'https://graph.facebook.com/415075535267248/picture?type=large';
+  return '';
+ };
+ const manual=methods.map(m=>{const details=[m.instructions,m.account_holder?'المستفيد: '+m.account_holder:'',m.account_number?'رقم الحساب/المحفظة: '+m.account_number:'',m.account_iban?'IBAN: '+m.account_iban:''].filter(Boolean).join(' · ');const logo=paymentBrandLogo(m.name);const image=logo?'<img class="paybrand-logo" src="'+logo+'" alt="شعار '+esc(m.name)+'" loading="lazy" referrerpolicy="no-referrer">':'';return '<label class="paychoice"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+'<span class="paybrand-copy"><b>'+esc(m.name)+'</b>'+(details?'<small>'+esc(details)+'</small>':'')+'</span></label>'}).join('');
+ const wallet='<label class="paychoice"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label>';
+ box.innerHTML='<p style="color:#e9bd55">اختر طريقة الدفع</p>'+wallet+manual;
+}
+function add(id,name,price){const found=cart.find(x=>x.id===id);if(found)found.quantity+=1;else cart.push({id,name,price,quantity:1});renderCart();$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0)}
+function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('cartitems').innerHTML=cart.length?cart.map((x,i)=>'<div class="cartrow"><span>'+esc(x.name)+' × '+x.quantity+'<small style="display:block;color:#c9bd9a">'+formatStorePrice(x.price*x.quantity)+'</small></span><button class="add" data-remove="'+i+'">حذف</button></div>').join('')+'<div style="text-align:left;color:#f2d37d;font-weight:800;padding:10px">الإجمالي التقريبي: '+formatStorePrice(total)+'</div>':'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
+function removeItem(i){cart.splice(i,1);$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0);renderCart()}
+function openCart(){$('cartpanel').classList.add('show');renderCart()}
+function closeCart(){$('cartpanel').classList.remove('show')}
+
+function renderApexAssistantMessages(){
+ const box=$('apexAiMessages');if(!box)return;
+ box.replaceChildren();
+ if(!apexAssistantMessages.length){
+  const welcome=document.createElement('div');welcome.className='apex-ai-welcome';
+  const title=document.createElement('b');title.textContent='مرحباً بك في APEX 👑';
+  const body=document.createElement('span');body.textContent='اسألني عن المنتجات أو الحساب أو الطلبات والشحن والدفع.';
+  welcome.append(title,body);box.append(welcome);return;
+ }
+ apexAssistantMessages.forEach(m=>{
+  const row=document.createElement('div');row.className='apex-ai-message '+(m.role==='user'?'apex-ai-user':'apex-ai-bot');
+  const label=document.createElement('small');label.textContent=m.role==='user'?'أنت':'APEX AI';
+  const text=document.createElement('div');text.textContent=m.content;
+  row.append(label,text);box.append(row);
+ });
+ box.scrollTop=box.scrollHeight;
+}
+function initApexAssistant(){
+ if(apexAssistantInitialized)return;
+ apexAssistantInitialized=true;
+ renderApexAssistantMessages();
+ if(!customerSession&&$('apexAiStatus'))$('apexAiStatus').textContent='سجّل الدخول إلى حسابك لاستخدام المساعد ومتابعة طلباتك.';
+}
+function askApexAssistantQuick(text){
+ if(apexAssistantBusy)return;
+ const input=$('apexAiInput');if(!input)return;
+ input.value=text;sendApexAssistantMessage();
+}
+function clearApexAssistantSession(){
+ apexAssistantSessionVersion++;
+ apexAssistantMessages=[];apexAssistantInitialized=false;apexAssistantBusy=false;
+ if($('apexAiHandoff'))$('apexAiHandoff').hidden=true;
+ if($('apexAiStatus'))$('apexAiStatus').textContent='';
+ if($('apexAiSend')){$('apexAiSend').disabled=false;$('apexAiSend').textContent='إرسال';}
+ renderApexAssistantMessages();$('apexAiInput')?.focus();
+}
+async function sendApexAssistantMessage(){
+ const input=$('apexAiInput'),button=$('apexAiSend'),status=$('apexAiStatus');
+ if(!input||!button||!status)return;
+ const message=String(input.value||'').trim();
+ if(!message||apexAssistantBusy)return;
+ if(!customerSession?.user?.id){status.textContent='يرجى تسجيل الدخول أولاً.';return}
+ if(message.length>1500){status.textContent='اختصر رسالتك إلى 1500 حرف كحد أقصى.';return}
+ const requestVersion=apexAssistantSessionVersion;
+ const requestUserId=customerSession.user.id;
+ apexAssistantMessages.push({role:'user',content:message});
+ input.value='';apexAssistantBusy=true;button.disabled=true;button.textContent='جارٍ الرد...';
+ $('apexAiHandoff').hidden=true;status.textContent='APEX AI يراجع معلومات المتجر...';renderApexAssistantMessages();
+ try{
+  const {data,error}=await supabase.functions.invoke('apex-store-assistant',{body:{messages:apexAssistantMessages.slice(-12)}});
+  if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
+  if(error)throw error;
+  if(!data||typeof data.reply!=='string'||!data.reply.trim())throw new Error('تعذر الحصول على رد صالح.');
+  apexAssistantMessages.push({role:'assistant',content:data.reply.trim()});
+  if(data.handoff)$('apexAiHandoff').hidden=false;
+  status.textContent='';renderApexAssistantMessages();
+ }catch(error){
+  if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
+  console.error('APEX assistant error:',error);
+  const detail=String(error?.message||error||'').toLowerCase();
+  const fallback=detail.includes('503')||detail.includes('not configured')
+   ?'المساعد الذكي غير مهيأ حالياً. يرجى التواصل مع خدمة العملاء.'
+   :'تعذر الاتصال بالمساعد الآن. حاول مرة أخرى بعد قليل أو تواصل مع خدمة العملاء.';
+  apexAssistantMessages.push({role:'assistant',content:fallback});
+  $('apexAiHandoff').hidden=false;status.textContent='';renderApexAssistantMessages();
+ }finally{
+  if(requestVersion===apexAssistantSessionVersion){
+   apexAssistantBusy=false;button.disabled=false;button.textContent='إرسال';
+  }
+ }
+}
+
+function showAccountSection(name){const allowed=['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'];if(!allowed.includes(name))return;allowed.forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=id!==name});const target=$('accountSection-'+name);if(target)target.scrollIntoView({behavior:'smooth',block:'nearest'});if(name==='referrals'&&customerSession?.user?.id)loadCustomerReferral(customerSession);if(name==='support')initApexAssistant()}
+function showAccountHome(){['profile','orders','shipping','transit','wallet','referrals','notifications','support','policies','management','about'].forEach(id=>{const el=$('accountSection-'+id);if(el)el.hidden=true});const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavAccount(){showAccountHome();const hub=document.querySelector('#accountData .user-hub');if(hub)hub.scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavFavorites(){closeAccount();$('showFavorites').dataset.only='1';filterProducts();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavCart(){closeAccount();openCart()}
+function customerNavProducts(){closeAccount();$('showFavorites').dataset.only='0';document.querySelector('.cat.active')?.classList.remove('active');document.querySelector('.cat[data-cat="الكل"]')?.classList.add('active');filterProducts();$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+function customerNavHome(){closeAccount();window.scrollTo({top:0,behavior:'smooth'})}
+
+
+let walletPaymentMethods=[];
+function walletMoney(v){return Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' ر.س'}
+function walletMethodChanged(){const m=walletPaymentMethods.find(x=>String(x.id)===$('walletPaymentMethod').value);if(!m){$('walletPaymentInstructions').textContent='';return}const details=[m.instructions,m.account_holder?'اسم المستفيد: '+m.account_holder:'',m.account_number?'رقم الحساب/المحفظة: '+m.account_number:'',m.account_iban?'IBAN: '+m.account_iban:''].filter(Boolean);$('walletPaymentInstructions').textContent=details.join('\n')}
+async function loadCustomerWallet(session){
+ try{
+  const uid=session.user.id;
+  const [w,t,c,r,rewards,topups,methods]=await Promise.all([
+   supabase.from('apex_wallets').select('balance_sar').eq('user_id',uid).maybeSingle(),
+   supabase.from('apex_wallet_transactions').select('amount_sar,transaction_type,description,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(30),
+   supabase.from('apex_referral_codes').select('code').eq('user_id',uid).maybeSingle(),
+   supabase.from('apex_referral_signups').select('status,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
+   supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
+   supabase.from('apex_wallet_topups').select('id,amount_sar,payment_method_name,status,created_at,admin_note').eq('user_id',uid).order('created_at',{ascending:false}).limit(20),
+   supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,wallet_topup_enabled,account_holder,account_number,account_iban,integration_status').eq('enabled',true).eq('wallet_topup_enabled',true).order('sort_order')
+  ]);
+  if(w.error)throw w.error;
+  const bal=Number(w.data?.balance_sar||0);$('walletBalance').textContent=walletMoney(bal);$('walletBalanceSummary').innerHTML=walletMoney(bal).replace(' ر.س',' <small>ر.س</small>');
+  if(t.error)throw t.error;
+  const names={top_up:'شحن رصيد',referral_reward:'مكافأة دعوة',purchase:'شراء من المحفظة',refund:'استرداد مبلغ',admin_adjustment:'تعديل من الإدارة'};
+  $('walletTransactions').innerHTML=(t.data||[]).map(x=>'<div class="item" style="margin:7px 0;padding:10px"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(names[x.transaction_type]||x.transaction_type)+'</b><strong style="color:'+(x.transaction_type==='purchase'?'#ffb6a8':'#8fe0a7')+'">'+(x.transaction_type==='purchase'?'−':'+')+walletMoney(x.amount_sar)+'</strong></div><small style="color:#aaa">'+esc(x.description||'')+' · '+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p style="color:#aaa">لا توجد عمليات بعد.</p>';
+  if(topups.error)throw topups.error;
+  const sts={pending:'بانتظار مراجعة المدير',approved:'تم اعتماد الشحن',rejected:'مرفوض',cancelled:'ملغي'};
+  $('walletTopupHistory').innerHTML=(topups.data||[]).map(x=>'<div class="item" style="margin:7px 0;padding:10px"><b>طلب شحن #'+x.id+'</b><p>'+walletMoney(x.amount_sar)+' · '+esc(x.payment_method_name)+'</p><p style="color:#e9bd55">'+(sts[x.status]||x.status)+'</p>'+(x.admin_note?'<small>'+esc(x.admin_note)+'</small>':'')+'</div>').join('')||'<p style="color:#aaa">لا توجد طلبات شحن.</p>';
+  if(methods.error)throw methods.error;
+  const customerCountry=String(session.user.user_metadata?.country||'').toLowerCase();const countryCode=(customerCountry.includes('اليمن')||customerCountry.includes('yemen')||customerCountry==='ye')?'YE':'SA';walletPaymentMethods=(methods.data||[]).filter(x=>x.method_type==='manual'&&x.country_code===countryCode);
+  $('walletPaymentMethod').innerHTML='<option value="">اختر وسيلة الدفع</option>'+walletPaymentMethods.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');
+  $('walletPaymentInstructions').textContent=walletPaymentMethods.length?'اختر وسيلة الدفع لعرض بيانات التحويل وتعليماتها.':countryCode==='YE'?'لا توجد وسيلة تحويل يمنية مفعلة حالياً. سيقوم المدير بإضافة بيانات الحساب وتفعيلها.':'وسائل الدفع السعودية الإلكترونية مجهزة في لوحة المدير، وتنتظر بيانات مزود الدفع واختبار الربط الآمن.';
+  if(c.error)throw c.error;$('myReferralCode').textContent=c.data?.code||'سيتم إنشاء كودك تلقائياً';
+  if(r.error)throw r.error;
+  const count=(r.data||[]).filter(x=>x.status==='confirmed').length,progress=count===0?0:(count%5===0?5:count%5),remaining=5-progress;
+  $('referralProgressText').textContent=progress+' / 5';$('referralProgressBar').style.width=(progress*20)+'%';$('referralRemaining').textContent=remaining===0?'اكتملت المكافأة!':'تبقى '+remaining+' أشخاص';
+  if(rewards.error)throw rewards.error;
+  const earned=(rewards.data||[]).reduce((a,x)=>a+Number(x.reward_amount_sar||0),0);
+  $('referralRewardStatus').textContent='الدعوات المؤهلة: '+count+' · إجمالي المكافآت: '+walletMoney(earned);
+  $('referralHistory').innerHTML=(r.data||[]).map((x,i)=>'<p style="color:#aaa;font-size:12px">دعوة '+(i+1)+' · '+(x.status==='confirmed'?'مؤهلة':'قيد التحقق')+'</p>').join('');
+ }catch(e){console.error('APEX WALLET LOAD ERROR:',e);$('walletTopupMessage').textContent='تعذر تحميل بعض بيانات المحفظة: '+(e.message||'خطأ')}
+}
+async function loadCustomerReferral(session){
+ const codeEl=$('myReferralCode');
+ const linkEl=$('myReferralLink');
+ codeEl.textContent='جارٍ تحميل كود الدعوة...';
+ if(linkEl)linkEl.textContent='';
+ if(!session?.user?.id){codeEl.textContent='سجّل الدخول لعرض كودك';return}
+ try{
+  const uid=session.user.id;
+  const {data:codeRow,error:codeError}=await supabase.from('apex_referral_codes').select('code').eq('user_id',uid).maybeSingle();
+  if(codeError)throw codeError;
+  const code=codeRow?.code||'';
+  if(!code)throw new Error('لا يوجد كود مرتبط بحسابك في قاعدة البيانات.');
+  codeEl.textContent=code;
+  linkEl.textContent=buildReferralLink(code);
+  linkEl.style.display='block';
+  const [signups,rewards,visits]=await Promise.all([
+   supabase.from('apex_referral_signups').select('status,created_at,referred_name').eq('referrer_id',uid).order('created_at',{ascending:false}),
+   supabase.from('apex_referral_rewards').select('milestone_count,reward_amount_sar,created_at').eq('referrer_id',uid).order('created_at',{ascending:false}),
+   supabase.from('apex_referral_visits').select('visit_count').eq('referrer_id',uid)
+  ]);
+  if(signups.error)throw signups.error;
+  if(rewards.error)throw rewards.error;
+  if(visits.error)throw visits.error;
+  const count=(signups.data||[]).filter(x=>x.status==='confirmed').length;
+  const uniqueVisits=(visits.data||[]).length;
+  const totalVisits=(visits.data||[]).reduce((sum,x)=>sum+Number(x.visit_count||0),0);
+  const conversion=uniqueVisits?Math.round(count/uniqueVisits*100):0;
+  $('referralVisitStats').textContent='زيارات الرابط: '+totalVisits+' · زوار فريدون: '+uniqueVisits+' · نسبة التسجيل: '+conversion+'%';
+  const progress=count===0?0:(count%5===0?5:count%5),remaining=5-progress;
+  $('referralProgressText').textContent=progress+' / 5';
+  $('referralProgressBar').style.width=(progress*20)+'%';
+  $('referralRemaining').textContent=remaining===0?'اكتملت المكافأة!':'تبقى '+remaining+' أشخاص';
+  const earned=(rewards.data||[]).reduce((sum,x)=>sum+Number(x.reward_amount_sar||0),0);
+  $('referralRewardStatus').textContent='الدعوات المؤهلة: '+count+' · إجمالي المكافآت: '+walletMoney(earned);
+  const rows=(signups.data||[]);
+  $('referralHistory').innerHTML=rows.map((x,i)=>'<div style="border-bottom:1px solid #393222;padding:9px 2px;color:#ddd;font-size:13px"><b>'+(i+1)+'. '+esc(x.referred_name||'عميل جديد')+'</b><div style="color:#aaa;font-size:11px;margin-top:4px">'+(x.status==='confirmed'?'دعوة مؤكدة':'قيد التحقق')+' · '+new Date(x.created_at).toLocaleDateString('ar-SA')+'</div></div>').join('')||'<p style="color:#aaa;font-size:12px">لم تتم إضافة دعوات بعد.</p>';
+  const insight=!uniqueVisits?'شارك رابطك لبدء استقبال الزيارات.':!count?'رابطك يجذب الزيارات، لكن لم تكتمل تسجيلات مؤكدة بعد. جرّب مشاركة الرابط مع أشخاص مهتمين.':conversion>=20?'أداء ممتاز: نسبة التحويل إلى تسجيلات مؤكدة '+conversion+'%. استمر في مشاركة الرابط.':'لديك '+uniqueVisits+' زائر فريد و'+count+' تسجيل مؤكد. أضف شرحاً مختصراً لفوائد المتجر عند مشاركة الرابط لرفع التحويل.';
+  $('referralAiInsight').textContent=insight;
+ }catch(e){
+  console.error('APEX REFERRAL LOAD ERROR:',e);
+  codeEl.textContent='تعذر تحميل كود الدعوة';
+  if(linkEl)linkEl.textContent='تحقق من اتصال الحساب ثم افتح قسم الدعوات مجدداً.';
+  $('referralRewardStatus').textContent='تعذر تحميل بيانات الدعوات: '+(e.message||'خطأ');
+ }
+}
+async function requestWalletTopup(){
+ const amount=Number($('walletTopupAmount').value),methodId=$('walletPaymentMethod').value;
+ if(!Number.isFinite(amount)||amount<=0||!methodId){$('walletTopupMessage').textContent='أدخل مبلغ الشحن واختر وسيلة الدفع.';return}
+ const b=$('accountSection-wallet').querySelector('button[onclick="requestWalletTopup()"]');b.disabled=true;b.textContent='جارٍ إرسال الطلب...';
+ try{const {data,error}=await supabase.rpc('apex_request_wallet_topup',{p_amount_sar:amount,p_payment_method_id:Number(methodId),p_customer_reference:$('walletCustomerReference').value.trim()||null});if(error)throw error;$('walletTopupMessage').textContent='تم إرسال طلب الشحن رقم #'+data+'. سيضاف الرصيد بعد اعتماد المدير.';$('walletTopupAmount').value='';$('walletCustomerReference').value='';await loadCustomerWallet(customerSession)}
+ catch(e){$('walletTopupMessage').textContent='تعذر إرسال طلب الشحن: '+(e.message||'خطأ')}
+ finally{b.disabled=false;b.textContent='إرسال طلب الشحن'}
+}
+async function copyMyReferralCode(){
+ const code=String($('myReferralCode')?.textContent||'').trim().toUpperCase();
+ if(!/^APEX\d{4}$/.test(code)){toast('انتظر حتى يتم تحميل كود الدعوة');return}
+ const link=buildReferralLink(code);
+ try{
+  if(navigator.clipboard?.writeText&&window.isSecureContext){await navigator.clipboard.writeText(link)}
+  else{
+   const field=document.createElement('textarea');
+   field.value=link;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';field.style.left='-9999px';
+   document.body.appendChild(field);field.focus();field.select();field.setSelectionRange(0,field.value.length);
+   const copied=document.execCommand('copy');field.remove();
+   if(!copied)throw new Error('clipboard_unavailable');
+  }
+  toast('تم نسخ رابط الدعوة الخاص بك');
+ }catch(error){
+  window.prompt('انسخ رابط الدعوة الخاص بك:',link);
+ }
+}
+function copyMyReferralLink(){return copyMyReferralCode()}
+
+async function loadCustomerNotifications(){if(!customerSession){$('customerNotifications').innerHTML='<p>سجل الدخول لعرض إشعاراتك.</p>';return}const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').order('created_at',{ascending:false}).limit(30);if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};$('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث حالة الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>'}
+async function refreshCustomer(session){
+ const previousUserId=customerSession?.user?.id||null;
+ const nextUserId=session?.user?.id||null;
+ if(previousUserId!==nextUserId){
+  apexAssistantSessionVersion++;apexAssistantMessages=[];apexAssistantInitialized=false;apexAssistantBusy=false;
+  if($('apexAiMessages'))renderApexAssistantMessages();
+  if($('apexAiHandoff'))$('apexAiHandoff').hidden=true;
+  if($('apexAiStatus'))$('apexAiStatus').textContent='';
+  if($('apexAiSend')){$('apexAiSend').disabled=false;$('apexAiSend').textContent='إرسال';}
+ }
+ customerSession=session||null;
+ $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
+ $('storefrontAuth').hidden=!!session;
+ $('account-entry').hidden=!session;
+ if(!session){
+  $('accountForm').hidden=false;
+  $('authLoginFields').hidden=false;
+  $('authSignupFields').hidden=true;
+  $('myOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات.</p>';
+  $('shippingOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد طلبات شحن.</p>';
+  $('transitOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد طلبات تم شحنها.</p>';
+  return;
+ }
+ const meta=session.user.user_metadata||{};
+ const country=String(meta.country||'').toUpperCase();const nextCountry=(country==='YE'||country.includes('YEMEN')||country.includes('اليمن'))?'YE':'SA';if(storeCurrencyCountry!==nextCountry){storeCurrencyCountry=nextCountry;loadStoreProducts();loadPaymentMethods();}
+ $('customer').value=meta.full_name||'';$('phone').value=meta.phone||'';$('notes').value=meta.address||'';$('profileName').value=meta.full_name||'';$('profilePhone').value=meta.phone||'';$('profileAddress').value=meta.address||'';$('profileEmailNew').value='';$('accountDisplayName').textContent=meta.full_name||'غير محدد';$('accountDisplayEmail').textContent=session.user.email||'غير متوفر';$('accountDisplayPhone').textContent=meta.phone||'غير محدد';$('accountDisplayCountry').textContent=meta.country==='SA'?'السعودية':meta.country==='YE'?'اليمن':meta.country||'غير محدد';$('accountDisplayLocation').textContent=meta.address||'غير محدد';const savedLat=Number(meta.latitude),savedLng=Number(meta.longitude),hasSavedMap=Number.isFinite(savedLat)&&Number.isFinite(savedLng)&&Math.abs(savedLat)<=90&&Math.abs(savedLng)<=180;if(hasSavedMap){deliveryCoords={lat:savedLat,lng:savedLng};$('accountDisplayMapLocation').hidden=true;$('accountDisplayMapMissing').hidden=false;$('locationMapLink').hidden=true;$('locationStatus').textContent='تم تحميل موقع التوصيل المحفوظ. يمكنك تغييره عند الحاجة.'}else{deliveryCoords=null;$('accountDisplayMapLocation').hidden=true;$('accountDisplayMapMissing').hidden=false;$('locationMapLink').hidden=true;try{const local=JSON.parse(localStorage.getItem('apex_delivery_coords')||'null');if(local&&Number.isFinite(Number(local.lat))&&Number.isFinite(Number(local.lng))&&Math.abs(Number(local.lat))<=90&&Math.abs(Number(local.lng))<=180)deliveryCoords={lat:Number(local.lat),lng:Number(local.lng)}}catch{} }$('profileCurrentEmail').textContent='البريد الحالي: '+(session.user.email||'غير متوفر');
+ // تحميل كود الدعوة مستقلاً عن المحفظة حتى لا يبقى معلقاً بسبب استعلام آخر.
+ loadCustomerReferral(session);
+ // تحميل المحفظة بشكل مستقل حتى لا يعلّق عرض الطلبات إذا تأخر أحد استعلاماتها.
+ loadCustomerWallet(session);
+ const {data,error}=await supabase.from('apex_orders').select('id,created_at,status,items,aramex_tracking_number,total_sar,payment_method,payment_status,shipping_status,carrier,customer_name,phone,address').eq('user_id',session.user.id).order('created_at',{ascending:false});
+ if(error){const fail='<p>تعذر تحميل الطلبات: '+esc(error.message)+'</p>';$('myOrders').innerHTML=fail;$('shippingOrders').innerHTML=fail;$('transitOrders').innerHTML=fail;return}
+ const orders=data||[];
+ // استرجاع بيانات العملاء القدامى من آخر طلب إذا لم تكن محفوظة في ملف الحساب بعد.
+ const latestOrder=orders[0],currentMeta=customerSession?.user?.user_metadata||{};
+ if(latestOrder&&(!currentMeta.full_name||!currentMeta.phone||!currentMeta.address)){
+  const orderAddress=String(latestOrder.address||'');
+  const mapMatch=orderAddress.match(/https?:\/\/www\.google\.com\/maps\?q=([-\d.]+),([-\d.]+)/i);
+  const cleanAddress=orderAddress.split(/\s*\|\s*موقع الخريطة:/)[0].trim();
+  const recovered={...(currentMeta.full_name?{}:{full_name:latestOrder.customer_name||''}),...(currentMeta.phone?{}:{phone:latestOrder.phone||''}),...(currentMeta.address?{}:{address:cleanAddress})};
+  if(mapMatch&&!Number.isFinite(Number(currentMeta.latitude))) {recovered.latitude=Number(mapMatch[1]);recovered.longitude=Number(mapMatch[2]);}
+  if(Object.values(recovered).some(Boolean)){
+   const {data:recoveredUser,error:recoverError}=await supabase.auth.updateUser({data:recovered});
+   if(!recoverError&&recoveredUser?.user){customerSession={...customerSession,user:recoveredUser.user};const merged=recoveredUser.user.user_metadata||{};$('customer').value=merged.full_name||$('customer').value;$('phone').value=merged.phone||$('phone').value;$('notes').value=merged.address||$('notes').value;$('profileName').value=merged.full_name||'';$('profilePhone').value=merged.phone||'';$('profileAddress').value=merged.address||'';$('accountDisplayName').textContent=merged.full_name||'غير محدد';$('accountDisplayPhone').textContent=merged.phone||'غير محدد';$('accountDisplayLocation').textContent=merged.address||'غير محدد';if(merged.latitude!==undefined&&merged.longitude!==undefined){deliveryCoords={lat:Number(merged.latitude),lng:Number(merged.longitude)};const savedMap='https://www.google.com/maps?q='+merged.latitude+','+merged.longitude;$('accountDisplayMapLocation').href=savedMap;$('accountDisplayMapLocation').hidden=false;$('accountDisplayMapMissing').hidden=true;$('locationMapLink').href=savedMap;$('locationMapLink').hidden=false;}}
+  }
+ }
+ const hist=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').in('order_id',orders.map(o=>o.id)).order('created_at',{ascending:false});
+ const historyByOrder={};(hist.data||[]).forEach(h=>(historyByOrder[h.order_id]??=[]).push(h));
+ const statusNames={new:'تم استلام الطلب — بانتظار التأكيد',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'قيد الشحن مع شركة التوصيل',delivered:'تم التسليم للعميل',cancelled:'ملغي'};
+ const card=o=>{
+  const address=String(o.address||'');
+  const mapMatch=address.match(/https?:\/\/www\.google\.com\/maps\?q=([-\d.]+),([-\d.]+)/i);
+  const cleanAddress=address.replace(/\s*\|\s*موقع الخريطة:\s*https?:\/\/\S+/i,'').trim();
+  const history=historyByOrder[o.id]||[];
+  return '<div class="item" style="margin:9px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#15130d,#080a08)"><b style="color:#f5d879">طلب #'+esc(o.id)+'</b><p>'+new Date(o.created_at).toLocaleString('ar-SA')+'</p><p><b>حالة الطلب:</b> '+esc(statusNames[o.status]||o.status||'قيد المراجعة')+'</p>'+(o.shipping_status?'<p><b>تحديث الشحن:</b> '+esc(o.shipping_status)+'</p>':'')+(o.total_sar!==null&&o.total_sar!==undefined?'<p>الإجمالي: '+Number(o.total_sar).toFixed(2)+' ر.س · الدفع: '+esc(o.payment_method||'بانتظار التأكيد')+'</p>':'')+'<p><b>المنتجات:</b> '+esc((Array.isArray(o.items)?o.items:[]).map(x=>'منتج '+(x.id||'')+' × '+(x.quantity||1)).join('، ')||'تفاصيل الطلب متاحة لدى المتجر')+'</p>'+(cleanAddress?'<p><b>عنوان التوصيل:</b> '+esc(cleanAddress)+'</p>':'')+(mapMatch?'<p><a target="_blank" rel="noopener" style="color:#f5d879" href="https://www.google.com/maps?q='+mapMatch[1]+','+mapMatch[2]+'">📍 عرض إحداثيات موقع التوصيل</a></p>':'')+(o.carrier?'<p><b>شركة الشحن:</b> '+esc(o.carrier)+'</p>':'')+(o.aramex_tracking_number?'<p><b>رقم التتبع:</b> <span dir="ltr">'+esc(o.aramex_tracking_number)+'</span></p>':'')+(history.length?'<div style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><b style="color:#f5d879">آخر تحديثات الطلب والشحن</b>'+history.map(h=>'<p style="font-size:12px;color:#c9bd9a">• '+esc(statusNames[h.status]||h.status)+' — '+new Date(h.created_at).toLocaleString('ar-SA')+(h.note?' · '+esc(h.note):'')+'</p>').join('')+'</div>':'<p style="font-size:12px;color:#c9bd9a">ستظهر هنا تحديثات الطلب والشحن عند تسجيلها من إدارة المتجر.</p>')+'</div>';
+ };
+ $('myOrders').innerHTML=orders.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات.</p>';
+ const shipping=orders.filter(o=>o.status!=='cancelled');
+ $('shippingOrders').innerHTML=shipping.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات شحن.</p>';
+ const transit=orders.filter(o=>o.status==='shipped');
+ $('transitOrders').innerHTML=transit.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد طلبات تم شحنها.</p>';
+ showAccountHome();
+}
+async function openCustomerProfile(){$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
+function openAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
+async function openMoreAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session){showAccountSection('orders');$('accountSection-orders').scrollIntoView({behavior:'smooth',block:'start'})}}
+function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode')}
+ async function customerSignIn(){
+  const identity=$('accountEmail').value.trim(),password=$('accountPassword').value,button=$('accountAuthAction'),msg=$('accountMsg');
+  if(!identity||!password){msg.textContent='أدخل البريد الإلكتروني وكلمة المرور.';msg.style.color='#ff7777';return}
+  if(!identity.includes('@')){msg.textContent='تسجيل الدخول الحالي يتم بالبريد الإلكتروني. استخدم بريد الحساب المسجل.';msg.style.color='#ff7777';return}
+  button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';msg.textContent='جارٍ التحقق من بياناتك...';msg.style.color='#e9bd55';
+  let authenticated=false;
+  try{
+   const credentials={email:identity.trim().toLowerCase(),password};
+   const {data,error}=await supabase.auth.signInWithPassword(credentials);
+   if(error){await apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:identity.includes('@')?'email':'phone'});console.error('APEX LOGIN AUTH ERROR:',error);msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
+   authenticated=true;
+   await apexSecurityEvent('login_success',{method:identity.includes('@')?'email':'phone'});
+   msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';
+   await refreshCustomer(data.session);
+   // Keep the customer account open after login so the customer lands in the dashboard.
+   $('accountForm').hidden=true;
+   $('accountData').hidden=false;
+   $('storefrontAuth').hidden=true;
+   $('accountpanel').classList.add('show');
+   showAccountHome();
+   const accountHub=document.querySelector('#accountData .user-hub');
+   if(accountHub) accountHub.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(error){
+   console.error('APEX LOGIN ERROR:',error);
+   const reason=error?.message||String(error);
+   msg.textContent=authenticated?'تم تسجيل الدخول، لكن تعذر تحميل بيانات الحساب: '+reason:'تعذر تسجيل الدخول: '+reason;
+   msg.style.color='#ff7777';
+  }finally{button.disabled=false;button.textContent='تسجيل الدخول'}
+ }
+async function customerSignInWithGoogle(){const button=document.querySelector('#authLoginFields button[onclick="customerSignInWithGoogle()"]'),msg=$('accountMsg');if(button){button.disabled=true;button.textContent='جارٍ الاتصال بحساب Google…'}try{const {data,error}=await supabase.auth.signInWithGoogle();if(error)throw error;if(data?.session){await refreshCustomer(data.session);$('accountForm').hidden=true;$('accountData').hidden=false;$('storefrontAuth').hidden=true;$('accountpanel').classList.add('show');showAccountHome()}else if(data?.redirecting){msg.textContent='سيتم تحويلك إلى Google لإكمال تسجيل الدخول.'}}catch(error){msg.textContent='تعذر تسجيل الدخول باستخدام Google: '+(error?.message||'حاول مرة أخرى.');msg.style.color='#ff7777'}finally{if(button){button.disabled=false;button.textContent='G  المتابعة باستخدام Google'}}}
+let signupEmailVerified='',signupLat=null,signupLng=null;
+function showStoreLogin(){$('accountForm').hidden=false;$('authLoginFields').hidden=false;$('authSignupFields').hidden=true;$('accountMsg').textContent=''}
+function showStoreSignup(){$('accountForm').hidden=false;$('authLoginFields').hidden=true;$('authSignupFields').hidden=false;$('signupStep1').hidden=false;$('signupStep2').hidden=true;$('signupStep3').hidden=true;$('signupEmail').value='';$('signupCode').value='';$('signupReferralCode').value=localStorage.getItem('apex_pending_referral_code')||'';signupEmailVerified='';signupLat=signupLng=null;$('accountMsg').textContent=''}
+async function sendSignupCode(){if(!$('signupPrivacyConsent').checked){$('accountMsg').textContent='يجب الموافقة على سياسة الخصوصية قبل متابعة إنشاء الحساب.';return}const email=$('signupEmail').value.trim();if(!email||!email.includes('@')){$('accountMsg').textContent='أدخل بريدًا إلكترونيًا صحيحًا.';return}try{await apexSecurityEvent('signup_attempt',{method:'email_otp'});const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error){const duplicate=/already registered|already exists|user already|identity_exists/i.test(error.message||'');if(duplicate)await apexSecurityEvent('duplicate_account',{reason:error.message||'already_registered',method:'email_otp'});throw error;}$('signupStep1').hidden=true;$('signupStep2').hidden=false;$('accountMsg').textContent='تم إرسال الكود إلى بريدك. تحقق من صندوق الوارد والرسائل غير المرغوبة.'}catch(e){const reason=String(e.message||'').toLowerCase();$('accountMsg').textContent=(reason.includes('already registered')||reason.includes('already exists')||reason.includes('user already')||reason.includes('identity_exists'))?'لديك حساب مسجل مسبقاً بهذا البريد الإلكتروني. انتقل إلى تسجيل الدخول.':'تعذر إرسال الكود: '+e.message}}
+async function verifySignupCode(){const token=$('signupCode').value.trim(),email=$('signupEmail').value.trim();if(!/^\d{6}$/.test(token)){$('accountMsg').textContent='أدخل رمز التحقق المكوّن من 6 أرقام.';return}try{const {data,error}=await supabase.auth.verifyOtp({email,token,type:'email'});if(error)throw error;signupEmailVerified=email;$('signupStep2').hidden=true;$('signupStep3').hidden=false;$('accountMsg').textContent='تم التحقق بنجاح.'}catch(e){$('accountMsg').textContent='الرمز غير صحيح أو منتهي: '+e.message}}
+function pickSignupLocation(){if(!navigator.geolocation){$('signupLocation').textContent='تحديد الموقع غير مدعوم.';return} $('signupLocation').textContent='جارٍ تحديد موقعك...';navigator.geolocation.getCurrentPosition(p=>{signupLat=p.coords.latitude;signupLng=p.coords.longitude;$('signupLocation').textContent='تم تحديد الموقع بنجاح ✓'},()=>{$('signupLocation').textContent='تعذر تحديد الموقع؛ اسمح للمتصفح بالوصول للموقع.'},{enableHighAccuracy:true,timeout:15000})}
+async function finishSignup(){const password=$('signupPassword').value,confirm=$('signupConfirm').value,name=$('signupName').value.trim(),phone=$('signupPhone').value.trim(),country=$('signupCountry').value.trim(),address=$('signupAddress').value.trim(),referralCode=($('signupReferralCode').value.trim()||localStorage.getItem('apex_pending_referral_code')||'').toUpperCase();if(!$('signupPrivacyConsent').checked){$('accountMsg').textContent='يجب الموافقة على سياسة الخصوصية لإكمال إنشاء الحساب.';return}if(!signupEmailVerified){$('accountMsg').textContent='تحقق من بريدك أولاً.';return}if(!name||!phone){$('accountMsg').textContent='أدخل الاسم الكامل ورقم الجوال.';return}if(password.length<6||password!==confirm){$('accountMsg').textContent='تأكد من تطابق كلمتي المرور وأن لا تقل عن 6 أحرف.';return}if(!country||!address||signupLat===null||signupLng===null){$('accountMsg').textContent='أدخل الدولة والعنوان وحدد الموقع.';return}try{const {error}=await supabase.auth.updateUser({password,data:{full_name:name,phone,country,address,latitude:signupLat,longitude:signupLng,apex_privacy_policy_accepted:true,apex_privacy_policy_version:'2026-11-05-referrals',apex_privacy_policy_accepted_at:new Date().toISOString(),apex_marketing_opt_in:$('signupMarketingOptIn').checked,apex_marketing_consent_at:$('signupMarketingOptIn').checked?new Date().toISOString():null}});if(error)throw error;let referralNotice='';if(referralCode){const claim=await supabase.rpc('apex_claim_referral_code',{p_code:referralCode});if(claim.error)referralNotice=' تعذر اعتماد كود الدعوة: '+claim.error.message;else if(claim.data?.claimed)localStorage.removeItem('apex_pending_referral_code');}await supabase.auth.signOut();refreshCustomer(null);$('accountEmail').value=signupEmailVerified;$('accountPassword').value='';$('signupPassword').value='';$('signupConfirm').value='';showStoreLogin();$('accountMsg').textContent='تم إنشاء الحساب وحفظ بياناتك. سجّل الدخول لاحقاً وستظهر بياناتك تلقائياً في حسابك ووقت الطلب.'+referralNotice;$('accountMsg').style.color='#7ee0a1'}catch(e){$('accountMsg').textContent='تعذر حفظ بيانات الحساب: '+e.message;$('accountMsg').style.color='#ff7777'}}
+async function customerSignUp(){return finishSignup()}
+async function saveNewPassword(){const password=$('newPassword').value;if(password.length<6){$('accountMsg').textContent='كلمة المرور يجب أن تكون 6 أحرف على الأقل.';return}const {error}=await supabase.auth.updateUser({password});$('accountMsg').textContent=error?'تعذر تحديث كلمة المرور: '+error.message:'تم تحديث كلمة المرور بنجاح.';if(!error){$('passwordRecovery').hidden=true;$('newPassword').value=''}}
+async function customerReset(){const email=$('accountEmail').value.trim();if(!email){$('accountMsg').textContent='أدخل بريدك الإلكتروني أولاً.';return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});$('accountMsg').textContent=error?'تعذر إرسال رابط الاستعادة: '+error.message:'إذا كان البريد مسجلاً، ستصلك رسالة لاستعادة كلمة المرور.'}
+async function saveProfile(){const meta=customerSession?.user?.user_metadata||{},name=$('profileName').value.trim()||meta.full_name||'',phone=$('profilePhone').value.trim()||meta.phone||'',address=$('profileAddress').value.trim()||meta.address||'',button=$('accountSection-profile').querySelector('button[onclick="saveProfile()"]');if(!name&&!phone&&!address){$('profileMsg').textContent='أدخل البيانات التي تريد تعديلها.';return}button.disabled=true;button.textContent='جارٍ الحفظ…';try{const {data,error}=await supabase.auth.updateUser({data:{...meta,full_name:name,phone,address}});if(error)throw error;if(data?.user)customerSession={...customerSession,user:data.user};$('customer').value=name||$('customer').value;$('phone').value=phone||$('phone').value;$('notes').value=address||$('notes').value;$('accountDisplayName').textContent=name||'غير محدد';$('accountDisplayPhone').textContent=phone||'غير محدد';$('accountDisplayLocation').textContent=address||'غير محدد';$('profileMsg').textContent='تم حفظ بيانات الحساب على الخادم بنجاح.'}catch(e){$('profileMsg').textContent='تعذر حفظ البيانات: '+(e.message||'خطأ')}finally{button.disabled=false;button.textContent='حفظ البيانات'}}
+async function saveProfileEmail(){const email=$('profileEmailNew').value.trim(),msg=$('profileEmailMsg'),button=$('accountSection-profile').querySelector('button[onclick="saveProfileEmail()"]');if(!email||!email.includes('@')){msg.textContent='أدخل بريداً إلكترونياً صحيحاً.';return}if(email.toLowerCase()===String(customerSession?.user?.email||'').toLowerCase()){msg.textContent='هذا هو بريدك الحالي بالفعل.';return}button.disabled=true;button.textContent='جارٍ الإرسال…';try{const {error}=await supabase.auth.updateUser({email});if(error)throw error;msg.textContent='تم طلب تغيير البريد. افتح رسالة التأكيد المرسلة إلى البريد الجديد لإكمال التحديث.';$('profileEmailNew').value=''}catch(e){msg.textContent='تعذر طلب تغيير البريد: '+(e.message||'خطأ')}finally{button.disabled=false;button.textContent='تحديث البريد الإلكتروني'}}
+async function customerSignOut(){await supabase.auth.signOut();refreshCustomer(null);$('accountMsg').textContent='تم تسجيل الخروج.'}
+supabase.auth.getSession().then(({data})=>refreshCustomer(data.session));
+supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){$('passwordRecovery').hidden=false;$('accountpanel').classList.add('show')}queueMicrotask(()=>refreshCustomer(session))});window.addEventListener('pageshow',async()=>{const {data,error}=await supabase.auth.getSession();if(!error)refreshCustomer(data.session)});
+let deliveryCoords=null;
+let deliveryMap=null,deliveryMarker=null,pendingDeliveryCoords=null;
+function closeDeliveryMap(){$('deliveryMapModal').classList.remove('show')}
+async function confirmDeliveryLocation(){if(!pendingDeliveryCoords){$('deliveryMapMessage').textContent='اختر نقطة على الخريطة أولاً.';return}const chosen={lat:Number(pendingDeliveryCoords.lat),lng:Number(pendingDeliveryCoords.lng)};if(!Number.isFinite(chosen.lat)||!Number.isFinite(chosen.lng)||Math.abs(chosen.lat)>90||Math.abs(chosen.lng)>180){$('deliveryMapMessage').textContent='الموقع المحدد غير صالح.';return}deliveryCoords=chosen;try{localStorage.setItem('apex_delivery_coords',JSON.stringify(chosen))}catch{}if(customerSession?.user){const oldMeta=customerSession.user.user_metadata||{};const {data,error}=await supabase.auth.updateUser({data:{...oldMeta,latitude:chosen.lat,longitude:chosen.lng}});if(error){$('deliveryMapMessage').textContent='تعذر حفظ الموقع في حسابك: '+error.message;return}if(data?.user)customerSession={...customerSession,user:data.user}}$('locationMapLink').hidden=true;$('locationStatus').textContent='تم حفظ موقعك بنجاح. يمكنك متابعة التسوق.';$('deliveryMapMessage').textContent='تم حفظ الموقع وإغلاق الخريطة.';closeDeliveryMap()}
+function selectDeliveryLocation(){
+ $('deliveryMapModal').classList.add('show');$('deliveryMapMessage').textContent='جارٍ فتح الخريطة داخل المتجر…';pendingDeliveryCoords=deliveryCoords?{...deliveryCoords}:null;
+ const initMap=(lat,lng,confirmed=true)=>{if(!window.L){$('deliveryMapMessage').textContent='تعذر تحميل الخريطة. تحقق من اتصال الإنترنت ثم أعد المحاولة.';return}if(!deliveryMap){deliveryMap=L.map('deliveryMap').setView([lat,lng],16);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(deliveryMap);deliveryMarker=L.marker([lat,lng],{draggable:true}).addTo(deliveryMap);deliveryMarker.on('dragend',()=>{const p=deliveryMarker.getLatLng();pendingDeliveryCoords={lat:p.lat,lng:p.lng};$('deliveryMapMessage').textContent='تم تعديل العلامة. اضغط حفظ الموقع.'});deliveryMap.on('click',e=>{deliveryMarker.setLatLng(e.latlng);pendingDeliveryCoords={lat:e.latlng.lat,lng:e.latlng.lng};$('deliveryMapMessage').textContent='تم اختيار النقطة. اضغط حفظ الموقع.'})}else{deliveryMap.setView([lat,lng],16);deliveryMarker.setLatLng([lat,lng])}pendingDeliveryCoords=confirmed?{lat,lng}:null;setTimeout(()=>deliveryMap.invalidateSize(),120);$('deliveryMapMessage').textContent=confirmed?'موقعك محفوظ مسبقاً. حرّك العلامة إن أردت ثم اضغط حفظ الموقع.':'اختر موقعك على الخريطة أو حرّك العلامة ثم اضغط حفظ الموقع.'};
+ const saved=deliveryCoords?{...deliveryCoords}:null;
+ if(saved){initMap(saved.lat,saved.lng,true);return}
+ if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>initMap(pos.coords.latitude,pos.coords.longitude,true),err=>{initMap(24.7136,46.6753,false);$('deliveryMapMessage').textContent=err.code===1?'اسمح بالوصول للموقع أو اختر موقعك يدوياً على الخريطة.':'تعذر تحديد الموقع تلقائياً؛ اختر موقعك يدوياً على الخريطة.'},{enableHighAccuracy:true,timeout:20000,maximumAge:60000})}else{initMap(24.7136,46.6753,false)}
+}
+async function sendOrder(){
+ if(!cart.length){alert('أضف منتجاً إلى السلة أولاً');return}
+ const name=$('customer').value.trim(),phone=$('phone').value.trim(),address=$('notes').value.trim();
+ const shipping=$('shippingMethod').value;
+ if(!name||!phone){alert('يرجى إدخال الاسم ورقم الجوال.');return}
+ if(shipping==='توصيل إلى المنزل'&&!address&&!deliveryCoords){alert('حدد موقع التوصيل على الخريطة أو اكتب عنوانك.');return}
+ const picked=document.querySelector('input[name="paymentMethod"]:checked');
+ const methods=document.querySelectorAll('input[name="paymentMethod"]');
+ if(methods.length&&!picked){alert('يرجى اختيار طريقة الدفع');return}
+ let paymentName='';
+ if(picked){const label=picked.closest('label');paymentName=label?.querySelector('b')?.textContent||''}
+ const mapUrl=deliveryCoords?'https://www.google.com/maps?q='+deliveryCoords.lat+','+deliveryCoords.lng:'';
+ const orderAddress=[address,mapUrl?'موقع الخريطة: '+mapUrl:''].filter(Boolean).join(' | ')||'استلام بالتنسيق مع المتجر';
+ const orderNotes='طريقة الشحن: '+shipping+'\nطريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+(mapUrl?'\nموقع الخريطة: '+mapUrl:'')+(address?'\nملاحظات العنوان: '+address:'');
+ const items=cart.map(x=>({id:x.id,quantity:x.quantity}));
+ if(!customerSession?.user){alert('سجل الدخول أولاً لحفظ بياناتك وإرسال الطلب.');openAccount();return}
+ const oldMeta=customerSession.user.user_metadata||{};
+ const savedProfile={full_name:name,phone,address:address||oldMeta.address||'',country:oldMeta.country||storeCurrencyCountry,latitude:deliveryCoords?.lat??oldMeta.latitude??null,longitude:deliveryCoords?.lng??oldMeta.longitude??null};
+ const {data:profileUpdate,error:profileError}=await supabase.auth.updateUser({data:savedProfile});
+ if(profileError){alert('تعذر حفظ بياناتك في الحساب: '+profileError.message);return}
+ if(profileUpdate?.user)customerSession={...customerSession,user:profileUpdate.user};
+ $('profileName').value=name;$('profilePhone').value=phone;$('profileAddress').value=savedProfile.address;
+ $('accountDisplayName').textContent=name;$('accountDisplayPhone').textContent=phone;$('accountDisplayLocation').textContent=savedProfile.address||'غير محدد';
+ const profileCountry=savedProfile.country;$('accountDisplayCountry').textContent=profileCountry==='SA'?'السعودية':profileCountry==='YE'?'اليمن':profileCountry;
+ if(savedProfile.latitude!==null&&savedProfile.longitude!==null){const profileMap='https://www.google.com/maps?q='+savedProfile.latitude+','+savedProfile.longitude;$('accountDisplayMapLocation').href=profileMap;$('accountDisplayMapLocation').hidden=false;$('accountDisplayMapMissing').hidden=true}
+ if(picked?.value==='wallet'){
+  if(!customerSession?.user){alert('سجل الدخول أولاً لاستخدام محفظة APEX.');return}
+  const {data,error}=await supabase.functions.invoke('apex-wallet-checkout',{body:{customer_name:name,phone,address:orderAddress,notes:orderNotes,shipping_method:shipping,items,request_id:crypto.randomUUID()}});
+  if(error||!data?.success){alert('تعذر الشراء من المحفظة: '+(data?.error||error?.message||'خطأ غير معروف'));return}
+  alert('تم الدفع من المحفظة واستلام طلبك رقم #'+data.order_id+'.');await loadCustomerWallet(customerSession);
+ }else{
+  if(!customerSession?.user){alert('سجل الدخول أولاً لإرسال الطلب ومتابعته من حسابك.');openAccount();return}
+  const paymentMethodId=Number(picked?.value);
+  if(!Number.isSafeInteger(paymentMethodId)||paymentMethodId<=0){alert('اختر وسيلة دفع متاحة للطلبات.');return}
+  const {data,error}=await supabase.functions.invoke('apex-create-order',{body:{customer_name:name,phone,address:orderAddress,notes:orderNotes,shipping_method:shipping,items,payment_method_id:paymentMethodId,request_id:crypto.randomUUID()}});
+  if(error||!data?.success){alert('تعذر إنشاء الطلب: '+(data?.error||error?.message||'خطأ غير معروف'));return}
+  alert('تم استلام طلبك رقم #'+data.order_id+'. حالة الدفع: بانتظار التأكيد. لن يتم اعتبار الطلب مدفوعاً قبل التحقق.');
+ }
+ cart=[];$('count').textContent='0';renderCart();closeCart();
+}
+window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.copyMyReferralLink=copyMyReferralLink;window.loadCustomerNotifications=loadCustomerNotifications;window.askApexAssistantQuick=askApexAssistantQuick;window.sendApexAssistantMessage=sendApexAssistantMessage;window.clearApexAssistantSession=clearApexAssistantSession;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignInWithGoogle=customerSignInWithGoogle;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
+bindCategoryFilters();
+$('search').addEventListener('input',filterProducts);
+$('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
+$('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
+function filterProducts(){const active=document.querySelector('.cat.active');const cat=active?.dataset.cat||'الكل',q=$('search').value.trim().toLowerCase();document.querySelectorAll('.product').forEach(p=>{const favorite=p.querySelector('[data-fav]')?.dataset.fav;p.style.display=(cat==='الكل'||p.dataset.cat===cat)&&p.dataset.name.toLowerCase().includes(q)&&(!($('showFavorites')?.dataset.only==='1')||favorites.has(String(favorite)))?'':'none'})}
+function filterCategory(name){const button=[...document.querySelectorAll('.cat')].find(x=>x.dataset.cat===name);if(button)button.click();else{document.querySelector('.cat[data-cat="الكل"]')?.click();toast('هذا القسم غير متاح حالياً');}$('products').scrollIntoView({behavior:'smooth',block:'start'})}
+loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
+</script>
+
+
+</body></html>
