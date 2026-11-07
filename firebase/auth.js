@@ -1,9 +1,7 @@
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  sendEmailVerification,
   sendPasswordResetEmail,
   updateProfile,
   verifyBeforeUpdateEmail,
@@ -11,26 +9,26 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { getFirebase, firebaseMessage } from "./client.js";
+import { requestSignupOtp, completeSignupWithOtp } from "./otp.js";
 
-export async function registerCustomer({ email, password, fullName, phone, country, address, latitude, longitude, marketingOptIn = false }) {
-  const { auth, db } = getFirebase();
+export async function requestCustomerSignupOtp(email) {
+  return requestSignupOtp(email);
+}
+
+export async function registerCustomer({ email, password, otp, fullName, phone, country, address, latitude, longitude, marketingOptIn = false }) {
   try {
-    const credential = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
-    await updateProfile(credential.user, { displayName: fullName.trim() });
-    await setDoc(doc(db, "customers", credential.user.uid), {
-      uid: credential.user.uid,
-      fullName: fullName.trim(),
+    return await completeSignupWithOtp({
+      email: email.trim().toLowerCase(),
+      password,
+      code: String(otp || ""),
+      full_name: fullName.trim(),
       phone: phone.trim(),
       country,
       address: address.trim(),
       latitude,
       longitude,
-      marketingOptIn: Boolean(marketingOptIn),
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      marketing_opt_in: Boolean(marketingOptIn)
     });
-    await sendEmailVerification(credential.user);
-    return credential.user;
   } catch (error) {
     throw new Error(firebaseMessage(error));
   }
