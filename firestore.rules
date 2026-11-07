@@ -104,14 +104,16 @@ service cloud.firestore {
       allow write: if false;
     }
     match /securityEvents/{id} {
-      allow read, write: if false;
+      allow read: if isAdmin();
+      allow write: if false;
     }
     match /admins/{uid} {
       allow read: if owns(uid) || isAdmin();
       allow write: if false;
     }
     match /emailSettings/{id} {
-      allow read, write: if false;
+      allow read: if isAdmin();
+      allow write: if false;
     }
     match /{document=**} {
       allow read, write: if false;
