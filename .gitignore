@@ -1,0 +1,16 @@
+# Local Firebase web configuration (public keys only, but environment-specific)
+firebase/runtime-config.js
+
+# Firebase CLI and local emulators
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*-debug.log
+
+# Local secrets and dependencies
+.env
+.env.*
+!.env.example
+node_modules/
+functions/node_modules/
