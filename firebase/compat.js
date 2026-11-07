@@ -1,6 +1,6 @@
 import { getFirebase, firebaseMessage } from "./client.js";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithCustomToken, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile, verifyBeforeUpdateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, documentId as firestoreDocumentId } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-functions.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-storage.js";
 
@@ -81,7 +81,7 @@ class Builder {
       const col=collection(db,name);
       if(this.mode==="select"||this.mode==="update"||this.mode==="delete"){
         const constraints=[];
-        for(const f of this.filters){if((this.table==="apex_store_settings"&&f.field==="setting_key")||(this.table==="apex_email_settings"&&f.field==="id")||f.field==="id")continue;const field=this.table==="apex_admins"&&f.field==="user_id"?"uid":camel(f.field);if(f.op==="eq")constraints.push(where(field,"==",f.value));else if(f.op==="neq")constraints.push(where(field,"!=",f.value));else if(f.op==="notNull")constraints.push(where(field,"!=",null));else if(f.op==="in")constraints.push(where(field,"in",f.values.slice(0,30)));else if(f.op==="gte"||f.op==="lte"){const val=typeof f.value==="string"&&/^\\d{4}-\\d{2}-\\d{2}T/.test(f.value)?Timestamp.fromDate(new Date(f.value)):f.value;constraints.push(where(field,f.op==="gte"?">=":"<=",val));}}
+        for(const f of this.filters){if((this.table==="apex_store_settings"&&f.field==="setting_key")||(this.table==="apex_email_settings"&&f.field==="id")||f.field==="id")continue;if(this.table==="apex_admins"&&f.field==="user_id"&&f.op==="eq"){constraints.push(where(firestoreDocumentId(),"==",String(f.value)));continue;}const field=camel(f.field);if(f.op==="eq")constraints.push(where(field,"==",f.value));else if(f.op==="neq")constraints.push(where(field,"!=",f.value));else if(f.op==="notNull")constraints.push(where(field,"!=",null));else if(f.op==="in")constraints.push(where(field,"in",f.values.slice(0,30)));else if(f.op==="gte"||f.op==="lte"){const val=typeof f.value==="string"&&/^\\d{4}-\\d{2}-\\d{2}T/.test(f.value)?Timestamp.fromDate(new Date(f.value)):f.value;constraints.push(where(field,f.op==="gte"?">=":"<=",val));}}
         const snap=await getDocs(constraints.length?query(col,...constraints):col);let rows=snap.docs.map(d=>({doc:d,row:fromDocument(this.table,d)})).filter(x=>this.matches(x.row));
         for(const s of this.sorts.slice().reverse())rows.sort((a,b)=>{const av=a.row[s.field],bv=b.row[s.field];const c=av===bv?0:av==null?-1:bv==null?1:av>bv?1:-1;return s.ascending?c:-c;});
         if(this.max!==null)rows=rows.slice(0,this.max);
