@@ -165,8 +165,23 @@ export const apexStoreAssistant=onCall({region:REGION,secrets:[OPENAI_API_KEY]},
   const catalog=products.docs.map(d=>{const p=d.data();return {name:p.name,category:p.category,description:clean(p.description,240),price_sar:p.price,stock:p.stock,availability:Number(p.stock||0)>0?"متوفر":"غير متوفر"};});
   const methods=payments.docs.map(d=>{const p=d.data();return {name:p.name,instructions:p.instructions,type:p.methodType,country:p.countryCode};}).filter(p=>!p.country||p.country==="ALL"||p.country===country);
   let orderContext=null;
-  const match=[...cleanMessages].reverse().find(m=>m.role==="user")?.content.match(/(?:رقم\s*(?:الطلب|طلب)|طلب\s*رقم|الطلب\s*(?:رقمه|رقم)?|طلب\s*#)\s*[:：#-]?\s*([A-Za-z0-9-]{4,40})/i);
-  if(match){let order=await db.doc("orders/"+match[1]).get();if(!order.exists&&/^\d+$/.test(match[1])){const q=await db.collection("orders").where("userId","==",auth.uid).where("legacyId","==",Number(match[1])).limit(1).get();if(!q.empty)order=q.docs[0];}if(order.exists&&order.get("userId")===auth.uid){const o=order.data();orderContext={id:order.id,status:o.status,status_ar:statusAr[o.status]||o.status,total_sar:o.totalSar,payment_status:o.paymentStatus,shipping_status:o.shippingStatus,items:o.items};}else orderContext={requested_order_id:match[1],found:false};}
+  // Search the full recent user history: customers often mention the order number
+  // once, then ask follow-up questions without repeating it.
+  let requestedOrderId=null;
+  for(const message of [...cleanMessages].reverse()){
+    if(message.role!=="user")continue;
+    const match=message.content.match(/(?:رقم\s*(?:الطلب|طلب)|طلب\s*رقم|الطلب\s*(?:رقمه|رقم)?|طلب\s*#)\s*[:：#-]?\s*(\d{1,15})/i);
+    if(match?.[1]){requestedOrderId=match[1];break;}
+  }
+  if(requestedOrderId){
+    let order=await db.doc("orders/"+requestedOrderId).get();
+    if(!order.exists){const q=await db.collection("orders").where("userId","==",auth.uid).where("legacyId","==",Number(requestedOrderId)).limit(1).get();if(!q.empty)order=q.docs[0];}
+    if(order.exists&&order.get("userId")===auth.uid){
+      const o=order.data();
+      const history=await db.collection("orderStatusHistory").where("orderId","==",order.id).orderBy("createdAt","desc").limit(12).get();
+      orderContext={id:order.id,created_at:o.createdAt?.toDate?.()?.toISOString?.()||null,updated_at:o.updatedAt?.toDate?.()?.toISOString?.()||null,status:o.status,status_ar:statusAr[o.status]||o.status,total_sar:o.totalSar,payment_method:o.paymentMethod,payment_status:o.paymentStatus,shipping_status:o.shippingStatus,carrier:o.carrier||null,tracking_number:o.trackingNumber||o.aramexTrackingNumber||null,items:o.items,status_history:history.docs.map(d=>({status:statusAr[d.get("status")]||d.get("status"),note:d.get("note")||"",at:d.get("createdAt")?.toDate?.()?.toISOString?.()||null}))};
+    }else orderContext={requested_order_id:requestedOrderId,found:false};
+  }
   const apiKey=OPENAI_API_KEY.value();if(!apiKey)fail("unavailable","مساعد APEX غير مهيأ بعد.");
   const system="أنت مساعد خدمة العملاء الرسمي لمتجر APEX فقط. أجب بالعربية الواضحة. النطاق: منتجات APEX وأسعارها ومخزونها والحساب والسلة والشراء والدفع والشحن ومتابعة طلبات العميل. استخدم بيانات المتجر والطلب المرفقة فقط ولا تخترع سعراً أو مخزوناً أو سياسة أو حالة طلب. لا تكشف أي طلب لا يخص المستخدم الحالي، ولا تطلب كلمة مرور أو رمز تحقق أو بيانات بطاقة. إذا كان السؤال خارج نطاق المتجر فاعتذر باختصار. إذا لم تتوفر المعلومة فقل ذلك ووجّه للبريد apex.1.shopping@gmail.com. أضف [[APEX_HANDOFF]] عند طلب موظف.";
   const payload=[{role:"developer",content:system+"\nبيانات المتجر: "+JSON.stringify({country,products:catalog,payment_methods:methods,currency:settings.exists?settings.data():null,order:orderContext})},...cleanMessages.slice(-8)];
