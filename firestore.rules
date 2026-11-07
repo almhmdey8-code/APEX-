@@ -14,14 +14,7 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     match /paymentMethods/{id} {
-      allow read: if (resource.data.enabled == true &&
-        resource.data.keys().hasOnly([
-          'legacyId', 'name', 'instructions', 'methodType', 'enabled',
-          'sortOrder', 'countryCode', 'methodCode', 'walletTopupEnabled',
-          'ordersEnabled', 'accountHolder', 'accountNumber', 'accountIban',
-          'createdAt', 'updatedAt'
-        ])) || isAdmin();
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
     match /storeSettings/{id} {
       allow read: if id == 'currency' || isAdmin();
