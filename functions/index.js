@@ -184,7 +184,7 @@ function safeDetails(raw){const out={};if(raw&&typeof raw==="object")for(const k
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
 
-export const apexRequestSignupOtp=onCall({region:REGION,secrets:[RESEND_API_KEY]},async request=>{
+export const apexRequestSignupOtp=onCall({region:REGION,secrets:[RESEND_API_KEY,SECURITY_HASH_SALT]},async request=>{
   const email=clean(request.data?.email,254).toLowerCase();
   if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) fail("invalid-argument","أدخل بريداً إلكترونياً صحيحاً.");
   const key=RESEND_API_KEY.value();if(!key) fail("unavailable","خدمة إرسال رمز التحقق غير مهيأة حالياً.");
@@ -208,13 +208,16 @@ export const apexCompleteSignup=onCall({region:REGION,secrets:[SECURITY_HASH_SAL
   if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!/^\\d{6}$/.test(code)||password.length<6||!fullName||!phone||!address) fail("invalid-argument","بيانات إنشاء الحساب غير مكتملة.");
   if(latitude===null||longitude===null||Math.abs(latitude)>90||Math.abs(longitude)>180) fail("invalid-argument","حدد موقع التوصيل قبل إكمال التسجيل.");
   const emailHash=await sha256(email),ref=db.doc("signupOtpChallenges/"+emailHash),salt=SECURITY_HASH_SALT.value()||"apex-signup-otp-v1";
+  let otpValid=false;
   await db.runTransaction(async tx=>{
     const snap=await tx.get(ref);
     if(!snap.exists||snap.get("verified")===true||Number(snap.get("expiresAtMs")||0)<Date.now()) fail("deadline-exceeded","رمز التحقق منتهي أو غير موجود. اطلب رمزاً جديداً.");
     if(Number(snap.get("attempts")||0)>=5) fail("resource-exhausted","تجاوزت عدد محاولات التحقق. اطلب رمزاً جديداً.");
-    if(await sha256(code+salt)!==snap.get("codeHash")){tx.update(ref,{attempts:FieldValue.increment(1)});fail("permission-denied","رمز التحقق غير صحيح.");}
+    if(await sha256(code+salt)!==snap.get("codeHash")){tx.update(ref,{attempts:FieldValue.increment(1)});return;}
     tx.update(ref,{verified:true,verifiedAtMs:Date.now(),usedAtMs:Date.now()});
+    otpValid=true;
   });
+  if(!otpValid) fail("permission-denied","رمز التحقق غير صحيح.");
   let user;
   try{
     user=await getAuth().createUser({email,password,displayName:fullName,emailVerified:true,disabled:false});
