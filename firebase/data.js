@@ -27,18 +27,10 @@ export async function loadBanners() {
 }
 
 export async function loadPublicPaymentMethods() {
-  const rows = await readCollection("paymentMethods", [
-    where("enabled", "==", true),
-    where("ordersEnabled", "==", true),
-    orderBy("sortOrder", "asc")
-  ]);
-  const publicKeys = [
-    "id", "name", "instructions", "methodType", "countryCode", "accountHolder",
-    "accountNumber", "accountIban", "sortOrder", "enabled", "ordersEnabled"
-  ];
-  return rows.map((row) => Object.fromEntries(publicKeys.filter((key) =>
-    Object.hasOwn(row, key)
-  ).map((key) => [key, row[key]])));
+  const { functions } = getFirebase();
+  const call = httpsCallable(functions, "apexGetPublicPaymentMethods");
+  const result = await call({});
+  return result.data?.paymentMethods || [];
 }
 
 export async function loadCustomerProfile(uid) {
