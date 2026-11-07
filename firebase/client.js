@@ -6,7 +6,17 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-s
 import { getFunctions } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-functions.js";
 
 const REQUIRED_CONFIG = ["apiKey", "authDomain", "projectId", "storageBucket", "appId"];
-const config = globalThis.APEX_FIREBASE_CONFIG;
+// Firebase Web SDK configuration is public client metadata, not a server secret.
+// This app is intentionally pinned to the APEX Firebase project.
+const config = globalThis.APEX_FIREBASE_CONFIG || Object.freeze({
+  apiKey: "AIzaSyCFxYYD90TxD6VMfYdDsqc4y5wUSRwcqbU",
+  authDomain: "apex-3c12f.firebaseapp.com",
+  projectId: "apex-3c12f",
+  storageBucket: "apex-3c12f.firebasestorage.app",
+  messagingSenderId: "535024132294",
+  appId: "1:535024132294:web:375722423c4047a75ab7c7",
+  measurementId: "G-76SGYM1RXQ"
+});
 
 export function isFirebaseConfigured() {
   return Boolean(config && REQUIRED_CONFIG.every((key) =>
