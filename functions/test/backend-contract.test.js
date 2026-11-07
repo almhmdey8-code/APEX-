@@ -37,3 +37,11 @@ test("signup OTP is time limited, attempt limited and one-time", () => {
   assert.ok(source.includes('snap.get("attempts")||0)>=5'));
   assert.ok(source.includes("verified:true"));
 });
+
+test("assistant resolves short legacy order numbers from prior user turns and limits details to the owner", () => {
+  assert.ok(source.includes("for(const message of [...cleanMessages].reverse())"));
+  assert.ok(source.includes("(\\\\d{1,15})"));
+  assert.ok(source.includes('order.get("userId")===auth.uid'));
+  assert.ok(source.includes('collection("orderStatusHistory")'));
+  assert.ok(source.includes("tracking_number:o.trackingNumber"));
+});
