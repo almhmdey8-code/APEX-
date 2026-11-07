@@ -19,6 +19,7 @@ on:
       - "functions/**"
       - "index.html"
       - "docs/FIREBASE_NATIVE_IMPLEMENTATION_AR.md"
+      - "docs/FIREBASE_DEPLOYMENT_AR.md"
       - "firestore.rules"
       - "storage.rules"
       - "firebase.json"
@@ -42,6 +43,7 @@ jobs:
       - name: Check Firebase client modules and config
         run: |
           node --check firebase/client.js
+          node --check firebase/compat.js
           node --check firebase/auth.js
           node --check firebase/data.js
           node --check firebase/runtime-config.example.js
