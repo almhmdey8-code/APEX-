@@ -1,7 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
 process.env.FIRESTORE_EMULATOR_HOST ||= "127.0.0.1:8080";
@@ -11,14 +10,14 @@ const auth = getAuth();
 const db = getFirestore();
 const base = "http://127.0.0.1:5001/apex-3c12f-ci/us-central1";
 
-async function tokenFor(uid,email) {
-  const user = await auth.createUser({uid,email,password:"TestPassword123!",emailVerified:true});
-  const customToken = await auth.createCustomToken(user.uid);
-  const response = await fetch("http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=fake-api-key",{
-    method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:customToken,returnSecureToken:true})
+async function tokenFor(email) {
+  const response = await fetch("http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-api-key",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email,password:"TestPassword123!",returnSecureToken:true})
   });
-  assert.equal(response.ok,true,"Auth emulator custom-token exchange failed: "+await response.text());
-  return (await response.json()).idToken;
+  const data=await response.json();
+  assert.equal(response.ok,true,"Auth emulator signup failed: "+JSON.stringify(data));
+  return {uid:data.localId,idToken:data.idToken};
 }
 
 async function callable(name,payload,idToken) {
@@ -37,8 +36,8 @@ async function callable(name,payload,idToken) {
 }
 
 test("Firebase order, wallet, idempotency, public payment projection and admin permissions",async()=>{
-  const customerUid="ci-apex-customer";
-  const customerToken=await tokenFor(customerUid,"ci-customer@apex.invalid");
+  const customer=await tokenFor("ci-customer@apex.invalid");
+  const customerUid=customer.uid,customerToken=customer.idToken;
   await db.doc("customers/"+customerUid).set({uid:customerUid,fullName:"CI Customer",marketingOptIn:false});
   await db.doc("products/123456789").set({legacyId:123456789,name:"APEX CI Product",price:25,active:true,stock:50});
   await db.doc("paymentMethods/987654321").set({
@@ -84,8 +83,8 @@ test("Firebase order, wallet, idempotency, public payment projection and admin p
 
   await assert.rejects(callable("apexAdminCustomers",{},customerToken));
 
-  const adminUid="ci-apex-admin";
-  const adminToken=await tokenFor(adminUid,"apex.1.shopping@gmail.com");
+  const admin=await tokenFor("apex.1.shopping@gmail.com");
+  const adminUid=admin.uid,adminToken=admin.idToken;
   await db.doc("admins/"+adminUid).set({active:true,role:"admin"});
   const adminResult=await callable("apexAdminCustomers",{},adminToken);
   assert.ok(Array.isArray(adminResult.customers));
