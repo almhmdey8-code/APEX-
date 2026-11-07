@@ -24,7 +24,8 @@ async function requireAdmin(request) {
   const snap = await db.doc("admins/"+auth.uid).get();
   if (!snap.exists || snap.get("active") !== true) fail("permission-denied","هذه العملية للمدير المعتمد فقط.");
   if (String(auth.token.email || "").toLowerCase() !== OWNER_EMAIL && snap.get("role") !== "admin") fail("permission-denied","غير مصرح.");
-  await getAuth().setCustomUserClaims(auth.uid,{...auth.token,admin:true});
+  const userRecord=await getAuth().getUser(auth.uid);
+  await getAuth().setCustomUserClaims(auth.uid,{...(userRecord.customClaims||{}),admin:true});
   return auth;
 }
 function validItems(raw) {
