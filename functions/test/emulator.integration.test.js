@@ -72,8 +72,8 @@ test("Firebase order, wallet, idempotency, public payment projection and admin p
   assert.equal(first.order_id,second.order_id,"Idempotent retry must return the same order");
   const wallet=await db.doc("wallets/"+customerUid).get();
   assert.equal(wallet.get("balanceSar"),50,"Wallet must be debited exactly once");
-  const ledger=await db.collection("walletTransactions").where("userId","==",customerUid).where("referenceType","==","order").get();
-  assert.equal(ledger.size,1);
+  const ledger=await db.collection("walletTransactions").get();
+  assert.equal(ledger.docs.filter(x=>x.get("userId")===customerUid&&x.get("referenceType")==="order").length,1);
 
   await assert.rejects(
     callable("apexWalletCheckout",{...walletPayload,request_id:"33333333-3333-4333-8333-333333333333",items:[{id:123456789,quantity:10}]},customerToken),
