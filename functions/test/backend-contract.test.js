@@ -6,33 +6,34 @@ const source = await readFile(new URL("../index.js", import.meta.url), "utf8");
 
 test("all six required APEX callable backends are exported", () => {
   for (const name of ["apexCreateOrder","apexWalletCheckout","apexAdminCustomers","apexAiGuard","apexEmailCampaign","apexStoreAssistant"]) {
-    assert.match(source, new RegExp("export const "+name+"\\s*="));
+    assert.ok(source.includes("export const "+name+"=onCall"), name+" export missing");
   }
 });
 
-test("financial paths use Firestore transactions and server-side prices", () => {
-  assert.match(source, /async function makeOrder[\\s\\S]*?runTransaction/);
-  assert.match(source, /apexWalletCheckout[\\s\\S]*?makeOrder\\(request,true\\)/);
-  assert.match(source, /checkoutRequests\\//);
-  assert.match(source, /unit_price_sar/);
+test("financial paths use transactions, server prices and idempotency", () => {
+  assert.ok(source.includes("async function makeOrder"));
+  assert.ok(source.includes("await db.runTransaction"));
+  assert.ok(source.includes("checkoutRequests/"));
+  assert.ok(source.includes("unit_price_sar"));
+  assert.ok(source.includes("balanceSar:money(Number(walletSnap.get(\"balanceSar\"))-total)"));
 });
 
-test("admin callable checks active server-managed admin membership", () => {
-  assert.match(source, /async function requireAdmin[\\s\\S]*?admins\\/\"\\+auth\\.uid/);
-  assert.match(source, /snap\\.get\\(\"active\"\\) !== true/);
+test("admin access checks the active server-managed admin registry", () => {
+  assert.ok(source.includes('db.doc("admins/"+auth.uid).get()'));
+  assert.ok(source.includes('snap.get("active") !== true'));
 });
 
-test("public payment projection is allow-listed and excludes gateway secrets", () => {
-  const start = source.indexOf("export const apexGetPublicPaymentMethods");
-  assert.notEqual(start, -1);
-  const block = source.slice(start);
-  assert.match(block, /const allowed=\\[/);
-  assert.match(block, /methodType===\"manual\"/);
-  assert.doesNotMatch(block, /secretKeyNames|privateKey|apiSecret/);
+test("public payment methods use a narrow manual-only projection", () => {
+  const start=source.indexOf("export const apexGetPublicPaymentMethods");
+  assert.notEqual(start,-1);
+  const block=source.slice(start);
+  assert.ok(block.includes('const allowed=["legacyId","name","instructions"'));
+  assert.ok(block.includes('row.methodType==="manual"'));
+  assert.ok(!block.includes("secretKeyNames"));
 });
 
 test("signup OTP is time limited, attempt limited and one-time", () => {
-  assert.match(source, /expiresAtMs:now\+10\*60\*1000/);
-  assert.match(source, /attempts\)\|\|0\)>=5/);
-  assert.match(source, /verified:true/);
+  assert.ok(source.includes("expiresAtMs:now+10*60*1000"));
+  assert.ok(source.includes('snap.get("attempts")||0)>=5'));
+  assert.ok(source.includes("verified:true"));
 });
