@@ -585,8 +585,11 @@ document.addEventListener('contextmenu',function(e){
 <div style="margin-top:16px;display:flex;justify-content:space-between;gap:8px"><b>تقدمك نحو المكافأة</b><strong id="referralProgressText">0 / 5</strong></div><div style="height:9px;background:#29251a;border-radius:20px;overflow:hidden;margin:9px 0"><div id="referralProgressBar" style="height:100%;width:0;background:linear-gradient(90deg,#987022,#f5d879);border-radius:20px"></div></div><h3 id="referralRemaining" style="color:#f2d37d">تبقى 5 أشخاص</h3><p id="referralRewardStatus" style="color:#aaa;font-size:12px"></p><div id="referralHistory"></div></section>
 
 </div></div></div></div><div id="deliveryMapModal" role="dialog" aria-modal="true" aria-labelledby="deliveryMapTitle"><div class="delivery-map-card"><h3 id="deliveryMapTitle" style="margin:2px 0;color:#f2d37d">تحديد موقع التوصيل</h3><p id="deliveryMapMessage" style="font-size:13px;color:#ddd;margin:6px 0">جارٍ تحديد موقعك تلقائياً…</p><div id="deliveryMap"></div><p style="font-size:12px;color:#bbb">يمكنك تحريك العلامة إلى موقع المنزل بدقة، ثم اضغط «موافقة» لاعتماد الموقع.</p><div class="delivery-map-actions"><button type="button" onclick="confirmDeliveryLocation()">موافقة واعتماد الموقع</button><button type="button" class="secondary" onclick="closeDeliveryMap()">إلغاء</button></div></div></div><div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><label for="shippingMethod" style="display:block;color:var(--gold);margin:10px 0 5px">طريقة الشحن</label><select id="shippingMethod" style="width:100%;padding:12px;border:1px solid var(--gold);border-radius:10px;background:#101612;color:#fff;margin-bottom:10px"><option value="توصيل إلى المنزل">توصيل إلى المنزل</option><option value="استلام بالتنسيق مع المتجر">استلام بالتنسيق مع المتجر</option></select><textarea id="notes" rows="3" placeholder="المدينة والحي والشارع أو ملاحظات إضافية (اختياري)"></textarea><button type="button" class="goldbtn" style="width:100%;margin:5px 0" onclick="selectDeliveryLocation()">📍 تحديد موقع التوصيل على الخريطة</button><p id="locationStatus" style="font-size:12px;color:#aaa">حدد موقعك لإرساله مع الطلب، أو اكتب عنوانك في الحقل أعلاه.</p><span id="locationMapLink" hidden></span><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
+<script src="./firebase/runtime-config.js"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+import { isFirebaseConfigured } from './firebase/client.js';
+import { loadProducts as loadFirebaseProducts, loadBanners as loadFirebaseBanners, loadPublicPaymentMethods as loadFirebasePaymentMethods, loadStoreCurrencySettings } from './firebase/data.js';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}});
 function buildReferralLink(code){return location.origin+location.pathname+'?ref='+encodeURIComponent(code)}
 function getReferralVisitorId(){
@@ -617,10 +620,12 @@ function toast(msg){const n=document.createElement('div');n.className='luxury-to
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function formatStorePrice(amount){const n=Number(amount||0);return storeCurrencyCountry==='YE'?(n*storeExchangeRate).toLocaleString('ar-YE',{maximumFractionDigits:0})+' ر.ي':n.toFixed(2)+' ر.س'}
-async function loadStoreCurrency(){const {data,error}=await supabase.from('apex_store_settings').select('exchange_rate').eq('setting_key','currency').maybeSingle();if(!error&&data?.exchange_rate>0)storeExchangeRate=Number(data.exchange_rate);await loadStoreProducts()}
+async function loadStoreCurrency(){if(isFirebaseConfigured()){try{const settings=await loadStoreCurrencySettings();if(settings?.exchangeRate>0)storeExchangeRate=Number(settings.exchangeRate)}catch(error){console.error('APEX Firebase currency settings:',error);$('products').innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل إعدادات المتجر من Firebase.</p>';return}}else{const {data,error}=await supabase.from('apex_store_settings').select('exchange_rate').eq('setting_key','currency').maybeSingle();if(!error&&data?.exchange_rate>0)storeExchangeRate=Number(data.exchange_rate)}await loadStoreProducts()}
 async function loadStoreProducts(){
  const box=$('products');if(!box)return;
- const {data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,image_urls,active').eq('active',true).order('created_at',{ascending:false});
+ let data,error;
+ if(isFirebaseConfigured()){try{data=(await loadFirebaseProducts()).map(p=>({...p,id:p.legacyId??p.id,image_url:p.imageUrl??p.image_url,image_urls:p.imageUrls??p.image_urls,created_at:p.createdAt??p.created_at}));}catch(e){error=e}}
+ else{({data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,image_urls,active').eq('active',true).order('created_at',{ascending:false}))}
  if(error){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل المنتجات. يرجى المحاولة لاحقاً.</p>';console.error(error);return}
  const products=data||[];
  if(!products.length){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#c9bd9a;padding:35px">لا توجد منتجات متاحة حالياً. نعمل على إضافة منتجات جديدة قريباً.</p>';return}
@@ -651,7 +656,9 @@ function bindCategoryFilters(){
 }
 async function loadStoreBanners(){
  const box=$('storeBanners');if(!box)return;
- const {data,error}=await supabase.from('apex_banners').select('id,title,subtitle,image_url,link_url').eq('active',true).order('sort_order',{ascending:true});
+ let data,error;
+ if(isFirebaseConfigured()){try{data=(await loadFirebaseBanners()).map(x=>({...x,id:x.legacyId??x.id,image_url:x.imageUrl??x.image_url,link_url:x.linkUrl??x.link_url,sort_order:x.sortOrder??x.sort_order}))}catch(e){error=e}}
+ else{({data,error}=await supabase.from('apex_banners').select('id,title,subtitle,image_url,link_url').eq('active',true).order('sort_order',{ascending:true}))}
  if(error){box.hidden=true;console.warn('تعذر تحميل البنرات',error.message);return}
  box.innerHTML=(data||[]).filter(x=>x.image_url).map(x=>{
   const inner='<img src="'+esc(x.image_url)+'" alt="'+esc(x.title)+'" loading="lazy"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle)+'</p></div>';
@@ -661,7 +668,9 @@ async function loadStoreBanners(){
 }
 async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,account_holder,account_number,account_iban').eq('enabled',true).eq('orders_enabled',true).eq('method_type','manual').order('sort_order',{ascending:true});
+ let data,error;
+ if(isFirebaseConfigured()){try{data=(await loadFirebasePaymentMethods()).map(m=>({...m,id:m.legacyId??m.id,method_type:m.methodType??m.method_type,country_code:m.countryCode??m.country_code,account_holder:m.accountHolder??m.account_holder,account_number:m.accountNumber??m.account_number,account_iban:m.accountIban??m.account_iban,sort_order:m.sortOrder??m.sort_order})).filter(m=>m.method_type==='manual')}catch(e){error=e}}
+ else{({data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,account_holder,account_number,account_iban').eq('enabled',true).eq('orders_enabled',true).eq('method_type','manual').order('sort_order',{ascending:true}))}
  if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
  const methods=(data||[]).filter(m=>m.country_code===storeCurrencyCountry);
  const paymentBrandLogo=(name)=>{
