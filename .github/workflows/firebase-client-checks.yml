@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "firebase/**"
+      - "index.html"
+      - "docs/FIREBASE_NATIVE_IMPLEMENTATION_AR.md"
       - "firestore.rules"
       - "storage.rules"
       - "firebase.json"
@@ -38,6 +40,8 @@ jobs:
           node --check firebase/auth.js
           node --check firebase/data.js
           node --check firebase/runtime-config.example.js
+          node --input-type=module -e "const fs=require('fs');const html=fs.readFileSync('index.html','utf8');const match=html.match(/<script type=\"module\">([\\s\\S]*?)<\\/script>/);if(!match)throw new Error('Storefront module script not found');fs.writeFileSync('/tmp/apex-storefront-module.mjs',match[1]);"
+          node --check /tmp/apex-storefront-module.mjs
           node -e "JSON.parse(require('fs').readFileSync('firebase.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json','utf8'))"
       - name: Validate Firestore and Storage rules with emulators
