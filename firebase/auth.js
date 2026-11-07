@@ -9,6 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { getFirebase, firebaseMessage } from "./client.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-functions.js";
 import { requestSignupOtp, completeSignupWithOtp } from "./otp.js";
 
 export async function requestCustomerSignupOtp(email) {
@@ -17,6 +18,8 @@ export async function requestCustomerSignupOtp(email) {
 
 export async function registerCustomer({ email, password, otp, fullName, phone, country, address, latitude, longitude, marketingOptIn = false }) {
   try {
+    const { functions } = getFirebase();
+    await httpsCallable(functions, "apexVerifySignupOtp")({ email: email.trim().toLowerCase(), code: String(otp || "") });
     return await completeSignupWithOtp({
       email: email.trim().toLowerCase(),
       password,
