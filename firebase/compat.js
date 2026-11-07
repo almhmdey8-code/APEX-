@@ -1,5 +1,5 @@
 import { getFirebase, firebaseMessage } from "./client.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithCustomToken, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithCustomToken, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile, verifyBeforeUpdateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-functions.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-storage.js";
@@ -26,6 +26,7 @@ const rpcNames = {
   apex_admin_refund_order_to_wallet:"apexAdminRefundOrderToWallet"
 };
 const snake = value => value.replace(/[A-Z]/g,c=>"_"+c.toLowerCase());
+const cleanMeta=(value,max=120)=>String(value??"").slice(0,max);
 const camel = value => value.replace(/_([a-z])/g,(_,c)=>c.toUpperCase());
 function normalize(value){
   if(value?.toDate) return value.toDate().toISOString();
@@ -103,7 +104,7 @@ class Builder {
 }
 function mapUser(user,profile={}){
   if(!user)return null;
-  return {id:user.uid,uid:user.uid,email:user.email,phone:user.phoneNumber,created_at:user.metadata?.creationTime,user_metadata:{full_name:user.displayName||profile.fullName||"",name:user.displayName||profile.fullName||"",phone:profile.phone||"",country:profile.country||"SA",address:profile.address||"",latitude:profile.latitude??null,longitude:profile.longitude??null,apex_marketing_opt_in:profile.marketingOptIn===true},email_confirmed_at:user.emailVerified?user.metadata?.lastSignInTime||new Date().toISOString():null};
+  return {id:user.uid,uid:user.uid,email:user.email,phone:user.phoneNumber,created_at:user.metadata?.creationTime,user_metadata:{full_name:user.displayName||profile.fullName||"",name:user.displayName||profile.fullName||"",phone:profile.phone||"",country:profile.country||"SA",address:profile.address||"",latitude:profile.latitude??null,longitude:profile.longitude??null,apex_marketing_opt_in:profile.marketingOptIn===true,apex_privacy_policy_accepted:profile.privacyPolicyAccepted===true,apex_privacy_policy_version:profile.privacyPolicyVersion||"",apex_privacy_policy_accepted_at:profile.privacyPolicyAcceptedAt||null},email_confirmed_at:user.emailVerified?user.metadata?.lastSignInTime||new Date().toISOString():null};
 }
 export function createApexFirebaseCompat(){
   const {auth,db,functions,storage}=getFirebase();
@@ -125,8 +126,8 @@ export function createApexFirebaseCompat(){
       }
       if(!current)throw new Error("يجب تسجيل الدخول أولاً.");
       if(payload.password)await updatePassword(current,payload.password);
-      if(payload.email)await updateEmail(current,payload.email);
-      const meta=payload.data||{},profile={fullName:meta.full_name||meta.name||current.displayName||"",phone:meta.phone||"",country:meta.country==="YE"?"YE":"SA",address:meta.address||"",latitude:Number.isFinite(meta.latitude)?meta.latitude:null,longitude:Number.isFinite(meta.longitude)?meta.longitude:null,marketingOptIn:meta.apex_marketing_opt_in===true,updatedAt:serverTimestamp()};
+      if(payload.email)await verifyBeforeUpdateEmail(current,payload.email);
+      const meta=payload.data||{},profile={fullName:meta.full_name||meta.name||current.displayName||"",phone:meta.phone||"",country:meta.country==="YE"?"YE":"SA",address:meta.address||"",latitude:Number.isFinite(meta.latitude)?meta.latitude:null,longitude:Number.isFinite(meta.longitude)?meta.longitude:null,marketingOptIn:meta.apex_marketing_opt_in===true,privacyPolicyAccepted:meta.apex_privacy_policy_accepted===true,privacyPolicyVersion:cleanMeta(meta.apex_privacy_policy_version,80),privacyPolicyAcceptedAt:meta.apex_privacy_policy_accepted_at||null,marketingConsentAt:meta.apex_marketing_consent_at||null,updatedAt:serverTimestamp()};
       if(profile.fullName&&profile.fullName!==current.displayName)await updateProfile(current,{displayName:profile.fullName});
       await setDoc(doc(db,"customers",current.uid),{uid:current.uid,...profile},{merge:true});
       return {data:{user:mapUser(current,profile)},error:null};
