@@ -589,8 +589,9 @@ document.addEventListener('contextmenu',function(e){
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 import { isFirebaseConfigured } from './firebase/client.js';
+import { createApexFirebaseCompat } from './firebase/compat.js';
 import { loadProducts as loadFirebaseProducts, loadBanners as loadFirebaseBanners, loadPublicPaymentMethods as loadFirebasePaymentMethods, loadStoreCurrencySettings } from './firebase/data.js';
-const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}});
+const supabase=isFirebaseConfigured()?createApexFirebaseCompat():createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}});
 function buildReferralLink(code){return location.origin+location.pathname+'?ref='+encodeURIComponent(code)}
 function getReferralVisitorId(){
  let id=localStorage.getItem('apex_referral_visitor_id');
