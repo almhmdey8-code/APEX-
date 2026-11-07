@@ -20,12 +20,13 @@ const money = (v) => Math.round((Number(v) + Number.EPSILON) * 100) / 100;
 const requireUser = (request) => { if (!request.auth?.uid) fail("unauthenticated","يجب تسجيل الدخول أولاً."); return request.auth; };
 async function requireAdmin(request) {
   const auth = requireUser(request);
-  if (auth.token.admin === true) return auth;
   const snap = await db.doc("admins/"+auth.uid).get();
   if (!snap.exists || snap.get("active") !== true) fail("permission-denied","هذه العملية للمدير المعتمد فقط.");
   if (String(auth.token.email || "").toLowerCase() !== OWNER_EMAIL && snap.get("role") !== "admin") fail("permission-denied","غير مصرح.");
-  const userRecord=await getAuth().getUser(auth.uid);
-  await getAuth().setCustomUserClaims(auth.uid,{...(userRecord.customClaims||{}),admin:true});
+  if (auth.token.admin !== true) {
+    const userRecord=await getAuth().getUser(auth.uid);
+    await getAuth().setCustomUserClaims(auth.uid,{...(userRecord.customClaims||{}),admin:true});
+  }
   return auth;
 }
 function validItems(raw) {
