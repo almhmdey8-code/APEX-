@@ -96,10 +96,12 @@ export const apexWalletCheckout=onCall({region:REGION},request=>makeOrder(reques
 
 export const apexAdminCustomers=onCall({region:REGION},async request=>{
   await requireAdmin(request);
-  const [users,orders]=await Promise.all([getAuth().listUsers(1000),db.collection("orders").limit(5000).get()]);
+  const [orders]=await Promise.all([db.collection("orders").limit(5000).get()]);
+  const users=[];let pageToken;
+  do{const page=await getAuth().listUsers(1000,pageToken);users.push(...page.users);pageToken=page.pageToken;}while(pageToken&&users.length<20000);
   const stats=new Map();
   for(const doc of orders.docs){const o=doc.data(),uid=o.userId;if(!uid)continue;const s=stats.get(uid)||{accepted:0,rejected:0,pending:0,total:0,orderName:"",orderPhone:""};s.total++;if(["confirmed","processing","shipped","delivered"].includes(o.status))s.accepted++;else if(o.status==="cancelled")s.rejected++;else s.pending++;s.orderName ||= o.customerName||"";s.orderPhone ||= o.phone||"";stats.set(uid,s);}
-  const customers=users.users.map(u=>{const s=stats.get(u.uid)||{accepted:0,rejected:0,pending:0,total:0,orderName:"",orderPhone:""};const p=u.customClaims||{};return {id:u.uid,name:clean(u.displayName||s.orderName||"عميل APEX",120),email:u.email||"",phone:clean(s.orderPhone,40),accepted_orders:s.accepted,rejected_orders:s.rejected,pending_orders:s.pending,total_orders:s.total,admin:p.admin===true};}).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+  const customers=users.map(u=>{const s=stats.get(u.uid)||{accepted:0,rejected:0,pending:0,total:0,orderName:"",orderPhone:""};const p=u.customClaims||{};return {id:u.uid,name:clean(u.displayName||s.orderName||"عميل APEX",120),email:u.email||"",phone:clean(s.orderPhone,40),accepted_orders:s.accepted,rejected_orders:s.rejected,pending_orders:s.pending,total_orders:s.total,admin:p.admin===true};}).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
   return {customers};
 });
 
@@ -128,7 +130,7 @@ export const apexAiGuard=onCall({region:REGION,secrets:[RESEND_API_KEY,SECURITY_
   return {accepted:true,alert_status};
 });
 
-export const apexEmailCampaign=onCall({region:REGION,secrets:[RESEND_API_KEY]},async request=>{
+export const apexEmailCampaign=onCall({region:REGION,timeoutSeconds:540,memory:"512MiB",secrets:[RESEND_API_KEY]},async request=>{
   const auth=await requireAdmin(request);
   if(String(auth.token.email||"").toLowerCase()!==OWNER_EMAIL) fail("permission-denied","غير مصرح.");
   const settings=await db.doc("emailSettings/main").get();
@@ -143,7 +145,7 @@ export const apexEmailCampaign=onCall({region:REGION,secrets:[RESEND_API_KEY]},a
   do{const page=await getAuth().listUsers(1000,token);for(const u of page.users){const c=await db.doc("customers/"+u.uid).get();if(u.email&&u.emailVerified&&c.get("marketingOptIn")===true)recipients.push(u.email);}token=page.pageToken;}while(token&&recipients.length<10000);
   let sent=0,failed=0;
   const html='<div dir="rtl" style="font-family:Tahoma,Arial;background:#080b09;color:#f8f2df;padding:24px"><div style="max-width:620px;margin:auto;background:#101612;border:1px solid #b78b35;border-radius:18px;padding:22px"><b style="color:#e9bd55">APEX 👑</b><h1 style="color:#f5d879">'+esc(title)+'</h1>'+(image?'<img src="'+esc(image)+'" alt="" style="width:100%;border-radius:12px">':'')+'<p style="white-space:pre-wrap;line-height:1.9">'+esc(content)+'</p>'+(link?'<p><a href="'+esc(link)+'">اكتشف العرض</a></p>':'')+'<hr><small>وصلتك الرسالة لأنك وافقت على استقبال عروض APEX.</small></div></div>';
-  for(const to of recipients){const res=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.APEX_REPORT_FROM||"APEX <onboarding@resend.dev>",to:[to],subject,html})});if(res.ok)sent++;else failed++;}
+  for(let i=0;i<recipients.length;i+=5){const results=await Promise.all(recipients.slice(i,i+5).map(to=>fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from:"APEX <onboarding@resend.dev>",to:[to],subject,html})})));for(const res of results)if(res.ok)sent++;else failed++;}
   return {email_status:"sent",sent,failed,total:recipients.length};
 });
 
