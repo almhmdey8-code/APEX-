@@ -116,7 +116,7 @@ export function createApexFirebaseCompat(){
     async getUser(){try{return {data:{user:mapUser(auth.currentUser,auth.currentUser?await profileFor(auth.currentUser):{})},error:null};}catch(error){return {data:{user:null},error};}},
     async signInWithPassword({email,password}){try{const c=await signInWithEmailAndPassword(auth,email.trim().toLowerCase(),password);return {data:{user:mapUser(c.user,await profileFor(c.user)),session:await sessionFor(c.user)},error:null};}catch(error){return {data:null,error};}},
     async signInWithOtp({email}){try{const call=httpsCallable(functions,"apexRequestSignupOtp");await call({email});pendingOtp={email:email.trim().toLowerCase(),code:""};return {data:{},error:null};}catch(error){return {data:null,error};}},
-    async verifyOtp({email,token}){if(email.trim().toLowerCase()!==pendingOtp.email)return {data:null,error:{message:"البريد لا يطابق طلب رمز التحقق."}};pendingOtp.code=String(token||"");return {data:{verified:true},error:null};},
+    async verifyOtp({email,token}){try{if(email.trim().toLowerCase()!==pendingOtp.email)throw new Error("البريد لا يطابق طلب رمز التحقق.");const call=httpsCallable(functions,"apexVerifySignupOtp");await call({email,code:String(token||"")});pendingOtp.code=String(token||"");return {data:{verified:true},error:null};}catch(error){return {data:null,error};}},
     async updateUser(payload){try{
       const current=auth.currentUser;
       if(pendingOtp.code&&pendingOtp.email){
