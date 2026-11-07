@@ -32,7 +32,7 @@ service cloud.firestore {
       allow create, update: if owns(uid) &&
         request.resource.data.keys().hasOnly([
           'uid', 'fullName', 'phone', 'country', 'address', 'latitude',
-          'longitude', 'marketingOptIn', 'preferences', 'createdAt', 'updatedAt'
+          'longitude', 'marketingOptIn', 'privacyPolicyAccepted', 'privacyPolicyVersion', 'privacyPolicyAcceptedAt', 'marketingConsentAt', 'preferences', 'createdAt', 'updatedAt'
         ]) &&
         (!('uid' in request.resource.data) || request.resource.data.uid == uid) &&
         (!('preferences' in request.resource.data) ||
@@ -53,7 +53,7 @@ service cloud.firestore {
         (!('longitude' in request.resource.data) ||
           (request.resource.data.longitude == null ||
             (request.resource.data.longitude is number && request.resource.data.longitude >= -180 && request.resource.data.longitude <= 180))) &&
-        (!('marketingOptIn' in request.resource.data) || request.resource.data.marketingOptIn is bool);
+        (!('marketingOptIn' in request.resource.data) || request.resource.data.marketingOptIn is bool) &&\n        (!('privacyPolicyAccepted' in request.resource.data) || request.resource.data.privacyPolicyAccepted is bool) &&\n        (!('privacyPolicyVersion' in request.resource.data) || (request.resource.data.privacyPolicyVersion is string && request.resource.data.privacyPolicyVersion.size() <= 80));
       allow delete: if isAdmin();
     }
     match /orders/{id} {
