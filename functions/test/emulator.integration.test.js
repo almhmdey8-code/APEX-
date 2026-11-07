@@ -88,4 +88,21 @@ test("Firebase order, wallet, idempotency, public payment projection and admin p
   const adminResult=await callable("apexAdminCustomers",{},adminToken);
   assert.ok(Array.isArray(adminResult.customers));
   assert.ok(adminResult.customers.some(x=>x.id===customerUid));
+
+  const topup=await callable("apexRequestWalletTopup",{p_amount_sar:25,p_payment_method_id:987654321,p_customer_reference:"CI transfer"},customerToken);
+  assert.equal(topup.success,true);
+  const beforeApproval=await db.doc("wallets/"+customerUid).get();
+  assert.equal(beforeApproval.get("balanceSar"),50,"Pending top-up must not credit the wallet");
+  await callable("apexAdminReviewWalletTopup",{p_topup_id:topup.topup_id,p_decision:"approved",p_admin_note:"CI approved"},adminToken);
+  const afterApproval=await db.doc("wallets/"+customerUid).get();
+  assert.equal(afterApproval.get("balanceSar"),75,"Approved manual top-up must credit once");
+
+  await db.doc("orders/"+order.order_id).update({paymentStatus:"paid"});
+  const refund=await callable("apexAdminRefundOrderToWallet",{p_order_id:order.order_id,p_reason:"CI refund"},adminToken);
+  assert.equal(refund.wallet_credited,true);
+  const afterRefund=await db.doc("wallets/"+customerUid).get();
+  assert.equal(afterRefund.get("balanceSar"),125,"Refund must credit the wallet atomically");
+  await assert.rejects(callable("apexAdminRefundOrderToWallet",{p_order_id:order.order_id,p_reason:"duplicate"},adminToken));
+  const refundedOrder=await db.doc("orders/"+order.order_id).get();
+  assert.equal(refundedOrder.get("paymentStatus"),"refunded");
 });
