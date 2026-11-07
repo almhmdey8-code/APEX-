@@ -1,0 +1,114 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+    function owns(uid) { return signedIn() && request.auth.uid == uid; }
+
+    match /products/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /banners/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /paymentMethods/{id} {
+      allow read: if (resource.data.enabled == true &&
+        resource.data.keys().hasOnly([
+          'legacyId', 'name', 'instructions', 'methodType', 'enabled',
+          'sortOrder', 'countryCode', 'methodCode', 'walletTopupEnabled',
+          'ordersEnabled', 'accountHolder', 'accountNumber', 'accountIban',
+          'createdAt', 'updatedAt'
+        ])) || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /storeSettings/{id} {
+      allow read: if id == 'currency' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /customers/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow create, update: if owns(uid) &&
+        request.resource.data.keys().hasOnly([
+          'uid', 'fullName', 'phone', 'country', 'address', 'latitude',
+          'longitude', 'marketingOptIn', 'preferences', 'createdAt', 'updatedAt'
+        ]) &&
+        (!('fullName' in request.resource.data) ||
+          (request.resource.data.fullName is string && request.resource.data.fullName.size() <= 120)) &&
+        (!('phone' in request.resource.data) ||
+          (request.resource.data.phone is string && request.resource.data.phone.size() <= 30)) &&
+        (!('country' in request.resource.data) || request.resource.data.country in ['SA', 'YE']) &&
+        (!('address' in request.resource.data) ||
+          (request.resource.data.address is string && request.resource.data.address.size() <= 500)) &&
+        (!('latitude' in request.resource.data) ||
+          (request.resource.data.latitude == null ||
+            (request.resource.data.latitude is number && request.resource.data.latitude >= -90 && request.resource.data.latitude <= 90))) &&
+        (!('longitude' in request.resource.data) ||
+          (request.resource.data.longitude == null ||
+            (request.resource.data.longitude is number && request.resource.data.longitude >= -180 && request.resource.data.longitude <= 180))) &&
+        (!('marketingOptIn' in request.resource.data) || request.resource.data.marketingOptIn is bool);
+      allow delete: if isAdmin();
+    }
+    match /orders/{id} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /orderStatusHistory/{id} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /wallets/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if false;
+    }
+    match /walletTransactions/{id} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if false;
+    }
+    match /walletTopups/{id} {
+      allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow write: if false;
+    }
+    match /referralCodes/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if false;
+    }
+    match /referralSignups/{id} {
+      allow read: if (signedIn() &&
+        (resource.data.referrerId == request.auth.uid ||
+         resource.data.referredUserId == request.auth.uid)) || isAdmin();
+      allow write: if false;
+    }
+    match /referralRewards/{id} {
+      allow read: if (signedIn() && resource.data.referrerId == request.auth.uid) || isAdmin();
+      allow write: if false;
+    }
+    match /privateGatewayTransactions/{id} {
+      allow read, write: if false;
+    }
+    match /paymentWebhookEvents/{id} {
+      allow read, write: if false;
+    }
+    match /shippingJobs/{id} {
+      allow read, write: if false;
+    }
+    match /shippingProviders/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    match /securityEvents/{id} {
+      allow read, write: if false;
+    }
+    match /admins/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if false;
+    }
+    match /emailSettings/{id} {
+      allow read, write: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
