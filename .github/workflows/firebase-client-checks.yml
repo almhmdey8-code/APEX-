@@ -7,6 +7,7 @@ on:
       - "functions/**"
       - "index.html"
       - "docs/FIREBASE_NATIVE_IMPLEMENTATION_AR.md"
+      - "docs/FIREBASE_DEPLOYMENT_AR.md"
       - "firestore.rules"
       - "storage.rules"
       - "firebase.json"
