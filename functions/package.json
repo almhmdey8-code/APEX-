@@ -7,7 +7,8 @@
   },
   "scripts": {
     "check": "node --check index.js",
-    "test": "node --test"
+    "test": "node --test test/backend-contract.test.js",
+    "test:emulator": "node --test test/emulator.integration.test.js"
   },
   "dependencies": {
     "firebase-admin": "^13.6.0",
