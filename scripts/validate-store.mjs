@@ -44,7 +44,10 @@ for (const file of pages) {
     if (!target.startsWith(root + path.sep) && target !== root) {
       fail(file + ': local resource escapes repository: ' + ref);
     } else if (!fs.existsSync(target)) {
-      fail(file + ': broken local resource: ' + ref);
+      // Firebase runtime config is intentionally local/ignored: the storefront
+      // must remain deployable before the owner adds the public Web App config.
+      const optionalRuntimeConfig = ref === './firebase/runtime-config.js';
+      if (!optionalRuntimeConfig) fail(file + ': broken local resource: ' + ref);
     }
   }
 
