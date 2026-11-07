@@ -954,11 +954,12 @@ async function openMoreAccount(){$('accountpanel').classList.remove('customer-pr
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode')}
  async function customerSignIn(){
   const identity=$('accountEmail').value.trim(),password=$('accountPassword').value,button=$('accountAuthAction'),msg=$('accountMsg');
-  if(!identity||!password){msg.textContent='أدخل البريد الإلكتروني أو رقم الهاتف وكلمة المرور.';msg.style.color='#ff7777';return}
+  if(!identity||!password){msg.textContent='أدخل البريد الإلكتروني وكلمة المرور.';msg.style.color='#ff7777';return}
+  if(!identity.includes('@')){msg.textContent='تسجيل الدخول الحالي يتم بالبريد الإلكتروني. استخدم بريد الحساب المسجل.';msg.style.color='#ff7777';return}
   button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';msg.textContent='جارٍ التحقق من بياناتك...';msg.style.color='#e9bd55';
   let authenticated=false;
   try{
-   const credentials=identity.includes('@')?{email:identity,password}:{phone:identity,password};
+   const credentials={email:identity.trim().toLowerCase(),password};
    const {data,error}=await supabase.auth.signInWithPassword(credentials);
    if(error){await apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:identity.includes('@')?'email':'phone'});console.error('APEX LOGIN AUTH ERROR:',error);msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
    authenticated=true;
@@ -980,7 +981,7 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
    msg.style.color='#ff7777';
   }finally{button.disabled=false;button.textContent='تسجيل الدخول'}
  }
-async function customerSignInWithGoogle(){const button=document.querySelector('#authLoginFields button[onclick="customerSignInWithGoogle()"]'),msg=$('accountMsg');if(button){button.disabled=true;button.textContent='جارٍ الاتصال بحساب Google…'}try{const {data,error}=await supabase.auth.signInWithGoogle();if(error)throw error;if(data?.session){authenticated=true;await refreshCustomer(data.session);$('accountForm').hidden=true;$('accountData').hidden=false;$('storefrontAuth').hidden=true;$('accountpanel').classList.add('show');showAccountHome()}else if(data?.redirecting){msg.textContent='سيتم تحويلك إلى Google لإكمال تسجيل الدخول.'}}catch(error){msg.textContent='تعذر تسجيل الدخول باستخدام Google: '+(error?.message||'حاول مرة أخرى.');msg.style.color='#ff7777'}finally{if(button){button.disabled=false;button.textContent='G  المتابعة باستخدام Google'}}}
+async function customerSignInWithGoogle(){const button=document.querySelector('#authLoginFields button[onclick="customerSignInWithGoogle()"]'),msg=$('accountMsg');if(button){button.disabled=true;button.textContent='جارٍ الاتصال بحساب Google…'}try{const {data,error}=await supabase.auth.signInWithGoogle();if(error)throw error;if(data?.session){await refreshCustomer(data.session);$('accountForm').hidden=true;$('accountData').hidden=false;$('storefrontAuth').hidden=true;$('accountpanel').classList.add('show');showAccountHome()}else if(data?.redirecting){msg.textContent='سيتم تحويلك إلى Google لإكمال تسجيل الدخول.'}}catch(error){msg.textContent='تعذر تسجيل الدخول باستخدام Google: '+(error?.message||'حاول مرة أخرى.');msg.style.color='#ff7777'}finally{if(button){button.disabled=false;button.textContent='G  المتابعة باستخدام Google'}}}
 let signupEmailVerified='',signupLat=null,signupLng=null;
 function showStoreLogin(){$('accountForm').hidden=false;$('authLoginFields').hidden=false;$('authSignupFields').hidden=true;$('accountMsg').textContent=''}
 function showStoreSignup(){$('accountForm').hidden=false;$('authLoginFields').hidden=true;$('authSignupFields').hidden=false;$('signupStep1').hidden=false;$('signupStep2').hidden=true;$('signupStep3').hidden=true;$('signupEmail').value='';$('signupCode').value='';$('signupReferralCode').value=localStorage.getItem('apex_pending_referral_code')||'';signupEmailVerified='';signupLat=signupLng=null;$('accountMsg').textContent=''}
