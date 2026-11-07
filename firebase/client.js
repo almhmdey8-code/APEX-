@@ -5,7 +5,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/13.2.0/firebase
 import { getStorage } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-storage.js";
 import { getFunctions } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-functions.js";
 
-const REQUIRED_CONFIG = ["apiKey", "authDomain", "projectId", "appId"];
+const REQUIRED_CONFIG = ["apiKey", "authDomain", "projectId", "storageBucket", "appId"];
 const config = globalThis.APEX_FIREBASE_CONFIG;
 
 export function isFirebaseConfigured() {
