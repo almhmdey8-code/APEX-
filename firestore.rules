@@ -34,6 +34,12 @@ service cloud.firestore {
           'uid', 'fullName', 'phone', 'country', 'address', 'latitude',
           'longitude', 'marketingOptIn', 'preferences', 'createdAt', 'updatedAt'
         ]) &&
+        (!('uid' in request.resource.data) || request.resource.data.uid == uid) &&
+        (!('preferences' in request.resource.data) ||
+          (request.resource.data.preferences is map &&
+           request.resource.data.preferences.keys().hasOnly(['language', 'currency']) &&
+           (!('language' in request.resource.data.preferences) || request.resource.data.preferences.language in ['ar', 'en']) &&
+           (!('currency' in request.resource.data.preferences) || request.resource.data.preferences.currency in ['SAR', 'YER']))) &&
         (!('fullName' in request.resource.data) ||
           (request.resource.data.fullName is string && request.resource.data.fullName.size() <= 120)) &&
         (!('phone' in request.resource.data) ||
