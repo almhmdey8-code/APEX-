@@ -230,3 +230,80 @@ export const apexCompleteSignup=onCall({region:REGION,secrets:[SECURITY_HASH_SAL
     throw error;
   }
 });
+
+
+export const apexRequestWalletTopup=onCall({region:REGION},async request=>{
+  const auth=requireUser(request),b=request.data||{},amount=money(Number(b.amount_sar)),methodId=clean(b.payment_method_id,80);
+  if(!Number.isFinite(amount)||amount<=0||!/^\\d+$/.test(methodId)) fail("invalid-argument","أدخل مبلغاً ووسيلة دفع صحيحة.");
+  const method=await db.doc("paymentMethods/"+methodId).get();
+  if(!method.exists||method.get("enabled")!==true||method.get("walletTopupEnabled")!==true||method.get("methodType")!=="manual") fail("failed-precondition","وسيلة شحن المحفظة غير متاحة حالياً.");
+  const ref=db.collection("walletTopups").doc();
+  await ref.set({userId:auth.uid,amountSar:amount,paymentMethodId:methodId,paymentMethodName:clean(method.get("name"),100),paymentInstructions:clean(method.get("instructions"),1500),customerReference:clean(b.customer_reference,160),status:"pending",paymentMethodType:"manual",createdAt:FieldValue.serverTimestamp(),updatedAt:FieldValue.serverTimestamp()});
+  return {success:true,topup_id:ref.id};
+});
+
+export const apexAdminReviewWalletTopup=onCall({region:REGION},async request=>{
+  const admin=await requireAdmin(request),b=request.data||{},id=clean(b.p_topup_id??b.topup_id,100),decision=clean(b.p_decision??b.decision,20),note=clean(b.p_admin_note??b.admin_note,500);
+  if(!id||!["approved","rejected"].includes(decision)) fail("invalid-argument","قرار مراجعة طلب الشحن غير صحيح.");
+  const topupRef=db.doc("walletTopups/"+id);
+  await db.runTransaction(async tx=>{
+    const topup=await tx.get(topupRef);if(!topup.exists)fail("not-found","طلب الشحن غير موجود.");
+    const t=topup.data();if(t.paymentMethodType==="gateway")fail("failed-precondition","لا يعتمد الشحن الإلكتروني يدوياً.");
+    if(t.status!=="pending")fail("failed-precondition","تمت مراجعة طلب الشحن مسبقاً.");
+    const walletRef=db.doc("wallets/"+t.userId),wallet=await tx.get(walletRef);
+    if(decision==="approved"){
+      const amount=money(Number(t.amountSar));if(!Number.isFinite(amount)||amount<=0)fail("failed-precondition","مبلغ الشحن غير صالح.");
+      tx.set(walletRef,{userId:t.userId,balanceSar:money(Number(wallet.get("balanceSar")||0)+amount),updatedAt:FieldValue.serverTimestamp()},{merge:true});
+      const ledger=db.collection("walletTransactions").doc();tx.create(ledger,{userId:t.userId,amountSar:amount,transactionType:"top_up",description:"شحن المحفظة عبر "+clean(t.paymentMethodName,100),referenceType:"wallet_topup",referenceId:id,createdAt:FieldValue.serverTimestamp()});
+    }
+    tx.update(topupRef,{status:decision,adminNote:note||null,reviewedBy:admin.uid,reviewedAt:FieldValue.serverTimestamp(),updatedAt:FieldValue.serverTimestamp()});
+  });
+  return {success:true,status:decision};
+});
+
+export const apexAdminRefundOrderToWallet=onCall({region:REGION},async request=>{
+  const admin=await requireAdmin(request),raw=clean(request.data?.p_order_id??request.data?.order_id,100);
+  if(!raw)fail("invalid-argument","رقم الطلب غير صالح.");
+  let orderRef=db.doc("orders/"+raw),orderSnap=await orderRef.get();
+  if(!orderSnap.exists){const q=await db.collection("orders").where("legacyId","==",Number(raw)).limit(1).get();if(q.empty)fail("not-found","الطلب غير موجود.");orderRef=q.docs[0].ref;orderSnap=q.docs[0];}
+  const refundRef=db.doc("orderRefunds/"+orderRef.id);
+  await db.runTransaction(async tx=>{
+    const [order,refund]=await Promise.all([tx.get(orderRef),tx.get(refundRef)]);
+    if(!order.exists)fail("not-found","الطلب غير موجود.");
+    const o=order.data();if(!o.userId)fail("failed-precondition","الطلب غير مرتبط بحساب عميل.");
+    if(o.paymentStatus!=="paid")fail("failed-precondition","لا يمكن استرداد طلب غير مدفوع.");
+    if(refund.exists)fail("already-exists","تم استرداد هذا الطلب مسبقاً.");
+    const amount=money(Number(o.totalSar));if(!Number.isFinite(amount)||amount<=0)fail("failed-precondition","قيمة الاسترداد غير صالحة.");
+    const walletRef=db.doc("wallets/"+o.userId),wallet=await tx.get(walletRef);
+    tx.create(refundRef,{orderId:orderRef.id,userId:o.userId,amountSar:amount,adminId:admin.uid,reason:clean(request.data?.p_reason??request.data?.reason,500),createdAt:FieldValue.serverTimestamp()});
+    tx.set(walletRef,{userId:o.userId,balanceSar:money(Number(wallet.get("balanceSar")||0)+amount),updatedAt:FieldValue.serverTimestamp()},{merge:true});
+    const ledger=db.collection("walletTransactions").doc();tx.create(ledger,{userId:o.userId,amountSar:amount,transactionType:"refund",description:"استرداد قيمة الطلب #"+raw+" إلى محفظة APEX",referenceType:"order_refund",referenceId:orderRef.id,createdAt:FieldValue.serverTimestamp()});
+    tx.update(orderRef,{paymentStatus:"refunded",status:"cancelled",shippingStatus:"cancelled",updatedAt:FieldValue.serverTimestamp()});
+  });
+  return {ok:true,order_id:raw,payment_status:"refunded",wallet_credited:true};
+});
+
+export const apexClaimReferralCode=onCall({region:REGION},async request=>{
+  const auth=requireUser(request),code=clean(request.data?.p_code??request.data?.code,20).toUpperCase();
+  if(!auth.token.email_verified)fail("failed-precondition","يجب التحقق من الحساب قبل اعتماد الدعوة.");
+  if(!/^APEX[0-9]{4}$/.test(code))fail("invalid-argument","كود الدعوة غير صحيح.");
+  const q=await db.collection("referralCodes").where("code","==",code).limit(1).get();
+  if(q.empty)fail("not-found","كود الدعوة غير موجود.");
+  const referrerId=q.docs[0].get("userId")||q.docs[0].id;
+  if(referrerId===auth.uid)fail("failed-precondition","لا يمكنك استخدام كود الدعوة الخاص بك.");
+  const signupRef=db.doc("referralSignups/"+auth.uid);
+  await db.runTransaction(async tx=>{
+    const prior=await tx.get(signupRef);if(prior.exists)fail("already-exists","تم تسجيل دعوة لهذا الحساب مسبقاً.");
+    tx.create(signupRef,{referrerId,referredUserId:auth.uid,code,status:"confirmed",confirmedAt:FieldValue.serverTimestamp(),createdAt:FieldValue.serverTimestamp()});
+  });
+  return {claimed:true};
+});
+
+export const apexTrackReferralVisit=onCall({region:REGION},async request=>{
+  const code=clean(request.data?.p_code??request.data?.code,20).toUpperCase(),visitor=clean(request.data?.p_visitor_id??request.data?.visitor_id,100);
+  if(!/^APEX[0-9]{4}$/.test(code)||!visitor)return {tracked:false};
+  const q=await db.collection("referralCodes").where("code","==",code).limit(1).get();if(q.empty)return {tracked:false};
+  const id=await sha256(code+":"+visitor),ref=db.doc("referralVisits/"+id);
+  await db.runTransaction(async tx=>{const old=await tx.get(ref);if(!old.exists)tx.create(ref,{code,userId:q.docs[0].get("userId")||q.docs[0].id,landingPath:clean(request.data?.p_landing_path??request.data?.landing_path,200),createdAt:FieldValue.serverTimestamp()});});
+  return {tracked:true};
+});
