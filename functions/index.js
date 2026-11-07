@@ -1,0 +1,183 @@
+import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { defineSecret } from "firebase-functions/params";
+import { logger } from "firebase-functions";
+
+initializeApp();
+const db = getFirestore();
+const REGION = "us-central1";
+const OWNER_EMAIL = "apex.1.shopping@gmail.com";
+const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
+const RESEND_API_KEY = defineSecret("RESEND_API_KEY");
+const SECURITY_HASH_SALT = defineSecret("APEX_SECURITY_HASH_SALT");
+const statusAr = { new:"تم استلام الطلب", confirmed:"تم تأكيد الطلب", processing:"قيد التجهيز", shipped:"تم تسليم الطلب لشركة الشحن", delivered:"تم التسليم", cancelled:"ملغي" };
+const fail = (code, message) => { throw new HttpsError(code, message); };
+const clean = (v, max=500) => String(v ?? "").trim().slice(0,max);
+const money = (v) => Math.round((Number(v) + Number.EPSILON) * 100) / 100;
+const requireUser = (request) => { if (!request.auth?.uid) fail("unauthenticated","يجب تسجيل الدخول أولاً."); return request.auth; };
+async function requireAdmin(request) {
+  const auth = requireUser(request);
+  if (auth.token.admin === true) return auth;
+  const snap = await db.doc("admins/"+auth.uid).get();
+  if (!snap.exists || snap.get("active") !== true) fail("permission-denied","هذه العملية للمدير المعتمد فقط.");
+  if (String(auth.token.email || "").toLowerCase() !== OWNER_EMAIL && snap.get("role") !== "admin") fail("permission-denied","غير مصرح.");
+  await getAuth().setCustomUserClaims(auth.uid,{...auth.token,admin:true});
+  return auth;
+}
+function validItems(raw) {
+  if (!Array.isArray(raw) || raw.length < 1 || raw.length > 40) fail("invalid-argument","السلة غير صالحة.");
+  const grouped = new Map();
+  for (const item of raw) {
+    const id = clean(item?.id ?? item?.product_id,80);
+    const quantity = Number(item?.quantity);
+    if (!/^\d+$/.test(id) || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 20) fail("invalid-argument","قائمة المنتجات غير صالحة؛ الحد الأقصى 20 قطعة لكل منتج.");
+    grouped.set(id,(grouped.get(id)||0)+quantity);
+  }
+  for (const q of grouped.values()) if (q > 20) fail("invalid-argument","الحد الأقصى لكل منتج هو 20 قطعة.");
+  return [...grouped].map(([id,quantity])=>({id,quantity}));
+}
+async function makeOrder(request, walletMode) {
+  const auth=requireUser(request), b=request.data||{};
+  const name=clean(b.customer_name,160), phone=clean(b.phone,40), address=clean(b.address,1000), notes=clean(b.notes,1000), shipping=clean(b.shipping_method||"توصيل إلى المنزل",100);
+  const requestId=clean(b.request_id,64), items=validItems(b.items);
+  if (!name || !phone || !/^[0-9a-f-]{36}$/i.test(requestId)) fail("invalid-argument","بيانات الطلب غير مكتملة.");
+  const paymentId=walletMode ? "wallet" : clean(b.payment_method_id,80);
+  if (!walletMode && !/^\d+$/.test(paymentId)) fail("invalid-argument","وسيلة الدفع غير صالحة.");
+  const idemRef=db.doc("checkoutRequests/"+auth.uid+"_"+requestId);
+  const orderRef=db.collection("orders").doc();
+  const now=FieldValue.serverTimestamp();
+  const productRefs=items.map(x=>db.doc("products/"+x.id));
+  const paymentRef=walletMode?null:db.doc("paymentMethods/"+paymentId);
+  const walletRef=db.doc("wallets/"+auth.uid);
+  let resultOrderId=null;
+  await db.runTransaction(async tx=>{
+    const idem=await tx.get(idemRef);
+    if(idem.exists){resultOrderId=idem.get("orderId");return;}
+    const productSnaps=await tx.getAll(...productRefs);
+    const methodSnap=paymentRef?await tx.get(paymentRef):null;
+    const walletSnap=walletMode?await tx.get(walletRef):null;
+    const lines=[]; let total=0;
+    for(let i=0;i<items.length;i++){
+      const snap=productSnaps[i], item=items[i];
+      if(!snap.exists || snap.get("active")!==true) fail("failed-precondition","أحد المنتجات غير متاح حالياً.");
+      const price=Number(snap.get("price"));
+      if(!Number.isFinite(price)||price<=0) fail("failed-precondition","يوجد منتج بسعر غير صالح.");
+      const line=money(price*item.quantity); total=money(total+line);
+      lines.push({id:Number(item.id),name:clean(snap.get("name"),180),quantity:item.quantity,unit_price_sar:money(price),line_total_sar:line});
+    }
+    if(total<=0) fail("failed-precondition","قيمة الطلب غير صالحة.");
+    if(!walletMode && (!methodSnap?.exists || methodSnap.get("enabled")!==true || methodSnap.get("ordersEnabled")!==true || methodSnap.get("methodType")!=="manual")) fail("failed-precondition","وسيلة الدفع غير متاحة للطلبات.");
+    if(walletMode && Number(walletSnap?.get("balanceSar")||0)<total) fail("failed-precondition","رصيد محفظة APEX غير كافٍ.");
+    const orderId=orderRef.id;
+    const order={
+      userId:auth.uid,customerName:name,phone,address,items:lines,notes:(notes+"\nطريقة الشحن: "+shipping).slice(0,1400),
+      status:"new",totalSar:total,paymentMethod:walletMode?"wallet":clean(methodSnap.get("name"),100),
+      paymentStatus:walletMode?"paid":"pending",shippingStatus:"order_received",customerCurrency:"SAR",
+      checkoutRequestId:requestId,createdAt:now,updatedAt:now
+    };
+    tx.create(orderRef,order);
+    tx.create(idemRef,{orderId,uid:auth.uid,createdAt:now});
+    const historyRef=db.collection("orderStatusHistory").doc();
+    tx.create(historyRef,{orderId,userId:auth.uid,status:"new",note:walletMode?"تم استلام الطلب والدفع من محفظة APEX":"تم استلام الطلب وبانتظار تأكيد الدفع ومراجعة الإدارة",changedBy:auth.uid,createdAt:now});
+    if(walletMode){
+      tx.set(walletRef,{userId:auth.uid,balanceSar:money(Number(walletSnap.get("balanceSar"))-total),updatedAt:now},{merge:true});
+      const ledger=db.collection("walletTransactions").doc();
+      tx.create(ledger,{userId:auth.uid,amountSar:total,transactionType:"purchase",description:"شراء الطلب رقم #"+orderId,referenceType:"order",referenceId:orderId,createdAt:now});
+    }
+    resultOrderId=orderId;
+  });
+  return {success:true,order_id:resultOrderId};
+}
+export const apexCreateOrder=onCall({region:REGION},request=>makeOrder(request,false));
+export const apexWalletCheckout=onCall({region:REGION},request=>makeOrder(request,true));
+
+export const apexAdminCustomers=onCall({region:REGION},async request=>{
+  await requireAdmin(request);
+  const [users,orders]=await Promise.all([getAuth().listUsers(1000),db.collection("orders").limit(5000).get()]);
+  const stats=new Map();
+  for(const doc of orders.docs){const o=doc.data(),uid=o.userId;if(!uid)continue;const s=stats.get(uid)||{accepted:0,rejected:0,pending:0,total:0,orderName:"",orderPhone:""};s.total++;if(["confirmed","processing","shipped","delivered"].includes(o.status))s.accepted++;else if(o.status==="cancelled")s.rejected++;else s.pending++;s.orderName ||= o.customerName||"";s.orderPhone ||= o.phone||"";stats.set(uid,s);}
+  const customers=users.users.map(u=>{const s=stats.get(u.uid)||{accepted:0,rejected:0,pending:0,total:0,orderName:"",orderPhone:""};const p=u.customClaims||{};return {id:u.uid,name:clean(u.displayName||s.orderName||"عميل APEX",120),email:u.email||"",phone:clean(s.orderPhone,40),accepted_orders:s.accepted,rejected_orders:s.rejected,pending_orders:s.pending,total_orders:s.total,admin:p.admin===true};}).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+  return {customers};
+});
+
+export const apexAiGuard=onCall({region:REGION,secrets:[RESEND_API_KEY,SECURITY_HASH_SALT]},async request=>{
+  const b=request.data||{},eventType=clean(b.event_type||"event",60);
+  const allowed=new Set(["login_success","login_failed","signup_attempt","duplicate_account","suspicious_activity","access_denied","rate_limited"]);
+  if(b.action==="send_report"){
+    await requireAdmin(request);
+    const hours=Math.max(1,Math.min(168,Number(b.hours)||24)),since=Date.now()-hours*3600000;
+    const snap=await db.collection("securityEvents").where("createdAtMs",">=",since).orderBy("createdAtMs","desc").limit(500).get();
+    const counts={};for(const d of snap.docs){const t=d.get("eventType");counts[t]=(counts[t]||0)+1;}
+    const status=await sendAdminMail("APEX AI GUARD — التقرير الأمني", "إجمالي الأحداث: "+snap.size+"\n"+Object.entries(counts).map(([k,v])=>k+": "+v).join("\n"));
+    return {total_events:snap.size,counts,email_status:status};
+  }
+  if(!allowed.has(eventType)) fail("invalid-argument","نوع الحدث غير مسموح.");
+  const rawIp=request.rawRequest?.ip||"unknown";
+  const salt=SECURITY_HASH_SALT.value()||"apex-security-v1";
+  const ipHash=await sha256(rawIp+salt);
+  const recent=await db.collection("securityEvents").where("ipHash","==",ipHash).where("createdAtMs",">=",Date.now()-60000).limit(20).get();
+  if(recent.size>=20) fail("resource-exhausted","محاولات كثيرة؛ حاول لاحقاً.");
+  const severity={login_success:"info",signup_attempt:"info",login_failed:"warning",duplicate_account:"high",suspicious_activity:"high",access_denied:"warning",rate_limited:"high"}[eventType];
+  const email=clean(b.email,254).toLowerCase();
+  await db.collection("securityEvents").add({eventType,severity,uid:request.auth?.uid||null,emailHash:email?await sha256(email):null,ipHash,userAgent:clean(request.rawRequest?.get("user-agent"),300),source:clean(b.source||"storefront",40),details:safeDetails(b.details),createdAt:FieldValue.serverTimestamp(),createdAtMs:Date.now()});
+  let alert_status="not_required";
+  if(["high","critical"].includes(severity)) alert_status=await sendAdminMail("تنبيه أمني عاجل — APEX AI GUARD","تم رصد حدث أمني: "+eventType+"\nدرجة الخطورة: "+severity);
+  return {accepted:true,alert_status};
+});
+
+export const apexEmailCampaign=onCall({region:REGION,secrets:[RESEND_API_KEY]},async request=>{
+  const auth=await requireAdmin(request);
+  if(String(auth.token.email||"").toLowerCase()!==OWNER_EMAIL) fail("permission-denied","غير مصرح.");
+  const settings=await db.doc("emailSettings/main").get();
+  if(settings.exists && settings.get("marketingCampaignsEnabled")!==true) return {email_status:"disabled"};
+  const b=request.data||{};
+  if(b.action!=="send_campaign") fail("invalid-argument","عملية غير مدعومة.");
+  const subject=clean(b.subject,150),title=clean(b.title,180),content=clean(b.content,5000),image=clean(b.image_url,2000),link=clean(b.link_url,2000);
+  if(!subject||!title||!content) fail("invalid-argument","أكمل بيانات الحملة.");
+  if((image&&!/^https:\/\//i.test(image))||(link&&!/^https:\/\//i.test(link))) fail("invalid-argument","رابط غير آمن.");
+  const key=RESEND_API_KEY.value();if(!key)return {email_status:"not_configured"};
+  const recipients=[];let token;
+  do{const page=await getAuth().listUsers(1000,token);for(const u of page.users){const c=await db.doc("customers/"+u.uid).get();if(u.email&&u.emailVerified&&c.get("marketingOptIn")===true)recipients.push(u.email);}token=page.pageToken;}while(token&&recipients.length<10000);
+  let sent=0,failed=0;
+  const html='<div dir="rtl" style="font-family:Tahoma,Arial;background:#080b09;color:#f8f2df;padding:24px"><div style="max-width:620px;margin:auto;background:#101612;border:1px solid #b78b35;border-radius:18px;padding:22px"><b style="color:#e9bd55">APEX 👑</b><h1 style="color:#f5d879">'+esc(title)+'</h1>'+(image?'<img src="'+esc(image)+'" alt="" style="width:100%;border-radius:12px">':'')+'<p style="white-space:pre-wrap;line-height:1.9">'+esc(content)+'</p>'+(link?'<p><a href="'+esc(link)+'">اكتشف العرض</a></p>':'')+'<hr><small>وصلتك الرسالة لأنك وافقت على استقبال عروض APEX.</small></div></div>';
+  for(const to of recipients){const res=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.APEX_REPORT_FROM||"APEX <onboarding@resend.dev>",to:[to],subject,html})});if(res.ok)sent++;else failed++;}
+  return {email_status:"sent",sent,failed,total:recipients.length};
+});
+
+export const apexStoreAssistant=onCall({region:REGION,secrets:[OPENAI_API_KEY]},async request=>{
+  const auth=requireUser(request),b=request.data||{},messages=b.messages;
+  if(!Array.isArray(messages)||messages.length<1||messages.length>12) fail("invalid-argument","الرسائل غير صالحة.");
+  const cleanMessages=messages.map(m=>{if(!m||!["user","assistant"].includes(m.role)||typeof m.content!=="string"||m.content.length<1||m.content.length>1500)fail("invalid-argument","إحدى الرسائل غير صالحة.");return {role:m.role,content:m.content};});
+  if(cleanMessages.at(-1).role!=="user")fail("invalid-argument","آخر رسالة يجب أن تكون من العميل.");
+  const [products,payments,settings]=await Promise.all([
+    db.collection("products").where("active","==",true).limit(40).get(),
+    db.collection("paymentMethods").where("enabled","==",true).where("ordersEnabled","==",true).limit(30).get(),
+    db.doc("storeSettings/currency").get()
+  ]);
+  const country=String((await db.doc("customers/"+auth.uid).get()).get("country")||"SA");
+  const catalog=products.docs.map(d=>{const p=d.data();return {name:p.name,category:p.category,description:clean(p.description,240),price_sar:p.price,stock:p.stock,availability:Number(p.stock||0)>0?"متوفر":"غير متوفر"};});
+  const methods=payments.docs.map(d=>{const p=d.data();return {name:p.name,instructions:p.instructions,type:p.methodType,country:p.countryCode};}).filter(p=>!p.country||p.country==="ALL"||p.country===country);
+  let orderContext=null;
+  const match=[...cleanMessages].reverse().find(m=>m.role==="user")?.content.match(/(?:رقم\s*(?:الطلب|طلب)|طلب\s*رقم|الطلب\s*(?:رقمه|رقم)?|طلب\s*#)\s*[:：#-]?\s*(\d{1,30})/i);
+  if(match){const q=await db.collection("orders").where("userId","==",auth.uid).where("legacyId","==",Number(match[1])).limit(1).get();if(!q.empty){const o=q.docs[0].data();orderContext={id:q.docs[0].id,status:o.status,status_ar:statusAr[o.status]||o.status,total_sar:o.totalSar,payment_status:o.paymentStatus,shipping_status:o.shippingStatus,items:o.items};}else orderContext={requested_order_id:match[1],found:false};}
+  const apiKey=OPENAI_API_KEY.value();if(!apiKey)fail("unavailable","مساعد APEX غير مهيأ بعد.");
+  const system="أنت مساعد خدمة العملاء الرسمي لمتجر APEX فقط. أجب بالعربية الواضحة. النطاق: منتجات APEX وأسعارها ومخزونها والحساب والسلة والشراء والدفع والشحن ومتابعة طلبات العميل. استخدم بيانات المتجر والطلب المرفقة فقط ولا تخترع سعراً أو مخزوناً أو سياسة أو حالة طلب. لا تكشف أي طلب لا يخص المستخدم الحالي، ولا تطلب كلمة مرور أو رمز تحقق أو بيانات بطاقة. إذا كان السؤال خارج نطاق المتجر فاعتذر باختصار. إذا لم تتوفر المعلومة فقل ذلك ووجّه للبريد apex.1.shopping@gmail.com. أضف [[APEX_HANDOFF]] عند طلب موظف.";
+  const payload=[{role:"developer",content:system+"\nبيانات المتجر: "+JSON.stringify({country,products:catalog,payment_methods:methods,currency:settings.exists?settings.data():null,order:orderContext})},...cleanMessages.slice(-8)];
+  const response=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{Authorization:"Bearer "+apiKey,"Content-Type":"application/json"},signal:AbortSignal.timeout(30000),body:JSON.stringify({model:"gpt-6.1-sol",input:payload,max_output_tokens:500})});
+  const data=await response.json().catch(()=>({}));if(!response.ok){logger.error("APEX assistant provider error",response.status,data?.error?.code);fail("unavailable","تعذر تشغيل المساعد حالياً.");}
+  let reply=data.output_text||data.output?.flatMap(x=>x.content||[]).filter(x=>x.type==="output_text").map(x=>x.text).join("\n")||"";
+  if(!reply.trim())fail("unavailable","لم يصل رد من المساعد.");
+  const handoff=reply.includes("[[APEX_HANDOFF]]");reply=reply.replace(/\s*\[\[APEX_HANDOFF\]\]\s*/g,"").trim();
+  return {reply,handoff};
+});
+
+async function sendAdminMail(subject,textBody){
+  const key=RESEND_API_KEY.value();if(!key)return "not_configured";
+  const response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from:"APEX Security <onboarding@resend.dev>",to:[OWNER_EMAIL],subject,text:textBody})});
+  return response.ok?"sent":"failed";
+}
+async function sha256(value){const bytes=new TextEncoder().encode(value);const hash=await crypto.subtle.digest("SHA-256",bytes);return [...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+function safeDetails(raw){const out={};if(raw&&typeof raw==="object")for(const key of ["reason","screen","method","attempt","code"])if(raw[key]!==undefined)out[key]=clean(raw[key],120);return out;}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
