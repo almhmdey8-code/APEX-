@@ -309,3 +309,11 @@ export const apexTrackReferralVisit=onCall({region:REGION},async request=>{
   await db.runTransaction(async tx=>{const old=await tx.get(ref);if(!old.exists)tx.create(ref,{code,userId:q.docs[0].get("userId")||q.docs[0].id,landingPath:clean(request.data?.p_landing_path??request.data?.landing_path,200),createdAt:FieldValue.serverTimestamp()});});
   return {tracked:true};
 });
+
+
+export const apexGetPublicPaymentMethods=onCall({region:REGION},async ()=>{
+  const snap=await db.collection("paymentMethods").where("enabled","==",true).where("ordersEnabled","==",true).orderBy("sortOrder","asc").get();
+  const allowed=["legacyId","name","instructions","methodType","countryCode","accountHolder","accountNumber","accountIban","sortOrder","enabled","ordersEnabled","walletTopupEnabled","methodCode"];
+  const paymentMethods=snap.docs.map(d=>{const row=d.data();return {id:row.legacyId??(Number.isNaN(Number(d.id))?d.id:Number(d.id)),...Object.fromEntries(allowed.filter(k=>Object.hasOwn(row,k)).map(k=>[k,row[k]]))};}).filter(row=>row.methodType==="manual");
+  return {paymentMethods};
+});
