@@ -56,4 +56,4 @@ jobs:
       - name: Validate Firestore and Storage rules with emulators
         run: |
           npm install --global firebase-tools
-          firebase emulators:exec --project apex-3c12f-ci --only auth,functions,firestore,storage "echo Firebase rules loaded"
+          firebase emulators:exec --project apex-3c12f-ci --only auth,functions,firestore,storage "cd functions && npm run test:emulator"
