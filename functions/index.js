@@ -238,7 +238,7 @@ export const apexCompleteSignup=onCall({region:REGION,secrets:[SECURITY_HASH_SAL
 
 export const apexRequestWalletTopup=onCall({region:REGION},async request=>{
   const auth=requireUser(request),b=request.data||{},amount=money(Number(b.p_amount_sar??b.amount_sar)),methodId=clean(b.p_payment_method_id??b.payment_method_id,80);
-  if(!Number.isFinite(amount)||amount<=0||!/^\\d+$/.test(methodId)) fail("invalid-argument","أدخل مبلغاً ووسيلة دفع صحيحة.");
+  if(!Number.isFinite(amount)||amount<=0||!Number.isSafeInteger(Number(methodId))||Number(methodId)<=0) fail("invalid-argument","أدخل مبلغاً ووسيلة دفع صحيحة.");
   const method=await db.doc("paymentMethods/"+methodId).get();
   if(!method.exists||method.get("enabled")!==true||method.get("walletTopupEnabled")!==true||method.get("methodType")!=="manual") fail("failed-precondition","وسيلة شحن المحفظة غير متاحة حالياً.");
   const ref=db.collection("walletTopups").doc();
