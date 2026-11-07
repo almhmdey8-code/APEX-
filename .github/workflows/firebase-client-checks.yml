@@ -28,9 +28,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check Firebase client modules
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Check Firebase client modules and config
         run: |
           node --check firebase/client.js
           node --check firebase/auth.js
           node --check firebase/data.js
           node --check firebase/runtime-config.example.js
+          node -e "JSON.parse(require('fs').readFileSync('firebase.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json','utf8'))"
+      - name: Validate Firestore and Storage rules with emulators
+        run: |
+          npm install --global firebase-tools
+          firebase emulators:exec --project apex-3c12f-ci --only firestore,storage "echo Firebase rules loaded"
