@@ -673,15 +673,25 @@ let paymentsCache=[];
 function buildAdminSectionCards(panelId){
  if(panelId==='adm_payments')return;
  const panel=$(panelId);if(!panel||panel.dataset.cardsReady==='1')return;
- const labels={adm_productlist:'قائمة المنتجات',adm_orderlist:'قائمة الطلبات',adm_customer_list:'سجل العملاء',adm_wallet_topup_list:'طلبات شحن المحفظة',adm_shiplist:'شركات الشحن',adm_security_events:'سجل الحماية'};
+ const labels={
+  adm_products:['إضافة وتعديل المنتجات','قائمة المنتجات'],
+  adm_banners:['إعداد البنر الرئيسي','قائمة البنرات'],
+  adm_orders:['طلبات العملاء'],
+  adm_customers:['دليل العملاء','استعادة كلمة المرور'],
+  adm_currency:['إعداد سعر الصرف'],
+  adm_wallet_topups:['طلبات شحن المحفظة'],
+  adm_shipping:['إعداد شركات الشحن'],
+  adm_marketing:['إعدادات الإرسال الآلي','إنشاء وإرسال حملة'],
+  adm_security:['أدوات الحماية والتقارير','مؤشرات الأمان','سجل الأحداث الأمنية']
+ };
  const items=Array.from(panel.children).filter(el=>{
   if(el.matches('h1,h2,h3,h4,p,script,style,button'))return false;
   if(el.classList?.contains('admin-section-accordion'))return false;
   return el.classList?.contains('item')||el.tagName==='DIV'||el.tagName==='SECTION'||el.tagName==='FORM';
  });
  items.forEach((item,index)=>{
-  const heading=item.querySelector('h2,h3,h4');
-  const label=(heading?.textContent||labels[item.id]||item.querySelector('label')?.textContent||('إعدادات القسم '+(index+1))).trim();
+  const heading=item.querySelector(':scope > h2,:scope > h3,:scope > h4')||item.querySelector('h2,h3,h4');
+  const label=(heading?.textContent||labels[panelId]?.[index]||item.querySelector('label')?.textContent||('إعدادات القسم '+(index+1))).trim();
   const details=document.createElement('details');details.className='admin-section-accordion';
   const summary=document.createElement('summary');summary.textContent=label;
   const body=document.createElement('div');body.className='admin-section-accordion-body';
@@ -738,9 +748,7 @@ async function loadPayments(){
  $('adm_paymentlist').querySelectorAll('[data-pe]').forEach(x=>x.onclick=()=>openPaymentEditor(x.dataset.pe,x.dataset.pnew,x.dataset.country));
  $('adm_paymentlist').querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>togglePayment(Number(x.dataset.pt),x.dataset.enabled==='true'));
  $('adm_paymentlist').querySelectorAll('[data-pclear]').forEach(x=>x.onclick=()=>clearPaymentData(Number(x.dataset.pclear)));
-
- $('adm_paymentlist').querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>togglePayment(Number(x.dataset.pt),x.dataset.enabled==='true'));
- $('adm_paymentlist').querySelectorAll('[data-pclear]').forEach(x=>x.onclick=()=>clearPaymentData(Number(x.dataset.pclear)));
+ selectPaymentCountry('YE');
 }
 async function togglePayment(id,currentlyEnabled){
  const p=paymentsCache.find(x=>Number(x.id)===id);if(!p)return;
