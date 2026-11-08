@@ -1431,4 +1431,50 @@ loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
 </script>
 
 
+<style id="apex-interface-upgrade-nov2026">
+/* APEX storefront experience refinement */
+:root{--apex-gold:#f2cf78;--apex-glass:rgba(18,21,16,.82)}
+body{background-color:#070806}
+.topbar{height:76px;background:rgba(5,8,6,.86);border-bottom:1px solid rgba(242,207,120,.38);box-shadow:0 8px 30px #0008}
+.hero{min-height:500px;background-position:center 45%;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(3,6,4,.22),rgba(3,6,4,.84) 62%),radial-gradient(ellipse at 20% 60%,rgba(13,204,164,.16),transparent 42%)}
+.heroart{animation:apexFloat 6s ease-in-out infinite}
+@keyframes apexFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.feature,.product,.about,.store-banner{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.feature{min-height:112px;display:flex;flex-direction:column;justify-content:center;border-radius:18px}
+.products{gap:20px}
+.product{padding:11px;border-radius:20px;display:flex;flex-direction:column;min-width:0}
+.product img{height:210px;transition:transform .35s ease,filter .35s ease}
+.product:hover img{transform:scale(1.035);filter:saturate(1.12)}
+.product h3{font-size:15px;line-height:1.7;min-height:48px}
+.product p{line-height:1.8}
+.productfoot{margin-top:auto}
+.add,.goldbtn,.goldbtn:focus-visible{min-height:42px}
+.toolbar{padding:13px;border:1px solid rgba(242,207,120,.28);border-radius:18px;background:rgba(12,16,12,.68);backdrop-filter:blur(12px)}
+.toolbar input,.toolbar select,.toolbar button{min-height:44px}
+.categories{gap:9px}
+.cat{min-height:42px;transition:.2s}
+.cat:focus-visible,.add:focus-visible,button:focus-visible{outline:2px solid #fff0b8;outline-offset:3px}
+.product-detail-panel{width:min(900px,100%);max-height:92vh;overflow:auto;border:1px solid rgba(242,207,120,.72);border-radius:26px;background:linear-gradient(145deg,#171b14,#080b08);box-shadow:0 25px 90px #000d}
+.detail-gallery img{border-radius:18px}
+.account-shell{width:min(760px,100%);max-height:94vh;border-radius:26px;background:linear-gradient(145deg,#151a13,#070a08);border:1px solid rgba(242,207,120,.72);box-shadow:0 24px 80px #000d}
+.account-head{position:sticky;top:0;z-index:3;background:rgba(8,11,8,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(242,207,120,.25)}
+.account-content{padding:clamp(12px,3vw,24px)}
+.user-diamond-hero{border-radius:22px;overflow:hidden}
+.user-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.user-shortcuts button{min-height:90px;border:1px solid rgba(242,207,120,.45);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(8,13,9,.85));color:#f8e7b8;box-shadow:inset 0 1px #ffffff12,0 8px 20px #0005;transition:.2s}
+.user-shortcuts button:hover{transform:translateY(-2px);border-color:#f2cf78}
+.account-panel-card{padding:18px;border:1px solid rgba(242,207,120,.42);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(8,12,9,.82));box-shadow:0 10px 28px #0005}
+.account-panel-card input,.account-panel-card select,.account-panel-card textarea,.account-shell input,.account-shell select,.account-shell textarea{width:100%;min-height:46px;padding:12px 14px;border:1px solid rgba(220,180,94,.48);border-radius:12px;background:#080d09;color:#fff;font:inherit}
+.account-panel-card input:focus,.account-panel-card select:focus,.account-panel-card textarea:focus{outline:2px solid rgba(242,207,120,.35);border-color:#f2cf78}
+.cartbox .goldbtn{width:100%;border-radius:12px}
+.cartrow{align-items:center;gap:14px}
+.luxury-toast{max-width:calc(100vw - 28px);text-align:center}
+footer{padding-bottom:105px}
+.apex-mobile-dock{background:rgba(7,10,8,.94);border-top:1px solid rgba(242,207,120,.5);backdrop-filter:blur(18px);box-shadow:0 -10px 30px #0008}
+.apex-mobile-dock button{min-height:62px}
+@media(max-width:800px){.hero{min-height:470px}.heroart{font-size:112px}.products{gap:12px}.product img{height:170px}.features{padding-top:16px}.user-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.topbar{height:66px}.hero{min-height:430px;padding:24px 14px}.heroart{font-size:94px}.herotext h1{font-size:30px}.features{gap:8px}.feature{padding:13px 7px;min-height:94px}.feature b{font-size:23px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:7px;border-radius:15px}.product img{height:132px;border-radius:11px}.product h3{font-size:13px;min-height:43px}.product p{font-size:11px;min-height:36px}.productfoot{align-items:flex-start;flex-direction:column}.add{width:100%}.toolbar{gap:8px;padding:9px}.toolbar>*{flex:1 1 100%;min-width:0}.cat{padding:8px 13px;font-size:13px}.account-shell{max-height:96vh;margin:5px 0}.account-content{padding:10px}.user-shortcuts button{min-height:78px}.account-panel-card{padding:13px}}
+@media(prefers-reduced-motion:reduce){.heroart{animation:none}.product,.product img,.user-shortcuts button{transition:none}}
+</style>
 </body></html>
