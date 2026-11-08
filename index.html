@@ -1201,7 +1201,7 @@ async function refreshCustomer(session){
  const isStoreAdmin=signedEmail==='apex.1.shopping@gmail.com';
  if(isStoreAdmin){
   $('accountAuth').hidden=false;$('accountData').hidden=true;$('storefrontAuth').hidden=false;$('account-entry').hidden=false;
-  $('accountForm').hidden=true;
+  $('accountForm').hidden=false;$('authLoginFields').hidden=true;$('authSignupFields').hidden=true;
   $('accountMsg').textContent='هذا حساب إدارة المتجر، ولا يُستخدم كحساب عميل. سجّل الدخول ببريد العميل لعرض بياناته وطلباته.';
   $('accountDisplayEmail').textContent='';$('profileCurrentEmail').textContent='';
   $('myOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">سجّل الدخول بحساب العميل لعرض طلباتك.</p>';
