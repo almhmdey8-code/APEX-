@@ -267,7 +267,82 @@ body{background:radial-gradient(ellipse at 80% -5%,rgba(183,137,48,.19),transpar
  #adminWorkspace .kpi b{font-size:26px!important}
 }
 @media(prefers-reduced-motion:reduce){#adminWorkspace *,#adminWorkspace *:before,#adminWorkspace *:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
-</style><style id="apex-admin-overview-upgrade">#adminWorkspace .admin-overview{margin:12px 0;padding:16px;border:1px solid #a9843d;border-radius:16px;background:linear-gradient(145deg,#15180f,#090c09)}#adminWorkspace .admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}#adminWorkspace .admin-metrics article{padding:13px;border:1px solid #79602f;border-radius:12px;background:#17150e}#adminWorkspace .admin-metrics span{display:block;color:#cfc3a2;font-size:12px}#adminWorkspace .admin-metrics b{display:block;color:#ffe2a0;font-size:24px;margin-top:6px}#adminWorkspace .admin-overview-bottom{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:13px}#adminWorkspace .admin-overview-bottom>div{padding:12px;border:1px solid #554322;border-radius:12px;background:#090d0a;min-width:0}#adminWorkspace .admin-overview-bottom h3{margin:0 0 8px;color:#f4d78e;font-size:14px}#adminWorkspace .admin-overview-bottom p{margin:6px 0;padding-bottom:6px;border-bottom:1px solid #ffffff12;color:#d4c9ac;font-size:12px;overflow-wrap:anywhere}#adminWorkspace #adm_overview_updated{font-size:11px}@media(max-width:650px){#adminWorkspace .admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .admin-overview-bottom{grid-template-columns:1fr}}</style></head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
+</style><style id="apex-admin-overview-upgrade">#adminWorkspace .admin-overview{margin:12px 0;padding:16px;border:1px solid #a9843d;border-radius:16px;background:linear-gradient(145deg,#15180f,#090c09)}#adminWorkspace .admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}#adminWorkspace .admin-metrics article{padding:13px;border:1px solid #79602f;border-radius:12px;background:#17150e}#adminWorkspace .admin-metrics span{display:block;color:#cfc3a2;font-size:12px}#adminWorkspace .admin-metrics b{display:block;color:#ffe2a0;font-size:24px;margin-top:6px}#adminWorkspace .admin-overview-bottom{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:13px}#adminWorkspace .admin-overview-bottom>div{padding:12px;border:1px solid #554322;border-radius:12px;background:#090d0a;min-width:0}#adminWorkspace .admin-overview-bottom h3{margin:0 0 8px;color:#f4d78e;font-size:14px}#adminWorkspace .admin-overview-bottom p{margin:6px 0;padding-bottom:6px;border-bottom:1px solid #ffffff12;color:#d4c9ac;font-size:12px;overflow-wrap:anywhere}#adminWorkspace #adm_overview_updated{font-size:11px}@media(max-width:650px){#adminWorkspace .admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#adminWorkspace .admin-overview-bottom{grid-template-columns:1fr}}</style><style id="apex-admin-services-grid-v2">
+/* APEX admin services: compact square dashboard tiles */
+#adminWorkspace .tabs{
+ display:grid!important;
+ grid-template-columns:repeat(5,minmax(0,1fr))!important;
+ grid-auto-rows:1fr;
+ gap:12px!important;
+ padding:16px!important;
+ margin:18px 0!important;
+ overflow:visible!important;
+}
+#adminWorkspace .tabs button{
+ flex:none!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:104px!important;
+ aspect-ratio:1.18/1;
+ padding:13px 8px!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:9px!important;
+ white-space:normal!important;
+ overflow-wrap:anywhere;
+ text-align:center!important;
+ line-height:1.5!important;
+ font-size:12px!important;
+ border-radius:15px!important;
+ background:linear-gradient(145deg,#182019,#0c100d)!important;
+ border:1px solid #806a3e!important;
+ box-shadow:inset 0 1px #ffffff0c,0 5px 14px #0005!important;
+ transition:transform .18s,border-color .18s,background .18s!important;
+}
+#adminWorkspace .tabs button:before{
+ content:"✦";
+ display:grid;
+ place-items:center;
+ width:31px;
+ height:31px;
+ border-radius:10px;
+ color:#f0d58f;
+ background:#d5b46b14;
+ border:1px solid #b18d4a66;
+ font-size:17px;
+ line-height:1;
+}
+#adminWorkspace .tabs button[data-tab="products"]:before{content:"▦"}
+#adminWorkspace .tabs button[data-tab="banners"]:before{content:"▣"}
+#adminWorkspace .tabs button[data-tab="payments"]:before{content:"◈"}
+#adminWorkspace .tabs button[data-tab="orders"]:before{content:"▤"}
+#adminWorkspace .tabs button[data-tab="customers"]:before{content:"♙"}
+#adminWorkspace .tabs button[data-tab="currency"]:before{content:"﷼"}
+#adminWorkspace .tabs button[data-tab="wallet_topups"]:before{content:"▣"}
+#adminWorkspace .tabs button[data-tab="shipping"]:before{content:"➤"}
+#adminWorkspace .tabs button[data-tab="marketing"]:before{content:"✉"}
+#adminWorkspace .tabs button[data-tab="security"]:before{content:"⬡"}
+#adminWorkspace .tabs button:hover{transform:translateY(-3px)!important;border-color:#e0c27b!important}
+#adminWorkspace .tabs button[aria-pressed="true"]{
+ color:#1a1308!important;
+ background:linear-gradient(145deg,#f1d88e,#b88735)!important;
+ border-color:#ffe6a2!important;
+ box-shadow:0 8px 20px #b78b3533,inset 0 1px #fff8!important;
+}
+#adminWorkspace .tabs button[aria-pressed="true"]:before{
+ color:#211707;background:#fff4d544;border-color:#fff0c5;
+}
+@media(max-width:900px){#adminWorkspace .tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:600px){
+ #adminWorkspace .tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;padding:10px!important}
+ #adminWorkspace .tabs button{min-height:91px!important;aspect-ratio:1/1!important;padding:8px 5px!important;font-size:10px!important;gap:6px!important}
+ #adminWorkspace .tabs button:before{width:27px;height:27px;font-size:15px}
+}
+@media(max-width:360px){#adminWorkspace .tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+</head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button><p id="adm_who" class="muted admin-login-status" aria-live="polite"></p></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" placeholder="بريد المدير المعتمد" autocomplete="username" value=""><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
 <section id="adm_dashboard" class="apex-admin-hidden">
