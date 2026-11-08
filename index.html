@@ -927,7 +927,7 @@ async function loadStoreProducts(){
  }).join('');
  box.querySelectorAll('[data-add-id]').forEach(b=>b.addEventListener('click',()=>add(Number(b.dataset.addId),b.dataset.addName,Number(b.dataset.addPrice))));
  box.querySelectorAll('[data-detail-id]').forEach(b=>b.addEventListener('click',()=>openProductDetail(b.dataset.detailId)));
- box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');}));
+ box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');if($('showFavorites')?.dataset.only==='1')filterProducts();}));
  box.querySelectorAll('[data-product-image]').forEach(b=>b.addEventListener('click',()=>{
   const gallery=b.closest('.product-gallery'),main=gallery?.querySelector('.product-main-image');if(!main)return;
   main.src=b.dataset.productImage;gallery.querySelectorAll('.product-thumb').forEach(x=>x.classList.toggle('active',x===b));
