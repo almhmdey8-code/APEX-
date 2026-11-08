@@ -988,4 +988,29 @@ checkSession();
 }
 </style>
 
+<style id="apex-admin-interface-refinement">
+#adminWorkspace{background:radial-gradient(ellipse at 50% 0,rgba(117,79,20,.22),transparent 42%),#070806!important}
+#adminWorkspace .wrap{max-width:1540px!important}
+#adminWorkspace .head{border-bottom:1px solid rgba(242,207,120,.3)!important}
+#adminWorkspace .kpi,#adminWorkspace .quick-card,#adminWorkspace .panel,#adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders,#adminWorkspace #adm_customers{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#adminWorkspace .quick-card{min-height:145px;height:auto;border-radius:20px!important;transition:transform .2s,border-color .2s,box-shadow .2s}
+#adminWorkspace .quick-card:focus-visible,#adminWorkspace .tabs button:focus-visible{outline:2px solid #fff0b8;outline-offset:3px}
+#adminWorkspace .tabs{position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}
+#adminWorkspace .panel,#adminWorkspace .item{box-shadow:inset 0 1px rgba(255,255,255,.045),0 10px 26px rgba(0,0,0,.24)}
+#adminWorkspace .field,#adminWorkspace input,#adminWorkspace select,#adminWorkspace textarea{min-height:46px;padding:12px 14px;color:#fff;font:inherit}
+#adminWorkspace textarea{min-height:110px;resize:vertical}
+#adminWorkspace .btn,#adminWorkspace .btn2{min-height:43px;border-radius:12px}
+#adminWorkspace .payment-country-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+#adminWorkspace .payment-country-panel{min-width:0;padding:16px;border:1px solid rgba(229,190,111,.4);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(8,12,9,.72))}
+#adminWorkspace .payment-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+#adminWorkspace .payment-card{width:100%;min-width:0;border-radius:16px;overflow-wrap:anywhere}
+#adminWorkspace .payment-card-actions{display:flex;flex-wrap:wrap;gap:8px}
+#adminWorkspace .payment-card-actions button{min-width:0;flex:1 1 110px}
+#adminWorkspace .grid{align-items:start}
+#adminWorkspace .item{overflow-wrap:anywhere}
+#adminWorkspace .tablewrap{border:1px solid rgba(229,190,111,.25);border-radius:14px}
+@media(max-width:760px){#adminWorkspace .payment-country-layout{grid-template-columns:1fr}#adminWorkspace .tabs{top:0}#adminWorkspace .panel{margin:12px 0}}
+@media(max-width:520px){#adminWorkspace .wrap{padding:0 10px 24px!important}#adminWorkspace .quick-card{min-height:112px;height:auto}#adminWorkspace .payment-card{padding:14px}#adminWorkspace .payment-card-actions{flex-direction:column}#adminWorkspace .payment-card-actions button{width:100%;flex:1 1 auto}#adminWorkspace td,#adminWorkspace th{padding:8px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){#adminWorkspace .quick-card{transition:none}}
+</style>
 </body></html>
