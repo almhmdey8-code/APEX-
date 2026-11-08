@@ -73,6 +73,40 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 .account-back-button:active{transform:scale(.97);background:linear-gradient(120deg,#956214,#f5d879);color:#171006}
 
 .apex-about-full{text-align:right;color:#e8e2d2;line-height:1.95;font-size:14px}.apex-about-full h2{color:#ffe8a0;font-size:16px;text-align:center;line-height:1.5;margin:7px 0 11px}.apex-about-full h3{color:#f3cf72;font-size:17px;margin:23px 0 8px;padding-bottom:6px;border-bottom:1px solid #8e6d2e}.apex-about-full p{color:#d8d2c4;margin:9px 0}.apex-about-full ul{padding-right:23px;margin:8px 0}.apex-about-full li{padding:3px 0;color:#e8e2d2}.apex-about-full .apex-about-signoff{text-align:center;color:#ffe8a0;font-size:13px;line-height:1.6;margin-top:20px;padding:13px 8px;border:1px solid #8e6d2e;border-radius:12px;background:linear-gradient(120deg,#211707,#090908)}.apex-about-full .apex-about-signoff strong{font-size:13px}
+ 
+/* APEX flagship storefront refresh */
+.topbar.apex-topbar{height:78px;padding-inline:clamp(12px,3.5vw,52px);background:linear-gradient(180deg,rgba(10,10,8,.98),rgba(5,6,5,.91));border-bottom:1px solid rgba(245,211,125,.5);box-shadow:0 10px 35px #0008}
+.topbar .brand{font-family:Georgia,serif;font-size:clamp(27px,4.5vw,43px);letter-spacing:4px}
+.topbar .brand small{display:block;font:700 8px/1.4 Tahoma,Arial;letter-spacing:3px;text-align:center;color:#c9aa61}
+.apex-head-actions .iconbtn,.apex-cart-button{border-radius:15px;background:linear-gradient(145deg,#19160e,#090a08);color:#f7df9a;border:1px solid #b9954b;box-shadow:inset 0 1px #fff2,0 6px 18px #0008}
+.apex-hero{min-height:530px;isolation:isolate;background:linear-gradient(90deg,rgba(3,5,4,.15),rgba(3,5,4,.9)),url('https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=2000&q=88') center/cover}
+.apex-hero:before{content:"";position:absolute;inset:18px;border:1px solid #d8b45d66;border-radius:26px;pointer-events:none;z-index:0}
+.apex-hero:after{background:radial-gradient(ellipse at 25% 45%,rgba(223,179,83,.2),transparent 38%),linear-gradient(0deg,#050605 0%,transparent 30%)}
+.apex-hero .heroart{font-family:Georgia,serif;font-size:clamp(78px,15vw,190px);font-weight:900;letter-spacing:7px;color:#f8df9a;-webkit-text-stroke:1px #fff0b2;text-shadow:0 3px 0 #79541a,0 12px 35px #d4a54888,0 0 75px #b88c3d55;filter:none}
+.apex-hero .eyebrow{color:#e8c777;letter-spacing:2px;font-size:12px}
+.apex-hero .herotext h1{font-size:clamp(34px,5vw,60px);text-shadow:0 4px 22px #000}
+.apex-hero .hero-caption{display:inline-block;margin:10px 0;padding:8px 14px;border:1px solid #d5b66b88;border-radius:30px;color:#f6e3b1;background:#080907aa}
+.apex-value-strip{max-width:1200px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.apex-value-strip article{display:flex;align-items:center;gap:12px;min-height:82px;padding:14px;border:1px solid #a8874766;border-radius:18px;background:linear-gradient(135deg,#201a0d,#0b0c09 72%);box-shadow:0 10px 28px #0007,inset 0 1px #fff2}
+.apex-value-strip article>span{font-size:27px;color:#f4d88f}
+.apex-value-strip b,.apex-value-strip small{display:block}.apex-value-strip b{color:#f8e7bc}.apex-value-strip small{color:#bdb39b;font-size:11px;margin-top:4px}
+main{max-width:1400px;padding-top:20px}
+#storeCategories{position:sticky;top:78px;z-index:15;padding:12px 8px;margin:0 -8px 22px;background:linear-gradient(180deg,#080907f5,#080907e8);backdrop-filter:blur(15px);border-bottom:1px solid #9b7a3b55}
+#storeCategories .cat{padding:10px 19px;background:#11120e;border-color:#806632;color:#ead7a6;white-space:nowrap}
+#storeCategories .cat.active{background:linear-gradient(120deg,#8e641e,#f4d987,#a97925);color:#1b1408}
+#search{border-radius:16px!important;border:1px solid #b08a43!important;background:linear-gradient(120deg,#15140f,#090a08)!important;box-shadow:inset 0 2px 8px #0008,0 8px 24px #0005}
+.toolbar{max-width:1200px;padding:8px 0 14px;border-bottom:1px solid #8d703b55}
+.products{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.product{padding:11px;border-radius:21px;background:linear-gradient(155deg,#1b1a13 0%,#0c0e0b 60%,#070807);border:1px solid #9f804655;box-shadow:0 15px 38px #0009,inset 0 1px #fff2}
+.product img{height:230px;border-radius:14px;background:linear-gradient(135deg,#292417,#080907)}
+.product h3{font-size:16px;line-height:1.6;color:#f8edcf}
+.product p{font-size:12px;line-height:1.7;color:#b8b3a6}
+.product .fav{backdrop-filter:blur(8px)}
+.product .add{border-radius:12px;padding:9px 14px}
+.product:hover{transform:translateY(-7px);border-color:#f0d38c;box-shadow:0 22px 45px #000b,0 0 24px #c49b4b2a}
+@media(max-width:800px){.topbar.apex-topbar{height:70px}.apex-hero{min-height:520px;background-position:58% center}.apex-value-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.apex-value-strip article{min-height:74px;padding:10px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product img{height:180px}#storeCategories{top:70px;overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;scrollbar-width:none}}
+@media(max-width:430px){.apex-hero .heroart{font-size:76px;letter-spacing:3px}.apex-hero .herotext h1{font-size:31px}.apex-value-strip small{font-size:10px}.products{gap:9px}.product img{height:148px}.product{padding:8px}.product h3{font-size:14px}.product .add{font-size:11px;padding:8px 10px}}
+
 </style><style>
 /* Compact storefront cards and product tiles */
 .products{gap:10px!important;grid-template-columns:repeat(auto-fill,minmax(145px,1fr))!important}
@@ -489,7 +523,7 @@ document.addEventListener('contextmenu',function(e){
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
-<section class="hero apex-hero"><div class="heroart" aria-label="شعار APX">APX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">تسوّق بثقة، واكتشف اختيارات تليق بك</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
+<section class="hero apex-hero"><div class="heroart" aria-label="شعار APEX">APEX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">تسوّق بثقة، واكتشف اختيارات تليق بك</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
 <section class="apex-value-strip" aria-label="مميزات تجربة APEX">
   <article role="link" tabindex="0" aria-label="اكتشف المنتجات المتنوعة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'})}"><span>✧</span><div><b>اختيارات متنوعة</b><small>اكتشف منتجات تناسب احتياجاتك</small></div><i aria-hidden="true">←</i></article>
   <article role="link" tabindex="0" aria-label="ابدأ البحث عن المنتجات" onclick="document.getElementById('search').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('search').focus(),350)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('search').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('search').focus(),350)}"><span>◇</span><div><b>تجربة سهلة</b><small>تصفّح وابحث وأضف إلى سلتك بسلاسة</small></div><i aria-hidden="true">⌕</i></article>
@@ -742,7 +776,13 @@ async function sendApexAssistantMessage(){
   if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
   console.error('APEX assistant error:',error);
   const detail=String(error?.message||error||'').toLowerCase();
-  const fallback=detail.includes('503')||detail.includes('not configured')
+  let providerCode='';
+  try{const response=error?.context;if(response?.clone){const payload=await response.clone().json();providerCode=String(payload?.error||'')}}catch{}
+  const fallback=providerCode==='assistant_credits_exhausted'
+   ?'خدمة APEX AI متوقفة مؤقتاً لأن رصيد واجهة الذكاء الاصطناعي نفد. المتجر نفسه يعمل؛ أعد شحن رصيد OpenAI API لتعود الخدمة، أو تواصل مع خدمة العملاء.'
+   :providerCode==='assistant_key_invalid'
+   ?'مفتاح تشغيل المساعد غير صالح. يحتاج مسؤول المتجر إلى تحديث مفتاح OpenAI API.'
+   :detail.includes('503')||detail.includes('not configured')
    ?'المساعد الذكي غير مهيأ حالياً. يرجى التواصل مع خدمة العملاء.'
    :'تعذر الاتصال بالمساعد الآن. حاول مرة أخرى بعد قليل أو تواصل مع خدمة العملاء.';
   apexAssistantMessages.push({role:'assistant',content:fallback});
