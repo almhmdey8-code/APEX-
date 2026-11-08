@@ -990,9 +990,16 @@ function showCheckoutPaymentCard(methods,value){
 }
 async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,account_holder,account_number,account_iban').eq('enabled',true).eq('orders_enabled',true).eq('method_type','manual').order('sort_order',{ascending:true});
+ const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,account_holder,account_number,account_iban,sort_order').eq('enabled',true).eq('orders_enabled',true).order('sort_order',{ascending:true});
  if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
- const methods=(data||[]).filter(m=>m.country_code===storeCurrencyCountry);
+ // لا تعرض أي وسيلة تحويل إلا إذا كان لها رقم حساب/محفظة أو آيبان محفوظ فعلياً.
+ // تقبل رمز الدولة كما هو، وتسمح بوسائل ALL إن وجدت.
+ const wantedCountry=String(storeCurrencyCountry||'SA').trim().toUpperCase();
+ const methods=(data||[]).filter(m=>{
+  const country=String(m.country_code||'').trim().toUpperCase();
+  const hasAccount=Boolean(String(m.account_number||'').trim()||String(m.account_iban||'').trim());
+  return (country===wantedCountry||country==='ALL')&&hasAccount&&String(m.method_type||'manual').toLowerCase()!=='gateway';
+ });
  const paymentBrandLogo=(name)=>{
   const n=String(name||'').toLowerCase();
   if(n.includes('الكريمي')||n.includes('كريمي'))return 'https://play-lh.googleusercontent.com/6IZttTeyjm-9x0Do0AMsmTzFOIAYnLGO08ykQRkZfwd4d5YcTFyJFhsn6wNIToHBvHrK17wz--r3kmPwpR1tSw=w240-h480';
