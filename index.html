@@ -1197,6 +1197,18 @@ async function refreshCustomer(session){
   if($('apexAiSend')){$('apexAiSend').disabled=false;$('apexAiSend').textContent='إرسال';}
  }
  customerSession=session||null;
+ const signedEmail=String(session?.user?.email||'').trim().toLowerCase();
+ const isStoreAdmin=signedEmail==='apex.1.shopping@gmail.com';
+ if(isStoreAdmin){
+  $('accountAuth').hidden=false;$('accountData').hidden=true;$('storefrontAuth').hidden=false;$('account-entry').hidden=false;
+  $('accountForm').hidden=true;
+  $('accountMsg').textContent='هذا حساب إدارة المتجر، ولا يُستخدم كحساب عميل. سجّل الدخول ببريد العميل لعرض بياناته وطلباته.';
+  $('accountDisplayEmail').textContent='';$('profileCurrentEmail').textContent='';
+  $('myOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">سجّل الدخول بحساب العميل لعرض طلباتك.</p>';
+  $('shippingOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد طلبات قيد الشحن.</p>';
+  $('transitOrders').innerHTML='<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد طلبات تم شحنها.</p>';
+  return;
+ }
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
  $('account-entry').hidden=!session;
