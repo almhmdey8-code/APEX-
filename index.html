@@ -519,6 +519,132 @@ document.addEventListener('contextmenu',function(e){
 @media(max-width:560px){.apex-ai-messages{height:43vh;min-height:220px;padding:9px}.apex-ai-message,.apex-ai-welcome{max-width:94%}.apex-ai-compose .goldbtn{padding:10px 12px}.apex-ai-footer{align-items:flex-start;flex-direction:column}}
 
 </style>
+<style id="apex-compact-premium">
+/* APEX compact premium UI — smaller type, tighter cards, consistent spacing */
+html{font-size:14px}
+body{font-size:13px;line-height:1.55}
+button,input,select,textarea{font-size:inherit}
+.topbar.apex-topbar{height:64px;padding:0 14px}
+.topbar .brand{font-size:30px;letter-spacing:2px;gap:6px}
+.topbar .brand small{font-size:7px;letter-spacing:2px}
+.topbar .crown{font-size:23px}
+.apex-head-actions{gap:7px}
+.apex-head-actions .iconbtn,.apex-cart-button{width:auto;min-width:36px;height:36px;padding:6px 10px;border-radius:11px;font-size:12px}
+.apex-cart-button{min-width:82px}
+.apex-hero{min-height:390px;padding:28px clamp(14px,4vw,48px);gap:10px}
+.apex-hero:before{inset:10px;border-radius:18px}
+.apex-hero .heroart{font-size:clamp(60px,10vw,130px);letter-spacing:3px}
+.apex-hero .eyebrow{font-size:10px;letter-spacing:1.4px}
+.apex-hero .herotext h1{font-size:clamp(25px,3.6vw,39px);line-height:1.35;margin:7px 0}
+.apex-hero .herotext p{font-size:13px;line-height:1.7;margin:6px 0}
+.apex-hero .hero-caption{font-size:11px;padding:5px 10px;margin:5px 0}
+.goldbtn{font-size:13px;padding:9px 17px;margin-top:8px}
+.apex-value-strip{margin:14px auto;padding:0 12px;gap:8px}
+.apex-value-strip article{min-height:62px;padding:9px 10px;border-radius:13px;gap:8px}
+.apex-value-strip article>span{font-size:20px}
+.apex-value-strip b{font-size:12px}.apex-value-strip small{font-size:9px;line-height:1.4}
+.banner-strip{margin:14px auto;padding:0 12px;gap:9px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.store-banner{min-height:125px;border-radius:15px}
+.store-banner div{padding:14px}
+.store-banner h2{font-size:15px;margin-bottom:4px}
+.store-banner p{font-size:11px;line-height:1.5}
+main{padding:16px 12px 55px}
+.sectionhead{margin:20px 0 13px}
+.sectionhead h2{font-size:22px;line-height:1.4}
+.sectionhead p{font-size:11px}
+.sectionhead .rule{font-size:17px}
+#storeCategories{top:64px;padding:8px 5px;margin:0 -4px 13px;gap:7px}
+#storeCategories .cat{font-size:11px;padding:7px 12px;border-radius:20px}
+.toolbar{gap:7px;margin-bottom:12px;padding:5px 0 9px}
+.toolbar select,.toolbar button{font-size:11px;padding:7px 10px;border-radius:12px}
+#search{min-height:38px;padding:8px 11px!important;font-size:12px!important}
+.products{gap:12px}
+.product{padding:8px;border-radius:15px}
+.product img{height:165px;border-radius:10px}
+.product .tag{top:13px;right:13px;padding:4px 8px;font-size:9px}
+.product .fav{top:12px;left:12px;width:29px;height:29px;font-size:15px}
+.product h3{font-size:12px;line-height:1.5;margin:7px 3px 2px}
+.product p{font-size:10px;line-height:1.5;min-height:30px;margin:0 3px 7px}
+.product-price{font-size:15px;margin:5px 3px 8px}
+.productfoot{gap:4px;padding:0 2px 3px}
+.offer{font-size:10px}
+.product .add{font-size:10px;padding:7px 9px;border-radius:9px}
+.products-description-below{font-size:10px!important}
+.feature{padding:11px 8px;border-radius:14px}
+.feature b{font-size:20px}.feature span{font-size:11px}
+.about{margin:35px 0 18px;padding:22px 14px;border-radius:19px}
+.about h2{font-size:23px}.about p{font-size:12px;line-height:1.7}
+.cartpanel{padding:10px}
+.cartbox{width:min(460px,100%);max-height:90dvh;padding:15px;border-radius:17px}
+.cartbox h2{font-size:18px;margin:6px 0 10px}
+.cartbox h3{font-size:14px}
+.cartbox p,.cartbox label,.cartbox .cartrow{font-size:12px;line-height:1.6}
+.cartbox input,.cartbox textarea,.cartbox select{font-size:13px!important;padding:9px 10px;margin:5px 0;border-radius:9px;min-height:38px}
+.cartbox .goldbtn,.cartbox button{font-size:12px}
+.cartrow{padding:7px 0;gap:7px}
+.close{font-size:21px}
+.account-head{padding:8px 0!important}
+.account-head h2{font-size:17px!important}
+.account-layout{gap:10px!important}
+.account-menu{gap:6px!important}
+.account-menu button{font-size:10px!important;padding:7px 6px!important;border-radius:10px!important;min-height:34px}
+.account-panel-card{padding:11px!important;border-radius:13px!important}
+.account-section-heading{gap:7px;margin-bottom:8px;padding-bottom:7px}
+.account-section-heading h3,.account-section-title{font-size:13px!important}
+.account-back-button{font-size:10px!important;padding:6px 10px}
+.apex-ai-intro{font-size:11px;line-height:1.65;margin:5px 0 9px}
+.apex-ai-messages{height:34vh;min-height:175px;max-height:300px;gap:7px;padding:8px;border-radius:12px}
+.apex-ai-welcome,.apex-ai-user,.apex-ai-bot{font-size:12px;line-height:1.6;padding:9px 10px;border-radius:11px}
+.apex-ai-quick{gap:5px;margin:7px 0}
+.apex-ai-quick button,.apex-ai-footer button{font-size:9px;padding:6px 9px}
+.apex-ai-compose{gap:6px}
+.apex-ai-compose textarea{font-size:12px;min-height:42px;max-height:90px;padding:9px;border-radius:10px}
+.apex-ai-compose .goldbtn{font-size:11px;padding:8px 12px}
+.apex-ai-footer{font-size:9px;gap:5px;margin-top:6px}
+.apex-ai-status{font-size:10px}
+#adminWorkspace{padding:10px}
+#adminWorkspace .wrap{padding:6px}
+#adminWorkspace #adm_login{padding:18px;border-radius:16px}
+#adminWorkspace .panel{padding:13px;margin:12px 0;border-radius:13px}
+#adminWorkspace h1{font-size:20px}#adminWorkspace h2{font-size:16px}
+#adminWorkspace .field{font-size:12px;padding:9px;margin:5px 0 9px}
+#adminWorkspace .btn,#adminWorkspace .btn2,#adminWorkspace .tabs button{font-size:11px;padding:8px 12px}
+#adminWorkspace .kpis{gap:7px;margin:11px 0}
+#adminWorkspace .kpi{padding:10px;border-radius:12px}
+#adminWorkspace .kpi span{font-size:10px}#adminWorkspace .kpi b{font-size:19px}
+#adminWorkspace .item{padding:10px;margin:7px 0;border-radius:10px}
+#adminWorkspace td,#adminWorkspace th{font-size:11px;padding:8px}
+footer{padding:20px 12px;font-size:10px}
+footer strong{font-size:27px}
+@media(max-width:800px){
+ .apex-hero{grid-template-columns:1fr;min-height:365px;padding:20px 16px;gap:0}
+ .apex-hero .heroart{font-size:65px;line-height:1.05;margin:5px 0}
+ .apex-hero .herotext h1{font-size:25px}
+ .apex-hero .herotext p{font-size:12px}
+ .apex-value-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .product img{height:145px}
+ .banner-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:430px){
+ .topbar.apex-topbar{height:58px;padding:0 9px}
+ .topbar .brand{font-size:25px}
+ .topbar .crown{font-size:20px}
+ .apex-head-actions .iconbtn,.apex-cart-button{height:33px;min-width:32px;padding:5px 8px;font-size:11px}
+ .apex-cart-button{min-width:72px}
+ .apex-hero{min-height:335px}
+ .apex-hero .heroart{font-size:56px}
+ .apex-hero .herotext h1{font-size:22px}
+ .apex-value-strip article{min-height:56px;padding:7px}
+ .apex-value-strip b{font-size:11px}.apex-value-strip small{font-size:8px}
+ #storeCategories{top:58px}
+ .product img{height:125px}
+ .product h3{font-size:11px}
+ .product p{font-size:9px;min-height:27px}
+ .product-price{font-size:13px}
+ .cartbox{padding:12px}
+}
+</style>
 </head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
