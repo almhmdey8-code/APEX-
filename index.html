@@ -645,11 +645,122 @@ footer strong{font-size:27px}
  .cartbox{padding:12px}
 }
 </style>
+<style id="apex-internal-redesign">
+/* APEX in-store redesign: editorial hero, compact navigation, product-first layout */
+html{font-size:14px;scroll-padding-top:76px}
+body{font-size:13px;line-height:1.55;background:#070806;color:#f4f0e5}
+.topbar.apex-topbar{height:66px;min-height:66px;padding:0 13px;display:flex;align-items:center;gap:12px;background:rgba(7,8,6,.97);border-bottom:1px solid rgba(218,179,91,.35);box-shadow:0 8px 28px #0008}
+.topbar .brand{font-size:29px;letter-spacing:2px;gap:5px;line-height:1}
+.topbar .brand small{font:700 7px/1.4 Tahoma,Arial;letter-spacing:2px;color:#c9aa61}
+.topbar .crown{font-size:21px}
+.apex-head-actions{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.apex-head-actions .iconbtn{width:39px;height:39px;min-width:39px;padding:0;border-radius:12px;font-size:18px;display:grid;place-items:center;background:#11120e;color:#efd58e;border:1px solid #806b3d}
+.apex-cart-button{position:relative;display:inline-flex!important;align-items:center;justify-content:center;gap:3px;flex:0 0 42px;width:42px!important;min-width:42px!important;height:42px!important;min-height:42px;padding:0!important;border-radius:13px!important;white-space:nowrap;overflow:visible;background:#11120e!important;color:#f4d98d!important;border:1px solid #806b3d!important;box-shadow:none!important;font-size:17px!important}
+.apex-cart-button #count,.apex-cart-button b{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:20px;background:#e7c66e;color:#171108;font-size:10px;line-height:18px;text-align:center}
+.apex-cart-button>span{font-size:17px}
+.apex-hero{min-height:330px;height:auto;display:flex;align-items:center;justify-content:flex-start;padding:38px clamp(18px,6vw,75px);background:linear-gradient(90deg,rgba(4,6,5,.96),rgba(4,6,5,.76) 52%,rgba(4,6,5,.45)),url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1800&q=85') center 46%/cover;border:0;border-bottom:1px solid #8b713c55}
+.apex-hero:before{content:"";position:absolute;inset:13px;border:1px solid rgba(224,190,112,.35);border-radius:20px;pointer-events:none}
+.apex-hero:after{background:linear-gradient(0deg,#070806 0%,transparent 25%);opacity:.8}
+.apex-hero .heroart{display:none!important}
+.apex-hero .herotext{z-index:2;max-width:650px;text-align:right}
+.apex-hero .eyebrow{font-size:10px;letter-spacing:2px;color:#d9bd78;margin-bottom:9px}
+.apex-hero .herotext h1{font-size:clamp(25px,4vw,42px);line-height:1.35;margin:6px 0 9px;color:#fff0bd;text-shadow:0 3px 20px #000}
+.apex-hero .herotext p{max-width:520px;font-size:13px;line-height:1.9;color:#e2dfd5;margin:0 0 14px}
+.apex-hero .hero-caption{display:none}
+.hero-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.apex-hero .goldbtn{font-size:12px;padding:9px 17px;margin:0;border-radius:10px;box-shadow:0 5px 18px #a8792838}
+.hero-secondary{padding:9px 15px;border:1px solid #c9a85e;border-radius:10px;background:#10120fc9;color:#f2dfae;font:700 11px inherit}
+.banner-strip{max-width:1220px;margin:14px auto 4px;padding:0 14px;display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.banner-strip::-webkit-scrollbar{display:none}
+.store-banner{position:relative;display:block;flex:0 0 min(360px,82vw);min-height:112px;height:112px;border:1px solid #8b713c66;border-radius:14px;overflow:hidden;background:#11130f;scroll-snap-align:start;box-shadow:none}
+.store-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+.store-banner:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,7,5,.96),rgba(5,7,5,.35))}
+.store-banner div{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;height:100%;padding:12px 16px;text-shadow:none}
+.store-banner h2{font-size:14px;color:#f3d991;margin:0 0 3px}
+.store-banner p{font-size:10px;line-height:1.5;color:#f1eee5;margin:0}
+.apex-value-strip{max-width:1220px;margin:13px auto;padding:0 14px;gap:9px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.apex-value-strip article{min-height:65px;padding:10px 12px;border-radius:13px;gap:9px;background:linear-gradient(135deg,#17160f,#0c0e0b);border-color:#806b3d66;box-shadow:none}
+.apex-value-strip article>span{font-size:20px}
+.apex-value-strip b{font-size:11px;color:#f4e5be}
+.apex-value-strip small{font-size:9px;line-height:1.45;color:#aaa38f}
+main{max-width:1280px;padding:17px 14px 65px}
+#storeCategories{position:sticky;top:66px;z-index:15;display:flex;justify-content:flex-start;flex-wrap:nowrap;gap:7px;overflow-x:auto;scrollbar-width:none;padding:9px 3px;margin:0 -3px 14px;background:rgba(7,8,6,.95);backdrop-filter:blur(15px);border-bottom:1px solid #8b713c44}
+#storeCategories::-webkit-scrollbar{display:none}
+#storeCategories .cat{flex:0 0 auto;padding:7px 12px;font-size:10px;border-radius:9px;background:#11130f;color:#d9c99e;border:1px solid #6f5d36}
+#storeCategories .cat.active{background:linear-gradient(120deg,#b28a3e,#f1d98e);color:#171208}
+#search{font-size:12px!important;min-height:40px;padding:9px 13px!important;border-radius:11px!important;background:#10120f!important;border:1px solid #76623b!important}
+.toolbar{max-width:none;display:flex;align-items:center;gap:8px;margin:0 auto 12px;padding:7px 0 10px;border-bottom:1px solid #8b713c44}
+.toolbar>span{font-size:11px;color:#d6cba9}
+.toolbar select,.toolbar button{font-size:10px;padding:7px 10px;border-radius:9px;background:#11130f;color:#e8d8ae;border:1px solid #6f5d36}
+.products{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.product{padding:8px;border-radius:15px;background:linear-gradient(155deg,#171811,#0b0d0b);border:1px solid #75613a66;box-shadow:0 8px 20px #0006;transition:transform .2s,border-color .2s}
+.product:hover{transform:translateY(-3px);border-color:#c5a45c;box-shadow:0 12px 25px #0008}
+.product img{height:190px;border-radius:10px;object-fit:cover}
+.product .fav{top:12px;left:12px;width:29px;height:29px;font-size:14px}
+.product .tag{top:12px;right:12px;padding:4px 7px;font-size:9px}
+.product h3{font-size:12px;line-height:1.55;margin:7px 3px 2px}
+.product p{font-size:10px;line-height:1.5;min-height:30px;margin:0 3px 6px;color:#aaa696}
+.product-price{font-size:14px;margin:5px 3px 7px}
+.productfoot{gap:5px;padding:0 2px 2px}
+.product .add{font-size:10px;padding:7px 9px;border-radius:8px}
+.products-description-below{font-size:10px!important;color:#9d9888;text-align:center;margin-top:14px}
+footer{padding:18px 12px 82px;font-size:10px}
+footer strong{font-size:25px}
+.apex-mobile-dock{display:none}
+@media(max-width:800px){
+ .topbar.apex-topbar{height:62px;min-height:62px;padding:0 10px;gap:8px}
+ .topbar .brand{font-size:25px;letter-spacing:1px}
+ .topbar .brand small{font-size:6px;letter-spacing:1.5px}
+ .topbar .crown{font-size:18px}
+ .apex-head-actions{gap:5px}
+ .apex-head-actions .iconbtn{width:35px;height:35px;min-width:35px;font-size:16px}
+ .apex-cart-button{flex-basis:38px;width:38px!important;min-width:38px!important;height:38px!important;min-height:38px!important}
+ .apex-hero{min-height:280px;padding:28px 22px;background-position:center}
+ .apex-hero .herotext{max-width:100%;text-align:right}
+ .apex-hero .herotext h1{font-size:25px}
+ .apex-hero .herotext p{font-size:12px;line-height:1.8;max-width:340px}
+ .apex-value-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:11px auto}
+ .apex-value-strip article{min-height:58px;padding:8px}
+ .banner-strip{margin:10px auto 4px}
+ .store-banner{flex-basis:82vw;height:100px;min-height:100px}
+ main{padding:13px 10px 60px}
+ .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .product img{height:150px}
+ .toolbar{flex-wrap:wrap}
+ .toolbar>span{flex:1 0 100%}
+ .apex-mobile-dock{position:fixed;z-index:40;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px max(7px,env(safe-area-inset-bottom));background:rgba(8,9,7,.97);border-top:1px solid #92763f88;backdrop-filter:blur(18px);box-shadow:0 -8px 28px #0008}
+ .apex-mobile-dock button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;background:none;color:#bdb39a;font:inherit;padding:2px}
+ .apex-mobile-dock button span{font-size:17px;line-height:1.2}
+ .apex-mobile-dock button small{font-size:9px}
+ .apex-mobile-dock button.active{color:#f2d88f}
+ .apex-mobile-dock button b{position:absolute;top:-1px;right:calc(50% - 22px);min-width:15px;height:15px;padding:0 3px;border-radius:20px;background:#e7c66e;color:#171108;font-size:9px;line-height:15px}
+}
+@media(max-width:430px){
+ .topbar.apex-topbar{height:58px;min-height:58px}
+ .topbar .brand{font-size:23px}
+ .apex-head-actions .iconbtn{width:33px;height:33px;min-width:33px}
+ .apex-cart-button{flex-basis:36px;width:36px!important;min-width:36px!important;height:36px!important;min-height:36px!important}
+ .apex-hero{min-height:260px;padding:25px 18px}
+ .apex-hero .herotext h1{font-size:22px}
+ .apex-hero .herotext p{font-size:11px}
+ .apex-hero .goldbtn,.hero-secondary{font-size:10px;padding:8px 12px}
+ .apex-value-strip article>span{font-size:17px}
+ .apex-value-strip b{font-size:10px}
+ .apex-value-strip small{font-size:8px}
+ .store-banner{flex-basis:86vw;height:92px;min-height:92px}
+ #storeCategories{top:58px}
+ .product img{height:128px}
+ .product h3{font-size:11px}
+ .product p{font-size:9px;min-height:26px}
+ .product-price{font-size:13px}
+ .product .add{font-size:9px;padding:6px 8px}
+}
+</style>
 </head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة">🛒 <span>السلة</span> <b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
+<section class="hero apex-hero"><div class="heroart" aria-hidden="true">APEX</div><div class="herotext"><div class="eyebrow">APEX · PREMIUM SHOPPING</div><h1>كل ما تبحث عنه، في مكان واحد</h1><p>اكتشف منتجات مختارة بعناية، وقارن خياراتك، وتسوق بتجربة أسهل وأذكى.</p><div class="hero-actions"><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">ابدأ التسوق <span aria-hidden="true">←</span></button><button class="hero-secondary" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">استكشف الأقسام</button></div></div></section>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
-<section class="hero apex-hero"><div class="heroart" aria-label="شعار APEX">APEX</div><div class="herotext"><div class="eyebrow">APEX • SMART SHOPPING EXPERIENCE</div><h1>APEX كل ما تحتاجه بين يديك</h1><p>تسوّق بسهولة واكتشف منتجات مختارة بعناية<br>في تجربة إلكترونية ذكية تجمع احتياجاتك في مكان واحد</p><div class="hero-caption">تسوّق بثقة، واكتشف اختيارات تليق بك</div><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات　←</button></div></section>
 <section class="apex-value-strip" aria-label="مميزات تجربة APEX">
   <article role="link" tabindex="0" aria-label="اكتشف المنتجات المتنوعة" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'})}"><span>✧</span><div><b>اختيارات متنوعة</b><small>اكتشف منتجات تناسب احتياجاتك</small></div><i aria-hidden="true">←</i></article>
   <article role="link" tabindex="0" aria-label="ابدأ البحث عن المنتجات" onclick="document.getElementById('search').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('search').focus(),350)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('search').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('search').focus(),350)}"><span>◇</span><div><b>تجربة سهلة</b><small>تصفّح وابحث وأضف إلى سلتك بسلاسة</small></div><i aria-hidden="true">⌕</i></article>
@@ -665,6 +776,7 @@ footer strong{font-size:27px}
 <p class="products-description-below">منتجات مختارة بعناية مع وصف واضح وسعر بالريال السعودي</p>
 
 </main><footer><strong>APEX 👑</strong><br>© 2026 متجر APEX الإلكتروني — جميع الحقوق محفوظة</footer>
+<nav class="apex-mobile-dock" aria-label="التنقل السريع"><button type="button" class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span>⌂</span><small>الرئيسية</small></button><button type="button" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})"><span>▦</span><small>الأقسام</small></button><button type="button" onclick="openCart()"><span>🛒</span><small>السلة</small><b id="dockCount">0</b></button><button type="button" onclick="openCustomerProfile()"><span>♙</span><small>حسابي</small></button></nav>
 <div class="cartpanel" id="accountpanel" onclick="if(event.target===this)closeAccount()"><div class="cartbox account-shell"><header class="account-head"><button type="button" class="account-profile-shortcut" onclick="closeAccount()" aria-label="إغلاق بطاقة الحساب" title="إغلاق">×</button><div class="account-brand">👑 APEX<small>SHOP SMART · LIVE BETTER</small></div><span style="font-size:27px;color:#f5d879">♢</span></header><div class="account-content"><div id="apexOtpModal" class="cartpanel" style="z-index:10050" role="dialog" aria-modal="true"><div class="cartbox" style="width:min(420px,100%);text-align:center"><button type="button" class="close" onclick="closeApexOtp()">×</button><h2>التحقق من البريد الإلكتروني</h2><p id="apexOtpHint" style="color:#c9bd9a">أدخل رمز التحقق المكوّن من 6 أرقام.</p><input id="apexOtpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" dir="ltr" style="text-align:center;font-size:28px;letter-spacing:10px"><button id="apexOtpSubmit" class="goldbtn" type="button" onclick="submitApexOtp()">تأكيد الرمز</button><p id="apexOtpMessage" style="color:#e9bd55"></p></div></div><div id="passwordRecovery" hidden class="account-panel-card"><h3>تعيين كلمة مرور جديدة</h3><input id="newPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)"><button class="goldbtn" onclick="saveNewPassword()">حفظ كلمة المرور</button></div><div id="accountData" hidden>
 
 <div class="user-hub">
