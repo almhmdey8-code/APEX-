@@ -948,9 +948,10 @@ async function loadPaymentMethods(){
  const wallet='<label class="paychoice"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label>';
  box.innerHTML='<p style="color:#e9bd55">اختر طريقة الدفع</p>'+wallet+manual;
 }
-function add(id,name,price){const found=cart.find(x=>x.id===id);if(found)found.quantity+=1;else cart.push({id,name,price,quantity:1});renderCart();$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0)}
+function syncCartCount(){const n=cart.reduce((sum,x)=>sum+x.quantity,0);$('count').textContent=n;const dock=$('dockCount');if(dock)dock.textContent=n}
+function add(id,name,price){const found=cart.find(x=>x.id===id);if(found)found.quantity+=1;else cart.push({id,name,price,quantity:1});renderCart();syncCartCount()}
 function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('cartitems').innerHTML=cart.length?cart.map((x,i)=>'<div class="cartrow"><span>'+esc(x.name)+' × '+x.quantity+'<small style="display:block;color:#c9bd9a">'+formatStorePrice(x.price*x.quantity)+'</small></span><button class="add" data-remove="'+i+'">حذف</button></div>').join('')+'<div style="text-align:left;color:#f2d37d;font-weight:800;padding:10px">الإجمالي التقريبي: '+formatStorePrice(total)+'</div>':'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
-function removeItem(i){cart.splice(i,1);$('count').textContent=cart.reduce((n,x)=>n+x.quantity,0);renderCart()}
+function removeItem(i){cart.splice(i,1);renderCart();syncCartCount()}
 function openCart(){$('cartpanel').classList.add('show');renderCart()}
 function closeCart(){$('cartpanel').classList.remove('show')}
 
