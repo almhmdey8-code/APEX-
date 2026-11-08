@@ -673,10 +673,15 @@ let paymentsCache=[];
 function buildAdminSectionCards(panelId){
  if(panelId==='adm_payments')return;
  const panel=$(panelId);if(!panel||panel.dataset.cardsReady==='1')return;
- const items=Array.from(panel.children).filter(el=>el.classList?.contains('item'));
+ const labels={adm_productlist:'قائمة المنتجات',adm_orderlist:'قائمة الطلبات',adm_customer_list:'سجل العملاء',adm_wallet_topup_list:'طلبات شحن المحفظة',adm_shiplist:'شركات الشحن',adm_security_events:'سجل الحماية'};
+ const items=Array.from(panel.children).filter(el=>{
+  if(el.matches('h1,h2,h3,h4,p,script,style,button'))return false;
+  if(el.classList?.contains('admin-section-accordion'))return false;
+  return el.classList?.contains('item')||el.tagName==='DIV'||el.tagName==='SECTION'||el.tagName==='FORM';
+ });
  items.forEach((item,index)=>{
   const heading=item.querySelector('h2,h3,h4');
-  const label=(heading?.textContent||('إعدادات '+(index+1))).trim();
+  const label=(heading?.textContent||labels[item.id]||item.querySelector('label')?.textContent||('إعدادات القسم '+(index+1))).trim();
   const details=document.createElement('details');details.className='admin-section-accordion';
   const summary=document.createElement('summary');summary.textContent=label;
   const body=document.createElement('div');body.className='admin-section-accordion-body';
@@ -756,7 +761,7 @@ async function clearPaymentData(id){
  if(!error)await loadPayments();
 }
 $('adm_savepayment').onclick=async()=>{const row={name:$('adm_payname').value.trim(),method_code:$('adm_paycode').value,method_type:$('adm_paytype').value,country_code:$('adm_paycountry').value,account_holder:$('adm_payholder').value.trim()||null,account_number:$('adm_payaccount').value.trim()||null,account_iban:$('adm_payiban').value.trim()||null,gateway_provider:$('adm_gatewayprovider').value.trim()||null,orders_enabled:$('adm_payorders').checked,wallet_topup_enabled:$('adm_paywallet').checked,instructions:$('adm_payinstructions').value.trim(),sort_order:Number($('adm_payorder').value||0),enabled:$('adm_payenabled').checked,updated_at:new Date().toISOString()};if(!row.name){message('paymsg','أدخل اسم الطريقة');return}if(row.method_type==='gateway'&&row.enabled){message('paymsg','لا يمكن تفعيل بوابة إلكترونية قبل اكتمال ربط الخادم والتحقق من Webhook. احفظها معطلة الآن.');return}if(row.method_type!=='gateway'&&row.country_code==='YE'&&row.enabled&&!row.account_number&&!row.account_iban){message('paymsg','أدخل رقم الحساب أو المحفظة قبل تفعيل وسيلة التحويل.');return}const q=editingPayment?supabase.from('apex_payment_methods').update(row).eq('id',editingPayment):supabase.from('apex_payment_methods').insert(row);const {error}=await q;message('paymsg',error?'فشل الحفظ: '+error.message:'تم حفظ الطريقة');if(!error){$('adm_cancelpayment').click();$('adm_payments').querySelector('.payment-editor').open=false;loadPayments()}};
-$('adm_cancelpayment').onclick=()=>{editingPayment=null;$('adm_paycode').value='';['payname','payinstructions','payholder','payaccount','payiban','gatewayprovider'].forEach(id=>$(id).value='');$('adm_paytype').value='manual';$('adm_paycountry').value='SA';$('adm_payorder').value=0;$('adm_payenabled').checked=false;$('adm_payorders').checked=true;$('adm_paywallet').checked=false;$('adm_cancelpayment').classList.add('apex-admin-hidden');if($('adm_payments').querySelector('.payment-editor'))$('adm_payments').querySelector('.payment-editor').open=false};
+$('adm_cancelpayment').onclick=()=>{editingPayment=null;$('adm_paycode').value='';['payname','payinstructions','payholder','payaccount','payiban','gatewayprovider'].forEach(id=>$(id).value='');$('adm_paytype').value='manual';$('adm_paycountry').value='SA';$('adm_payorder').value=0;$('adm_payenabled').checked=false;$('adm_payorders').checked=true;$('adm_paywallet').checked=false;$('adm_cancelpayment').classList.add('apex-admin-hidden');if($('adm_payments').querySelector('.payment-editor')){$('adm_payments').querySelector('.payment-editor').open=false;$('adm_payments').querySelector('.payment-editor').style.display='none'}};
 
 checkSession();
 </script>
