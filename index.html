@@ -950,6 +950,7 @@ async function apexSecurityEvent(event_type,details={}){
  }catch(error){console.warn('APEX security event could not be recorded:',error?.message||error)}
 }
 let cart=[],selectedPayment='',customerSession=null,storeCurrencyCountry='SA',storeExchangeRate=137,storeProducts=[];
+window.openCart=openCart;window.closeCart=closeCart;window.add=add;
 let apexAssistantMessages=[],apexAssistantBusy=false,apexAssistantInitialized=false,apexAssistantSessionVersion=0;
 const favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));
 function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}
