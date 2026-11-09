@@ -699,7 +699,11 @@ async function loadCustomers(){
 $('adm_customer_refresh').onclick=loadCustomers;
 $('adm_customer_search').addEventListener('input',renderCustomers);
 function renderAdminOrderCard(o){
- return '<div class="item"><div class="row"><b>طلب #'+o.id+' — '+esc(o.customer_name)+'</b><small>'+new Date(o.created_at).toLocaleString('ar-SA')+'</small></div><p class="muted">الجوال: '+esc(o.phone)+'<br>العنوان: '+esc(o.address)+'<br>المنتجات: '+esc(JSON.stringify(o.items))+'<br>الإجمالي: '+(o.total_sar==null?'غير محدد':Number(o.total_sar).toFixed(2)+' ر.س')+'<br>الدفع: '+esc(o.payment_method||'غير محدد')+' · '+esc(o.payment_status||'pending')+'<br>ملاحظات: '+esc(o.notes)+'</p><div class="grid"><select class="field" id="st'+o.id+'"><option value="new">تم استلام الطلب</option><option value="confirmed">مؤكد</option><option value="processing">قيد التجهيز</option><option value="shipped">تم تسليمه لشركة الشحن</option><option value="delivered">تم التسليم</option><option value="cancelled" '+(o.payment_method==='wallet'&&o.payment_status==='paid'?'disabled':'')+'>'+((o.payment_method==='wallet'&&o.payment_status==='paid')?'إلغاء يتطلب استرداداً':'ملغي')+'</option></select><input class="field" id="tr'+o.id+'" placeholder="رقم التتبع" value="'+esc(o.aramex_tracking_number||'')+'"><input class="field" id="ca'+o.id+'" placeholder="شركة الشحن" value="'+esc(o.carrier||'')+'"></div><button class="btn2" data-order="'+o.id+'">حفظ تحديث الطلب</button>'+'</div>';
+ const isPaid=['paid','succeeded','completed','verified'].includes(String(o.payment_status||'').toLowerCase());
+ const isManual=o.payment_method!=='wallet';
+ const paymentAction=!isPaid&&isManual?'<button class="btn" data-verify-payment="'+o.id+'">تأكيد الدفع بعد التحقق من الحوالة</button>':(isPaid?'<p class="muted" style="color:#8fe0a7">تم اعتماد الدفع</p>':'');
+ const lock=!isPaid?'disabled title="اعتماد الدفع مطلوب أولاً"':'';
+ return '<div class="item"><div class="row"><b>طلب #'+o.id+' — '+esc(o.customer_name)+'</b><small>'+new Date(o.created_at).toLocaleString('ar-SA')+'</small></div><p class="muted">الجوال: '+esc(o.phone)+'<br>العنوان: '+esc(o.address)+'<br>المنتجات: '+esc(JSON.stringify(o.items))+'<br>الإجمالي: '+(o.total_sar==null?'غير محدد':Number(o.total_sar).toFixed(2)+' ر.س')+'<br>الدفع: '+esc(o.payment_method||'غير محدد')+' · '+esc(o.payment_status||'pending')+'<br>ملاحظات: '+esc(o.notes)+'</p>'+paymentAction+'<div class="grid"><select class="field" id="st'+o.id+'"><option value="new">تم استلام الطلب</option><option value="confirmed" '+(!isPaid?'disabled':'')+'>مؤكد</option><option value="processing" '+(!isPaid?'disabled':'')+'>قيد التجهيز</option><option value="shipped" '+(!isPaid?'disabled':'')+'>تم تسليمه لشركة الشحن</option><option value="delivered" '+(!isPaid?'disabled':'')+'>تم التسليم</option><option value="cancelled" '+(o.payment_status==='paid'?'disabled':'')+'>ملغي</option></select><input class="field" id="tr'+o.id+'" placeholder="رقم التتبع" value="'+esc(o.aramex_tracking_number||'')+'"><input class="field" id="ca'+o.id+'" placeholder="شركة الشحن" value="'+esc(o.carrier||'')+'"></div><button class="btn2" data-order="'+o.id+'">حفظ تحديث الطلب</button>'+'</div>';
 }
 async function loadReturns(){
  const box=$('adm_returns_list');if(!box)return;
@@ -758,8 +762,22 @@ async function loadOrders(){
  const group=(title,rows,cls)=>'<section class="item"><div class="row"><h3>'+title+'</h3><b>'+rows.length+'</b></div>'+(rows.length?rows.map(renderAdminOrderCard).join(''):'<p class="muted">لا توجد طلبات في هذا القسم.</p>')+'</section>';
  $('adm_orderlist').innerHTML=group('الطلبات المقبولة',accepted,'accepted')+group('الطلبات المرفوضة',rejected,'rejected')+group('الطلبات المعلقة',pending,'pending');
  (data||[]).forEach(o=>{const el=$('st'+o.id);if(el)el.value=o.status});
+ $('adm_orderlist').querySelectorAll('[data-verify-payment]').forEach(b=>b.onclick=async()=>{
+  const id=Number(b.dataset.verifyPayment);
+  const note=prompt('لا تعتمد الدفع إلا بعد مطابقة الحوالة فعلياً في حساب البنك. اكتب ملاحظة التحقق:','تمت مطابقة الحوالة في حساب المتجر');
+  if(note===null)return;
+  if(!note.trim()){alert('ملاحظة التحقق مطلوبة.');return}
+  if(!confirm('هل تحققت بنفسك من وصول المبلغ ومطابقة الحوالة؟ لن يتم اعتماد المرجع المكتوب وحده.'))return;
+  b.disabled=true;b.textContent='جارٍ اعتماد الدفع...';
+  const {data,error}=await supabase.rpc('apex_admin_verify_order_payment',{p_order_id:id,p_admin_note:note.trim()});
+  if(error||!data?.success){alert('تعذر اعتماد الدفع: '+(error?.message||'فشل التحقق'));b.disabled=false;b.textContent='تأكيد الدفع بعد التحقق من الحوالة';return}
+  alert('تم اعتماد الدفع. يمكنك الآن تأكيد الطلب وتجهيزه.');
+  loadOrders();
+ });
  $('adm_orderlist').querySelectorAll('[data-order]').forEach(b=>b.onclick=async()=>{
   const id=Number(b.dataset.order),status=$('st'+id).value;
+  const order=window.apexOrders.find(x=>Number(x.id)===id);
+  if(['confirmed','processing','shipped','delivered'].includes(status)&&!['paid','succeeded','completed','verified'].includes(String(order?.payment_status||'').toLowerCase())){alert('لا يمكن تأكيد أو تجهيز أو شحن الطلب قبل التحقق من الدفع.');return}
   const patch={status,aramex_tracking_number:$('tr'+id).value,carrier:$('ca'+id).value,shipping_status:status==='shipped'?'in_transit':status==='delivered'?'delivered':status==='processing'?'preparing':status==='confirmed'?'approved':status==='cancelled'?'cancelled':'order_received',updated_at:new Date().toISOString()};
   const {error}=await supabase.from('apex_orders').update(patch).eq('id',id);
   if(error){b.textContent='فشل الحفظ: '+error.message;return}
