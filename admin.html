@@ -836,7 +836,7 @@ async function loadPayments(){
  if(error){message('paymsg','تعذر تحميل الطرق: '+error.message);return}
  paymentsCache=data||[];
  const card=(p,code,label,symbol)=>{
-  const status=p?(p.enabled?'مفعّلة':(!p.account_number&&!p.account_iban?'رقم الحساب غير محفوظ':'موقوف مؤقتاً')):'لم تُضبط بعد';
+  const status=p?(p.enabled?'مفعّلة':(p.method_code==='alkuraimi_bank'&&!p.account_number&&!p.account_iban?'رقم الحساب غير محفوظ':'موقوف مؤقتاً')):'لم تُضبط بعد';
   const integration=p?(p.integration_status==='verified'?'موثّقة':p.method_type==='gateway'?'تحتاج ربطاً':'يدوي'):'اضغط لإدخال البيانات';
   return '<article class="payment-card"><button class="payment-method-tile" type="button" data-pe="'+(p?p.id:'')+'" data-pnew="'+code+'" data-country="'+(p?p.country_code:(['mada','visa','google_pay'].includes(code)?'SA':'YE'))+'"><span class="method-symbol">'+symbol+'</span><strong>'+esc(label)+'</strong><small>'+status+' · '+integration+'</small></button>'+(p?'<div class="payment-card-actions"><button class="btn2" data-pt="'+p.id+'" data-enabled="'+p.enabled+'">'+(p.enabled?'إيقاف':'تشغيل')+'</button><button class="btn2" data-pclear="'+p.id+'">مسح البيانات</button></div>':'')+'</article>';
  };
