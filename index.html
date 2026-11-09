@@ -993,7 +993,7 @@ function showCheckoutPaymentCard(methods,value){
 }
 async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,instructions,method_type,country_code,account_holder,account_number,account_iban,sort_order').eq('enabled',true).eq('orders_enabled',true).order('sort_order',{ascending:true});
+ const {data,error}=await supabase.from('apex_payment_methods').select('id,name,method_code,instructions,method_type,country_code,account_holder,account_number,account_iban,sort_order').eq('enabled',true).eq('orders_enabled',true).order('sort_order',{ascending:true});
  if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
  // لا تعرض أي وسيلة تحويل إلا إذا كان لها رقم حساب/محفظة أو آيبان محفوظ فعلياً.
  // تقبل رمز الدولة كما هو، وتسمح بوسائل ALL إن وجدت.
@@ -1001,7 +1001,7 @@ async function loadPaymentMethods(){
  const methods=(data||[]).filter(m=>{
   const country=String(m.country_code||'').trim().toUpperCase();
   const hasAccount=Boolean(String(m.account_number||'').trim()||String(m.account_iban||'').trim());
-  return (country===wantedCountry||country==='ALL')&&hasAccount&&String(m.method_type||'manual').toLowerCase()!=='gateway';
+  return (country===wantedCountry||country==='ALL')&&hasAccount&&String(m.method_type||'manual').toLowerCase()!=='gateway'&&(wantedCountry!=='YE'||['ye_yer','ye_kas','ye_usd'].includes(m.method_code));
  });
  const paymentBrandLogo=(name)=>{
   const n=String(name||'').toLowerCase();
