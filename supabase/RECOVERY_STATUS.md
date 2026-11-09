@@ -13,9 +13,16 @@ Project ref: `ulzxdvtzziydhuvennzw`
 - The current stock values were not bulk-adjusted for historical orders because the database does not establish whether old orders had already been deducted from stock. The new rule applies to orders created after this migration.
 - Unpaid manual-transfer orders keep their stock reserved until an administrator cancels them. No automatic expiry/release job was added.
 
-## Migration history caveat
+## Migration history recovery — completed (2026-11-09)
 
-The live Supabase migration history contains 33 recorded versions. The repository now contains 7 SQL migration files; 26 historical SQL migration files are still missing. The newly recorded direct database changes are now captured in the migration above, but the missing historical SQL source files cannot be reconstructed byte-for-byte from the migration version/name ledger alone. Do not reset or recreate the production database from this partial migration directory until the remaining historical migrations or a complete schema/data backup have been recovered.
+- Recovered the original SQL bodies for all 26 previously missing historical migrations directly from `supabase_migrations.schema_migrations.statements` in the live Supabase project. This is the stored SQL that was applied, not a reconstruction from migration names.
+- Added the 26 original files under `supabase/migrations/` using their exact recorded version and name.
+- Also recovered the previously unarchived return-escrow migration `20261109121451_apex_product_return_escrow_wallet.sql`.
+- Compared every migration file against its stored applied SQL. All 34 migration files now match the live migration ledger exactly, including the newer inventory and return-tracking migrations.
+- No migration was re-applied to production during this recovery. This was a source-control archive operation only.
+- The repository and live Supabase ledger now contain 34/34 matching migration versions. Keep this directory as the canonical migration history going forward.
+
+**Safety:** Do not run `supabase db reset --remote` on production. Since these migrations are already recorded as applied, do not re-apply them to production. Use the normal local validation workflow first, then deploy only genuinely new migrations.
 
 ## Production data safety
 
