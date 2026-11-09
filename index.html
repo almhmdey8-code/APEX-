@@ -778,6 +778,8 @@ footer strong{font-size:25px}
 @media(max-width:600px){.apex-hero{min-height:300px;grid-template-columns:1fr;padding:26px 19px}.hero-visual{position:absolute;left:-38px;top:30px;min-height:180px;opacity:.22;pointer-events:none}.hero-monogram{width:175px;height:175px;font-size:120px}.orbit-one{width:220px;height:150px}.orbit-two{width:255px;height:175px}.hero-visual-caption{display:none}.hero-content{max-width:100%}.apex-hero h1{font-size:32px!important}.apex-hero p{max-width:310px;font-size:12px}.hero-proof{gap:8px;margin-top:16px;font-size:8px}.catalog-head{margin:19px 0 12px}.catalog-head h2{font-size:20px}.catalog-tools{grid-template-columns:1fr;gap:9px}.catalog-search{grid-column:auto;grid-row:auto}.catalog-tools .toolbar{justify-content:space-between}.products{gap:9px}.product .product-main-image{height:140px}.product-card-info{padding:8px}.product-card-info h3{font-size:11px}.product-description{font-size:9px;min-height:29px}.product .product-price{font-size:12px}.add-to-cart-wide{padding:8px;font-size:9px}#productDetailContent{grid-template-columns:1fr;gap:9px;padding:14px}.detail-gallery>img,.detail-placeholder{height:210px}.detail-copy{padding:4px}.detail-copy h2{font-size:18px}}</style>
 <style id="apex-customer-checkout-bank-card-v1">
 #paymentChoices .checkout-pay-heading{color:#e9bd55;font-weight:800;font-size:13px;margin:14px 0 9px}
+#paymentChoices .checkout-payment-country{margin:10px 0 13px}
+#paymentChoices .checkout-payment-country-title{display:block;color:#e9bd55;font-size:11px;margin:8px 2px;font-weight:900}
 #paymentChoices .checkout-payment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 #paymentChoices .checkout-payment-tile{min-width:0;min-height:76px;display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #80683e;border-radius:13px;background:linear-gradient(145deg,#19231b,#0d120e);color:#f2dfb0;cursor:pointer;box-sizing:border-box}
 #paymentChoices .checkout-payment-tile:has(input:checked){border-color:#f0ce79;box-shadow:0 0 0 1px #d6b15a66;background:linear-gradient(145deg,#302718,#172019)}
@@ -1091,6 +1093,7 @@ function closeCart(){
  panel.removeAttribute('aria-modal');
  document.body.classList.remove('modal-open');
 }
+window.openCart=openCart;window.closeCart=closeCart;window.add=add;
 
 function renderApexAssistantMessages(){
  const box=$('apexAiMessages');if(!box)return;
