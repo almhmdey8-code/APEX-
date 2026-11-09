@@ -1429,6 +1429,8 @@ function openProductDetail(id){
  $('productDetailModal').classList.add('open');document.body.classList.add('modal-open');
 }
 function closeProductDetail(){$('productDetailModal').classList.remove('open');document.body.classList.remove('modal-open')}
+window.closeProductDetail=closeProductDetail;
+window.resetCatalogFilters=resetCatalogFilters;
 function filterCategory(name){const button=[...document.querySelectorAll('.cat')].find(x=>x.dataset.cat===name);if(button)button.click();else{document.querySelector('.cat[data-cat="الكل"]')?.click();toast('هذا القسم غير متاح حالياً');}$('products').scrollIntoView({behavior:'smooth',block:'start'})}
 loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
 </script>
