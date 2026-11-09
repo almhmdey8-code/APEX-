@@ -1005,9 +1005,15 @@ function showCheckoutPaymentCard(methods,value){
  const card=$('checkoutPaymentCard'),body=$('checkoutPaymentDetails'),title=$('checkoutPaymentTitle'),ref=$('checkoutPaymentReference');if(!card||!body)return;
  if(value==='wallet'){card.hidden=false;title.textContent='محفظة APEX';body.innerHTML='<p>سيتم خصم قيمة الطلب من رصيد محفظتك بعد التحقق من كفايته.</p>';ref.hidden=true;return}
  const m=methods.find(x=>String(x.id)===String(value));if(!m){card.hidden=true;return}title.textContent=m.name;ref.hidden=false;
- const currencyLabel=({ye_yer:'الريال اليمني',ye_kas:'KAS',ye_usd:'الدولار الأمريكي',alkuraimi_bank:'حسب بيانات حساب الكريمي',jeeb:'حسب بيانات محفظة جيب',one_cash:'حسب بيانات محفظة ون كاش',alamri_cash:'حسب بيانات محفظة عامري كاش'})[m.method_code]||'';
- const rows=[['العملة',currencyLabel],['اسم صاحب الحساب',m.account_holder],['رقم الحساب',m.account_number],['رقم الآيبان',m.account_iban],['تعليمات الدفع',m.instructions]].filter(x=>x[1]);
- body.innerHTML=rows.length?rows.map(([k,v])=>'<div class="checkout-payment-detail"><small>'+esc(k)+'</small><b>'+esc(v)+'</b>'+(k==='رقم الحساب'||k==='رقم الآيبان'?'<button type="button" class="copy-payment-number" data-copy-payment="'+esc(v)+'">نسخ الرقم</button>':'')+'</div>').join(''):'<p>لا توجد تفاصيل إضافية لهذه الوسيلة.</p>';
+ const accounts=m.method_code==='alkuraimi_bank'?(m.public_config?.accounts_by_currency||{}):{};
+ if(m.method_code==='alkuraimi_bank'&&Object.keys(accounts).length){
+  const order=['YER','SAR','USD'];
+  body.innerHTML='<p class="checkout-payment-note">اختر الحساب المطابق للعملة التي ستحوّل بها، ثم انسخ رقمه.</p>'+order.filter(code=>accounts[code]?.account_number).map(code=>'<div class="checkout-payment-detail"><small>'+esc(accounts[code].label||code)+'</small><b dir="ltr">'+esc(accounts[code].account_number)+'</b><button type="button" class="copy-payment-number" data-copy-payment="'+esc(accounts[code].account_number)+'">نسخ رقم الحساب</button></div>').join('');
+ }else{
+  const currencyLabel=({ye_yer:'الريال اليمني',ye_kas:'الريال السعودي',ye_usd:'الدولار الأمريكي',alkuraimi_bank:'حساب الكريمي',jeeb:'محفظة جيب',one_cash:'محفظة ون كاش',alamri_cash:'محفظة عامري كاش'})[m.method_code]||'';
+  const rows=[['العملة',currencyLabel],['اسم صاحب الحساب',m.account_holder],['رقم الحساب',m.account_number],['رقم الآيبان',m.account_iban],['تعليمات الدفع',m.instructions]].filter(x=>x[1]);
+  body.innerHTML=rows.length?rows.map(([k,v])=>'<div class="checkout-payment-detail"><small>'+esc(k)+'</small><b>'+esc(v)+'</b>'+(k==='رقم الحساب'||k==='رقم الآيبان'?'<button type="button" class="copy-payment-number" data-copy-payment="'+esc(v)+'">نسخ الرقم</button>':'')+'</div>').join(''):'<p>لا توجد تفاصيل إضافية لهذه الوسيلة.</p>';
+ }
  body.querySelectorAll('[data-copy-payment]').forEach(btn=>btn.addEventListener('click',async()=>{const value=btn.dataset.copyPayment||'';try{await navigator.clipboard.writeText(value);btn.textContent='تم النسخ ✓'}catch(e){const t=document.createElement('textarea');t.value=value;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();btn.textContent='تم النسخ ✓'}setTimeout(()=>btn.textContent='نسخ الرقم',1800)}));
  card.hidden=false;card.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -1015,7 +1021,7 @@ async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
  const wantedCountry=String(storeCurrencyCountry||'SA').trim().toUpperCase();
  const {data,error}=await supabase.from('apex_payment_methods')
-  .select('id,name,method_code,instructions,method_type,country_code,account_holder,account_number,account_iban,sort_order,enabled,orders_enabled')
+  .select('id,name,method_code,instructions,method_type,country_code,account_holder,account_number,account_iban,public_config,sort_order,enabled,orders_enabled')
   .order('sort_order',{ascending:true});
  if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
  const yeCodes=['alkuraimi_bank','jeeb','one_cash','alamri_cash'];
