@@ -19,20 +19,20 @@ try {
     }
 
     const html = fs.readFileSync(fullPath, 'utf8');
-    const ids = [...html.matchAll(/\\bid=["']([^"']+)["']/g)].map(match => match[1]);
+    const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(match => match[1]);
     const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
     if (duplicateIds.length) fail(file + ': duplicate IDs: ' + duplicateIds.join(', '));
 
     const idSet = new Set(ids);
-    const idRefs = [...new Set([...html.matchAll(/(?:\\$|getElementById)\\(\\s*['"]([^'"]+)['"]\\s*\\)/g)].map(match => match[1]))];
+    const idRefs = [...new Set([...html.matchAll(/(?:\$|getElementById)\(\s*['"]([^'"]+)['"]\s*\)/g)].map(match => match[1]))];
     const missingIds = idRefs.filter(id => !idSet.has(id));
     if (missingIds.length) fail(file + ': JavaScript references missing IDs: ' + missingIds.join(', '));
 
-    const modules = [...html.matchAll(/<script\\b(?=[^>]*\\btype\\s*=\\s*["']module["'])[^>]*>([\\s\\S]*?)<\\/script\\s*>/gi)];
+    const modules = [...html.matchAll(/<script\b(?=[^>]*\btype\s*=\s*["']module["'])[^>]*>([\s\S]*?)<\/script\s*>/gi)];
     if (!modules.length) fail(file + ': module script is missing');
     const inlineModules = modules.filter(match => {
       const opening = match[0].slice(0, match[0].indexOf('>') + 1);
-      return !/\\bsrc\\s*=/.test(opening) && match[1].trim();
+      return !/\bsrc\s*=/.test(opening) && match[1].trim();
     });
     if (!inlineModules.length) fail(file + ': inline module script is missing');
 
@@ -46,9 +46,9 @@ try {
       }
     });
 
-    const localRefs = [...new Set([...html.matchAll(/(?:href|src)\\s*=\\s*["']([^"'#?]+)(?:[?#][^"']*)?["']/gi)]
+    const localRefs = [...new Set([...html.matchAll(/(?:href|src)\s*=\s*["']([^"'#?]+)(?:[?#][^"']*)?["']/gi)]
       .map(match => match[1])
-      .filter(ref => !/^(?:[a-z]+:|\\/\\/|data:|javascript:)/i.test(ref) && ref !== '#' && !ref.startsWith('mailto:')))];
+      .filter(ref => !/^(?:[a-z]+:|\/\/|data:|javascript:)/i.test(ref) && ref !== '#' && !ref.startsWith('mailto:')))];
     for (const ref of localRefs) {
       const target = path.resolve(path.dirname(fullPath), ref);
       if (!target.startsWith(root + path.sep) && target !== root) {
@@ -59,11 +59,11 @@ try {
     }
 
     if (file === 'index.html') {
-      const exports = new Set([...html.matchAll(/window\\.([A-Za-z_$][\\w$]*)\\s*=/g)].map(match => match[1]));
-      const handlers = [...html.matchAll(/\\bonclick\\s*=\\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
+      const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=/g)].map(match => match[1]));
+      const handlers = [...html.matchAll(/\bonclick\s*=\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
       for (const handler of handlers) {
-        if (/^(?:if\\s*\\(|document\\.)/.test(handler)) continue;
-        const fn = handler.match(/^([A-Za-z_$][\\w$]*)\\s*\\(/)?.[1];
+        if (/^(?:if\s*\(|document\.)/.test(handler)) continue;
+        const fn = handler.match(/^([A-Za-z_$][\w$]*)\s*\(/)?.[1];
         if (fn && !exports.has(fn)) fail('index.html: inline handler is not exposed on window: ' + fn);
       }
       if (/sb_secret_|service_role/i.test(html)) fail('index.html: privileged Supabase key must never be shipped to browsers');
@@ -79,7 +79,7 @@ try {
 }
 
 if (failures.length) {
-  console.error(failures.map(message => 'FAIL: ' + message).join('\\n'));
+  console.error(failures.map(message => 'FAIL: ' + message).join('\n'));
   process.exit(1);
 }
 console.log('APEX storefront validation passed: required pages, IDs, JavaScript syntax, local links, public-key boundary and inline handlers.');
