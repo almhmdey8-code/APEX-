@@ -1005,7 +1005,7 @@ function showCheckoutPaymentCard(methods,value){
  const card=$('checkoutPaymentCard'),body=$('checkoutPaymentDetails'),title=$('checkoutPaymentTitle'),ref=$('checkoutPaymentReference');if(!card||!body)return;
  if(value==='wallet'){card.hidden=false;title.textContent='محفظة APEX';body.innerHTML='<p>سيتم خصم قيمة الطلب من رصيد محفظتك بعد التحقق من كفايته.</p>';ref.hidden=true;return}
  const m=methods.find(x=>String(x.id)===String(value));if(!m){card.hidden=true;return}title.textContent=m.name;ref.hidden=false;
- const currencyLabel=({ye_yer:'الريال اليمني',ye_kas:'KAS',ye_usd:'الدولار الأمريكي'})[m.method_code]||'';
+ const currencyLabel=({ye_yer:'الريال اليمني',ye_kas:'KAS',ye_usd:'الدولار الأمريكي',alkuraimi_bank:'حسب بيانات حساب الكريمي',jeeb:'حسب بيانات محفظة جيب',one_cash:'حسب بيانات محفظة ون كاش',alamri_cash:'حسب بيانات محفظة عامري كاش'})[m.method_code]||'';
  const rows=[['العملة',currencyLabel],['اسم صاحب الحساب',m.account_holder],['رقم الحساب',m.account_number],['رقم الآيبان',m.account_iban],['تعليمات الدفع',m.instructions]].filter(x=>x[1]);
  body.innerHTML=rows.length?rows.map(([k,v])=>'<div class="checkout-payment-detail"><small>'+esc(k)+'</small><b>'+esc(v)+'</b>'+(k==='رقم الحساب'||k==='رقم الآيبان'?'<button type="button" class="copy-payment-number" data-copy-payment="'+esc(v)+'">نسخ الرقم</button>':'')+'</div>').join(''):'<p>لا توجد تفاصيل إضافية لهذه الوسيلة.</p>';
  body.querySelectorAll('[data-copy-payment]').forEach(btn=>btn.addEventListener('click',async()=>{const value=btn.dataset.copyPayment||'';try{await navigator.clipboard.writeText(value);btn.textContent='تم النسخ ✓'}catch(e){const t=document.createElement('textarea');t.value=value;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();btn.textContent='تم النسخ ✓'}setTimeout(()=>btn.textContent='نسخ الرقم',1800)}));
@@ -1013,15 +1013,17 @@ function showCheckoutPaymentCard(methods,value){
 }
 async function loadPaymentMethods(){
  const box=$('paymentChoices');if(!box)return;
- const {data,error}=await supabase.from('apex_payment_methods').select('id,name,method_code,instructions,method_type,country_code,account_holder,account_number,account_iban,sort_order').eq('enabled',true).eq('orders_enabled',true).order('sort_order',{ascending:true});
- if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
- // لا تعرض أي وسيلة تحويل إلا إذا كان لها رقم حساب/محفظة أو آيبان محفوظ فعلياً.
- // تقبل رمز الدولة كما هو، وتسمح بوسائل ALL إن وجدت.
  const wantedCountry=String(storeCurrencyCountry||'SA').trim().toUpperCase();
+ const {data,error}=await supabase.from('apex_payment_methods')
+  .select('id,name,method_code,instructions,method_type,country_code,account_holder,account_number,account_iban,sort_order,enabled,orders_enabled')
+  .order('sort_order',{ascending:true});
+ if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
+ const yeCodes=['alkuraimi_bank','jeeb','one_cash','alamri_cash'];
  const methods=(data||[]).filter(m=>{
   const country=String(m.country_code||'').trim().toUpperCase();
-  const hasAccount=Boolean(String(m.account_number||'').trim()||String(m.account_iban||'').trim());
-  return (country===wantedCountry||country==='ALL')&&hasAccount&&String(m.method_type||'manual').toLowerCase()!=='gateway'&&(wantedCountry!=='YE'||['ye_yer','ye_kas','ye_usd'].includes(m.method_code));
+  if(!(country===wantedCountry||country==='ALL'))return false;
+  if(wantedCountry==='YE')return yeCodes.includes(m.method_code)&&String(m.method_type||'manual').toLowerCase()!=='gateway';
+  return Boolean(m.enabled&&m.orders_enabled)&&String(m.method_type||'manual').toLowerCase()!=='gateway'&&Boolean(String(m.account_number||'').trim()||String(m.account_iban||'').trim());
  });
  const paymentBrandLogo=(name)=>{
   const n=String(name||'').toLowerCase();
@@ -1031,17 +1033,44 @@ async function loadPaymentMethods(){
   if(n.includes('عامري')||n.includes('alameri')||n.includes('amiri'))return 'https://graph.facebook.com/415075535267248/picture?type=large';
   return '';
  };
- const manual=methods.map(m=>{const logo=paymentBrandLogo(m.name);const image=logo?'<img class="paybrand-logo" src="'+logo+'" alt="شعار '+esc(m.name)+'" loading="lazy" referrerpolicy="no-referrer">':'';return '<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+'<span class="paybrand-copy"><b>'+esc(m.name)+'</b><small>اختر لعرض بطاقة الدفع</small></span></label>'}).join('');
+ const isReady=m=>Boolean(m.enabled&&m.orders_enabled&&(String(m.account_number||'').trim()||String(m.account_iban||'').trim())&&String(m.method_type||'manual').toLowerCase()!=='gateway');
+ const manual=methods.map(m=>{
+  const logo=paymentBrandLogo(m.name);
+  const image=logo?'<img class="paybrand-logo" src="'+logo+'" alt="شعار '+esc(m.name)+'" loading="lazy" referrerpolicy="no-referrer">':'';
+  const ready=isReady(m);
+  const status=ready?'متاح للدفع':(!String(m.account_number||'').trim()&&!String(m.account_iban||'').trim()?'بانتظار حفظ رقم الحساب':'موقوف مؤقتاً');
+  const content='<span class="paybrand-copy"><b>'+esc(m.name)+'</b><small>'+status+'</small></span>';
+  return ready
+   ?'<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+content+'</label>'
+   :'<div class="paychoice checkout-payment-tile" aria-disabled="true" style="opacity:.62;cursor:not-allowed"><input type="radio" disabled aria-label="'+esc(m.name)+' موقوف">'+image+content+'</div>';
+ }).join('');
  const wallet='<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label>';
- box.innerHTML='<p class="checkout-pay-heading">اختر طريقة الدفع</p><div class="checkout-payment-grid">'+wallet+manual+'</div><section id="checkoutPaymentCard" class="checkout-payment-card" hidden><header class="checkout-payment-card-head"><span class="checkout-card-chip">✦</span><div><b id="checkoutPaymentTitle">بيانات الدفع</b><small>تفاصيل الدفع الخاصة بطلبك</small></div><strong>APEX</strong></header><div id="checkoutPaymentDetails" class="checkout-payment-card-body"></div><label class="checkout-reference-label" for="checkoutPaymentReference">رقم الحوالة / مرجع الدفع</label><input id="checkoutPaymentReference" class="checkout-reference-input" placeholder="أدخل رقم العملية بعد التحويل"><p class="checkout-payment-note">سيظل الطلب بانتظار تأكيد الإدارة حتى التحقق من استلام المبلغ.</p></section>';
- box.querySelectorAll('input[name="paymentMethod"]').forEach(input=>input.addEventListener('change',()=>showCheckoutPaymentCard(methods,input.value)));
+ const disabledNotice=wantedCountry==='YE'?'<p style="color:#bdb18e;font-size:11px">الوسائل الموقوفة مؤقتاً تظهر للتعريف فقط ولا يمكن اختيارها حتى تفعيل حسابها من الإدارة.</p>':'';
+ box.innerHTML='<p class="checkout-pay-heading">اختر طريقة الدفع</p><div class="checkout-payment-grid">'+wallet+manual+'</div>'+disabledNotice+'<section id="checkoutPaymentCard" class="checkout-payment-card" hidden><header class="checkout-payment-card-head"><span class="checkout-card-chip">✦</span><div><b id="checkoutPaymentTitle">بيانات الدفع</b><small>تفاصيل الدفع الخاصة بطلبك</small></div><strong>APEX</strong></header><div id="checkoutPaymentDetails" class="checkout-payment-card-body"></div><label class="checkout-reference-label" for="checkoutPaymentReference">رقم الحوالة / مرجع الدفع</label><input id="checkoutPaymentReference" class="checkout-reference-input" placeholder="أدخل رقم العملية بعد التحويل"><p class="checkout-payment-note">سيظل الطلب بانتظار تأكيد الإدارة حتى التحقق من استلام المبلغ.</p></section>';
+ box.querySelectorAll('input[name="paymentMethod"]:not(:disabled)').forEach(input=>input.addEventListener('change',()=>showCheckoutPaymentCard(methods,input.value)));
 }
 function syncCartCount(){const n=cart.reduce((sum,x)=>sum+x.quantity,0);$('count').textContent=n;const dock=$('dockCount');if(dock)dock.textContent=n}
 function add(id,name,price){const found=cart.find(x=>x.id===id);if(found)found.quantity+=1;else cart.push({id,name,price,quantity:1});renderCart();syncCartCount()}
 function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('cartitems').innerHTML=cart.length?cart.map((x,i)=>'<div class="cartrow"><span>'+esc(x.name)+' × '+x.quantity+'<small style="display:block;color:#c9bd9a">'+formatStorePrice(x.price*x.quantity)+'</small></span><button class="add" data-remove="'+i+'">حذف</button></div>').join('')+'<div style="text-align:left;color:#f2d37d;font-weight:800;padding:10px">الإجمالي التقريبي: '+formatStorePrice(total)+'</div>':'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
 function removeItem(i){cart.splice(i,1);renderCart();syncCartCount()}
-function openCart(){$('cartpanel').classList.add('show');renderCart()}
-function closeCart(){$('cartpanel').classList.remove('show')}
+function openCart(){
+ const panel=$('cartpanel');if(!panel)return;
+ renderCart();
+ panel.classList.add('show');
+ panel.style.display='flex';
+ panel.style.visibility='visible';
+ panel.style.opacity='1';
+ panel.style.zIndex='10020';
+ document.body.classList.add('modal-open');
+}
+function closeCart(){
+ const panel=$('cartpanel');if(!panel)return;
+ panel.classList.remove('show');
+ panel.style.display='none';
+ panel.style.visibility='';
+ panel.style.opacity='';
+ document.body.classList.remove('modal-open');
+}
 
 function renderApexAssistantMessages(){
  const box=$('apexAiMessages');if(!box)return;
