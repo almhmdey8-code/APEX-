@@ -1,0 +1,1 @@
+update public.apex_payment_methods set wallet_topup_enabled=true,updated_at=now() where method_type='manual' and country_code='YE' and method_code in ('al_kuraimi','one_cash','jeeb','alamri_cash');
