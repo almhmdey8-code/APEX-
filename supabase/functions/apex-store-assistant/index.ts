@@ -48,7 +48,7 @@ function localStoreFallback(
   orderContext: any,
 ): string {
   const q = String(messages.filter((m) => m.role === "user").at(-1)?.content || "").toLowerCase();
-  const wantsOrder = /طلب|شحن|تتبع|وصل|استلم|حالة الطلب/.test(q);
+  const wantsOrder = /طلب|تتبع|وصل|استلم|حالة الطلب|رقم الطلب/.test(q);
   if (wantsOrder) {
     if (orderContext?.found) {
       return "حالة طلبك رقم #" + orderContext.id + ": " + (orderContext.status_ar || orderContext.status) +
@@ -82,7 +82,7 @@ function localStoreFallback(
   if (/حساب|تسجيل|دخول|كلمة المرور/.test(q)) {
     return "لإنشاء حساب، اختر «إنشاء حساب»، تحقق من بريدك الإلكتروني، ثم أكمل بياناتك. وبعد التسجيل تبقى الجلسة محفوظة حتى تختار تسجيل الخروج.";
   }
-  if (/شحن|توصيل|شركة الشحن|مدة التوصيل/.test(q)) {
+  if (/توصيل|شركة الشحن|مدة التوصيل|شحنة/.test(q)) {
     return "تفاصيل شركة الشحن ومدة التوصيل لا تزال بحاجة إلى تأكيد من الإدارة؛ لا أريد إعطاءك موعداً أو رسوماً غير مؤكدة.";
   }
   return "وصلني سؤالك. خدمة الذكاء الاصطناعي الموسعة غير متاحة مؤقتاً بسبب رصيد مزود الذكاء الاصطناعي، ويمكنني حالياً عرض معلومات المنتجات والطلبات والدفع والمحفظة المسجلة. للاستفسار الذي يحتاج موظفاً: apex.1.shopping@gmail.com.";
