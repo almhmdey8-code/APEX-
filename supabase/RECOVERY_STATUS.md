@@ -15,7 +15,7 @@ Project ref: `ulzxdvtzziydhuvennzw`
 
 ## Migration history caveat
 
-The live Supabase migration history contains 34 recorded versions. The repository now contains 7 SQL migration files; 27 historical SQL migration files are still missing. The newly recorded direct database changes are now captured in the migration above, but the missing historical SQL source files cannot be reconstructed byte-for-byte from the migration version/name ledger alone. Do not reset or recreate the production database from this partial migration directory until the remaining historical migrations or a complete schema/data backup have been recovered.
+The live Supabase migration history contains 33 recorded versions. The repository now contains 7 SQL migration files; 26 historical SQL migration files are still missing. The newly recorded direct database changes are now captured in the migration above, but the missing historical SQL source files cannot be reconstructed byte-for-byte from the migration version/name ledger alone. Do not reset or recreate the production database from this partial migration directory until the remaining historical migrations or a complete schema/data backup have been recovered.
 
 ## Production data safety
 
