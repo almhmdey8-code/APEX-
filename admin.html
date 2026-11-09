@@ -473,6 +473,34 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
 const owner='apex.1.shopping@gmail.com';
 const $=id=>document.getElementById(id);
+/* Bind admin login immediately so unrelated dashboard initialization cannot leave the button inactive. */
+const adminLoginButton=$('adm_send');
+if(adminLoginButton){
+ adminLoginButton.addEventListener('click',async()=>{
+  const email=$('adm_email')?.value.trim().toLowerCase()||'';
+  const password=$('adm_password')?.value||'';
+  const status=$('adm_loginmsg');
+  const showLoginStatus=(value)=>{if(status)status.textContent=value};
+  if(email!==owner){showLoginStatus('فشل تسجيل الدخول: البريد غير مصرح له.');return}
+  if(!password){showLoginStatus('فشل تسجيل الدخول: أدخل كلمة المرور.');return}
+  if(adminLoginButton.disabled)return;
+  adminLoginButton.disabled=true;
+  const oldText=adminLoginButton.textContent;
+  adminLoginButton.textContent='جارٍ تسجيل الدخول...';
+  showLoginStatus('جارٍ التحقق من بيانات المدير...');
+  try{
+   const {error}=await supabase.auth.signInWithPassword({email,password});
+   if(error){showLoginStatus('فشل تسجيل الدخول: '+error.message);return}
+   showLoginStatus('تم التحقق من كلمة المرور. جارٍ فتح لوحة الإدارة...');
+   await checkSession();
+  }catch(error){
+   showLoginStatus('فشل تسجيل الدخول: '+(error?.message||'تحقق من الاتصال وحاول مجدداً.'));
+  }finally{
+   adminLoginButton.disabled=false;
+   adminLoginButton.textContent=oldText||'تسجيل الدخول';
+  }
+ });
+}
 let editing=null,editingBanner=null,editingPayment=null;
 function updateKpis(ps,os){$('adm_kProducts').textContent=ps.length;$('adm_kActive').textContent=ps.filter(p=>p.active).length;$('adm_kOrders').textContent=os.length;$('adm_kNew').textContent=os.filter(o=>o.status==='new').length;renderAdminOverview(ps,os)}
 function renderAdminOverview(ps,os){
@@ -594,7 +622,7 @@ async function checkSession(){
   message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
  }finally{checkingAdminSession=false}
 }
-$('adm_send').onclick=async()=>{const email=$('adm_email').value.trim().toLowerCase(),password=$('adm_password').value,button=$('adm_send'),msg=$('adm_loginmsg');if(email!==owner){message('adm_loginmsg','فشل تسجيل الدخول: البريد غير مصرح له.');return}if(!password){message('adm_loginmsg','فشل تسجيل الدخول: أدخل كلمة المرور.');return}button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';message('adm_loginmsg','جارٍ التحقق من بيانات المدير...');try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error){message('adm_loginmsg','فشل تسجيل الدخول: '+error.message);return}message('adm_loginmsg','تم تسجيل الدخول بنجاح، جارٍ فتح لوحة الإدارة...');await checkSession()}catch(error){message('adm_loginmsg','فشل تسجيل الدخول. تحقق من اتصال الإنترنت وحاول مرة أخرى.')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}};
+/* Login handler is registered near the start of module initialization. */
 $('adm_send_reset').onclick=async()=>{const email=$('adm_reset_email').value.trim().toLowerCase(),button=$('adm_send_reset');if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){message('adm_reset_msg','أدخل بريدًا إلكترونيًا صحيحًا للعميل.');return}button.disabled=true;button.textContent='جارٍ إرسال الرابط...';message('adm_reset_msg','جارٍ إرسال رابط الاستعادة...');try{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://almhmdey8-code.github.io/APEX-/'});if(error)throw error;message('adm_reset_msg','تم إرسال طلب الاستعادة. إذا كان البريد مسجلاً، ستصل للعميل رسالة تحتوي رابطاً آمناً لتعيين كلمة مرور جديدة.');}catch(error){message('adm_reset_msg','تعذر إرسال رابط الاستعادة: '+(error?.message||'تحقق من إعدادات البريد وروابط التحويل في Supabase.'));}finally{button.disabled=false;button.textContent='إرسال رابط الاستعادة'}};
 $('adm_logout').onclick=async()=>{await supabase.auth.signOut();$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
 supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});
