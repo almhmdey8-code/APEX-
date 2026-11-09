@@ -1038,7 +1038,7 @@ async function loadPaymentMethods(){
   const logo=paymentBrandLogo(m.name);
   const image=logo?'<img class="paybrand-logo" src="'+logo+'" alt="شعار '+esc(m.name)+'" loading="lazy" referrerpolicy="no-referrer">':'';
   const ready=isReady(m);
-  const status=ready?'متاح للدفع':(!String(m.account_number||'').trim()&&!String(m.account_iban||'').trim()?'بانتظار حفظ رقم الحساب':'موقوف مؤقتاً');
+  const status=ready?'متاح للدفع':(m.method_code==='alkuraimi_bank'&&!String(m.account_number||'').trim()&&!String(m.account_iban||'').trim()?'بانتظار حفظ رقم الحساب':'موقوف مؤقتاً');
   const content='<span class="paybrand-copy"><b>'+esc(m.name)+'</b><small>'+status+'</small></span>';
   return ready
    ?'<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+content+'</label>'
