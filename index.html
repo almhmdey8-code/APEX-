@@ -1353,12 +1353,13 @@ async function refreshCustomer(session){
   return '<div class="item" style="margin:9px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#15130d,#080a08)"><b style="color:#f5d879">طلب #'+esc(o.id)+'</b><p>'+new Date(o.created_at).toLocaleString('ar-SA')+'</p><p><b>حالة الطلب:</b> '+esc(statusNames[o.status]||o.status||'قيد المراجعة')+'</p>'+(o.shipping_status?'<p><b>تحديث الشحن:</b> '+esc(o.shipping_status)+'</p>':'')+(o.total_sar!==null&&o.total_sar!==undefined?'<p>الإجمالي: '+Number(o.total_sar).toFixed(2)+' ر.س · الدفع: '+esc(o.payment_method||'بانتظار التأكيد')+'</p>':'')+'<div><b>المنتجات وخيارات الإرجاع:</b>'+itemHtml+'</div>'+(cleanAddress?'<p><b>عنوان التوصيل:</b> '+esc(cleanAddress)+'</p>':'')+(mapMatch?'<p><a target="_blank" rel="noopener" style="color:#f5d879" href="https://www.google.com/maps?q='+mapMatch[1]+','+mapMatch[2]+'">📍 عرض إحداثيات موقع التوصيل</a></p>':'')+(o.carrier?'<p><b>شركة الشحن:</b> '+esc(o.carrier)+'</p>':'')+(o.aramex_tracking_number?'<p><b>رقم التتبع:</b> <span dir="ltr">'+esc(o.aramex_tracking_number)+'</span></p>':'')+(history.length?'<div style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><b style="color:#f5d879">آخر تحديثات الطلب والشحن</b>'+history.map(h=>'<p style="font-size:12px;color:#c9bd9a">• '+esc(statusNames[h.status]||h.status)+' — '+new Date(h.created_at).toLocaleString('ar-SA')+(h.note?' · '+esc(h.note):'')+'</p>').join('')+'</div>':'<p style="font-size:12px;color:#c9bd9a">ستظهر هنا تحديثات الطلب والشحن عند تسجيلها من إدارة المتجر.</p>')+'</div>';
  };
  $('myOrders').innerHTML=orders.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات.</p>';
- document.querySelectorAll('[data-return-order]').forEach(button=>button.addEventListener('click',()=>requestProductReturn(button.dataset.returnOrder,button.dataset.returnProduct,Number(button.dataset.returnMax))));
 
  const shipping=orders.filter(o=>o.status!=='cancelled');
  $('shippingOrders').innerHTML=shipping.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد لديك طلبات شحن.</p>';
  const transit=orders.filter(o=>o.status==='shipped');
  $('transitOrders').innerHTML=transit.map(card).join('')||'<p style="text-align:center;padding:22px;color:#d8c99f">لا توجد طلبات تم شحنها.</p>';
+ document.querySelectorAll('[data-return-order]').forEach(button=>button.addEventListener('click',()=>requestProductReturn(button.dataset.returnOrder,button.dataset.returnProduct,Number(button.dataset.returnMax))));
+
  showAccountHome();
 }
 async function openCustomerProfile(){$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session)showAccountSection('profile');else{$('accountForm').hidden=false}}
