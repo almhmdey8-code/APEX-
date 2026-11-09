@@ -471,7 +471,7 @@ body{background:radial-gradient(ellipse at 80% -5%,rgba(183,137,48,.19),transpar
 </section>
 </div></section><script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
-const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
+const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'}});
 const $=id=>document.getElementById(id);
 /* Bind admin login immediately so unrelated dashboard initialization cannot leave the button inactive. */
 const adminLoginButton=$('adm_send');
@@ -618,8 +618,8 @@ async function checkSession(){
 }
 /* Login handler is registered near the start of module initialization. */
 $('adm_send_reset').onclick=async()=>{const email=$('adm_reset_email').value.trim().toLowerCase(),button=$('adm_send_reset');if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){message('adm_reset_msg','أدخل بريدًا إلكترونيًا صحيحًا للعميل.');return}button.disabled=true;button.textContent='جارٍ إرسال الرابط...';message('adm_reset_msg','جارٍ إرسال رابط الاستعادة...');try{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://almhmdey8-code.github.io/APEX-/'});if(error)throw error;message('adm_reset_msg','تم إرسال طلب الاستعادة. إذا كان البريد مسجلاً، ستصل للعميل رسالة تحتوي رابطاً آمناً لتعيين كلمة مرور جديدة.');}catch(error){message('adm_reset_msg','تعذر إرسال رابط الاستعادة: '+(error?.message||'تحقق من إعدادات البريد وروابط التحويل في Supabase.'));}finally{button.disabled=false;button.textContent='إرسال رابط الاستعادة'}};
-$('adm_logout').onclick=async()=>{await supabase.auth.signOut();$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
-supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});
+$('adm_logout').onclick=async()=>{const {error}=await supabase.auth.signOut({scope:'local'});if(error){message('adm_loginmsg','تعذر تسجيل خروج المدير: '+error.message);return}$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
+supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});window.addEventListener('pageshow',()=>{checkSession()});
 
 let shippingCache=[];
 async function loadShippingProviders(){
