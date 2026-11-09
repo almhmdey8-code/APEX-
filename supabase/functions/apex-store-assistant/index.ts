@@ -41,6 +41,53 @@ function outputText(data: any): string {
   return parts.join("\n").trim();
 }
 
+function localStoreFallback(
+  messages: Array<{ role: string; content: string }>,
+  products: any[],
+  paymentMethods: any[],
+  orderContext: any,
+): string {
+  const q = String(messages.filter((m) => m.role === "user").at(-1)?.content || "").toLowerCase();
+  const wantsOrder = /طلب|شحن|تتبع|وصل|استلم|حالة الطلب/.test(q);
+  if (wantsOrder) {
+    if (orderContext?.found) {
+      return "حالة طلبك رقم #" + orderContext.id + ": " + (orderContext.status_ar || orderContext.status) +
+        ". حالة الدفع: " + (orderContext.payment_status || "غير محددة") +
+        ". حالة الشحن: " + (orderContext.shipping_status || "غير محددة") +
+        (orderContext.carrier ? ". شركة الشحن: " + orderContext.carrier : "") +
+        (orderContext.tracking_number ? ". رقم التتبع: " + orderContext.tracking_number : "") +
+        ". هذه البيانات حسب آخر تحديث مسجل في المتجر.";
+    }
+    if (orderContext && orderContext.found === false) return "لم أجد هذا الطلب ضمن طلبات حسابك. تأكد من رقم الطلب أو تواصل مع خدمة العملاء.";
+    return "أستطيع متابعة طلبك بعد إرسال رقم الطلب، ويجب أن يكون الطلب تابعاً لحسابك المسجل.";
+  }
+  if (/منتج|المنتجات|متوفر|المخزون|كتالوج|السعر|أسعار/.test(q)) {
+    if (!products.length) return "لا توجد منتجات نشطة متاحة للعرض حالياً في بيانات المتجر.";
+    return "هذه بعض المنتجات النشطة المسجلة حالياً:\n" + products.slice(0, 8).map((p: any) =>
+      "• " + p.name + " — " + (p.price_sar == null ? "السعر غير محدد" : Number(p.price_sar).toFixed(2) + " ر.س") +
+      " — " + (Number(p.stock || 0) > 0 ? "متوفر (" + p.stock + ")" : "غير متوفر")
+    ).join("\n") + "\nللتأكد من تفاصيل أي منتج، افتح صفحة المنتج في المتجر.";
+  }
+  if (/دفع|الدفع|تحويل|وسيلة الدفع|طرق الدفع/.test(q)) {
+    if (!paymentMethods.length) return "لا توجد حالياً وسائل دفع مفعّلة للطلبات حسب إعدادات المتجر.";
+    return "وسائل الدفع المفعّلة للطلبات في بيانات المتجر:\n" + paymentMethods.map((m: any) => "• " + m.name).join("\n") +
+      "\nتحقق من تعليمات الوسيلة الظاهرة عند إتمام الطلب؛ ولا تعتبر الحوالة مؤكدة قبل مراجعتها من الإدارة.";
+  }
+  if (/إرجاع|ارجاع|استرجاع|استرداد/.test(q)) {
+    return "يمكن طلب إرجاع المنتج بعد تأكيد استلام الطلب، ويظل مبلغ الإرجاع مقيداً حتى وصول المنتج وفحصه وتأكيد استلامه من الإدارة. راجع قسم الطلبات في حسابك لبدء الطلب.";
+  }
+  if (/محفظة|رصيد|شحن المحفظة/.test(q)) {
+    return "يمكنك مراجعة الرصيد المتاح والرصيد المقيد وطلبات شحن المحفظة من قسم المحفظة في حسابك. لا يُضاف أي مبلغ إلى رصيدك قبل اعتماد عملية الشحن من الإدارة.";
+  }
+  if (/حساب|تسجيل|دخول|كلمة المرور/.test(q)) {
+    return "لإنشاء حساب، اختر «إنشاء حساب»، تحقق من بريدك الإلكتروني، ثم أكمل بياناتك. وبعد التسجيل تبقى الجلسة محفوظة حتى تختار تسجيل الخروج.";
+  }
+  if (/شحن|توصيل|شركة الشحن|مدة التوصيل/.test(q)) {
+    return "تفاصيل شركة الشحن ومدة التوصيل لا تزال بحاجة إلى تأكيد من الإدارة؛ لا أريد إعطاءك موعداً أو رسوماً غير مؤكدة.";
+  }
+  return "وصلني سؤالك. خدمة الذكاء الاصطناعي الموسعة غير متاحة مؤقتاً بسبب رصيد مزود الذكاء الاصطناعي، ويمكنني حالياً عرض معلومات المنتجات والطلبات والدفع والمحفظة المسجلة. للاستفسار الذي يحتاج موظفاً: apex.1.shopping@gmail.com.";
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
@@ -50,7 +97,6 @@ Deno.serve(async (req: Request) => {
   if (!token) return json({ error: "authentication_required" }, 401);
 
   const openAiKey = Deno.env.get("OPENAI_API_KEY");
-  if (!openAiKey) return json({ error: "assistant_not_configured" }, 503);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
@@ -169,6 +215,10 @@ Deno.serve(async (req: Request) => {
     ...messages.slice(-8).map((m) => ({ role: m.role, content: m.content })),
   ];
 
+  const fallbackReply = () => localStoreFallback(messages, products, paymentMethods, orderContext);
+  if (!openAiKey) return json({ reply: fallbackReply(), fallback: true });
+
+
   let aiResponse: Response;
   try {
     aiResponse = await fetch("https://api.openai.com/v1/responses", {
@@ -179,20 +229,20 @@ Deno.serve(async (req: Request) => {
     });
   } catch (error) {
     console.error("APEX OpenAI request timeout or network failure:", error instanceof Error ? error.name : "unknown");
-    return json({ error: "ai_provider_unreachable" }, 502);
+    return json({ reply: fallbackReply(), fallback: true });
   }
   const aiData = await aiResponse.json().catch(() => ({}));
   if (!aiResponse.ok) {
     const providerCode = aiData?.error?.code || aiData?.error?.type || "provider_error";
     console.error("APEX OpenAI request failed:", aiResponse.status, providerCode);
-    if (aiResponse.status === 401) return json({ error: "assistant_key_invalid" }, 503);
+    if (aiResponse.status === 401) return json({ reply: fallbackReply(), fallback: true });
     if (aiResponse.status === 429 && providerCode === "credit_balance_exhausted") {
-      return json({ error: "assistant_credits_exhausted" }, 503);
+      return json({ reply: fallbackReply(), fallback: true });
     }
-    return json({ error: "ai_provider_error" }, 502);
+    return json({ reply: fallbackReply(), fallback: true });
   }
   let reply = outputText(aiData);
-  if (!reply) return json({ error: "empty_ai_response" }, 502);
+  if (!reply) return json({ reply: fallbackReply(), fallback: true });
   const handoff = reply.includes("[[APEX_HANDOFF]]");
   reply = reply.replace(/\s*\[\[APEX_HANDOFF\]\]\s*/g, "").trim();
   return json({ reply, handoff });
