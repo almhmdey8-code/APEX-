@@ -1027,9 +1027,10 @@ async function loadPaymentMethods(){
  const yeCodes=['alkuraimi_bank','jeeb','one_cash','alamri_cash'];
  const methods=(data||[]).filter(m=>{
   const country=String(m.country_code||'').trim().toUpperCase();
-  if(!(country===wantedCountry||country==='ALL'))return false;
-  if(wantedCountry==='YE')return yeCodes.includes(m.method_code)&&String(m.method_type||'manual').toLowerCase()!=='gateway';
-  return Boolean(m.enabled&&m.orders_enabled)&&String(m.method_type||'manual').toLowerCase()!=='gateway'&&Boolean(String(m.account_number||'').trim()||String(m.account_iban||'').trim());
+  return ['SA','YE','ALL'].includes(country)&&(
+   ['mada','visa','google_pay','apple_pay'].includes(m.method_code)||
+   yeCodes.includes(m.method_code)
+  );
  });
  const paymentBrandLogo=(name)=>{
   const n=String(name||'').toLowerCase();
@@ -1040,18 +1041,23 @@ async function loadPaymentMethods(){
   return '';
  };
  const isReady=m=>Boolean(m.enabled&&m.orders_enabled&&(String(m.account_number||'').trim()||String(m.account_iban||'').trim())&&String(m.method_type||'manual').toLowerCase()!=='gateway');
- const manual=methods.map(m=>{
+ const renderMethod=(m)=>{
   const logo=paymentBrandLogo(m.name);
   const image=logo?'<img class="paybrand-logo" src="'+logo+'" alt="شعار '+esc(m.name)+'" loading="lazy" referrerpolicy="no-referrer">':'';
   const ready=isReady(m);
-  const status=ready?'متاح للدفع':(m.method_code==='alkuraimi_bank'&&!String(m.account_number||'').trim()&&!String(m.account_iban||'').trim()?'بانتظار حفظ رقم الحساب':'موقوف مؤقتاً');
+  const gateway=String(m.method_type||'').toLowerCase()==='gateway';
+  const status=ready?'متاح للدفع':(gateway?'غير مفعّل حالياً — بانتظار ربط بوابة الدفع':(m.method_code==='alkuraimi_bank'?'بانتظار اكتمال بيانات الحساب':'موقوف مؤقتاً'));
   const content='<span class="paybrand-copy"><b>'+esc(m.name)+'</b><small>'+status+'</small></span>';
   return ready
    ?'<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+content+'</label>'
-   :'<div class="paychoice checkout-payment-tile" aria-disabled="true" style="opacity:.62;cursor:not-allowed"><input type="radio" disabled aria-label="'+esc(m.name)+' موقوف">'+image+content+'</div>';
- }).join('');
- const wallet='<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label>';
- const disabledNotice=wantedCountry==='YE'?'<p style="color:#bdb18e;font-size:11px">الوسائل الموقوفة مؤقتاً تظهر للتعريف فقط ولا يمكن اختيارها حتى تفعيل حسابها من الإدارة.</p>':'';
+   :'<div class="paychoice checkout-payment-tile" aria-disabled="true" style="opacity:.62;cursor:not-allowed">'+image+content+'</div>';
+ };
+ const saMethods=methods.filter(m=>String(m.country_code||'').toUpperCase()==='SA');
+ const yeMethods=methods.filter(m=>String(m.country_code||'').toUpperCase()==='YE');
+ const group=(title,list)=>list.length?'<div class="checkout-payment-country"><b class="checkout-payment-country-title">'+title+'</b><div class="checkout-payment-grid">'+list.map(renderMethod).join('')+'</div></div>':'';
+ const manual=group('طرق الدفع في السعودية',saMethods)+group('طرق الدفع في اليمن',yeMethods);
+ const wallet='<div class="checkout-payment-country"><b class="checkout-payment-country-title">الدفع من رصيد APEX</b><div class="checkout-payment-grid"><label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label></div></div>';
+ const disabledNotice='<p style="color:#bdb18e;font-size:11px">تظهر وسائل الدفع الخاصة بالسعودية واليمن بشكل منفصل. الوسيلة غير المفعّلة لا يمكن اختيارها حتى يكتمل إعدادها.</p>';
  box.innerHTML='<p class="checkout-pay-heading">اختر طريقة الدفع</p><div class="checkout-payment-grid">'+wallet+manual+'</div>'+disabledNotice+'<section id="checkoutPaymentCard" class="checkout-payment-card" hidden><header class="checkout-payment-card-head"><span class="checkout-card-chip">✦</span><div><b id="checkoutPaymentTitle">بيانات الدفع</b><small>تفاصيل الدفع الخاصة بطلبك</small></div><strong>APEX</strong></header><div id="checkoutPaymentDetails" class="checkout-payment-card-body"></div><label class="checkout-reference-label" for="checkoutPaymentReference">رقم الحوالة / مرجع الدفع</label><input id="checkoutPaymentReference" class="checkout-reference-input" placeholder="أدخل رقم العملية بعد التحويل"><p class="checkout-payment-note">سيظل الطلب بانتظار تأكيد الإدارة حتى التحقق من استلام المبلغ.</p></section>';
  box.querySelectorAll('input[name="paymentMethod"]:not(:disabled)').forEach(input=>input.addEventListener('change',()=>showCheckoutPaymentCard(methods,input.value)));
 }
@@ -1060,21 +1066,29 @@ function add(id,name,price){const found=cart.find(x=>x.id===id);if(found)found.q
 function renderCart(){const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);$('cartitems').innerHTML=cart.length?cart.map((x,i)=>'<div class="cartrow"><span>'+esc(x.name)+' × '+x.quantity+'<small style="display:block;color:#c9bd9a">'+formatStorePrice(x.price*x.quantity)+'</small></span><button class="add" data-remove="'+i+'">حذف</button></div>').join('')+'<div style="text-align:left;color:#f2d37d;font-weight:800;padding:10px">الإجمالي التقريبي: '+formatStorePrice(total)+'</div>':'السلة فارغة';$('cartitems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeItem(Number(b.dataset.remove)))}
 function removeItem(i){cart.splice(i,1);renderCart();syncCartCount()}
 function openCart(){
- const panel=$('cartpanel');if(!panel)return;
+ const panel=document.getElementById('cartpanel');
+ if(!panel){console.error('APEX: cartpanel element is missing');return}
  renderCart();
+ panel.hidden=false;
+ panel.removeAttribute('hidden');
  panel.classList.add('show');
- panel.style.display='flex';
+ panel.style.setProperty('display','flex','important');
  panel.style.visibility='visible';
  panel.style.opacity='1';
  panel.style.zIndex='10020';
+ panel.setAttribute('role','dialog');
+ panel.setAttribute('aria-modal','true');
  document.body.classList.add('modal-open');
+ const close=panel.querySelector('.close');
+ if(close)close.focus({preventScroll:true});
 }
 function closeCart(){
- const panel=$('cartpanel');if(!panel)return;
+ const panel=document.getElementById('cartpanel');if(!panel)return;
  panel.classList.remove('show');
- panel.style.display='none';
+ panel.style.removeProperty('display');
  panel.style.visibility='';
  panel.style.opacity='';
+ panel.removeAttribute('aria-modal');
  document.body.classList.remove('modal-open');
 }
 
@@ -1499,7 +1513,7 @@ async function sendOrder(){
  }
  cart=[];$('count').textContent='0';renderCart();closeCart();
 }
-window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.copyMyReferralLink=copyMyReferralLink;window.loadCustomerNotifications=loadCustomerNotifications;window.askApexAssistantQuick=askApexAssistantQuick;window.sendApexAssistantMessage=sendApexAssistantMessage;window.clearApexAssistantSession=clearApexAssistantSession;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.openApexOtp=openApexOtp;window.closeApexOtp=closeApexOtp;window.submitApexOtp=submitApexOtp;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
+window.openCart=openCart;window.closeCart=closeCart;window.add=add;window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.copyMyReferralLink=copyMyReferralLink;window.loadCustomerNotifications=loadCustomerNotifications;window.askApexAssistantQuick=askApexAssistantQuick;window.sendApexAssistantMessage=sendApexAssistantMessage;window.clearApexAssistantSession=clearApexAssistantSession;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.openApexOtp=openApexOtp;window.closeApexOtp=closeApexOtp;window.submitApexOtp=submitApexOtp;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
 bindCategoryFilters();
 $('search').addEventListener('input',filterProducts);
 $('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
