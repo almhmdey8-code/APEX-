@@ -1149,7 +1149,7 @@ async function sendApexAssistantMessage(){
   if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
   if(error)throw error;
   if(!data||typeof data.reply!=='string'||!data.reply.trim())throw new Error('تعذر الحصول على رد صالح.');
-  apexAssistantMessages.push({role:'assistant',content:data.reply.trim()});
+  apexAssistantMessages.push({role:'assistant',content:(data.fallback?'[رد معلوماتي احتياطي — خدمة الذكاء الاصطناعي الموسعة غير متاحة مؤقتاً]\n':'')+data.reply.trim()});
   if(data.handoff)$('apexAiHandoff').hidden=false;
   status.textContent='';renderApexAssistantMessages();
  }catch(error){
