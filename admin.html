@@ -472,7 +472,6 @@ body{background:radial-gradient(ellipse at 80% -5%,rgba(183,137,48,.19),transpar
 </div></section><script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR');
-const owner='apex.1.shopping@gmail.com';
 const $=id=>document.getElementById(id);
 /* Bind admin login immediately so unrelated dashboard initialization cannot leave the button inactive. */
 const adminLoginButton=$('adm_send');
@@ -482,7 +481,7 @@ if(adminLoginButton){
   const password=$('adm_password')?.value||'';
   const status=$('adm_loginmsg');
   const showLoginStatus=(value)=>{if(status)status.textContent=value};
-  if(email!==owner){showLoginStatus('فشل تسجيل الدخول: البريد غير مصرح له.');return}
+  if(!email){showLoginStatus('أدخل البريد الإلكتروني.');return}
   if(!password){showLoginStatus('فشل تسجيل الدخول: أدخل كلمة المرور.');return}
   if(adminLoginButton.disabled)return;
   adminLoginButton.disabled=true;
@@ -597,12 +596,6 @@ async function checkSession(){
   if(!session){
    $('adm_login').classList.remove('apex-admin-hidden');
    $('adm_dashboard').classList.add('apex-admin-hidden');
-   return;
-  }
-  if((session.user.email||'').toLowerCase()!==owner){
-   $('adm_dashboard').classList.add('apex-admin-hidden');
-   $('adm_login').classList.remove('apex-admin-hidden');
-   message('adm_loginmsg','الجلسة الحالية ليست حساب المدير. أدخل بريد المدير للمتابعة.');
    return;
   }
   const {data:admin,error}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();
