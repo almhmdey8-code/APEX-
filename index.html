@@ -1005,9 +1005,9 @@ async function loadStoreBanners(){
  if(!box.children.length)box.hidden=true;
 }
 function showCheckoutPaymentCard(methods,value){
- const card=$('checkoutPaymentCard'),body=$('checkoutPaymentDetails'),title=$('checkoutPaymentTitle'),ref=$('checkoutPaymentReference');if(!card||!body)return;
- if(value==='wallet'){card.hidden=false;title.textContent='محفظة APEX';body.innerHTML='<p>سيتم خصم قيمة الطلب من رصيد محفظتك بعد التحقق من كفايته.</p>';ref.hidden=true;return}
- const m=methods.find(x=>String(x.id)===String(value));if(!m){card.hidden=true;return}title.textContent=m.name;ref.hidden=false;
+ const card=$('checkoutPaymentCard'),body=$('checkoutPaymentDetails'),title=$('checkoutPaymentTitle'),ref=$('checkoutPaymentReference'),transfer=$('checkoutTransferFields');if(!card||!body)return;
+ if(value==='wallet'){card.hidden=false;title.textContent='محفظة APEX';body.innerHTML='<p>سيتم خصم قيمة الطلب من رصيد محفظتك بعد التحقق من كفايته.</p>';if(transfer)transfer.hidden=true;return}
+ const m=methods.find(x=>String(x.id)===String(value));if(!m){card.hidden=true;return}title.textContent=m.name;ref.hidden=false;if(transfer)transfer.hidden=false;
  const accounts=m.method_code==='alkuraimi_bank'?(m.public_config?.accounts_by_currency||{}):{};
  if(m.method_code==='alkuraimi_bank'&&Object.keys(accounts).length){
   const order=['YER','SAR','USD'];
@@ -1061,7 +1061,7 @@ async function loadPaymentMethods(){
  const manual=group('طرق الدفع في السعودية',saMethods)+group('طرق الدفع في اليمن',yeMethods);
  const wallet='<div class="checkout-payment-country"><b class="checkout-payment-country-title">الدفع من رصيد APEX</b><div class="checkout-payment-grid"><label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label></div></div>';
  const disabledNotice='<p style="color:#bdb18e;font-size:11px">تظهر وسائل الدفع الخاصة بالسعودية واليمن بشكل منفصل. الوسيلة غير المفعّلة لا يمكن اختيارها حتى يكتمل إعدادها.</p>';
- box.innerHTML='<p class="checkout-pay-heading">اختر طريقة الدفع</p><div class="checkout-payment-grid">'+wallet+manual+'</div>'+disabledNotice+'<section id="checkoutPaymentCard" class="checkout-payment-card" hidden><header class="checkout-payment-card-head"><span class="checkout-card-chip">✦</span><div><b id="checkoutPaymentTitle">بيانات الدفع</b><small>تفاصيل الدفع الخاصة بطلبك</small></div><strong>APEX</strong></header><div id="checkoutPaymentDetails" class="checkout-payment-card-body"></div><label class="checkout-reference-label" for="checkoutPaymentReference">رقم الحوالة / مرجع الدفع</label><input id="checkoutPaymentReference" class="checkout-reference-input" placeholder="أدخل رقم العملية بعد التحويل"><p class="checkout-payment-note">سيظل الطلب بانتظار تأكيد الإدارة حتى التحقق من استلام المبلغ.</p></section>';
+ box.innerHTML='<p class="checkout-pay-heading">اختر طريقة الدفع</p><div class="checkout-payment-grid">'+wallet+manual+'</div>'+disabledNotice+'<section id="checkoutPaymentCard" class="checkout-payment-card" hidden><header class="checkout-payment-card-head"><span class="checkout-card-chip">✦</span><div><b id="checkoutPaymentTitle">بيانات الدفع</b><small>تفاصيل الدفع الخاصة بطلبك</small></div><strong>APEX</strong></header><div id="checkoutPaymentDetails" class="checkout-payment-card-body"></div><div id="checkoutTransferFields"><label class="checkout-reference-label" for="checkoutPayerName">اسم الشخص المحوِّل كما يظهر في الحوالة</label><input id="checkoutPayerName" class="checkout-reference-input" maxlength="120" placeholder="اكتب اسم المحوِّل"><label class="checkout-reference-label" for="checkoutPaymentReference">رقم الحوالة / مرجع الدفع</label><input id="checkoutPaymentReference" class="checkout-reference-input" maxlength="160" placeholder="أدخل رقم العملية بعد التحويل"></div><p class="checkout-payment-note">سيظل الطلب بانتظار تأكيد الإدارة حتى التحقق من استلام المبلغ.</p></section>';
  box.querySelectorAll('input[name="paymentMethod"]:not(:disabled)').forEach(input=>input.addEventListener('change',()=>showCheckoutPaymentCard(methods,input.value)));
 }
 function syncCartCount(){const n=cart.reduce((sum,x)=>sum+x.quantity,0);$('count').textContent=n;const dock=$('dockCount');if(dock)dock.textContent=n}
@@ -1492,7 +1492,9 @@ async function sendOrder(){
  if(picked){const label=picked.closest('label');paymentName=label?.querySelector('b')?.textContent||''}
  const mapUrl=deliveryCoords?'https://www.google.com/maps?q='+deliveryCoords.lat+','+deliveryCoords.lng:'';
  const orderAddress=[address,mapUrl?'موقع الخريطة: '+mapUrl:''].filter(Boolean).join(' | ')||'استلام بالتنسيق مع المتجر';
- const paymentReference=$('checkoutPaymentReference')?.value.trim()||'';const orderNotes='طريقة الشحن: '+shipping+'\nطريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+(paymentReference?'\nمرجع الحوالة: '+paymentReference:'')+(mapUrl?'\nموقع الخريطة: '+mapUrl:'')+(address?'\nملاحظات العنوان: '+address:'');
+ const paymentReference=$('checkoutPaymentReference')?.value.trim()||'';const payerName=$('checkoutPayerName')?.value.trim()||'';
+ if(picked&&picked.value!=='wallet'&&(!payerName||!paymentReference)){alert('أدخل اسم الشخص المحوِّل ورقم الحوالة قبل إرسال الطلب.');return}
+ const orderNotes='طريقة الشحن: '+shipping+'\nطريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+(payerName?'\nاسم المحوِّل: '+payerName:'')+(paymentReference?'\nمرجع الحوالة: '+paymentReference:'')+(mapUrl?'\nموقع الخريطة: '+mapUrl:'')+(address?'\nملاحظات العنوان: '+address:'');
  const items=cart.map(x=>({id:x.id,quantity:x.quantity}));
  if(!customerSession?.user){alert('سجل الدخول أولاً لحفظ بياناتك وإرسال الطلب.');openAccount();return}
  const oldMeta=customerSession.user.user_metadata||{};
