@@ -1016,64 +1016,6 @@ checkSession();
   #adminWorkspace .payment-card-actions button{width:100%}
 }
 </style>
-
-<style id="apex-admin-interface-refinement">
-#adminWorkspace{background:radial-gradient(ellipse at 50% 0,rgba(117,79,20,.22),transparent 42%),#070806!important}
-#adminWorkspace .wrap{max-width:1540px!important}
-#adminWorkspace .head{border-bottom:1px solid rgba(242,207,120,.3)!important}
-#adminWorkspace .kpi,#adminWorkspace .quick-card,#adminWorkspace .panel,#adminWorkspace #adm_products,#adminWorkspace #adm_banners,#adminWorkspace #adm_payments,#adminWorkspace #adm_orders,#adminWorkspace #adm_customers{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-#adminWorkspace .quick-card{min-height:145px;height:auto;border-radius:20px!important;transition:transform .2s,border-color .2s,box-shadow .2s}
-#adminWorkspace .quick-card:focus-visible,#adminWorkspace .tabs button:focus-visible{outline:2px solid #fff0b8;outline-offset:3px}
-#adminWorkspace .tabs{position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}
-#adminWorkspace .panel,#adminWorkspace .item{box-shadow:inset 0 1px rgba(255,255,255,.045),0 10px 26px rgba(0,0,0,.24)}
-#adminWorkspace .field,#adminWorkspace input,#adminWorkspace select,#adminWorkspace textarea{min-height:46px;padding:12px 14px;color:#fff;font:inherit}
-#adminWorkspace textarea{min-height:110px;resize:vertical}
-#adminWorkspace .btn,#adminWorkspace .btn2{min-height:43px;border-radius:12px}
-#adminWorkspace .payment-country-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-#adminWorkspace .payment-country-panel{min-width:0;padding:16px;border:1px solid rgba(229,190,111,.4);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(8,12,9,.72))}
-#adminWorkspace .payment-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
-#adminWorkspace .payment-card{width:100%;min-width:0;border-radius:16px;overflow-wrap:anywhere}
-#adminWorkspace .payment-card-actions{display:flex;flex-wrap:wrap;gap:8px}
-#adminWorkspace .payment-card-actions button{min-width:0;flex:1 1 110px}
-#adminWorkspace .grid{align-items:start}
-#adminWorkspace .item{overflow-wrap:anywhere}
-#adminWorkspace .tablewrap{border:1px solid rgba(229,190,111,.25);border-radius:14px}
-@media(max-width:760px){#adminWorkspace .payment-country-layout{grid-template-columns:1fr}#adminWorkspace .tabs{top:0}#adminWorkspace .panel{margin:12px 0}}
-@media(max-width:520px){#adminWorkspace .wrap{padding:0 10px 24px!important}#adminWorkspace .quick-card{min-height:112px;height:auto}#adminWorkspace .payment-card{padding:14px}#adminWorkspace .payment-card-actions{flex-direction:column}#adminWorkspace .payment-card-actions button{width:100%;flex:1 1 auto}#adminWorkspace td,#adminWorkspace th{padding:8px;font-size:12px}}
-@media(prefers-reduced-motion:reduce){#adminWorkspace .quick-card{transition:none}}
-</style>
-</body></html>
-]];
- $('adm_paymentlist_sa').innerHTML=saDefs.map(([code,label,sym])=>card(saMethods.find(p=>p.method_code===code),code,label,sym)).join('');
- $('adm_paymentlist_ye').innerHTML=yeDefs.map(([code,label,sym])=>card(yeMethods.find(p=>p.method_code===code),code,label,sym)).join('');
- $('adm_paymentlist').querySelectorAll('[data-pe]').forEach(x=>x.onclick=()=>openPaymentEditor(x.dataset.pe,x.dataset.pnew,x.dataset.country));
- $('adm_paymentlist').querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>togglePayment(Number(x.dataset.pt),x.dataset.enabled==='true'));
- $('adm_paymentlist').querySelectorAll('[data-pclear]').forEach(x=>x.onclick=()=>clearPaymentData(Number(x.dataset.pclear)));
- selectPaymentCountry('YE');
-}
-async function togglePayment(id,currentlyEnabled){
- const p=paymentsCache.find(x=>Number(x.id)===id);if(!p)return;
- const next=!currentlyEnabled;
- if(next&&p.method_type==='gateway'&&p.integration_status!=='verified'){message('paymsg','لا يمكن تشغيل '+p.name+' قبل اكتمال الربط والتحقق من Webhook.');return}
- if(next&&p.method_type!=='gateway'&&!['cod'].includes(p.method_code)&&p.country_code==='YE'&&!p.account_number&&!p.account_iban){message('paymsg','أدخل رقم الحساب أو الآيبان أولاً قبل تشغيل '+p.name+'.');return}
- if(!confirm('هل تريد '+(next?'تشغيل':'إيقاف')+' وسيلة '+p.name+'؟'))return;
- const {error}=await supabase.from('apex_payment_methods').update({enabled:next,updated_at:new Date().toISOString()}).eq('id',id);
- message('paymsg',error?'تعذر تغيير الحالة: '+error.message:'تم '+(next?'تشغيل':'إيقاف')+' '+p.name+'.');
- if(!error)await loadPayments();
-}
-async function clearPaymentData(id){
- const p=paymentsCache.find(x=>Number(x.id)===id);if(!p)return;
- if(!confirm('سيتم مسح بيانات '+p.name+' فقط (تعليمات الدفع وبيانات الحساب والمزود والإعدادات العامة)، مع الاحتفاظ بطريقة الدفع نفسها وإيقافها. هل تريد المتابعة؟'))return;
- const patch={instructions:'',account_holder:null,account_number:null,account_iban:null,gateway_provider:null,public_config:{},enabled:false,integration_status:'not_configured',integration_tested_at:null,updated_at:new Date().toISOString()};
- const {error}=await supabase.from('apex_payment_methods').update(patch).eq('id',id);
- message('paymsg',error?'تعذر مسح البيانات: '+error.message:'تم مسح بيانات الوسيلة وإيقافها، وبقيت طريقة الدفع محفوظة.');
- if(!error)await loadPayments();
-}
-$('adm_savepayment').onclick=async()=>{const row={name:$('adm_payname').value.trim(),method_code:$('adm_paycode').value,method_type:$('adm_paytype').value,country_code:$('adm_paycountry').value,account_holder:$('adm_payholder').value.trim()||null,account_number:$('adm_payaccount').value.trim()||null,account_iban:$('adm_payiban').value.trim()||null,gateway_provider:$('adm_gatewayprovider').value.trim()||null,orders_enabled:$('adm_payorders').checked,wallet_topup_enabled:$('adm_paywallet').checked,instructions:$('adm_payinstructions').value.trim(),sort_order:Number($('adm_payorder').value||0),enabled:$('adm_payenabled').checked,updated_at:new Date().toISOString()};if(!row.name){message('paymsg','أدخل اسم الطريقة');return}if(row.method_type==='gateway'&&row.enabled){message('paymsg','لا يمكن تفعيل بوابة إلكترونية قبل اكتمال ربط الخادم والتحقق من Webhook. احفظها معطلة الآن.');return}if(row.method_type!=='gateway'&&row.country_code==='YE'&&row.enabled&&!row.account_number&&!row.account_iban){message('paymsg','أدخل رقم الحساب أو المحفظة قبل تفعيل وسيلة التحويل.');return}const q=editingPayment?supabase.from('apex_payment_methods').update(row).eq('id',editingPayment):supabase.from('apex_payment_methods').insert(row);const {error}=await q;message('paymsg',error?'فشل الحفظ: '+error.message:'تم حفظ الطريقة');if(!error){$('adm_cancelpayment').click();$('adm_payments').querySelector('.payment-editor').open=false;loadPayments()}};
-$('adm_cancelpayment').onclick=()=>{editingPayment=null;$('adm_paycode').value='';['payname','payinstructions','payholder','payaccount','payiban','gatewayprovider'].forEach(id=>$(id).value='');$('adm_paytype').value='manual';$('adm_paycountry').value='SA';$('adm_payorder').value=0;$('adm_payenabled').checked=false;$('adm_payorders').checked=true;$('adm_paywallet').checked=false;$('adm_cancelpayment').classList.add('apex-admin-hidden');if($('adm_payments').querySelector('.payment-editor')){$('adm_payments').querySelector('.payment-editor').open=false;$('adm_payments').querySelector('.payment-editor').style.display='none'}};
-
-checkSession();
-</script>
 <style id="apex-luxury-glass-panels">
 /* APEX luxury glass panels — visual-only layer; preserves existing layout and behavior */
 #adminWorkspace{
