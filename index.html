@@ -1253,7 +1253,7 @@ async function loadCustomerNotifications(){
  if(!orderIds.length){$('customerNotifications').innerHTML='<p>لا توجد إشعارات حتى الآن.</p>';return}
  const {data,error}=await supabase.from('apex_order_status_history').select('order_id,status,note,created_at').in('order_id',orderIds).order('created_at',{ascending:false}).limit(30);
  if(error){$('customerNotifications').textContent='تعذر تحميل الإشعارات: '+error.message;return}
- const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب'};
+ const names={new:'تم استلام الطلب',confirmed:'تم تأكيد الطلب',processing:'قيد التجهيز',shipped:'تم تسليم الطلب لشركة الشحن',delivered:'تم التسليم',cancelled:'تم إلغاء الطلب',return_requested:'تم تسجيل طلب الإرجاع — المبلغ مقيد',return_released:'تم استلام المنتج وتحرير المبلغ إلى المحفظة',return_rejected:'تم رفض طلب الإرجاع'};
  $('customerNotifications').innerHTML=(data||[]).map(x=>'<div class="item" style="margin:8px 0;padding:10px"><b>الطلب #'+esc(x.order_id)+' — '+esc(names[x.status]||x.status)+'</b><p>'+esc(x.note||'تم تحديث الطلب')+'</p><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p>لا توجد إشعارات حتى الآن.</p>';
 }
 async function requestProductReturn(orderId,productId,maxQuantity){
