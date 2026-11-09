@@ -1,0 +1,18 @@
+# Preserve the currently deployed JWT verification behavior.
+[functions.apex-wallet-checkout]
+verify_jwt = true
+
+[functions.apex-create-order]
+verify_jwt = true
+
+[functions.apex-admin-customers]
+verify_jwt = true
+
+[functions.apex-ai-guard]
+verify_jwt = false
+
+[functions.apex-email-campaign]
+verify_jwt = true
+
+[functions.apex-store-assistant]
+verify_jwt = false
