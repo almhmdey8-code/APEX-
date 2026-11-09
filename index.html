@@ -1492,7 +1492,9 @@ async function sendOrder(){
  if(picked){const label=picked.closest('label');paymentName=label?.querySelector('b')?.textContent||''}
  const mapUrl=deliveryCoords?'https://www.google.com/maps?q='+deliveryCoords.lat+','+deliveryCoords.lng:'';
  const orderAddress=[address,mapUrl?'موقع الخريطة: '+mapUrl:''].filter(Boolean).join(' | ')||'استلام بالتنسيق مع المتجر';
- const paymentReference=$('checkoutPaymentReference')?.value.trim()||'';const payerName=$('checkoutPayerName')?.value.trim()||'';
+ const isWalletPayment=picked?.value==='wallet';
+ const paymentReference=isWalletPayment?'':($('checkoutPaymentReference')?.value.trim()||'');
+ const payerName=isWalletPayment?'':($('checkoutPayerName')?.value.trim()||'');
  if(picked&&picked.value!=='wallet'&&(!payerName||!paymentReference)){alert('أدخل اسم الشخص المحوِّل ورقم الحوالة قبل إرسال الطلب.');return}
  const orderNotes='طريقة الشحن: '+shipping+'\nطريقة الدفع المختارة: '+(paymentName||'يتم التأكيد مع العميل')+(payerName?'\nاسم المحوِّل: '+payerName:'')+(paymentReference?'\nمرجع الحوالة: '+paymentReference:'')+(mapUrl?'\nموقع الخريطة: '+mapUrl:'')+(address?'\nملاحظات العنوان: '+address:'');
  const items=cart.map(x=>({id:x.id,quantity:x.quantity}));
