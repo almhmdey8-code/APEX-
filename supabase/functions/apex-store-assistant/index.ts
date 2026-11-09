@@ -53,15 +53,8 @@ Deno.serve(async (req: Request) => {
   if (!openAiKey) return json({ error: "assistant_not_configured" }, 503);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  // Supabase projects may expose either the legacy anon key or the newer publishable key.
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
-  if (!supabaseUrl || !anonKey) {
-    console.error("APEX assistant backend configuration missing:", {
-      supabaseUrl: Boolean(supabaseUrl),
-      supabaseKey: Boolean(anonKey),
-    });
-    return json({ error: "backend_not_configured" }, 500);
-  }
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !anonKey) return json({ error: "backend_not_configured" }, 500);
 
   const supabase = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: "Bearer " + token } },
@@ -193,6 +186,9 @@ Deno.serve(async (req: Request) => {
     const providerCode = aiData?.error?.code || aiData?.error?.type || "provider_error";
     console.error("APEX OpenAI request failed:", aiResponse.status, providerCode);
     if (aiResponse.status === 401) return json({ error: "assistant_key_invalid" }, 503);
+    if (aiResponse.status === 429 && providerCode === "credit_balance_exhausted") {
+      return json({ error: "assistant_credits_exhausted" }, 503);
+    }
     return json({ error: "ai_provider_error" }, 502);
   }
   let reply = outputText(aiData);
