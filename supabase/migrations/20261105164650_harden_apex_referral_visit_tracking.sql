@@ -1,6 +1,3 @@
--- Harden APEX referral visit tracking.
--- Applied to the linked Supabase project; this migration keeps the change reproducible.
-
 create or replace function public.apex_track_referral_visit(
   p_code text,
   p_visitor_id text,
@@ -37,7 +34,8 @@ begin
     return jsonb_build_object('tracked', false, 'reason', 'invalid_or_self_referral');
   end if;
 
-  -- One row per referral code and visitor ID; repeat visits refresh metadata only.
+  -- Count each browser visitor only once per referral code.
+  -- Repeat page views refresh metadata but cannot inflate the unique-visitor total.
   insert into public.apex_referral_visits(
     referrer_id, code, visitor_id, landing_path, visit_count, first_seen_at, last_seen_at
   )
