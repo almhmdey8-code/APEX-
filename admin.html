@@ -573,25 +573,27 @@ async function ensureAdminMfa(){
  const factors=factorData?.totp||[];
  const verified=factors.find(f=>f.status==='verified');
  if(verified){
+  // Reuse the existing verified factor on every login. Never replace or
+  // unenroll it as part of normal sign-in or page restoration.
   adminMfaFactorId=verified.id;
-  showAdminMfa('replace','تأكيد استبدال Google Authenticator','لأمان حساب المدير، أدخل رمز التطبيق القديم مرة أخيرة لإزالة الربط السابق وإنشاء QR جديد.');
+  showAdminMfa('challenge','تأكيد هوية مدير APEX — Google Authenticator','أدخل الرمز الحالي من تطبيق Google Authenticator المرتبط مسبقًا بحساب المدير. لن نغيّر الربط أو ننشئ QR جديدًا.');
   return false;
  }
- // An unverified factor cannot be challenged. Remove only pending,
- // unverified enrollment attempts, then create a fresh QR for the admin.
+ // No verified factor exists: remove only incomplete enrollments, then
+ // create the initial factor once. Future logins reuse this verified factor.
  const pending=factors.filter(f=>f.status==='unverified');
  for(const factor of pending){
   const {error:removeError}=await supabase.auth.mfa.unenroll({factorId:factor.id});
-  if(removeError)throw new Error('تعذر إعادة تجهيز ربط Google Authenticator السابق: '+removeError.message);
+  if(removeError)throw new Error('تعذر تنظيف محاولة الربط غير المكتملة: '+removeError.message);
  }
  const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({
-  factorType:'totp',friendlyName:'APEX Admin Google Authenticator '+Date.now(),issuer:'APEX'
+  factorType:'totp',friendlyName:'APEX Admin Google Authenticator',issuer:'APEX'
  });
  if(enrollError)throw enrollError;
  adminMfaFactorId=enrolled.id;
  const totp=enrolled.totp||{};
  if(!totp.qr_code)throw new Error('تعذر إنشاء رمز QR للمصادقة.');
- showAdminMfa('enroll','ربط Google Authenticator بحساب المدير','امسح رمز QR في تطبيق Google Authenticator، ثم أدخل الرمز المكوّن من 6 أرقام لإكمال الربط.',totp.qr_code,totp.secret||'');
+ showAdminMfa('enroll','ربط Google Authenticator بحساب المدير','امسح رمز QR مرة واحدة في تطبيق Google Authenticator، ثم أدخل الرمز المكوّن من 6 أرقام لإكمال الربط.',totp.qr_code,totp.secret||'');
  return false;
 }
 $('adm_mfa_verify').addEventListener('click',async()=>{
@@ -618,20 +620,6 @@ $('adm_mfa_verify').addEventListener('click',async()=>{
   if(challengeError)throw challengeError;
   const {error:verifyError}=await supabase.auth.mfa.verify({factorId:adminMfaFactorId,challengeId:challenge.id,code});
   if(verifyError)throw verifyError;
-  if(adminMfaMode==='replace'){
-   const {error:removeError}=await supabase.auth.mfa.unenroll({factorId:adminMfaFactorId});
-   if(removeError)throw new Error('تم التحقق من الرمز القديم لكن تعذر إزالته: '+removeError.message);
-   adminMfaFactorId=null;
-   const {error:refreshError}=await supabase.auth.refreshSession();
-   if(refreshError)throw new Error('تم حذف الربط القديم، لكن تعذر تحديث جلسة الأمان: '+refreshError.message);
-   const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({factorType:'totp',friendlyName:'APEX Admin Google Authenticator '+Date.now(),issuer:'APEX'});
-   if(enrollError)throw enrollError;
-   adminMfaFactorId=enrolled.id;
-   const totp=enrolled.totp||{};
-   if(!totp.qr_code)throw new Error('تم حذف الربط القديم، لكن تعذر إنشاء QR جديد. أعد تحميل الصفحة لإكمال الإعداد.');
-   showAdminMfa('enroll','ربط Google Authenticator الجديد','امسح رمز QR الجديد في تطبيق Google Authenticator، ثم أدخل الرمز المكوّن من 6 أرقام لإكمال الربط.',totp.qr_code,totp.secret||'');
-   return;
-  }
   $('adm_mfa_msg').textContent='تم تأكيد رمز الأمان. جارٍ فتح لوحة المدير...';
   await checkSession();
  }catch(error){$('adm_mfa_msg').textContent='لم يتم قبول الرمز: '+(error?.message||'تحقق من الرمز وحاول مجددًا.');}
@@ -773,7 +761,7 @@ async function checkSession(){
 /* Login handler is registered near the start of module initialization. */
 $('adm_send_reset').onclick=async()=>{const email=$('adm_reset_email').value.trim().toLowerCase(),button=$('adm_send_reset');if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){message('adm_reset_msg','أدخل بريدًا إلكترونيًا صحيحًا للعميل.');return}button.disabled=true;button.textContent='جارٍ إرسال الرابط...';message('adm_reset_msg','جارٍ إرسال رابط الاستعادة...');try{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://almhmdey8-code.github.io/APEX-/'});if(error)throw error;message('adm_reset_msg','تم إرسال طلب الاستعادة. إذا كان البريد مسجلاً، ستصل للعميل رسالة تحتوي رابطاً آمناً لتعيين كلمة مرور جديدة.');}catch(error){message('adm_reset_msg','تعذر إرسال رابط الاستعادة: '+(error?.message||'تحقق من إعدادات البريد وروابط التحويل في Supabase.'));}finally{button.disabled=false;button.textContent='إرسال رابط الاستعادة'}};
 $('adm_logout').onclick=async()=>{const {error}=await supabase.auth.signOut({scope:'local'});if(error){message('adm_loginmsg','تعذر تسجيل خروج المدير: '+error.message);return}$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_password').value='';message('adm_loginmsg','تم تسجيل خروج المدير.')};
-supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED')setTimeout(checkSession,0)});window.addEventListener('pageshow',()=>{checkSession()});
+supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){adminMfaFactorId=null;$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');}});
 
 let shippingCache=[];
 async function loadShippingProviders(){
@@ -787,7 +775,6 @@ async function loadShippingProviders(){
 }
 $('adm_saveship').onclick=async()=>{const row={name:$('adm_shipname').value.trim(),provider_code:$('adm_shipcode').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,''),country_code:$('adm_shipcountry').value,integration_mode:$('adm_shipmode').value,tracking_url_template:$('adm_shiptracking').value.trim()||null,enabled:$('adm_shipenabled').checked,updated_at:new Date().toISOString()};if(!row.name||!row.provider_code){message('adm_shipmsg','أدخل اسم الشركة ورمزاً لاتينياً صحيحاً.');return}const id=$('adm_saveship').dataset.edit;const q=id?supabase.from('apex_shipping_providers').update(row).eq('id',id):supabase.from('apex_shipping_providers').insert(row);const {error}=await q;message('adm_shipmsg',error?'فشل الحفظ: '+error.message:'تم حفظ شركة الشحن');if(!error){delete $('adm_saveship').dataset.edit;$('adm_shipname').value='';$('adm_shipcode').value='';$('adm_shiptracking').value='';$('adm_shipenabled').checked=false;loadShippingProviders();}};
 
-checkSession();
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;const panels={products:'adm_products',banners:'adm_banners',payments:'adm_payments',orders:'adm_orders',returns:'adm_returns',customers:'adm_customers',currency:'adm_currency',wallet_topups:'adm_wallet_topups',shipping:'adm_shipping',marketing:'adm_marketing',security:'adm_security'};Object.entries(panels).forEach(([key,id])=>$(id).classList.toggle('apex-admin-hidden',key!==p));if(p!=='payments'&&p!=='returns')buildAdminSectionCards(panels[p]);document.querySelectorAll('[data-tab]').forEach(x=>{x.setAttribute('aria-pressed',String(x===b));x.setAttribute('aria-current',x===b?'page':'false')});if(p==='products')loadProducts();if(p==='banners')loadBanners();if(p==='payments')loadPayments();if(p==='orders')loadOrders();if(p==='returns')loadReturns();if(p==='customers')loadCustomers();if(p==='currency')loadCurrencySettings();if(p==='wallet_topups')loadWalletTopups();if(p==='shipping')loadShippingProviders();if(p==='security')loadSecurityEvents();if(p==='marketing')loadEmailSettings()});
 async function loadProducts(){const {data,error}=await supabase.from('apex_products').select('*').order('created_at',{ascending:false});if(error){message('pmsg','تعذر تحميل المنتجات: '+error.message);return}window.apexProducts=data||[];updateKpis(window.apexProducts,window.apexOrders);$('adm_productlist').innerHTML=(data||[]).map(p=>'<div class="item row"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.category||'')+' · مخزون: '+(p.stock??0)+' · '+(p.price??'بدون سعر')+' ر.س · '+(p.active?'نشط':'مخفي')+'</small></div><div><button class="btn2" data-edit="'+p.id+'">تعديل</button> <button class="btn2" data-delete="'+p.id+'">حذف</button> <button class="btn2" data-toggle="'+p.id+'" data-active="'+p.active+'">'+(p.active?'إخفاء':'تفعيل')+'</button></div></div>').join('')||'<p class="muted">لا توجد منتجات في قاعدة البيانات بعد.</p>';
  $('adm_productlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProduct(data.find(p=>p.id==b.dataset.edit)));$('adm_productlist').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.delete));$('adm_productlist').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle,b.dataset.active==='true'))}
