@@ -1773,6 +1773,9 @@ window.closeProductDetail=closeProductDetail;
 window.resetCatalogFilters=resetCatalogFilters;
 function filterCategory(name){const button=[...document.querySelectorAll('.cat')].find(x=>x.dataset.cat===name);if(button)button.click();else{document.querySelector('.cat[data-cat="الكل"]')?.click();toast('هذا القسم غير متاح حالياً');}$('products').scrollIntoView({behavior:'smooth',block:'start'})}
 loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
+
+window.scanApexCardQr=scanApexCardQr;
+window.transferApexWallet=transferApexWallet;
 </script>
 
 
