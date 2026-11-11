@@ -574,7 +574,7 @@ async function ensureAdminMfa(){
  const verified=factors.find(f=>f.status==='verified');
  if(verified){
   adminMfaFactorId=verified.id;
-  showAdminMfa('challenge','تحقق أمان المدير','افتح Google Authenticator وأدخل الرمز الحالي المكوّن من 6 أرقام.');
+  showAdminMfa('replace','تأكيد استبدال Google Authenticator','لأمان حساب المدير، أدخل رمز التطبيق القديم مرة أخيرة لإزالة الربط السابق وإنشاء QR جديد.');
   return false;
  }
  // An unverified factor cannot be challenged. Remove only pending,
@@ -604,6 +604,18 @@ $('adm_mfa_verify').addEventListener('click',async()=>{
   if(challengeError)throw challengeError;
   const {error:verifyError}=await supabase.auth.mfa.verify({factorId:adminMfaFactorId,challengeId:challenge.id,code});
   if(verifyError)throw verifyError;
+  if(adminMfaMode==='replace'){
+   const {error:removeError}=await supabase.auth.mfa.unenroll({factorId:adminMfaFactorId});
+   if(removeError)throw new Error('تم التحقق من الرمز القديم لكن تعذر إزالته: '+removeError.message);
+   adminMfaFactorId=null;
+   const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({factorType:'totp',friendlyName:'APEX Admin — Google Authenticator',issuer:'APEX'});
+   if(enrollError)throw enrollError;
+   adminMfaFactorId=enrolled.id;
+   const totp=enrolled.totp||{};
+   if(!totp.qr_code)throw new Error('تم حذف الربط القديم، لكن تعذر إنشاء QR جديد. أعد تحميل الصفحة لإكمال الإعداد.');
+   showAdminMfa('enroll','ربط Google Authenticator الجديد','امسح رمز QR الجديد في تطبيق Google Authenticator، ثم أدخل الرمز المكوّن من 6 أرقام لإكمال الربط.',totp.qr_code,totp.secret||'');
+   return;
+  }
   $('adm_mfa_msg').textContent='تم تأكيد رمز الأمان. جارٍ فتح لوحة المدير...';
   await checkSession();
  }catch(error){$('adm_mfa_msg').textContent='لم يتم قبول الرمز: '+(error?.message||'تحقق من الرمز وحاول مجددًا.');}
@@ -1542,7 +1554,6 @@ body{background:radial-gradient(ellipse at 50% 0%,#5a421b 0%,#211a0d 48%,#100e09
  border-color:#d9b45f!important
 }
 </style>
-</body></html>
 <style id="apex-admin-mfa-styles">
 #adm_mfa{max-width:520px;margin:7vh auto;text-align:center;border:1px solid #c39a49!important;background:linear-gradient(145deg,#15120b,#080b09)!important}
 #adm_mfa .apex-mfa-qr{padding:14px;background:#fff;border-radius:14px;display:inline-block;margin:12px auto}
@@ -1640,3 +1651,4 @@ body{background:radial-gradient(ellipse at 50% 0%,#5a421b 0%,#211a0d 48%,#100e09
 #adminWorkspace .head:after,
 #adminWorkspace .dashboard-hero:after{opacity:.12!important}
 </style>
+</body></html>
