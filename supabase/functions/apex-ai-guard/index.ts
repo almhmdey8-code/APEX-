@@ -57,6 +57,7 @@ Deno.serve(async(req:Request)=>{
   if(eventType==="admin_login_attempt"){const {count:adminAttemptCount,error:adminAttemptError}=await db.from("apex_security_events").select("id",{count:"exact",head:true}).eq("ip_hash",ipHash).eq("event_type","admin_login_attempt").gte("created_at",new Date(Date.now()-5*60000).toISOString());if(adminAttemptError)throw adminAttemptError;if((adminAttemptCount||0)>=3)return json({accepted:false,reason:"admin_attempt_throttled"},429);}
   const email=String(body.email||"").trim().toLowerCase().slice(0,254),raw=body.details&&typeof body.details==="object"?body.details:{},details:Record<string,unknown>={};
   for(const k of ["reason","screen","method","attempt","outcome","code"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
+  if(email)details.account_masked=email.replace(/^(.{1,2})[^@]*(@.*)$/,"$1***$2");
   const userAgent=(req.headers.get("user-agent")||"").slice(0,300),ua=userAgent;
   const device={device:/iPad|Tablet/i.test(ua)?"جهاز لوحي":/Mobi|Android|iPhone/i.test(ua)?"هاتف":ua?"كمبيوتر":"غير معروف",os:/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Mac OS X|Macintosh/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"غير معروف",browser:/Edg\//i.test(ua)?"Microsoft Edge":/OPR\//i.test(ua)?"Opera":/SamsungBrowser/i.test(ua)?"Samsung Internet":/Firefox\//i.test(ua)?"Firefox":/Chrome\//i.test(ua)?"Google Chrome":/Safari\//i.test(ua)?"Safari":"غير معروف"};
   details.device=device;
