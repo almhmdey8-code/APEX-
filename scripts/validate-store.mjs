@@ -78,11 +78,11 @@ try {
 
     if (file === 'admin.html') {
       if (!html.includes('apex_admins')) fail('admin.html: server-side admin membership check is missing');
-      const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\\w$]*)\\s*=/g)].map(match => match[1]));
-      const handlers = [...html.matchAll(/\\bonclick\\s*=\\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
+      const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=/g)].map(match => match[1]));
+      const handlers = [...html.matchAll(/\bonclick\s*=\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
       for (const handler of handlers) {
-        if (/^(?:if\\s*\\(|document\\.)/.test(handler)) continue;
-        const fn = handler.match(/^([A-Za-z_$][\\w$]*)\\s*\\(/)?.[1];
+        if (/^(?:if\s*\(|document\.)/.test(handler)) continue;
+        const fn = handler.match(/^([A-Za-z_$][\w$]*)\s*\(/)?.[1];
         if (fn && !exports.has(fn)) fail('admin.html: inline handler is not exposed on window: ' + fn);
       }
     }
