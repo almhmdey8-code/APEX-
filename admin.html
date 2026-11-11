@@ -619,6 +619,10 @@ $('adm_mfa_verify').addEventListener('click',async()=>{
   if(challengeError)throw challengeError;
   const {error:verifyError}=await supabase.auth.mfa.verify({factorId:adminMfaFactorId,challengeId:challenge.id,code});
   if(verifyError)throw verifyError;
+  if(adminMfaMode==='enroll'){
+   try{await supabase.functions.invoke('apex-ai-guard',{body:{event_type:'admin_action',email:$('adm_email')?.value.trim().toLowerCase()||'',source:'admin_panel',details:{screen:'admin_mfa_enrollment',method:'google_authenticator',action:'mfa_factor_added',factor_type:'totp'}}});}
+   catch(securityError){console.warn('APEX MFA enrollment alert could not be recorded:',securityError?.message||securityError)}
+  }
   try{await supabase.functions.invoke('apex-ai-guard',{body:{event_type:'admin_login_attempt',email:$('adm_email')?.value.trim().toLowerCase()||'',source:'admin_panel',details:{screen:'admin_mfa',method:'google_authenticator',attempt:'admin_mfa_verification',outcome:'fully_authenticated'}}});}catch(securityError){console.warn('APEX MFA success event could not be recorded:',securityError?.message||securityError)}
   $('adm_mfa_msg').textContent='تم تأكيد رمز الأمان. جارٍ فتح لوحة المدير...';
   await checkSession();
@@ -661,7 +665,7 @@ async function loadSecurityEvents(){
  $('adm_sec_failed').textContent=rows.filter(x=>x.event_type==='login_failed'||x.details?.outcome==='mfa_rejected').length;
  $('adm_sec_duplicate').textContent=rows.filter(x=>x.event_type==='duplicate_account').length;
  $('adm_sec_high').textContent=rows.filter(x=>['high','critical'].includes(x.severity)).length;
- const labels={login_success:'دخول ناجح',login_failed:'دخول فاشل',signup_attempt:'محاولة إنشاء حساب',duplicate_account:'حساب مكرر محتمل',suspicious_activity:'نشاط مشبوه',access_denied:'رفض وصول',rate_limited:'تجاوز حد المحاولات',admin_login_attempt:'محاولة دخول لوحة المدير'};
+ const labels={login_success:'دخول ناجح',login_failed:'دخول فاشل',signup_attempt:'محاولة إنشاء حساب',duplicate_account:'حساب مكرر محتمل',suspicious_activity:'نشاط مشبوه',access_denied:'رفض وصول',rate_limited:'تجاوز حد المحاولات',admin_login_attempt:'محاولة دخول لوحة المدير',admin_action:'إجراء أمني للمدير'};
  const escText=v=>esc(String(v??'غير متوفر'));
  const deviceInfo=ua=>{
   ua=String(ua||'');
@@ -675,12 +679,12 @@ async function loadSecurityEvents(){
   const details=[['الحساب المستهدف',d.account_masked],['النتيجة',outcomeLabels[d.outcome]||d.outcome],['عنوان IP (مخفي جزئياً)',d.ip_masked],['بصمة IP المشفرة',x.ip_hash?String(x.ip_hash).slice(0,18)+'…':null],['نوع الجهاز',dev.device],['نظام التشغيل',dev.os],['المتصفح',dev.browser],['الموقع التقريبي',location],['مزود الشبكة',geo.isp],['طريقة الدخول',d.method],['المرحلة',d.screen]];
   return '<article class="item" style="display:block;margin:10px 0"><div class="row" style="justify-content:space-between"><b>'+esc(labels[x.event_type]||x.event_type)+'</b><small>'+new Date(x.created_at).toLocaleString('ar-SA',{dateStyle:'full',timeStyle:'medium'})+'</small></div><p><small>'+esc(x.severity)+' · '+esc(x.source||'storefront')+(x.acknowledged_at?' · تمت المراجعة':'')+'</small></p><div class="grid">'+details.filter(v=>v[1]).map(v=>'<div><small class="muted">'+esc(v[0])+'</small><div>'+escText(v[1])+'</div></div>').join('')+'</div><p style="margin:8px 0">'+coords+'</p><details><summary>تفاصيل تقنية إضافية</summary><small style="white-space:pre-wrap;overflow-wrap:anywhere">'+escText(x.user_agent||'بيانات الجهاز غير متاحة')+'</small></details></article>';
  }).join('')||'<p class="muted">لا توجد أحداث مسجلة خلال آخر 7 أيام.</p>';
- const latestAdminAttempt=rows.find(x=>x.event_type==='admin_login_attempt'&&x.details?.outcome==='mfa_rejected'&&!x.acknowledged_at);
+ const latestAdminAttempt=rows.find(x=>!x.acknowledged_at&&((x.event_type==='admin_login_attempt'&&x.details?.outcome==='mfa_rejected')||(x.event_type==='admin_action'&&x.details?.action==='mfa_factor_added')));
  const alertBox=$('adm_admin_security_alert');
  if(alertBox){
   alertBox.hidden=!latestAdminAttempt;
   if(latestAdminAttempt){
-   $('adm_admin_security_alert_text').textContent='تم رصد محاولة تحقق ثنائي مرفوضة بتاريخ '+new Date(latestAdminAttempt.created_at).toLocaleString('ar-SA')+'. راجع تفاصيل الجهاز والشبكة في سجل الحماية، ثم اضغط تمت المراجعة لإخفاء التنبيه.';
+   $('adm_admin_security_alert_text').textContent=(latestAdminAttempt.details?.action==='mfa_factor_added'?'تمت إضافة وسيلة تحقق جديدة لحساب المدير بتاريخ ':'تم رصد محاولة تحقق ثنائي مرفوضة بتاريخ ')+new Date(latestAdminAttempt.created_at).toLocaleString('ar-SA')+'. راجع تفاصيل الجهاز والشبكة في سجل الحماية، ثم اضغط تمت المراجعة لإخفاء التنبيه.';
    const ack=$('adm_security_ack');
    if(ack)ack.onclick=async()=>{
     ack.disabled=true;ack.textContent='جارٍ حفظ المراجعة...';
