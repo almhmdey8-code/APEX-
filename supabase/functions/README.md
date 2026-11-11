@@ -1,23 +1,20 @@
-# APEX Supabase Edge Functions archive
+# APEX Supabase Edge Functions — production source archive
 
-These sources were fetched from the currently deployed Supabase project on 2026-11-09.
-They preserve the deployed function versions; they are source backups, not a redeployment.
+The six sources below were compared with the live Supabase project on 2026-11-12. Each repository file matches the currently deployed source.
 
-| Function | Deployed version | JWT verification |
+| Function | Live version | JWT verification |
 |---|---:|---|
 | apex-wallet-checkout | 8 | true |
 | apex-create-order | 7 | true |
 | apex-admin-customers | 7 | true |
-| apex-ai-guard | 10 | false (the handler validates its own authorization/cron secret) |
-| apex-email-campaign | 8 | true |
-| apex-store-assistant | 11 | false (the handler validates the user token itself) |
+| apex-ai-guard | 12 | false (the handler validates user/admin or cron authorization) |
+| apex-email-campaign | 9 | true |
+| apex-store-assistant | 16 | true |
 
-Each function's entry point is stored at `supabase/functions/<function-name>/index.ts`.
-The JWT settings are preserved in `supabase/config.toml`.
+Each entry point is stored at `supabase/functions/<function-name>/index.ts`. The JWT settings are preserved in `supabase/config.toml`.
 
-## Recovery and deployment notes
-
-- Keep all secrets in Supabase project secrets; never commit service-role keys, OpenAI keys, Resend keys, or cron secrets.
-- Before deploying, inspect the target function's source, required secrets, and JWT behavior.
-- Check the installed Supabase CLI version and its `functions deploy --help` output first. Supabase CLI v3 changed remote-target flags; do not copy old v2 commands blindly.
-- The six deployed versions above were archived only. No Edge Function was redeployed in this recovery task.
+## Deployment safety
+- These are source archives; do not redeploy just because this README changes.
+- Keep all service-role keys, gateway credentials, OpenAI keys, Resend keys, and cron secrets in Supabase project secrets.
+- Before any function deployment, compare its source with the live version, verify required secrets and JWT settings, and run integration tests.
+- Firebase is not part of the active APEX architecture.
