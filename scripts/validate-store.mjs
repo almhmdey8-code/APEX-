@@ -68,12 +68,41 @@ try {
       }
       if (/sb_secret_|service_role/i.test(html)) fail('index.html: privileged Supabase key must never be shipped to browsers');
       if (!html.includes('privacy.html')) fail('index.html: privacy policy link is missing');
+      if (!/country\s*===\s*wantedCountry/.test(html) || !/country\s*===\s*['"]ALL['"]/.test(html)) {
+        fail('index.html: checkout payment methods are not restricted to the selected country');
+      }
+      if (/['"]apple_pay['"]/.test(html)) fail('index.html: Apple Pay must not appear in customer checkout');
+      if (!html.includes('window.scanApexCardQr=scanApexCardQr')) fail('index.html: wallet QR scan handler is not exposed');
+      if (!html.includes('window.transferApexWallet=transferApexWallet')) fail('index.html: wallet transfer handler is not exposed');
     }
 
-    if (file === 'admin.html' && !html.includes('apex_admins')) {
-      fail('admin.html: server-side admin membership check is missing');
+    if (file === 'admin.html') {
+      if (!html.includes('apex_admins')) fail('admin.html: server-side admin membership check is missing');
+      const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\\w$]*)\\s*=/g)].map(match => match[1]));
+      const handlers = [...html.matchAll(/\\bonclick\\s*=\\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
+      for (const handler of handlers) {
+        if (/^(?:if\\s*\\(|document\\.)/.test(handler)) continue;
+        const fn = handler.match(/^([A-Za-z_$][\\w$]*)\\s*\\(/)?.[1];
+        if (fn && !exports.has(fn)) fail('admin.html: inline handler is not exposed on window: ' + fn);
+      }
     }
   }
+  const functionSlugs = ['apex-wallet-checkout','apex-create-order','apex-admin-customers','apex-ai-guard','apex-email-campaign','apex-store-assistant'];
+  for (const slug of functionSlugs) {
+    if (!fs.existsSync(path.join(root, 'supabase', 'functions', slug, 'index.ts'))) {
+      fail('Supabase Edge Function source is missing: ' + slug);
+    }
+  }
+  const countryMigration = path.join(root, 'supabase', 'migrations', '20261111225028_enforce_customer_country_payment_scope.sql');
+  if (!fs.existsSync(countryMigration)) {
+    fail('Supabase payment country-scope migration is missing');
+  } else {
+    const sql = fs.readFileSync(countryMigration, 'utf8');
+    if ((sql.match(/country_code in \(v_country,'ALL'\)/g) || []).length !== 2) {
+      fail('Supabase order and wallet top-up must both enforce payment country scope');
+    }
+  }
+  if (fs.existsSync(path.join(root, 'firebase', 'otp.js'))) fail('obsolete Firebase OTP source must not be restored');
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });
 }
@@ -82,4 +111,4 @@ if (failures.length) {
   console.error(failures.map(message => 'FAIL: ' + message).join('\n'));
   process.exit(1);
 }
-console.log('APEX storefront validation passed: required pages, IDs, JavaScript syntax, local links, public-key boundary and inline handlers.');
+console.log('APEX storefront validation passed: pages, IDs, JavaScript syntax, local links, public-key boundary, handlers, country-scoped checkout and six Supabase function sources.');
