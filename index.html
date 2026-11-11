@@ -1810,4 +1810,41 @@ footer{padding-bottom:105px}
 @media(max-width:420px){.apex-privilege-home .apex-privilege-card{padding:15px 15px 13px;min-height:0}.apex-card-brand strong{font-size:24px}.apex-card-contactless{font-size:24px}.apex-card-middle{margin:5px 0 9px}.apex-card-premium-line{font-size:6px}}
 </style>
 
+
+<style id="apex-account-services-gold-cards">
+/* خدمات الحساب — بطاقات شامبين ذهبية بأيقونات كبيرة وواضحة */
+#accountpanel .user-services{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#accountpanel .user-services button{
+ position:relative;isolation:isolate;overflow:hidden;min-height:126px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:8px;padding:15px 9px;text-align:center;
+ border:1px solid #fff0b0;border-radius:19px;
+ color:#211605!important;
+ background:linear-gradient(135deg,#fff2bd 0%,#efd17d 28%,#d6aa50 58%,#f5df9d 82%,#bd8730 100%)!important;
+ box-shadow:inset 0 1px 0 #fff,inset 0 -3px 9px #80551b35,0 9px 22px #0007,0 0 13px #d6aa5040;
+ transition:transform .2s,box-shadow .2s,border-color .2s
+}
+#accountpanel .user-services button:before{content:"";position:absolute;inset:5px;border:1px solid #80591d66;border-radius:14px;pointer-events:none;z-index:-1}
+#accountpanel .user-services button:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,#fff7 38%,transparent 53%);opacity:.42;pointer-events:none;z-index:-1}
+#accountpanel .user-services button:active{transform:scale(.97)}
+#accountpanel .user-services button>b{
+ display:grid;place-items:center;width:49px;height:49px;flex:0 0 49px;
+ margin:0;border-radius:15px;border:1px solid #f9e7ac;
+ background:linear-gradient(145deg,#30220b,#100d07);
+ color:#ffe39a!important;font-size:28px;line-height:1;
+ text-shadow:0 0 10px #d5a344;box-shadow:0 4px 10px #68430d66,inset 0 1px #fff4
+}
+#accountpanel .user-services button>span{display:block;color:#211605!important;font-size:13px;font-weight:900;line-height:1.5;text-shadow:0 1px #fff5}
+#accountpanel .user-services button>small{display:block;color:#4d3714!important;font-size:10px;font-weight:700;line-height:1.5}
+#accountpanel .user-service-title h3{color:#f5d98b!important}
+#accountpanel .user-service-title span{color:#d7c28f!important}
+@media(max-width:420px){
+ #accountpanel .user-services{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #accountpanel .user-services button{min-height:119px;padding:12px 7px;border-radius:16px}
+ #accountpanel .user-services button>b{width:46px;height:46px;flex-basis:46px;font-size:26px}
+ #accountpanel .user-services button>span{font-size:12px}
+ #accountpanel .user-services button>small{font-size:9px}
+}
+</style>
+
 </body></html>
