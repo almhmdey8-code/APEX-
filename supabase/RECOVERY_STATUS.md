@@ -22,7 +22,7 @@ Project ref: `ulzxdvtzziydhuvennzw`
 - Removed an older unrecorded draft `20261109121000_apex_product_return_escrow_wallet.sql`; the applied return-escrow migration is `20261109121451_apex_product_return_escrow_wallet.sql`.
 - Compared migration versions against the live ledger: all 37 repository migration files have matching live versions, and no live migration version is missing from the repository.
 - No migration was re-applied to production during this recovery. This was a source-control archive operation only.
-- The repository and live Supabase ledger now contain 37/37 matching migration versions. Keep this directory as the canonical migration history going forward.
+- The repository and live Supabase ledger now contain 38/38 matching migration versions. Keep this directory as the canonical migration history going forward.
 
 **Safety:** Do not run `supabase db reset --remote` on production. Since these migrations are already recorded as applied, do not re-apply them to production. Use the normal local validation workflow first, then deploy only genuinely new migrations.
 
@@ -38,3 +38,10 @@ Project ref: `ulzxdvtzziydhuvennzw`
 - Live logs showed signed-in sessions receiving HTTP 403 when calling `apex_track_referral_visit` because the function execute grant covered `anon` but not `authenticated`.
 - Applied migration `20261111224642_fix_referral_visit_authenticated_execute.sql` to grant execute to `authenticated` while retaining anonymous referral tracking.
 - The storefront's referral tracking should be rechecked from both signed-out and signed-in browser sessions after deployment.
+
+
+## Payment country enforcement — 2026-11-12
+
+- Added server-side country checks to both manual order checkout and wallet top-up. Saudi/default-SA accounts can use only `SA` or `ALL` methods; Yemen accounts can use only `YE` or `ALL` methods.
+- Tested both paths with a Saudi/default-SA account and the enabled Yemen-only Kuraimi method. Both were rejected before creating an order or wallet top-up; no test transaction was retained.
+- The production gateway methods remain disabled until their provider integration and webhook verification are completed.
