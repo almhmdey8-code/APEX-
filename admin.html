@@ -577,8 +577,15 @@ async function ensureAdminMfa(){
   showAdminMfa('challenge','تحقق أمان المدير','افتح Google Authenticator وأدخل الرمز الحالي المكوّن من 6 أرقام.');
   return false;
  }
- for(const pending of factors.filter(f=>f.status!=='verified')){
-  try{await supabase.auth.mfa.unenroll({factorId:pending.id});}catch(e){console.warn('Could not clear pending MFA factor:',e?.message||e);}
+ // Reuse the already-created pending APEX factor. Never enroll a duplicate
+ // or silently remove a factor: Supabase may still have this factor active.
+ const pending=factors.find(f=>f.status==='unverified' &&
+  (f.friendly_name==='APEX Admin — Google Authenticator' || f.friendlyName==='APEX Admin — Google Authenticator'))
+  || factors.find(f=>f.status==='unverified');
+ if(pending){
+  adminMfaFactorId=pending.id;
+  showAdminMfa('challenge','أكمل تفعيل Google Authenticator','تم العثور على ربط أمان سابق. افتح Google Authenticator وأدخل الرمز الحالي المكوّن من 6 أرقام لإكمال التحقق.');
+  return false;
  }
  const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({
   factorType:'totp',friendlyName:'APEX Admin — Google Authenticator',issuer:'APEX'
