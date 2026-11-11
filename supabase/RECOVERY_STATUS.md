@@ -18,9 +18,11 @@ Project ref: `ulzxdvtzziydhuvennzw`
 - Recovered the original SQL bodies for all 26 previously missing historical migrations directly from `supabase_migrations.schema_migrations.statements` in the live Supabase project. This is the stored SQL that was applied, not a reconstruction from migration names.
 - Added the 26 original files under `supabase/migrations/` using their exact recorded version and name.
 - Also recovered the previously unarchived return-escrow migration `20261109121451_apex_product_return_escrow_wallet.sql`.
-- Compared every migration file against its stored applied SQL. All 34 migration files now match the live migration ledger exactly, including the newer inventory and return-tracking migrations.
+- Archived the two additional migrations applied on 2026-11-11: `20261111173426_add_apex_privilege_wallet_card_number.sql` and `20261111184321_exclude_anonymous_auth_sessions_from_customer_policies.sql`.
+- Removed an older unrecorded draft `20261109121000_apex_product_return_escrow_wallet.sql`; the applied return-escrow migration is `20261109121451_apex_product_return_escrow_wallet.sql`.
+- Compared migration versions against the live ledger: all 37 repository migration files have matching live versions, and no live migration version is missing from the repository.
 - No migration was re-applied to production during this recovery. This was a source-control archive operation only.
-- The repository and live Supabase ledger now contain 34/34 matching migration versions. Keep this directory as the canonical migration history going forward.
+- The repository and live Supabase ledger now contain 37/37 matching migration versions. Keep this directory as the canonical migration history going forward.
 
 **Safety:** Do not run `supabase db reset --remote` on production. Since these migrations are already recorded as applied, do not re-apply them to production. Use the normal local validation workflow first, then deploy only genuinely new migrations.
 
@@ -34,5 +36,5 @@ Project ref: `ulzxdvtzziydhuvennzw`
 ## Referral tracking permission fix — 2026-11-12
 
 - Live logs showed signed-in sessions receiving HTTP 403 when calling `apex_track_referral_visit` because the function execute grant covered `anon` but not `authenticated`.
-- Applied migration `20261111225000_fix_referral_visit_authenticated_execute.sql` to grant execute to `authenticated` while retaining anonymous referral tracking.
+- Applied migration `20261111224642_fix_referral_visit_authenticated_execute.sql` to grant execute to `authenticated` while retaining anonymous referral tracking.
 - The storefront's referral tracking should be rechecked from both signed-out and signed-in browser sessions after deployment.
