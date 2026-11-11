@@ -4,7 +4,7 @@ const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"au
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json"}});
 const ADMIN_EMAIL="apex.1.shopping@gmail.com";
 const publicEvents=new Set(["login_success","login_failed","signup_attempt"]);
-const authenticatedAdminEvents=new Set(["admin_login_attempt"]);
+const authenticatedAdminEvents=new Set(["admin_login_attempt","admin_action"]);
 const severity:Record<string,string>={login_success:"info",signup_attempt:"info",login_failed:"warning",duplicate_account:"high",suspicious_activity:"high",access_denied:"warning",rate_limited:"high",admin_login_attempt:"high"};
 const hash=async(v:string)=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");};
 async function sendMail(subject:string,textBody:string){
@@ -54,7 +54,7 @@ Deno.serve(async(req:Request)=>{
   // Admin authentication events are never accepted anonymously. The password
   // rejection path has no authenticated session and is intentionally not logged
   // from the browser; this prevents arbitrary visitors forging manager alerts.
-  if(eventType==="admin_login_attempt"){
+  if(authenticatedAdminEvents.has(eventType)){
    if(!actor||(actor.email||"").toLowerCase()!==ADMIN_EMAIL)return json({error:"يلزم إثبات هوية المدير لتسجيل هذا الحدث"},401);
    const {data:adminRow,error:adminError}=await db.from("apex_admins").select("user_id").eq("user_id",actor.id).maybeSingle();
    if(adminError||!adminRow)return json({error:"حساب المدير غير معتمد"},403);
@@ -72,7 +72,7 @@ Deno.serve(async(req:Request)=>{
   if((count||0)>=20)return json({accepted:false,reason:"rate_limited"},429);
   if(eventType==="admin_login_attempt"){const {count:adminAttemptCount,error:adminAttemptError}=await db.from("apex_security_events").select("id",{count:"exact",head:true}).eq("ip_hash",ipHash).eq("event_type","admin_login_attempt").gte("created_at",new Date(Date.now()-5*60000).toISOString());if(adminAttemptError)throw adminAttemptError;if((adminAttemptCount||0)>=3)return json({accepted:false,reason:"admin_attempt_throttled"},429);}
   const email=String(body.email||"").trim().toLowerCase().slice(0,254),raw=body.details&&typeof body.details==="object"?body.details:{},details:Record<string,unknown>={};
-  for(const k of ["reason","screen","method","attempt","outcome","code"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
+  for(const k of ["reason","screen","method","attempt","outcome","code","action","factor_type"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
   if(email)details.account_masked=email.replace(/^(.{1,2})[^@]*(@.*)$/,"$1***$2");
   const userAgent=(req.headers.get("user-agent")||"").slice(0,300),ua=userAgent;
   const device={device:/iPad|Tablet/i.test(ua)?"جهاز لوحي":/Mobi|Android|iPhone/i.test(ua)?"هاتف":ua?"كمبيوتر":"غير معروف",os:/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Mac OS X|Macintosh/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"غير معروف",browser:/Edg\//i.test(ua)?"Microsoft Edge":/OPR\//i.test(ua)?"Opera":/SamsungBrowser/i.test(ua)?"Samsung Internet":/Firefox\//i.test(ua)?"Firefox":/Chrome\//i.test(ua)?"Google Chrome":/Safari\//i.test(ua)?"Safari":"غير معروف"};
@@ -89,13 +89,23 @@ Deno.serve(async(req:Request)=>{
   if(!location.country&&countryHeader&&countryHeader!=="XX")location.country=countryHeader;
   details.location=location;
   const outcome=String(details.outcome||"");
-  const level=eventType==="admin_login_attempt"&&outcome==="mfa_rejected"?"high":eventType==="admin_login_attempt"?"info":(severity[eventType]||"info");
+  const factorAdded=eventType==="admin_action"&&details.action==="mfa_factor_added";
+  const level=factorAdded?"critical":eventType==="admin_login_attempt"&&outcome==="mfa_rejected"?"high":eventType==="admin_login_attempt"?"info":(severity[eventType]||"info");
   const {error:insertError}=await db.from("apex_security_events").insert({event_type:eventType,severity:level,user_id:actor?.id||null,email_hash:email?await hash(email):null,ip_hash:ipHash,user_agent:userAgent,source:String(body.source||"storefront").slice(0,40),details});
   if(insertError)throw insertError;
   // Only a verified manager session reporting an actual MFA rejection can
   // trigger email. Anonymous/public telemetry is never allowed to send mail.
   let alert_status="not_required";
-  if(eventType==="admin_login_attempt"&&outcome==="mfa_rejected"&&actor?.id){
+  if(factorAdded&&actor?.id){
+   alert_status=await sendMail("تنبيه أمني حرج — تمت إضافة وسيلة تحقق جديدة لحساب APEX",
+    "تمت إضافة وسيلة تحقق جديدة من نوع "+String(details.factor_type||"TOTP")+" إلى حساب مدير APEX.\\n"+
+    "إذا لم تكن أنت من أضافها، غيّر كلمة المرور وراجع وسائل التحقق فوراً.\\n"+
+    "عنوان الشبكة (مخفي جزئياً): "+ipMasked+"\\n"+
+    "الجهاز: "+device.device+" / "+device.os+" / "+device.browser+"\\n"+
+    "الموقع التقريبي: "+[location.city,location.region,location.country].filter(Boolean).join("، ")+"\\n"+
+    "الوقت: "+new Date().toISOString()+"\\n"+
+    "راجع سجل الحماية في لوحة مدير APEX.");
+  }else if(eventType==="admin_login_attempt"&&outcome==="mfa_rejected"&&actor?.id){
    alert_status=await sendMail("تنبيه أمني مهم — محاولة تحقق مرفوضة في APEX",
     "رصد نظام APEX محاولة تحقق ثنائي مرفوضة لحساب المدير.\\n"+
     "الحساب: "+(details.account_masked||ADMIN_EMAIL)+"\\n"+
