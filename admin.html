@@ -1003,7 +1003,9 @@ $('adm_savebanner').onclick=async()=>{const row={title:$('adm_btitle').value.tri
 $('adm_cancelbanner').onclick=()=>{editingBanner=null;['btitle','bsubtitle','bimage','blink'].forEach(id=>$(id).value='');$('adm_border').value=0;$('adm_bactive').checked=true;$('adm_cancelbanner').classList.add('apex-admin-hidden')};
 let paymentsCache=[];
 function buildAdminSectionCards(panelId){
- if(panelId==='adm_payments')return;
+ // Keep the security center fully expanded: its KPI filters and action buttons
+ // must remain directly visible and must not be moved into collapsed accordions.
+ if(panelId==='adm_payments'||panelId==='adm_security')return;
  const panel=$(panelId);if(!panel||panel.dataset.cardsReady==='1')return;
  const labels={
   adm_products:['إضافة وتعديل المنتجات','قائمة المنتجات'],
