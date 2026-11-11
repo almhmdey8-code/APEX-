@@ -926,7 +926,7 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 <button onclick="showAccountSection('referrals')"><b>♧</b><span>دعوة الأصدقاء</span></button>
 
 </div>
-<section class="apex-privilege-wrap apex-privilege-home" role="button" tabindex="0" onclick="showAccountSection('wallet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showAccountSection('wallet')}"><div class="apex-privilege-card" aria-label="بطاقة الامتياز من APEX"><div class="apex-card-top"><span class="apex-card-contactless" aria-label="الدفع بدون تلامس">)))</span><div class="apex-card-brand"><strong>APEX</strong><small>PREMIUM</small></div></div><div class="apex-card-middle"><div class="apex-privilege-chip" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="apex-card-stars">✦　✧　✦　✧　✦</span></div><div class="apex-privilege-details"><div><small>اسم حامل البطاقة</small><strong id="walletCardName">عضو APEX</strong></div><div class="apex-card-balance"><small>الرصيد المتاح</small><strong id="walletCardBalance">0.00 ر.س</strong></div></div><div class="apex-privilege-number"><small>رقم البطاقة</small><strong id="walletCardNumber" dir="ltr">يتم الإصدار</strong></div><div class="apex-card-premium-line">APEX PRIVILEGE · EXCLUSIVE MEMBER</div></div></section>
+<section class="apex-privilege-wrap apex-privilege-home" role="button" tabindex="0" onclick="showAccountSection('wallet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showAccountSection('wallet')}"><div class="apex-privilege-card" aria-label="بطاقة الامتياز من APEX"><div class="apex-card-top"><div class="apex-card-emblem" aria-label="شعار التوصيل والهدايا"><span>🚚</span><i>🎁</i></div><div class="apex-card-brand"><strong>APEX</strong><small>PREMIUM</small></div><span class="apex-card-contactless" aria-label="الدفع بدون تلامس">)))</span></div><div class="apex-card-middle"><div class="apex-privilege-chip" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="apex-card-stars">✦　✧　✦　✧　✦</span></div><div class="apex-privilege-details"><div><small>اسم حامل البطاقة</small><strong id="walletCardName">عضو APEX</strong></div><div class="apex-card-balance"><small>الرصيد المتاح</small><strong id="walletCardBalance">0.00 ر.س</strong></div></div><div class="apex-privilege-number"><small>رقم البطاقة</small><strong id="walletCardNumber" dir="ltr">يتم الإصدار</strong></div><div class="apex-card-premium-line">APEX PRIVILEGE · EXCLUSIVE MEMBER</div></div></section>
 <div class="user-service-title"><h3>خدمات الحساب</h3><span>كل ما تحتاجه في مكان واحد</span></div>
 <div class="user-services">
 <button onclick="showAccountSection('shipping')"><b>♧</b><span>طلبات الشحن</span><small>متابعة الشحنات</small></button>
@@ -2031,4 +2031,18 @@ input,select,textarea{
 #accountpanel .user-diamond-hero .user-diamond i{color:#fff4c6!important}
 #accountpanel .user-diamond-hero .user-glow{background:#fff4c633!important}
 </style>
-</body></html>
+
+<style id="apex-privilege-card-compact-emblem">
+/* شعار صغير أعلى اليسار، مع تصغير اسم البطاقة والهدايا */
+.apex-privilege-card .apex-card-top{align-items:flex-start;min-height:34px}
+.apex-privilege-card .apex-card-emblem{position:relative;display:flex;align-items:center;justify-content:center;gap:1px;width:29px;height:29px;flex:0 0 29px;border:1px solid #d9b45f;border-radius:50%;background:linear-gradient(145deg,#30220b,#100d07);box-shadow:0 2px 7px #0008,inset 0 1px #fff3;font-size:10px;line-height:1}
+.apex-privilege-card .apex-card-emblem span{font-size:10px}
+.apex-privilege-card .apex-card-emblem i{font-style:normal;font-size:9px}
+.apex-privilege-card .apex-card-brand strong{font-size:17px!important;letter-spacing:2.4px!important}
+.apex-privilege-card .apex-card-brand small{font-size:6px!important;letter-spacing:2.4px!important}
+.apex-privilege-card .apex-card-contactless{font-size:19px!important;letter-spacing:-6px!important}
+.apex-privilege-card .apex-card-gifts{position:absolute;right:17px;bottom:17px;z-index:1;display:flex;gap:4px;opacity:.72;pointer-events:none}
+.apex-privilege-card .apex-card-gifts span{font-size:10px;filter:drop-shadow(0 1px 2px #000)}
+@media(max-width:420px){.apex-privilege-card .apex-card-emblem{width:24px;height:24px;flex-basis:24px;font-size:8px}.apex-privilege-card .apex-card-emblem span{font-size:8px}.apex-privilege-card .apex-card-emblem i{font-size:7px}.apex-privilege-card .apex-card-brand strong{font-size:15px!important}.apex-privilege-card .apex-card-contactless{font-size:16px!important}.apex-privilege-card .apex-card-gifts{right:12px;bottom:12px}.apex-privilege-card .apex-card-gifts span{font-size:8px}}
+</style>
+\n</body></html>
