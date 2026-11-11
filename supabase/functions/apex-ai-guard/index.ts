@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info,x-apex-cron-secret","Access-Control-Allow-Methods":"POST,OPTIONS"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json"}});
 const ADMIN_EMAIL="apex.1.shopping@gmail.com";
-const publicEvents=new Set(["login_success","login_failed","signup_attempt","duplicate_account","suspicious_activity","access_denied","rate_limited","admin_login_attempt"]);
+const publicEvents=new Set(["login_success","login_failed","signup_attempt"]);
+const authenticatedAdminEvents=new Set(["admin_login_attempt"]);
 const severity:Record<string,string>={login_success:"info",signup_attempt:"info",login_failed:"warning",duplicate_account:"high",suspicious_activity:"high",access_denied:"warning",rate_limited:"high",admin_login_attempt:"high"};
 const hash=async(v:string)=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");};
 async function sendMail(subject:string,textBody:string){
@@ -49,7 +50,7 @@ Deno.serve(async(req:Request)=>{
    return json({total_events:events?.length||0,counts,email_status});
   }
   const eventType=String(body.event_type||"");
-  if(!publicEvents.has(eventType))return json({error:"نوع الحدث غير مسموح من العميل"},400);
+  if(!publicEvents.has(eventType)&&!authenticatedAdminEvents.has(eventType))return json({error:"نوع الحدث غير مسموح"},400);
   // Admin authentication events are never accepted anonymously. The password
   // rejection path has no authenticated session and is intentionally not logged
   // from the browser; this prevents arbitrary visitors forging manager alerts.
