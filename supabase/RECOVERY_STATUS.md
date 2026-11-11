@@ -29,3 +29,10 @@ Project ref: `ulzxdvtzziydhuvennzw`
 - No customer orders, balances, product quantities, or customer accounts were bulk-modified by the recovery tests.
 - Inventory tests used nested transactions that were intentionally rolled back.
 - Never commit Supabase service-role keys or provider secrets to this repository.
+
+
+## Referral tracking permission fix — 2026-11-12
+
+- Live logs showed signed-in sessions receiving HTTP 403 when calling `apex_track_referral_visit` because the function execute grant covered `anon` but not `authenticated`.
+- Applied migration `20261111225000_fix_referral_visit_authenticated_execute.sql` to grant execute to `authenticated` while retaining anonymous referral tracking.
+- The storefront's referral tracking should be rechecked from both signed-out and signed-in browser sessions after deployment.
