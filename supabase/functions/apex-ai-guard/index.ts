@@ -3,8 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info,x-apex-cron-secret","Access-Control-Allow-Methods":"POST,OPTIONS"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json"}});
 const ADMIN_EMAIL="apex.1.shopping@gmail.com";
-const publicEvents=new Set(["login_success","login_failed","signup_attempt","duplicate_account","suspicious_activity","access_denied","rate_limited"]);
-const severity:Record<string,string>={login_success:"info",signup_attempt:"info",login_failed:"warning",duplicate_account:"high",suspicious_activity:"high",access_denied:"warning",rate_limited:"high"};
+const publicEvents=new Set(["login_success","login_failed","signup_attempt","duplicate_account","suspicious_activity","access_denied","rate_limited","admin_login_attempt"]);
+const severity:Record<string,string>={login_success:"info",signup_attempt:"info",login_failed:"warning",duplicate_account:"high",suspicious_activity:"high",access_denied:"warning",rate_limited:"high",admin_login_attempt:"high"};
 const hash=async(v:string)=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");};
 async function sendMail(subject:string,textBody:string){
  const key=Deno.env.get("RESEND_API_KEY");if(!key)return "not_configured";
@@ -54,6 +54,7 @@ Deno.serve(async(req:Request)=>{
   const {count,error:countError}=await db.from("apex_security_events").select("id",{count:"exact",head:true}).eq("ip_hash",ipHash).gte("created_at",new Date(Date.now()-60000).toISOString());
   if(countError)throw countError;
   if((count||0)>=20)return json({accepted:false,reason:"rate_limited"},429);
+  if(eventType==="admin_login_attempt"){const {count:adminAttemptCount,error:adminAttemptError}=await db.from("apex_security_events").select("id",{count:"exact",head:true}).eq("ip_hash",ipHash).eq("event_type","admin_login_attempt").gte("created_at",new Date(Date.now()-5*60000).toISOString());if(adminAttemptError)throw adminAttemptError;if((adminAttemptCount||0)>=3)return json({accepted:false,reason:"admin_attempt_throttled"},429);}
   const email=String(body.email||"").trim().toLowerCase().slice(0,254),raw=body.details&&typeof body.details==="object"?body.details:{},details:Record<string,unknown>={};
   for(const k of ["reason","screen","method","attempt","code"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
   const level=severity[eventType]||"info";
