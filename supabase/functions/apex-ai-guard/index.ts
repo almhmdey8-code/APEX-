@@ -58,12 +58,12 @@ Deno.serve(async(req:Request)=>{
   const email=String(body.email||"").trim().toLowerCase().slice(0,254),raw=body.details&&typeof body.details==="object"?body.details:{},details:Record<string,unknown>={};
   for(const k of ["reason","screen","method","attempt","outcome","code"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
   const userAgent=(req.headers.get("user-agent")||"").slice(0,300),ua=userAgent;
-  const device={device:/iPad|Tablet/i.test(ua)?"جهاز لوحي":/Mobi|Android|iPhone/i.test(ua)?"هاتف":ua?"كمبيوتر":"غير معروف",os:/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Mac OS X|Macintosh/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"غير معروف",browser:/Edg\\//i.test(ua)?"Microsoft Edge":/OPR\\//i.test(ua)?"Opera":/SamsungBrowser/i.test(ua)?"Samsung Internet":/Firefox\\//i.test(ua)?"Firefox":/Chrome\\//i.test(ua)?"Google Chrome":/Safari\\//i.test(ua)?"Safari":"غير معروف"};
+  const device={device:/iPad|Tablet/i.test(ua)?"جهاز لوحي":/Mobi|Android|iPhone/i.test(ua)?"هاتف":ua?"كمبيوتر":"غير معروف",os:/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Mac OS X|Macintosh/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"غير معروف",browser:/Edg\//i.test(ua)?"Microsoft Edge":/OPR\//i.test(ua)?"Opera":/SamsungBrowser/i.test(ua)?"Samsung Internet":/Firefox\//i.test(ua)?"Firefox":/Chrome\//i.test(ua)?"Google Chrome":/Safari\//i.test(ua)?"Safari":"غير معروف"};
   details.device=device;
   let location:Record<string,unknown>={};
   const countryHeader=req.headers.get("cf-ipcountry");
   try{
-   if(ip!=="unknown"&&!/^127\\.|^10\\.|^192\\.168\\.|^172\\.(1[6-9]|2[0-9]|3[0-1])\\./.test(ip)){
+   if(ip!=="unknown"&&!/^127\.|^10\.|^192\.168\.|^172\.(1[6-9]|2[0-9]|3[0-1])\\./.test(ip)){
     const geoResponse=await fetch("https://ipwho.is/"+encodeURIComponent(ip),{headers:{"Accept":"application/json"},signal:AbortSignal.timeout(2500)});
     if(geoResponse.ok){const geo=await geoResponse.json();if(geo?.success){location={city:geo.city||null,region:geo.region||null,country:geo.country||null,latitude:typeof geo.latitude==="number"?geo.latitude:null,longitude:typeof geo.longitude==="number"?geo.longitude:null,timezone:geo.timezone?.id||null,isp:geo.connection?.isp||geo.connection?.org||null};}}
    }
