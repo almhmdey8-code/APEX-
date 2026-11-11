@@ -22,7 +22,7 @@ Project ref: `ulzxdvtzziydhuvennzw`
 - Removed an older unrecorded draft `20261109121000_apex_product_return_escrow_wallet.sql`; the applied return-escrow migration is `20261109121451_apex_product_return_escrow_wallet.sql`.
 - Compared migration versions against the live ledger: all 37 repository migration files have matching live versions, and no live migration version is missing from the repository.
 - No migration was re-applied to production during this recovery. This was a source-control archive operation only.
-- The repository and live Supabase ledger now contain 39/39 matching migration versions. Keep this directory as the canonical migration history going forward.
+- The repository and live Supabase ledger now contain 38/38 matching migration versions. Keep this directory as the canonical migration history going forward.
 
 **Safety:** Do not run `supabase db reset --remote` on production. Since these migrations are already recorded as applied, do not re-apply them to production. Use the normal local validation workflow first, then deploy only genuinely new migrations.
 
