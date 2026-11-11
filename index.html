@@ -1151,8 +1151,8 @@ async function loadPaymentMethods(){
  const yeCodes=['alkuraimi_bank','jeeb','one_cash','alamri_cash'];
  const methods=(data||[]).filter(m=>{
   const country=String(m.country_code||'').trim().toUpperCase();
-  return ['SA','YE','ALL'].includes(country)&&(
-   ['mada','visa','google_pay','apple_pay'].includes(m.method_code)||
+  return (country===wantedCountry||country==='ALL')&&(
+   ['mada','visa','google_pay'].includes(m.method_code)||
    yeCodes.includes(m.method_code)
   );
  });
@@ -1176,8 +1176,8 @@ async function loadPaymentMethods(){
    ?'<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+content+'</label>'
    :'<div class="paychoice checkout-payment-tile" aria-disabled="true" style="opacity:.62;cursor:not-allowed">'+image+content+'</div>';
  };
- const saMethods=methods.filter(m=>String(m.country_code||'').toUpperCase()==='SA');
- const yeMethods=methods.filter(m=>String(m.country_code||'').toUpperCase()==='YE');
+ const saMethods=methods.filter(m=>['SA','ALL'].includes(String(m.country_code||'').toUpperCase()));
+ const yeMethods=methods.filter(m=>['YE','ALL'].includes(String(m.country_code||'').toUpperCase()));
  const group=(title,list)=>list.length?'<div class="checkout-payment-country"><b class="checkout-payment-country-title">'+title+'</b><div class="checkout-payment-grid">'+list.map(renderMethod).join('')+'</div></div>':'';
  const manual=group('طرق الدفع في السعودية',saMethods)+group('طرق الدفع في اليمن',yeMethods);
  const wallet='<div class="checkout-payment-country"><b class="checkout-payment-country-title">الدفع من رصيد APEX</b><div class="checkout-payment-grid"><label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label></div></div>';
