@@ -716,6 +716,7 @@ let checkingAdminSession=false;
 async function checkSession(){
  if(checkingAdminSession)return;
  checkingAdminSession=true;
+ let adminSessionConfirmed=false;
  try{
   const {data,error:sessionError}=await supabase.auth.getSession();
   if(sessionError)throw sessionError;
@@ -729,14 +730,26 @@ async function checkSession(){
    $('adm_dashboard').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');
    message('adm_loginmsg','هذا الحساب غير موجود في قائمة المديرين.');return;
   }
+  adminSessionConfirmed=true;
   const mfaVerified=await ensureAdminMfa();
   if(!mfaVerified)return;
   $('adm_login').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_dashboard').classList.remove('apex-admin-hidden');
   $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email+' · محمي بالمصادقة الثنائية';
   await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders(),loadSecurityEvents()]);
  }catch(error){
-  $('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');
-  message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
+  $('adm_dashboard').classList.add('apex-admin-hidden');
+  if(adminSessionConfirmed){
+   $('adm_login').classList.add('apex-admin-hidden');
+   $('adm_mfa').classList.remove('apex-admin-hidden');
+   $('adm_mfa_title').textContent='تعذر تجهيز التحقق الأمني';
+   $('adm_mfa_help').textContent=adminMfaFactorId?'أدخل رمز Google Authenticator المكوّن من 6 أرقام، ثم أعد المحاولة.':'تعذر تجهيز عامل المصادقة. أعد تحميل الصفحة مرة واحدة، ثم سجّل الدخول مجددًا.';
+   $('adm_mfa_code').disabled=!adminMfaFactorId;
+   $('adm_mfa_verify').disabled=!adminMfaFactorId;
+   $('adm_mfa_msg').textContent='تفاصيل المشكلة: '+(error?.message||'خطأ غير معروف');
+  }else{
+   $('adm_login').classList.remove('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');
+   message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
+  }
  }finally{checkingAdminSession=false}
 }
 /* Login handler is registered near the start of module initialization. */
