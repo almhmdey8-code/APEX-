@@ -56,12 +56,26 @@ Deno.serve(async(req:Request)=>{
   if((count||0)>=20)return json({accepted:false,reason:"rate_limited"},429);
   if(eventType==="admin_login_attempt"){const {count:adminAttemptCount,error:adminAttemptError}=await db.from("apex_security_events").select("id",{count:"exact",head:true}).eq("ip_hash",ipHash).eq("event_type","admin_login_attempt").gte("created_at",new Date(Date.now()-5*60000).toISOString());if(adminAttemptError)throw adminAttemptError;if((adminAttemptCount||0)>=3)return json({accepted:false,reason:"admin_attempt_throttled"},429);}
   const email=String(body.email||"").trim().toLowerCase().slice(0,254),raw=body.details&&typeof body.details==="object"?body.details:{},details:Record<string,unknown>={};
-  for(const k of ["reason","screen","method","attempt","code"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
-  const level=severity[eventType]||"info";
-  const {error:insertError}=await db.from("apex_security_events").insert({event_type:eventType,severity:level,user_id:actor?.id||null,email_hash:email?await hash(email):null,ip_hash:ipHash,user_agent:(req.headers.get("user-agent")||"").slice(0,300),source:String(body.source||"storefront").slice(0,40),details});
+  for(const k of ["reason","screen","method","attempt","outcome","code"])if(raw[k]!==undefined)details[k]=String(raw[k]).slice(0,120);
+  const userAgent=(req.headers.get("user-agent")||"").slice(0,300),ua=userAgent;
+  const device={device:/iPad|Tablet/i.test(ua)?"جهاز لوحي":/Mobi|Android|iPhone/i.test(ua)?"هاتف":ua?"كمبيوتر":"غير معروف",os:/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Mac OS X|Macintosh/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"غير معروف",browser:/Edg\\//i.test(ua)?"Microsoft Edge":/OPR\\//i.test(ua)?"Opera":/SamsungBrowser/i.test(ua)?"Samsung Internet":/Firefox\\//i.test(ua)?"Firefox":/Chrome\\//i.test(ua)?"Google Chrome":/Safari\\//i.test(ua)?"Safari":"غير معروف"};
+  details.device=device;
+  let location:Record<string,unknown>={};
+  const countryHeader=req.headers.get("cf-ipcountry");
+  try{
+   if(ip!=="unknown"&&!/^127\\.|^10\\.|^192\\.168\\.|^172\\.(1[6-9]|2[0-9]|3[0-1])\\./.test(ip)){
+    const geoResponse=await fetch("https://ipwho.is/"+encodeURIComponent(ip),{headers:{"Accept":"application/json"},signal:AbortSignal.timeout(2500)});
+    if(geoResponse.ok){const geo=await geoResponse.json();if(geo?.success){location={city:geo.city||null,region:geo.region||null,country:geo.country||null,latitude:typeof geo.latitude==="number"?geo.latitude:null,longitude:typeof geo.longitude==="number"?geo.longitude:null,timezone:geo.timezone?.id||null,isp:geo.connection?.isp||geo.connection?.org||null};}}
+   }
+  }catch(geoError){console.warn("APEX IP geolocation unavailable:",geoError instanceof Error?geoError.message:"lookup failed")}
+  if(!location.country&&countryHeader&&countryHeader!=="XX")location.country=countryHeader;
+  details.location=location;
+  const outcome=String(details.outcome||"");
+  const level=eventType==="admin_login_attempt"?((["password_rejected","mfa_rejected"].includes(outcome))?"high":"info"):(severity[eventType]||"info");
+  const {error:insertError}=await db.from("apex_security_events").insert({event_type:eventType,severity:level,user_id:actor?.id||null,email_hash:email?await hash(email):null,ip_hash:ipHash,user_agent:userAgent,source:String(body.source||"storefront").slice(0,40),details});
   if(insertError)throw insertError;
   let alert_status="not_required";
-  if(["high","critical"].includes(level))alert_status=await sendMail("تنبيه أمني عاجل — APEX AI GUARD","تم رصد حدث أمني: "+eventType+"\nدرجة الخطورة: "+level+"\nالوقت: "+new Date().toISOString()+"\nيرجى مراجعة لوحة الحماية في متجر APEX.");
-  return json({accepted:true,alert_status});
+  if(["high","critical"].includes(level))alert_status=await sendMail("تنبيه أمني عاجل — APEX AI GUARD","تم رصد حدث أمني: "+eventType+"\\nالنتيجة: "+(outcome||"غير محددة")+"\\nالجهاز: "+device.device+" / "+device.os+" / "+device.browser+"\\nالموقع التقريبي: "+[location.city,location.region,location.country].filter(Boolean).join("، ")+"\\nالوقت: "+new Date().toISOString()+"\\nيرجى مراجعة لوحة الحماية في متجر APEX.");
+  return json({accepted:true,alert_status,device,location});
  }catch(e){return json({error:e instanceof Error?e.message:"تعذر تنفيذ عملية الحماية"},400);}
 });
