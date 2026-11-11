@@ -448,7 +448,14 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 @media(max-width:700px){#adminWorkspace .head{min-height:100px!important;padding:12px!important}#adminWorkspace .dashboard-hero{padding:15px!important;margin:12px 0!important}#adminWorkspace .kpi{background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(244,236,220,.88))!important}}
 
 </style>
-</head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
+<style id="apex-security-kpi-controls">
+#adm_security_kpis .adm-security-filter{width:100%;height:100%;min-height:100px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;padding:12px;border:0;border-radius:12px;background:transparent;color:inherit;text-align:right;cursor:pointer}
+#adm_security_kpis .adm-security-filter span{font-size:12px;color:inherit}
+#adm_security_kpis .adm-security-filter b{font-size:26px;color:#e6c16c}
+#adm_security_kpis .adm-security-filter small{font-size:10px;opacity:.75}
+#adm_security_kpis .adm-security-filter:hover,#adm_security_kpis .adm-security-filter[aria-pressed="true"]{background:linear-gradient(135deg,#b58a3830,#e9ca7730);outline:1px solid #c5a04d}
+#adm_security .btn:disabled,#adm_security .btn2:disabled{opacity:.6;cursor:wait}
+</style></head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button><p id="adm_who" class="muted admin-login-status" aria-live="polite"></p></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" placeholder="بريد المدير المعتمد" autocomplete="username" value=""><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn" type="button">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
 <section id="adm_mfa" class="panel apex-admin-hidden" aria-live="polite">
@@ -510,7 +517,13 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
  <p class="muted">مراقبة محاولات الدخول وإنشاء الحسابات والأنشطة المشبوهة. لا تُعرض كلمات المرور أو بيانات الدفع الحساسة في هذا السجل.</p>
  <div class="row"><button id="adm_security_refresh" class="btn2" type="button">تحديث السجل</button><button id="adm_security_email" class="btn" type="button">إرسال التقرير إلى بريد المدير</button></div>
  <p id="adm_security_msg" class="status" role="status"></p>
- <div class="kpis"><div class="kpi"><span>إجمالي الأحداث خلال 24 ساعة</span><b id="adm_sec_total">—</b></div><div class="kpi"><span>محاولات دخول فاشلة</span><b id="adm_sec_failed">—</b></div><div class="kpi"><span>حسابات مكررة</span><b id="adm_sec_duplicate">—</b></div><div class="kpi"><span>أحداث عالية الخطورة</span><b id="adm_sec_high">—</b></div></div>
+ <div class="kpis" id="adm_security_kpis">
+  <div class="kpi"><button type="button" class="adm-security-filter" data-filter="all"><span>إجمالي الأحداث — آخر 7 أيام</span><b id="adm_sec_total">—</b><small>اضغط لعرض الكل</small></button></div>
+  <div class="kpi"><button type="button" class="adm-security-filter" data-filter="failed"><span>محاولات الدخول الفاشلة</span><b id="adm_sec_failed">—</b><small>اضغط لعرض المحاولات</small></button></div>
+  <div class="kpi"><button type="button" class="adm-security-filter" data-filter="duplicate"><span>الحسابات المكررة</span><b id="adm_sec_duplicate">—</b><small>اضغط لعرضها</small></button></div>
+  <div class="kpi"><button type="button" class="adm-security-filter" data-filter="high"><span>الأحداث عالية الخطورة</span><b id="adm_sec_high">—</b><small>اضغط لعرضها</small></button></div>
+ </div>
+ <div class="row" style="justify-content:space-between;align-items:center;margin:12px 0"><b id="adm_security_filter_title">كل أحداث الحماية</b><button id="adm_security_clear_filter" class="btn2" type="button">إلغاء التصفية</button></div>
  <div id="adm_security_list"></div>
 </div>
 </section>
@@ -655,12 +668,25 @@ window.apexProducts=[];window.apexOrders=[];
 $('adm_refreshAll').onclick=()=>{loadProducts();loadOrders();loadBanners();loadPayments();loadWalletTopups();loadReturns();message('adm_reset_msg','');};
 $('adm_adminSearch').addEventListener('input',()=>{const q=$('adm_adminSearch').value.trim().toLowerCase();document.querySelectorAll('#adm_productlist .item,#adm_orderlist .item').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'':'none');});
 function message(id,text){const el=$(id)||$('adm_'+id);if(el)el.textContent=text}
-async function loadSecurityEvents(){
+let admSecurityRows=[],admSecurityFilter='all';
+function renderSecurityEvents(){
+ const box=$('adm_security_list');if(!box)return;
+ const rows=admSecurityRows.filter(x=>{
+  if(admSecurityFilter==='failed')return x.event_type==='login_failed'||x.details?.outcome==='mfa_rejected';
+  if(admSecurityFilter==='duplicate')return x.event_type==='duplicate_account';
+  if(admSecurityFilter==='high')return ['high','critical'].includes(x.severity);
+  return true;
+ });
+ const titles={all:'كل أحداث الحماية',failed:'محاولات الدخول الفاشلة',duplicate:'الحسابات المكررة',high:'الأحداث عالية الخطورة'};
+ $('adm_security_filter_title').textContent=titles[admSecurityFilter]+' ('+rows.length+')';
+ document.querySelectorAll('#adm_security_kpis [data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===admSecurityFilter)));
+
  const box=$('adm_security_list');if(!box)return;
  const since=new Date(Date.now()-7*24*3600000).toISOString();
  const {data,error}=await supabase.from('apex_security_events').select('id,event_type,severity,source,created_at,details,user_agent,ip_hash,acknowledged_at').gte('created_at',since).order('created_at',{ascending:false}).limit(500);
  if(error){message('adm_security_msg','تعذر تحميل سجل الحماية: '+error.message);return}
- const rows=data||[];
+ admSecurityRows=data||[];
+ const rows=admSecurityRows;
  $('adm_sec_total').textContent=rows.length;
  $('adm_sec_failed').textContent=rows.filter(x=>x.event_type==='login_failed'||x.details?.outcome==='mfa_rejected').length;
  $('adm_sec_duplicate').textContent=rows.filter(x=>x.event_type==='duplicate_account').length;
@@ -697,9 +723,27 @@ async function loadSecurityEvents(){
    };
   }
  }
- message('adm_security_msg','تم تحديث سجل الحماية. يعرض IP مخفياً جزئياً وبصمته المشفرة، ومعلومات الجهاز والموقع التقريبي.');
+}
+async function loadSecurityEvents(){
+ const box=$('adm_security_list');if(!box)return;
+ const refresh=$('adm_security_refresh');if(refresh){refresh.disabled=true;refresh.textContent='جارٍ التحديث...';}
+ try{
+  const since=new Date(Date.now()-7*24*3600000).toISOString();
+  const {data,error}=await supabase.from('apex_security_events').select('id,event_type,severity,source,created_at,details,user_agent,ip_hash,acknowledged_at').gte('created_at',since).order('created_at',{ascending:false}).limit(500);
+  if(error)throw error;
+  admSecurityRows=data||[];
+  $('adm_sec_total').textContent=admSecurityRows.length;
+  $('adm_sec_failed').textContent=admSecurityRows.filter(x=>x.event_type==='login_failed'||x.details?.outcome==='mfa_rejected').length;
+  $('adm_sec_duplicate').textContent=admSecurityRows.filter(x=>x.event_type==='duplicate_account').length;
+  $('adm_sec_high').textContent=admSecurityRows.filter(x=>['high','critical'].includes(x.severity)).length;
+  renderSecurityEvents();
+  message('adm_security_msg','تم تحديث مؤشرات الحماية والسجل بنجاح.');
+ }catch(e){message('adm_security_msg','تعذر تحديث مركز الحماية: '+(e.message||e));}
+ finally{if(refresh){refresh.disabled=false;refresh.textContent='تحديث السجل';}}
 }
 $('adm_security_refresh').onclick=loadSecurityEvents;
+document.querySelectorAll('#adm_security_kpis [data-filter]').forEach(b=>b.addEventListener('click',()=>{admSecurityFilter=b.dataset.filter;renderSecurityEvents();}));
+$('adm_security_clear_filter').onclick=()=>{admSecurityFilter='all';renderSecurityEvents();};
 
 async function loadEmailSettings(){try{const {data,error}=await supabase.from('apex_email_settings').select('*').eq('id',1).maybeSingle();if(error)throw error;if(data){$('adm_auto_marketing').checked=!!data.marketing_campaigns_enabled;$('adm_auto_reports').checked=!!data.daily_security_report_enabled;$('adm_report_hours').value=String(data.report_hours||24);}}catch(e){message('adm_email_settings_msg','تعذر تحميل الإعدادات: '+e.message)}}
 $('adm_email_settings_save').onclick=async()=>{const b=$('adm_email_settings_save');b.disabled=true;try{const row={id:1,marketing_campaigns_enabled:$('adm_auto_marketing').checked,daily_security_report_enabled:$('adm_auto_reports').checked,report_hours:Number($('adm_report_hours').value),updated_at:new Date().toISOString()};const {error}=await supabase.from('apex_email_settings').upsert(row,{onConflict:'id'});if(error)throw error;message('adm_email_settings_msg','تم حفظ إعدادات الإرسال الآلي.');}catch(e){message('adm_email_settings_msg','فشل حفظ الإعدادات: '+e.message)}finally{b.disabled=false}};
