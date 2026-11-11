@@ -597,7 +597,21 @@ async function ensureAdminMfa(){
 $('adm_mfa_verify').addEventListener('click',async()=>{
  const button=$('adm_mfa_verify'),code=$('adm_mfa_code').value.replace(/\D/g,'');
  if(!/^\d{6}$/.test(code)){$('adm_mfa_msg').textContent='أدخل رمزًا صحيحًا من 6 أرقام.';return;}
- if(!adminMfaFactorId){$('adm_mfa_msg').textContent='تعذر تحديد عامل الأمان. أعد تحميل الصفحة وسجّل الدخول مجددًا.';return;}
+ if(!adminMfaFactorId){
+  button.disabled=true;button.textContent='جارٍ تجهيز الربط...';
+  try{
+   $('adm_mfa_code').value='';
+   $('adm_mfa_msg').textContent='جارٍ إعادة تجهيز Google Authenticator...';
+   const ready=await ensureAdminMfa();
+   if(!ready&&!adminMfaFactorId)throw new Error('لم يتم إنشاء عامل ربط جديد.');
+  }catch(error){
+   $('adm_mfa_msg').textContent='تعذر تجهيز الربط: '+(error?.message||'خطأ غير معروف');
+  }finally{
+   button.disabled=false;
+   button.textContent=adminMfaFactorId?'تأكيد رمز الأمان':'إعادة تجهيز الربط';
+  }
+  return;
+ }
  button.disabled=true;button.textContent='جارٍ التحقق...';$('adm_mfa_msg').textContent='جارٍ التحقق من رمز Google Authenticator...';
  try{
   const {data:challenge,error:challengeError}=await supabase.auth.mfa.challenge({factorId:adminMfaFactorId});
@@ -742,9 +756,11 @@ async function checkSession(){
    $('adm_login').classList.add('apex-admin-hidden');
    $('adm_mfa').classList.remove('apex-admin-hidden');
    $('adm_mfa_title').textContent='تعذر تجهيز التحقق الأمني';
-   $('adm_mfa_help').textContent=adminMfaFactorId?'أدخل رمز Google Authenticator المكوّن من 6 أرقام، ثم أعد المحاولة.':'تعذر تجهيز عامل المصادقة. أعد تحميل الصفحة مرة واحدة، ثم سجّل الدخول مجددًا.';
-   $('adm_mfa_code').disabled=!adminMfaFactorId;
-   $('adm_mfa_verify').disabled=!adminMfaFactorId;
+   $('adm_mfa_help').textContent=adminMfaFactorId?'أدخل رمز Google Authenticator المكوّن من 6 أرقام.':'لم يُنشأ عامل ربط صالح بعد؛ لا تدخل رمزًا الآن. اضغط زر إعادة تجهيز الربط لمحاولة إنشاء QR جديد.';
+   $('adm_mfa_code').disabled=false;
+   $('adm_mfa_code').value='';
+   $('adm_mfa_verify').disabled=false;
+   $('adm_mfa_verify').textContent=adminMfaFactorId?'تأكيد رمز الأمان':'إعادة تجهيز الربط';
    $('adm_mfa_msg').textContent='تفاصيل المشكلة: '+(error?.message||'خطأ غير معروف');
   }else{
    $('adm_login').classList.remove('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');
