@@ -7,10 +7,11 @@ const publicEvents=new Set(["login_success","login_failed","signup_attempt","dup
 const severity:Record<string,string>={login_success:"info",signup_attempt:"info",login_failed:"warning",duplicate_account:"high",suspicious_activity:"high",access_denied:"warning",rate_limited:"high",admin_login_attempt:"high"};
 const hash=async(v:string)=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");};
 async function sendMail(subject:string,textBody:string){
- const key=Deno.env.get("RESEND_API_KEY");if(!key)return "not_configured";
- const from=Deno.env.get("APEX_REPORT_FROM")||"APEX AI Guard <onboarding@resend.dev>";
+ const key=Deno.env.get("RESEND_API_KEY"),from=Deno.env.get("APEX_REPORT_FROM");
+ if(!key||!from)return "not_configured";
  const res=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from,to:[ADMIN_EMAIL],subject,text:textBody})});
- return res.ok?"sent":"failed";
+ if(!res.ok){console.error("APEX security email failed",res.status,await res.text().catch(()=>""));return "failed";}
+ return "sent";
 }
 Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS")return new Response("ok",{headers:cors});
@@ -49,7 +50,21 @@ Deno.serve(async(req:Request)=>{
   }
   const eventType=String(body.event_type||"");
   if(!publicEvents.has(eventType))return json({error:"نوع الحدث غير مسموح من العميل"},400);
-  const ip=req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()||"unknown";
+  // Admin authentication events are never accepted anonymously. The password
+  // rejection path has no authenticated session and is intentionally not logged
+  // from the browser; this prevents arbitrary visitors forging manager alerts.
+  if(eventType==="admin_login_attempt"){
+   if(!actor||(actor.email||"").toLowerCase()!==ADMIN_EMAIL)return json({error:"يلزم إثبات هوية المدير لتسجيل هذا الحدث"},401);
+   const {data:adminRow,error:adminError}=await db.from("apex_admins").select("user_id").eq("user_id",actor.id).maybeSingle();
+   if(adminError||!adminRow)return json({error:"حساب المدير غير معتمد"},403);
+  }
+  const ip=req.headers.get("cf-connecting-ip")||req.headers.get("x-real-ip")||req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()||"unknown";
+  const maskIp=(value:string)=>{
+   if(value.includes(".")){const parts=value.split(".");return parts.length===4?parts[0]+"."+parts[1]+"."+parts[2]+".x":"غير متاح";}
+   if(value.includes(":"))return value.split(":").slice(0,3).join(":")+":…";
+   return "غير متاح";
+  };
+  const ipMasked=maskIp(ip);
   const ipHash=await hash(ip+(Deno.env.get("APEX_SECURITY_HASH_SALT")||service.slice(0,24)));
   const {count,error:countError}=await db.from("apex_security_events").select("id",{count:"exact",head:true}).eq("ip_hash",ipHash).gte("created_at",new Date(Date.now()-60000).toISOString());
   if(countError)throw countError;
@@ -61,6 +76,7 @@ Deno.serve(async(req:Request)=>{
   const userAgent=(req.headers.get("user-agent")||"").slice(0,300),ua=userAgent;
   const device={device:/iPad|Tablet/i.test(ua)?"جهاز لوحي":/Mobi|Android|iPhone/i.test(ua)?"هاتف":ua?"كمبيوتر":"غير معروف",os:/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Mac OS X|Macintosh/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"غير معروف",browser:/Edg\//i.test(ua)?"Microsoft Edge":/OPR\//i.test(ua)?"Opera":/SamsungBrowser/i.test(ua)?"Samsung Internet":/Firefox\//i.test(ua)?"Firefox":/Chrome\//i.test(ua)?"Google Chrome":/Safari\//i.test(ua)?"Safari":"غير معروف"};
   details.device=device;
+  details.ip_masked=ipMasked;
   let location:Record<string,unknown>={};
   const countryHeader=req.headers.get("cf-ipcountry");
   try{
@@ -72,11 +88,23 @@ Deno.serve(async(req:Request)=>{
   if(!location.country&&countryHeader&&countryHeader!=="XX")location.country=countryHeader;
   details.location=location;
   const outcome=String(details.outcome||"");
-  const level=eventType==="admin_login_attempt"?((["password_rejected","mfa_rejected"].includes(outcome))?"high":"info"):(severity[eventType]||"info");
+  const level=eventType==="admin_login_attempt"&&outcome==="mfa_rejected"?"high":eventType==="admin_login_attempt"?"info":(severity[eventType]||"info");
   const {error:insertError}=await db.from("apex_security_events").insert({event_type:eventType,severity:level,user_id:actor?.id||null,email_hash:email?await hash(email):null,ip_hash:ipHash,user_agent:userAgent,source:String(body.source||"storefront").slice(0,40),details});
   if(insertError)throw insertError;
+  // Only a verified manager session reporting an actual MFA rejection can
+  // trigger email. Anonymous/public telemetry is never allowed to send mail.
   let alert_status="not_required";
-  if(["high","critical"].includes(level))alert_status=await sendMail("تنبيه أمني عاجل — APEX AI GUARD","تم رصد حدث أمني: "+eventType+"\\nالنتيجة: "+(outcome||"غير محددة")+"\\nالجهاز: "+device.device+" / "+device.os+" / "+device.browser+"\\nالموقع التقريبي: "+[location.city,location.region,location.country].filter(Boolean).join("، ")+"\\nالوقت: "+new Date().toISOString()+"\\nيرجى مراجعة لوحة الحماية في متجر APEX.");
+  if(eventType==="admin_login_attempt"&&outcome==="mfa_rejected"&&actor?.id){
+   alert_status=await sendMail("تنبيه أمني مهم — محاولة تحقق مرفوضة في APEX",
+    "رصد نظام APEX محاولة تحقق ثنائي مرفوضة لحساب المدير.\\n"+
+    "الحساب: "+(details.account_masked||ADMIN_EMAIL)+"\\n"+
+    "عنوان الشبكة (مخفي جزئياً): "+ipMasked+"\\n"+
+    "الجهاز: "+device.device+" / "+device.os+" / "+device.browser+"\\n"+
+    "الموقع التقريبي: "+[location.city,location.region,location.country].filter(Boolean).join("، ")+"\\n"+
+    "مزود الشبكة: "+(location.isp||"غير متاح")+"\\n"+
+    "الوقت: "+new Date().toISOString()+"\\n"+
+    "راجع سجل الحماية في لوحة مدير APEX. الموقع تقريبي حسب IP وليس GPS.");
+  }
   return json({accepted:true,alert_status,device,location});
  }catch(e){return json({error:e instanceof Error?e.message:"تعذر تنفيذ عملية الحماية"},400);}
 });
