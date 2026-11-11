@@ -922,11 +922,11 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 <div class="user-shortcuts">
 <button onclick="showAccountSection('profile')"><b>♙</b><span>بيانات حسابي</span></button>
 <button onclick="showAccountSection('orders')"><b>▤</b><span>طلباتي</span></button>
-<button onclick="showAccountSection('wallet')"><b>◈</b><span>المحفظة</span></button>
+<button onclick="showAccountSection('wallet')"><b>▣</b><span>بطاقة الامتياز</span></button>
 <button onclick="showAccountSection('referrals')"><b>♧</b><span>دعوة الأصدقاء</span></button>
 
 </div>
-<section class="user-wallet" role="button" tabindex="0" onclick="showAccountSection('wallet')"><div><small>APEX WALLET</small><h3>محفظتي</h3></div><div class="wallet-balance-info"><strong id="walletBalanceSummary">0.00 <small>ر.س</small></strong><p>الرصيد المتاح</p></div><span class="wallet-gem">◇</span><small class="wallet-note">شحن الرصيد والشراء من المحفظة</small></section>
+<section class="apex-privilege-wrap apex-privilege-home" role="button" tabindex="0" onclick="showAccountSection('wallet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showAccountSection('wallet')}"><div class="apex-privilege-card" aria-label="بطاقة الامتياز من APEX"><div class="apex-card-top"><span class="apex-card-contactless" aria-label="الدفع بدون تلامس">)))</span><div class="apex-card-brand"><strong>APEX</strong><small>PREMIUM</small></div></div><div class="apex-card-middle"><div class="apex-privilege-chip" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="apex-card-stars">✦　✧　✦　✧　✦</span></div><div class="apex-privilege-details"><div><small>اسم حامل البطاقة</small><strong id="walletCardName">عضو APEX</strong></div><div class="apex-card-balance"><small>الرصيد المتاح</small><strong id="walletCardBalance">0.00 ر.س</strong></div></div><div class="apex-privilege-number"><small>رقم البطاقة</small><strong id="walletCardNumber" dir="ltr">يتم الإصدار</strong></div><div class="apex-card-premium-line">APEX PRIVILEGE · EXCLUSIVE MEMBER</div></div></section>
 <div class="user-service-title"><h3>خدمات الحساب</h3><span>كل ما تحتاجه في مكان واحد</span></div>
 <div class="user-services">
 <button onclick="showAccountSection('shipping')"><b>♧</b><span>طلبات الشحن</span><small>متابعة الشحنات</small></button>
@@ -942,7 +942,7 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 <section id="accountSection-orders" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♢ طلباتي</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="myOrders">جارٍ تحميل الطلبات...</div></section>
 <section id="accountSection-shipping" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♢ طلبات الشحن</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="shippingOrders"><p>لا توجد طلبات شحن.</p></div></section>
 <section id="accountSection-transit" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♢ طلبات الإرجاع وتتبع عودتها للمخزن</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="transitOrders"><p>لا توجد طلبات إرجاع قيد المتابعة.</p></div></section><section id="accountSection-notifications" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">♧ إشعارات الحساب</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div id="customerNotifications">جارٍ تحميل الإشعارات...</div></section>
-<section id="accountSection-wallet" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">◈ محفظة APEX</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><div class="apex-privilege-wrap"><div class="apex-privilege-card" aria-label="بطاقة الامتياز من APEX"><div class="apex-privilege-head"><span>بطاقة الامتياز من APEX</span><span class="apex-wordmark">APEX</span></div><div class="apex-privilege-chip" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="apex-privilege-details"><div><small>اسم حامل البطاقة</small><strong id="walletCardName">عضو APEX</strong></div><div class="apex-card-balance"><small>الرصيد المتاح</small><strong id="walletCardBalance">0.00 ر.س</strong></div></div><div class="apex-privilege-number"><small>رقم البطاقة</small><strong id="walletCardNumber" dir="ltr">يتم الإصدار</strong></div><div class="apex-privilege-stripe"></div></div></div><button type="button" class="apex-wallet-topup-trigger" onclick="toggleWalletTopup()">＋ اشحن بطاقتك</button>
+<section id="accountSection-wallet" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">▣ بطاقة الامتياز من APEX</h3><button type="button" class="account-back-button" onclick="showAccountHome()" aria-label="العودة إلى قائمة الحساب">→ رجوع</button></div><button type="button" class="apex-wallet-topup-trigger" onclick="toggleWalletTopup()">＋ اشحن بطاقتك</button>
 
 <div id="walletRestrictedCard" style="border:1px solid #a17a32;border-radius:14px;padding:13px;background:linear-gradient(110deg,#211b0d,#100f0b);margin-bottom:14px"><small style="color:#e7c46c">رصيد الإرجاع المقيد</small><div id="walletRestrictedBalance" style="font-size:23px;color:#e8c36c;font-weight:900">0.00 ر.س</div><p style="color:#bdb29a;font-size:11px;margin:4px 0">مبلغ الإرجاع يظهر هنا مؤقتاً، ولا يصبح متاحاً للشراء إلا بعد استلام المنتج والتحقق منه.</p></div>
 <div id="walletTopupPanel" hidden><h4 style="color:#f4d98a">شحن بطاقة الامتياز</h4><label for="walletTopupAmount">مبلغ الشحن بالريال السعودي</label><input id="walletTopupAmount" type="number" min="1" step="0.01" placeholder="أدخل مبلغ الشحن">
@@ -1771,4 +1771,43 @@ footer{padding-bottom:105px}
 @media(max-width:520px){.topbar{height:66px}.hero{min-height:430px;padding:24px 14px}.heroart{font-size:94px}.herotext h1{font-size:30px}.features{gap:8px}.feature{padding:13px 7px;min-height:94px}.feature b{font-size:23px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:7px;border-radius:15px}.product img{height:132px;border-radius:11px}.product h3{font-size:13px;min-height:43px}.product p{font-size:11px;min-height:36px}.productfoot{align-items:flex-start;flex-direction:column}.add{width:100%}.toolbar{gap:8px;padding:9px}.toolbar>*{flex:1 1 100%;min-width:0}.cat{padding:8px 13px;font-size:13px}.account-shell{max-height:96vh;margin:5px 0}.account-content{padding:10px}.user-shortcuts button{min-height:78px}.account-panel-card{padding:13px}}
 @media(prefers-reduced-motion:reduce){.heroart{animation:none}.product,.product img,.user-shortcuts button{transition:none}}
 </style>
+
+<style id="apex-black-gold-privilege-final">
+/* APEX PRIVILEGE: black leather, polished gold frame, engraved geometry */
+.apex-privilege-home{max-width:650px;margin:12px auto 22px;padding:14px 6px 20px;cursor:pointer}
+.apex-privilege-home:before{inset:8% 4% 4%;background:rgba(221,165,52,.68);filter:blur(34px);opacity:.8}
+.apex-privilege-card{min-height:0;aspect-ratio:1.586/1;padding:20px 23px 16px;border-radius:21px;color:#e9c875;background:radial-gradient(ellipse at 82% 12%,rgba(190,145,55,.18),transparent 35%),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px),linear-gradient(135deg,#171714 0%,#080908 52%,#17130c 100%);border:2px solid #d8b45b;box-shadow:0 0 0 1px #fff0b0aa,inset 0 0 0 3px rgba(205,160,72,.15),inset 0 1px 12px #ffffff18,0 18px 42px #000b,0 0 32px #d9a93e66}
+.apex-privilege-card:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(125deg,transparent 18%,rgba(255,255,255,.1) 31%,transparent 44%),linear-gradient(135deg,transparent 0 62%,rgba(206,163,75,.13) 62.2%,transparent 62.8%);}
+.apex-privilege-card:after{content:"";position:absolute;left:0;bottom:0;width:46%;height:47%;z-index:0;pointer-events:none;opacity:.72;background:repeating-linear-gradient(135deg,transparent 0 13px,rgba(221,181,91,.42) 13px 14px,transparent 14px 25px),linear-gradient(90deg,transparent,rgba(206,163,75,.14));clip-path:polygon(0 18%,100% 100%,0 100%)}
+.apex-card-top,.apex-card-middle,.apex-privilege-details,.apex-privilege-number,.apex-card-premium-line{position:relative;z-index:1}
+.apex-card-top{display:flex;align-items:flex-start;justify-content:space-between;direction:ltr}
+.apex-card-brand{text-align:right;display:flex;flex-direction:column;line-height:1}
+.apex-card-brand strong{font:900 29px Georgia,serif;letter-spacing:4px;color:#f4d77f;text-shadow:0 0 12px #c99b3e88}
+.apex-card-brand small{font:800 9px/1.8 Tahoma,Arial;letter-spacing:4px;color:#d5ad58}
+.apex-card-contactless{font:900 28px/1 Arial,sans-serif;letter-spacing:-8px;transform:rotate(90deg);transform-origin:left top;color:#e6c36d;text-shadow:0 0 8px #b98932}
+.apex-card-middle{display:flex;align-items:center;justify-content:space-between;margin:8px 0 12px}
+.apex-privilege-chip{margin:0;width:53px;height:39px;border-radius:8px;background:linear-gradient(135deg,#fff1ad,#d6a84c 48%,#9b681f);border:1px solid #f9e6a3;box-shadow:inset 0 1px 4px #fff9,0 2px 8px #0008}
+.apex-card-stars{color:#d9b45f;letter-spacing:2px;font-size:12px;text-shadow:0 0 8px #b98b36}
+.apex-privilege-details{margin-top:4px;color:#e9cf8d}
+.apex-privilege-details small,.apex-privilege-number small{color:#c5a65d;opacity:1;font-size:9px}
+.apex-privilege-details strong{color:#fff0bf;text-shadow:0 1px 4px #000;font-size:clamp(12px,2.8vw,16px)}
+.apex-privilege-details .apex-card-balance strong{color:#f4d47a}
+.apex-privilege-number{margin-top:8px;color:#f0d78e}
+.apex-privilege-number strong{color:#f5e2ad;letter-spacing:2px;text-shadow:0 1px 4px #000}
+.apex-card-premium-line{margin-top:8px;text-align:left;direction:ltr;font:700 7px Tahoma,Arial;letter-spacing:2px;color:#b9954b;opacity:.85}
+/* Replace washed-out white copy with high-contrast black on champagne-gold surfaces */
+.account-menu button,.user-shortcuts button,.user-services button,.apex-wallet-topup-trigger,.account-back-button,.account-panel-card .add,.goldbtn,.cat.active,.tag{color:#171006!important}
+#accountpanel .account-panel-card{background:linear-gradient(135deg,#f7e6b3,#dfbd70 58%,#c99b43)!important;color:#1b1408!important;border-color:#8b641d!important}
+#accountpanel .account-panel-card h3,#accountpanel .account-panel-card h4,#accountpanel .account-panel-card label,#accountpanel .account-panel-card p,#accountpanel .account-panel-card small,#accountpanel .account-panel-card li,#accountpanel .account-panel-card .account-section-title{color:#241a08!important}
+#accountpanel .account-panel-card input,#accountpanel .account-panel-card select,#accountpanel .account-panel-card textarea{background:#fff8e7!important;color:#171006!important;border:1px solid #8f6b2c!important}
+#accountpanel .account-panel-card input::placeholder,#accountpanel .account-panel-card textarea::placeholder{color:#716044!important;opacity:1}
+#accountpanel .account-panel-card .item,#accountpanel .account-profile-summary,#accountpanel #walletRestrictedCard{background:rgba(255,248,226,.72)!important;color:#211707!important;border-color:#9b762f!important}
+#accountpanel .account-panel-card .item * ,#accountpanel .account-profile-summary *{color:#211707!important}
+#accountpanel .account-head{background:linear-gradient(100deg,#f8e7b7,#d4a64e,#f5dfa0)!important}
+#accountpanel .account-brand,#accountpanel .account-head .account-profile-shortcut{color:#1a1205!important;text-shadow:none!important}
+#accountpanel .account-panel-card a{color:#563a0d!important}
+.user-service-title h3,.user-service-title span{color:#f1d78e!important}
+@media(max-width:420px){.apex-privilege-home .apex-privilege-card{padding:15px 15px 13px;min-height:0}.apex-card-brand strong{font-size:24px}.apex-card-contactless{font-size:24px}.apex-card-middle{margin:5px 0 9px}.apex-card-premium-line{font-size:6px}}
+</style>
+
 </body></html>
