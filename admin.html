@@ -451,7 +451,7 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 </head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button><p id="adm_who" class="muted admin-login-status" aria-live="polite"></p></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" placeholder="بريد المدير المعتمد" autocomplete="username" value=""><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn" type="button">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
-<section id="adm_dashboard" class="apex-admin-hidden">
+<section id="adm_dashboard" class="apex-admin-hidden"><div id="adm_admin_security_alert" class="item" hidden role="alert" style="margin:10px 0;border:1px solid #b98a32;background:linear-gradient(110deg,#211a0c,#12150f);color:#ffe5a1"><b>🛡️ تنبيه أمني — لوحة المدير</b><p id="adm_admin_security_alert_text" style="margin:6px 0 0;font-size:13px"></p></div>
 <div class="panel row dashboard-hero"><div style="display:flex;align-items:center;gap:20px;position:relative;z-index:1"><div><h1 class="dashboard-title">لوحة المدير</h1></div></div><button id="adm_logout" class="btn2" style="position:relative;z-index:1">تسجيل الخروج</button></div>
 <div class="kpis"><div class="kpi"><span>إجمالي المنتجات</span><b id="adm_kProducts">—</b></div><div class="kpi"><span>الطلبات الكلية</span><b id="adm_kOrders">—</b></div><div class="kpi"><span>طلبات جديدة</span><b id="adm_kNew">—</b></div><div class="kpi"><span>المنتجات النشطة</span><b id="adm_kActive">—</b></div></div><section class="admin-overview"><h2>نظرة عامة على المتجر</h2><div class="admin-metrics"><article><span>المبيعات المدفوعة</span><b id="adm_metric_revenue">—</b></article><article><span>طلبات مدفوعة</span><b id="adm_metric_paid">—</b></article><article><span>مخزون منخفض</span><b id="adm_metric_stock">—</b></article><article><span>طلبات ملغاة</span><b id="adm_metric_cancelled">—</b></article></div><div class="admin-overview-bottom"><div><h3>آخر الطلبات</h3><div id="adm_recent_orders">بانتظار البيانات</div></div><div><h3>تنبيهات المخزون</h3><div id="adm_stock_alerts">بانتظار البيانات</div></div></div><p id="adm_overview_updated" class="muted">يتم تحديث المؤشرات تلقائياً</p></section><div class="panel"><div class="dash-tools"><input id="adm_adminSearch" class="field" style="margin:0" placeholder="ابحث في المنتجات أو الطلبات"><button id="adm_refreshAll" class="btn2" type="button">↻ تحديث البيانات</button></div><div class="tabs"><button class="btn2" data-tab="products" aria-pressed="true" aria-current="page">المنتجات والأسعار</button><button class="btn2" data-tab="banners">البنرات</button><button class="btn2" data-tab="payments">طرق الدفع</button><button class="btn2" data-tab="orders">الطلبات</button><button class="btn2" data-tab="returns">إرجاع المنتجات</button><button class="btn2" data-tab="customers">حسابات العملاء</button><button class="btn2" data-tab="currency">تغيير العملة</button><button class="btn2" data-tab="wallet_topups">شحن المحفظة</button><button class="btn2" data-tab="shipping">شركات الشحن</button><button class="btn2" data-tab="marketing">✉️ البريد والعروض</button><button class="btn2" data-tab="security">🛡️ الحماية الذكية</button></div>
 <div id="adm_products" class="apex-admin-hidden">
@@ -522,6 +522,8 @@ if(adminLoginButton){
   adminLoginButton.textContent='جارٍ تسجيل الدخول...';
   showLoginStatus('جارٍ التحقق من بيانات المدير...');
   try{
+   // Log every real admin-panel sign-in attempt before checking credentials; never send or store the password.
+   try{await supabase.functions.invoke('apex-ai-guard',{body:{event_type:'admin_login_attempt',email,source:'admin_panel',details:{screen:'admin_login',method:'password',attempt:'admin_panel_login'}}});}catch(securityError){console.warn('APEX admin attempt alert could not be delivered:',securityError?.message||securityError)}
    const {error}=await supabase.auth.signInWithPassword({email,password});
    if(error){showLoginStatus('فشل تسجيل الدخول: '+error.message);return}
    showLoginStatus('تم التحقق من كلمة المرور. جارٍ فتح لوحة الإدارة...');
@@ -561,8 +563,9 @@ async function loadSecurityEvents(){
  $('adm_sec_failed').textContent=rows.filter(x=>x.event_type==='login_failed').length;
  $('adm_sec_duplicate').textContent=rows.filter(x=>x.event_type==='duplicate_account').length;
  $('adm_sec_high').textContent=rows.filter(x=>['high','critical'].includes(x.severity)).length;
- const labels={login_success:'دخول ناجح',login_failed:'دخول فاشل',signup_attempt:'محاولة إنشاء حساب',duplicate_account:'حساب مكرر محتمل',suspicious_activity:'نشاط مشبوه',access_denied:'رفض وصول',rate_limited:'تجاوز حد المحاولات'};
+ const labels={login_success:'دخول ناجح',login_failed:'دخول فاشل',signup_attempt:'محاولة إنشاء حساب',duplicate_account:'حساب مكرر محتمل',suspicious_activity:'نشاط مشبوه',access_denied:'رفض وصول',rate_limited:'تجاوز حد المحاولات',admin_login_attempt:'محاولة دخول لوحة المدير'};
  box.innerHTML=rows.map(x=>'<div class="item row"><div><b>'+esc(labels[x.event_type]||x.event_type)+'</b><br><small>'+esc(x.severity)+' · '+esc(x.source||'storefront')+'</small></div><small>'+new Date(x.created_at).toLocaleString('ar-SA')+'</small></div>').join('')||'<p class="muted">لا توجد أحداث مسجلة خلال آخر 24 ساعة.</p>';
+ const latestAdminAttempt=rows.find(x=>x.event_type==='admin_login_attempt');const alertBox=$('adm_admin_security_alert');if(alertBox){alertBox.hidden=!latestAdminAttempt;if(latestAdminAttempt)$('adm_admin_security_alert_text').textContent='تم رصد محاولة دخول إلى لوحة المدير بتاريخ '+new Date(latestAdminAttempt.created_at).toLocaleString('ar-SA')+'. راجع سجل الحماية للتفاصيل.';}
  message('adm_security_msg','تم تحديث سجل الحماية.');
 }
 $('adm_security_refresh').onclick=loadSecurityEvents;
@@ -642,7 +645,7 @@ async function checkSession(){
   $('adm_login').classList.add('apex-admin-hidden');
   $('adm_dashboard').classList.remove('apex-admin-hidden');
   $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email;
-  await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders()]);
+  await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders(),loadSecurityEvents()]);
  }catch(error){
   $('adm_dashboard').classList.add('apex-admin-hidden');
   $('adm_login').classList.remove('apex-admin-hidden');
