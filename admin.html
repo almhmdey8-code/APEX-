@@ -1379,4 +1379,35 @@ checkSession();
 @media(max-width:390px){#adminWorkspace .payment-country-chooser{grid-template-columns:1fr!important}#adminWorkspace .payment-grid{gap:7px!important}}
 </style>
 
+
+<style id="apex-admin-overview-gold-royal">
+/* لوحة نظرة عامة — شامبين ذهبي ملكي وتباين أسود واضح */
+#adminWorkspace .admin-overview{
+ position:relative;overflow:hidden;padding:22px!important;margin:18px 0!important;
+ border:1px solid #fff0b3!important;border-radius:22px!important;
+ background:linear-gradient(135deg,#fff0b2 0%,#e8c66f 28%,#c9953e 62%,#f3dda0 100%)!important;
+ box-shadow:0 15px 38px #0008,inset 0 1px #fff!important;color:#211605!important
+}
+#adminWorkspace .admin-overview:before{content:"";position:absolute;inset:7px;border:1px solid #80591f88;border-radius:16px;pointer-events:none}
+#adminWorkspace .admin-overview>h2{position:relative;color:#241805!important;font-size:clamp(21px,3vw,28px)!important;font-weight:900!important;text-shadow:0 1px #fff7;margin:0 0 17px!important}
+#adminWorkspace .admin-metrics{position:relative;gap:12px!important}
+#adminWorkspace .admin-metrics article{
+ min-width:0;padding:16px!important;border:1px solid #80591f!important;border-radius:16px!important;
+ background:linear-gradient(145deg,#fff7d9 0%,#e8c66f 54%,#d4a34d 100%)!important;
+ box-shadow:inset 0 1px #fff,0 7px 16px #68440d38!important
+}
+#adminWorkspace .admin-metrics span{color:#49320f!important;font-weight:800!important;font-size:12px!important}
+#adminWorkspace .admin-metrics b{color:#1b1205!important;font-size:clamp(23px,3vw,30px)!important;font-weight:900!important;text-shadow:0 1px #fff8}
+#adminWorkspace .admin-overview-bottom{position:relative;gap:12px!important}
+#adminWorkspace .admin-overview-bottom>div{
+ padding:15px!important;border:1px solid #80591f!important;border-radius:16px!important;
+ background:linear-gradient(145deg,#fff3c5,#e3bd65 72%,#c8953e)!important;
+ box-shadow:inset 0 1px #fff,0 7px 16px #68440d38!important
+}
+#adminWorkspace .admin-overview-bottom h3{color:#241805!important;font-size:15px!important;font-weight:900!important}
+#adminWorkspace .admin-overview-bottom p{color:#30210b!important;border-bottom:1px solid #76521c55!important;font-weight:700!important}
+#adminWorkspace #adm_overview_updated{position:relative;color:#49320f!important;font-weight:800!important;margin:13px 2px 0!important}
+@media(max-width:650px){#adminWorkspace .admin-overview{padding:16px!important}#adminWorkspace .admin-metrics{gap:8px!important}#adminWorkspace .admin-metrics article{padding:12px!important}}
+</style>
+
 </body></html>
