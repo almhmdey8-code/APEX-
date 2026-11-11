@@ -110,6 +110,8 @@ Deno.serve(async (req: Request) => {
   const { data: authData, error: authError } = await supabase.auth.getUser(token);
   const user = authData?.user;
   if (authError || !user) return json({ error: "invalid_session" }, 401);
+  if (user.is_anonymous || !user.email_confirmed_at) return json({ error: "verified_customer_required" }, 403);
+  console.info("APEX_ASSISTANT_AUTH_OK");
 
   let body: any;
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
@@ -216,7 +218,10 @@ Deno.serve(async (req: Request) => {
   ];
 
   const fallbackReply = () => localStoreFallback(messages, products, paymentMethods, orderContext);
-  if (!openAiKey) return json({ reply: fallbackReply(), fallback: true });
+  if (!openAiKey) {
+    console.warn("APEX_ASSISTANT_FALLBACK", "missing_openai_key");
+    return json({ reply: fallbackReply(), fallback: true });
+  }
 
 
   let aiResponse: Response;
@@ -228,7 +233,7 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({ model: "gpt-6.1-sol", input, max_output_tokens: 500 }),
     });
   } catch (error) {
-    console.error("APEX OpenAI request timeout or network failure:", error instanceof Error ? error.name : "unknown");
+    console.warn("APEX_ASSISTANT_FALLBACK", "openai_network_failure", error instanceof Error ? error.name : "unknown");
     return json({ reply: fallbackReply(), fallback: true });
   }
   const aiData = await aiResponse.json().catch(() => ({}));
@@ -242,8 +247,12 @@ Deno.serve(async (req: Request) => {
     return json({ reply: fallbackReply(), fallback: true });
   }
   let reply = outputText(aiData);
-  if (!reply) return json({ reply: fallbackReply(), fallback: true });
+  if (!reply) {
+    console.warn("APEX_ASSISTANT_FALLBACK", "empty_model_response");
+    return json({ reply: fallbackReply(), fallback: true });
+  }
   const handoff = reply.includes("[[APEX_HANDOFF]]");
   reply = reply.replace(/\s*\[\[APEX_HANDOFF\]\]\s*/g, "").trim();
+  console.info("APEX_ASSISTANT_SUCCESS", { model: "gpt-6.1-sol", output_chars: reply.length, handoff });
   return json({ reply, handoff });
 });
