@@ -238,13 +238,16 @@ Deno.serve(async (req: Request) => {
   }
   const aiData = await aiResponse.json().catch(() => ({}));
   if (!aiResponse.ok) {
-    const providerCode = aiData?.error?.code || aiData?.error?.type || "provider_error";
-    console.error("APEX OpenAI request failed:", aiResponse.status, providerCode);
-    if (aiResponse.status === 401) return json({ reply: fallbackReply(), fallback: true });
-    if (aiResponse.status === 429 && providerCode === "credit_balance_exhausted") {
-      return json({ reply: fallbackReply(), fallback: true });
-    }
-    return json({ reply: fallbackReply(), fallback: true });
+    const providerCode = String(aiData?.error?.code || aiData?.error?.type || "provider_error");
+    const fallbackReason = aiResponse.status === 429 && /credit_balance_exhausted|insufficient_quota/i.test(providerCode)
+      ? "openai_credits_exhausted"
+      : aiResponse.status === 401 ? "openai_key_rejected" : "openai_http_" + aiResponse.status;
+    console.warn("APEX_ASSISTANT_FALLBACK", fallbackReason, providerCode);
+    return json({
+      reply: fallbackReply(),
+      fallback: true,
+      fallback_reason: fallbackReason,
+    });
   }
   let reply = outputText(aiData);
   if (!reply) {
