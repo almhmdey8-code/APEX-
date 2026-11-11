@@ -1,86 +1,83 @@
-# تجهيز متجر APEX للتطبيق
+# APEX integration and release audit — 2026-11-12
 
-## الصفحات المعتمدة
-- واجهة العميل: `https://almhmdey8-code.github.io/APEX-/` — الملف `index.html`.
-- لوحة المدير المستقلة: `https://almhmdey8-code.github.io/APEX-/admin.html`.
-- سياسة الخصوصية: `privacy.html`.
-- لوحة المدير ليست مسار `/admin`، ولا ينبغي إظهارها في تنقل العميل داخل التطبيق.
+## Production architecture
 
-## البنية الحالية
-- الواجهتان HTML مستقلتان وتستخدمان JavaScript Modules.
-- المصادقة وقاعدة البيانات والتخزين عبر Supabase JS v2.57.0.
-- جلسة المتجر محفوظة في Web Storage بالمفتاح `sb-ulzxdvtzziydhuvennzw-auth-token`.
-- واجهة العميل تعتمد على جداول المتجر، وظائف Supabase Edge، وسلة محلية في الذاكرة.
-- الخريطة تعتمد على Leaflet وOpenStreetMap، وروابط الموقع تفتح Google Maps.
-- لوحة المدير تستخدم المصادقة نفسها، ثم تتحقق من البريد المسموح ومن وجود المستخدم في جدول `apex_admins`.
+- Repository: `almhmdey8-code/APEX-`.
+- Customer storefront: `https://almhmdey8-code.github.io/APEX-/` (`index.html`).
+- Separate administrator console: `https://almhmdey8-code.github.io/APEX-/admin.html` (`admin.html`).
+- Privacy policy: `https://almhmdey8-code.github.io/APEX-/privacy.html`.
+- Supabase is the only active backend. Firebase migration was cancelled; no Firebase source is retained in this repository.
+- Supabase project ref: `ulzxdvtzziydhuvennzw`.
+- The repository contains 38 migration files matching all 38 versions in the live Supabase migration ledger.
+- Six Edge Functions are ACTIVE and their archived `index.ts` sources match the deployed versions:
+  - `apex-wallet-checkout` v8
+  - `apex-create-order` v7
+  - `apex-admin-customers` v7
+  - `apex-ai-guard` v12
+  - `apex-email-campaign` v9
+  - `apex-store-assistant` v16
 
-## متطلبات دمج واجهة العميل في Flutter
-1. تحميل رابط المتجر عبر HTTPS داخل WebView.
-2. تفعيل JavaScript وDOM Storage وLocal Storage، وعدم مسح بيانات WebView عند إعادة فتح التطبيق؛ وإلا ستنتهي جلسات دخول العملاء.
-3. منح إذن الموقع عند الطلب فقط، لأن إنشاء الحساب وتحديد عنوان التوصيل يستخدمان Geolocation.
-4. دعم منتقي الملفات في WebView إذا أُريد تنفيذ رفع الصور من لوحة المدير.
-5. التعامل مع الروابط الخارجية و`target=_blank`، خصوصاً Google Maps وسياسة الخصوصية.
-6. إبقاء الاتصال بالإنترنت متاحاً؛ المتجر الحالي ليس تطبيقاً يعمل دون اتصال.
-7. عدم تضمين مفاتيح سرية أو مفاتيح خدمة Supabase داخل التطبيق. المفتاح المنشور في الواجهة ليس بديلاً عن سياسات RLS.
+## Verification completed
 
-## فصل الصلاحيات
-- التطبيق الموجه للعملاء يفتح واجهة `index.html` فقط.
-- تبقى `admin.html` منفصلة، ولا تُعرض إلا للمدير بعد تحقق Supabase من الجلسة وقائمة المديرين.
-- يجب التحقق من سياسات RLS على جميع الجداول، ومن صلاحيات Edge Functions؛ ففحص الواجهة وحده لا يثبت حماية قاعدة البيانات.
+- GitHub Actions storefront validation passed on commit `47dd704942d56e92c46e36f79d904ec03ba191dd`.
+- GitHub Pages deployment completed successfully for that commit.
+- Static validation checks both HTML pages, unique IDs, JavaScript module syntax, local resource links, inline handler exports, public-key boundaries, payment-country filtering, six Supabase function sources, and critical migration presence.
+- Both storefront and admin HTML have unique IDs; all inline button handlers detected by the validator are exposed correctly.
+- Fixed missing global exports for wallet QR scanning and wallet-to-wallet transfer buttons.
+- Fixed signed-in referral tracking permission: both `anon` and `authenticated` now have the intended execute permission.
+- Added server-side country checks to manual order checkout and wallet top-up. Controlled rollback tests confirmed a Saudi/default-SA account is rejected when attempting to use the Yemen-only Kuraimi method; no test order or top-up was retained.
+- A simulated authenticated user with an unrelated UUID could read zero orders, wallets, or top-ups. Direct anonymous access to customer order tables is denied.
+- Reconciled the migration archive: restored two previously missing applied migrations, removed one unapplied duplicate draft, and archived the new referral and payment-country fixes.
 
-## عناصر يجب إكمالها قبل إصدار APK إنتاجي
-- اختبار تسجيل الدخول والتسجيل برمز البريد واستعادة كلمة المرور داخل Android WebView.
-- اختبار حفظ الجلسة بعد إغلاق التطبيق وإعادة فتحه.
-- اختبار الموقع ورفع الملفات والروابط الخارجية والحافظة على Android.
-- اختبار السلة وإنشاء الطلب ومحفظة APEX وحالات الطلبات.
-- اختبار عزل طرق الدفع حسب بلد الحساب.
-- بوابات Mada وVisa وGoogle Pay ليست مسار دفع مكتملًا في واجهة العميل الحالية؛ الصفحة تعرض وسائل الدفع اليدوية ومحفظة APEX فقط. لا تُفعّل بوابة إلكترونية قبل اكتمال تكامل الخادم والتحقق من Webhook.
-- مراجعة سياسات RLS وEdge Functions واختبارها بحساب عميل عادي وحساب مدير.
-- إضافة اختبارات تفاعل فعلية؛ ففحص GitHub Actions الحالي يتحقق من صياغة JavaScript وتكرار معرفات HTML فقط، ولا يختبر عمليات المتجر الحقيقية.
+## Release blockers and outstanding work
 
-## ملاحظة تكامل مهمة
-تطبيق Flutter القديم وخدمة دخوله الحالية مشروع منفصل عن متجر HTML الذي يستخدم Supabase Auth. تضمين المتجر في WebView يحافظ على جلسة Supabase الخاصة بالمتجر، لكنه لا يوحّدها تلقائياً مع جلسة التطبيق القديمة. يجب عدم استبدال تسجيل الدخول الحالي أو تغيير مستودع بناء APK أثناء تجهيز واجهة المتجر.
+### Payments
 
-## آخر إصلاح في الواجهة
-تم تصحيح إتاحة دالة نسخ رابط الدعوة للزر الذي يستدعيها من HTML؛ كانت الدالة موجودة داخل Module لكنها غير مكشوفة على `window`. الإصلاح في commit:
-`a344199e5bbc8d8e804cd8977db402e98af1de74`.
+- Saudi Mada, Visa, and Google Pay entries exist but are disabled and have no configured gateway provider or completed webhook integration.
+- Apple Pay is excluded from the customer checkout interface.
+- Yemen manual methods exist: Kuraimi, Jeeb, One Cash, and Amri Cash. Kuraimi is the only enabled method.
+- Kuraimi has account-number records for YER, SAR, and USD, but no account-holder name is stored. Jeeb, One Cash, and Amri Cash currently have no account numbers or three-currency account configuration.
+- The order backend currently supports manual payment methods; gateway methods must not be enabled until provider API integration, signed webhook verification, duplicate-event protection, and end-to-end payment tests are complete.
 
+### Shipping
 
-## تحديث تجهيز ما قبل التطبيق — 5 نوفمبر 2026
+- Four Saudi carriers are listed: Aramex, SPL, SMSA, and Naqel. All are disabled and marked `not_configured`.
+- No Yemen shipping providers are configured.
+- No live carrier API, label creation, rate quote, or tracking webhook has been certified. Do not present a carrier as active until its credentials and test shipment are verified.
 
-### ما تم تنفيذه
-- تشديد صلاحيات الكتابة المباشرة: لا يمكن للزائر المجهول إنشاء الطلبات أو تعديل بيانات المتجر أو وسائل الدفع.
-- جعل تعديلات الطلبات المالية والمحفظة وسجلات الدعوات وسجلات الأمان خاضعة لمسارات الخادم الموثوقة فقط.
-- إزالة صلاحية استدعاء دوال تسجيل أحداث الدفع الخاصة بالمشغلات كواجهات RPC عامة، مع إبقاء المشغلات تعمل داخل قاعدة البيانات.
-- ضبط `search_path` لدوال مشغلات تدقيق الدفع على قيمة فارغة وتأهيل أسماء الجداول بالمخطط `public`.
-- إضافة فهارس ربط طلبات شحن المحفظة.
-- إضافة مدقق آلي للصفحات: فحص الملفات المطلوبة، ومعرفات HTML المكررة أو المفقودة، والروابط المحلية، ودوال الأزرار المكشوفة على `window`، ومنع مفاتيح Supabase ذات الصلاحيات العالية من الظهور في الواجهة.
-- توسيع GitHub Actions لتشغيل المدقق وفحص صياغة JavaScript للمتجر ولوحة المدير.
+### Product catalog
 
-### وسائل الدفع مؤجلة عمداً
-لا تُفعّل أو تُعدّل وسائل الدفع الآن. تبقى إعدادات مدى وVisa وGoogle Pay ووسائل الدفع اليمنية وبوابات الربط محفوظة للإعداد اللاحق بعد جاهزية التطبيق. لا يُعد وجود إعداد في لوحة المدير دليلاً على اكتمال بوابة دفع؛ يجب إكمال ربط الخادم والتحقق من Webhook واختبارات المبالغ قبل التفعيل.
+- The database has 21 product records: 19 active and 2 inactive.
+- Four active products have very short descriptions. Current active products have prices and HTTPS image URLs.
+- The product table currently stores only ID, name, category, description, image URL(s), price, active status, stock, and timestamps. It does not yet provide structured SKU, brand, model, variants, detailed specifications, dimensions, shipping weight, warranty, origin, barcode, ratings, or reviews.
+- The production catalog APEX-101 to APEX-200 is not present as a complete verified catalog. Do not invent product data or replace it with demo descriptions.
 
-### تحقق قبل دمج التحديث
-- نجاح GitHub Actions لفرع التجهيز.
-- التأكد من بقاء صلاحيات قراءة المنتجات والبنرات العامة.
-- التأكد من استمرار إدارة المنتجات والبنرات والطلبات والشحن من حساب المدير.
-- اختبار إنشاء الطلب عبر `apex-create-order` وشراء المحفظة عبر `apex-wallet-checkout` بحساب مصرح، دون إنشاء طلب تجريبي حقيقي في بيانات المتجر.
-- اختبار تسجيل الدخول والتسجيل ورمز البريد والدعوات والجلسة على Android WebView قبل اعتماد APK.
+### Security
 
-### حدود النشر
-هذا المستودع ينشر واجهة الويب ولوحة المدير وسياسة الخصوصية. بناء APK الإنتاجي يتم من مستودع Flutter المستقل، ولا ينبغي تعديل مستودع البناء أو إعداداته أثناء تجهيز الواجهة. لا يُعلن التطبيق جاهزاً للتثبيت حتى ينجح بناء APK واختبار تشغيله وتسجيل الدخول وحفظ الجلسة على Android.
+- Customer RLS policies restrict orders, wallets, and top-ups to the signed-in owner; admin policies require membership in `apex_admins`.
+- The requested QR-based trusted-device binding for the administrator is not implemented: no device-binding table or pairing flow exists. A front-end-only QR would not be sufficient; this must be enforced server-side and against direct database access.
+- Supabase Auth leaked-password protection is currently disabled and should be enabled before launch.
+- Supabase security advisor reports nine authenticated SECURITY DEFINER functions and one anonymous referral SECURITY DEFINER function. The privileged admin functions inspected check admin membership; customer operations check authentication/ownership. Keep these grants narrowly scoped.
+- `apex_email_cron_auth` has RLS enabled without policies; it is intended for service-role-only access.
+- The `pg_net` extension-in-public warning and RLS/performance advisor warnings remain for review.
 
+### AI and email
 
-### إضافات فحص الطلبات
-- مسار الطلب اليدوي يرفض الطلب بالكامل إذا كان أي منتج غير نشط أو بلا سعر صالح؛ لم يعد ينشئ طلباً جزئياً ويُسقط عناصر من السلة.
-- مسارا الطلب اليدوي والشراء من المحفظة يطبّقان سقف 20 قطعة لكل منتج حتى عند تكرار معرّف المنتج داخل الطلب.
-- المنتجات التجريبية غير المسعّرة والمكرر المطابق أُخفيت من واجهة العميل دون حذف سجلاتها؛ يستطيع المدير مراجعتها وإعادة تفعيلها بعد التصحيح.
+- The store assistant authenticates correctly, but live logs show OpenAI `429 credit_balance_exhausted`; it falls back instead of providing the intended live AI response.
+- Actual email OTP delivery, password-reset delivery, and campaign delivery still require a real mailbox/provider test. A deployed function alone does not prove email deliverability.
 
+### Legal and real-device testing
 
-### مزامنة سجل Supabase
-تمت مطابقة أرقام ملفات الترحيلات التي أُضيفت في هذه المرحلة مع الإصدارات المسجلة في Supabase، وإضافة ملف الفهارس المطبق الذي كان مفقوداً. لكن الترحيلات الأقدم (قبل 5 نوفمبر 2026) ما زالت موجودة في سجل Supabase وليست كلها محفوظة في هذا المستودع. لذلك لا تشغّل `supabase db push` من هذا المستودع حتى تُستورد أو تُسوّى ملفات خط الأساس القديمة؛ هذا يمنع إعادة تنفيذ أو تجاوز تغييرات سابقة دون مراجعة.
+- `privacy.html` is linked and signup requires explicit consent. The privacy page still needs a confirmed public contact channel for privacy requests and the store's legal/operator details.
+- JavaScript syntax and static integration checks pass, but a complete visual and interactive browser test on Android has not been completed.
+- Do not perform real payment, wallet transfer, shipping-label, or customer email tests against production without a dedicated test account and an approved test transaction.
 
+## Android app
 
-### عناصر لم تُعتمد للإطلاق بعد
-- جدول المتجر الحالي يحتوي على 21 سجل منتج تجريبي؛ 19 نشطاً و2 مخفيان لعدم اكتمال السعر أو لتكرار المنتج. كتالوج الإنتاج المعتمد سابقاً APEX-101 إلى APEX-200 غير موجود كاملاً في قاعدة البيانات الحالية أو ملفات هذا المستودع، لذلك لم تُخترع أسماء أو أسعار بديلة.
-- مستودع Flutter السابق `almhmdey8-code/apexbuild` على الفرع `master` غير متاح عبر اتصال GitHub الحالي. المستودع `APEX-` الحالي يحتوي على واجهة الويب ولوحة المدير فقط، وليس مشروع Flutter. لا يمكن بناء APK يحافظ على تسجيل الدخول القديم دون استعادة صلاحية الوصول إلى مشروع Flutter الأصلي أو توفير مصدره.
+- The repository includes a standalone Android WebView wrapper under `android/`; it opens the HTTPS storefront and requires an internet connection.
+- The current Gradle release build uses the debug signing configuration. It is suitable for a test APK only, not a Play Store production release. A private production signing key and device testing are still required.
+- The web storefront and administrator console remain separate; the customer app must not expose the admin page in its navigation.
+
+## Launch decision
+
+**APEX is not ready for public launch yet.** The core storefront, admin console, Supabase functions, migration archive, and static validation are in place. Launch must wait for verified production products, payment gateway/webhook setup, enabled and tested shipping providers for the intended countries, administrator device binding, leaked-password protection, and real-device/email/payment/shipping end-to-end tests.
