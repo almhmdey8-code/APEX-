@@ -2250,3 +2250,48 @@ input,select,textarea{
 </style>
 
 </body></html>
+
+<style id="apex-wallet-card-qr-layout-fix">
+/* تحسين توزيع بيانات بطاقة APEX ومنع انقسام الاسم ورقم البطاقة */
+.apex-card-qr{bottom:50px!important}
+.apex-privilege-details{min-width:0!important;gap:8px!important}
+.apex-privilege-details>div{min-width:0!important}
+.apex-privilege-details>div:first-child{max-width:58%!important}
+.apex-privilege-details>div:first-child strong{
+ display:block!important;white-space:nowrap!important;overflow:hidden!important;
+ text-overflow:ellipsis!important;font-size:clamp(10px,2.5vw,14px)!important;
+ line-height:1.5!important
+}
+.apex-privilege-number{min-width:0!important;white-space:nowrap!important;gap:6px!important}
+.apex-privilege-number small{flex:0 0 auto!important;white-space:nowrap!important}
+.apex-privilege-number strong{
+ display:block!important;white-space:nowrap!important;word-break:normal!important;
+ overflow-wrap:normal!important;font-size:clamp(10px,2.35vw,13px)!important;
+ letter-spacing:1px!important;line-height:1.4!important
+}
+@media(max-width:420px){
+ .apex-card-qr{bottom:44px!important}
+ .apex-privilege-card{padding-left:88px!important}
+ .apex-privilege-number strong{font-size:10px!important;letter-spacing:.45px!important}
+ .apex-privilege-details>div:first-child strong{font-size:11px!important}
+}
+
+/* شاشة تحويل الرصيد: خلفية بيضاء ونصوص داكنة واضحة */
+#walletTransferPanel{
+ background:linear-gradient(145deg,#fff 0%,#f7f7f7 58%,#ececec 100%)!important;
+ border:1px solid #c8a85e!important;
+ color:#171717!important;
+ box-shadow:0 8px 24px #0002,inset 0 1px #fff!important
+}
+#walletTransferPanel h4,
+#walletTransferPanel p,
+#walletTransferPanel label,
+#walletTransferPanel small{color:#171717!important}
+#walletTransferPanel input{
+ background:#fff!important;color:#111!important;
+ -webkit-text-fill-color:#111!important;border:1px solid #b9a16d!important;
+}
+#walletTransferPanel input::placeholder{color:#777!important;opacity:1}
+#walletTransferPanel #walletTransferMessage{color:#725016!important}
+#walletTransferPanel video{background:#e9e9e9!important;border:1px solid #c9c9c9!important}
+</style>
