@@ -24,9 +24,9 @@ Deno.serve(async(req:Request)=>{
   const key=Deno.env.get("RESEND_API_KEY");if(!key)return json({email_status:"not_configured"});
   const from=Deno.env.get("APEX_REPORT_FROM")||"APEX <onboarding@resend.dev>",recipients:string[]=[];
   for(let page=1;page<=20;page++){const {data,error}=await db.auth.admin.listUsers({page,perPage:500});if(error)throw error;for(const u of data.users||[])if(u.email&&u.email_confirmed_at&&u.user_metadata?.apex_marketing_opt_in===true)recipients.push(u.email);if(!data.users||data.users.length<500)break;}
-  if(!recipients.length)return json({email_status:"sent",sent:0,failed:0,note:"لا يوجد مشتركون وافقوا على استقبال العروض."});
+  if(!recipients.length)return json({email_status:"no_recipients",sent:0,failed:0,total:0,note:"لا يوجد مشتركون وافقوا على استقبال العروض."});
   const html='<div dir="rtl" style="font-family:Tahoma,Arial;background:#080b09;color:#f8f2df;padding:24px"><div style="max-width:620px;margin:auto;background:#101612;border:1px solid #b78b35;border-radius:18px;padding:22px"><b style="color:#e9bd55">APEX 👑</b><h1 style="color:#f5d879">'+esc(title)+'</h1>'+(image?'<img src="'+esc(image)+'" alt="" style="width:100%;border-radius:12px">':'')+'<p style="white-space:pre-wrap;line-height:1.9">'+esc(content)+'</p>'+(link?'<p><a href="'+esc(link)+'" style="display:inline-block;background:#d8ad4f;color:#171006;padding:12px 22px;border-radius:8px;text-decoration:none">اكتشف العرض</a></p>':'')+'<hr><small>وصلتك الرسالة لأنك وافقت على استقبال عروض APEX. لإيقاف الرسائل، أرسل طلب إلغاء الاشتراك إلى apex.1.shopping@gmail.com.</small></div></div>';
   let sent=0,failed=0;for(let i=0;i<recipients.length;i++){const response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({from,to:[recipients[i]],subject,html})});if(response.ok)sent++;else failed++;if(i%10===9)await new Promise(r=>setTimeout(r,250));}
-  return json({email_status:"sent",sent,failed,total:recipients.length});
+  return json({email_status:failed===0?"sent":sent===0?"failed":"partial",sent,failed,total:recipients.length});
  }catch(e){return json({error:e instanceof Error?e.message:"تعذر إرسال الحملة"},400)}
 });
