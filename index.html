@@ -928,9 +928,15 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 }
 
 </style>
+
+<style>
+/* Header hamburger opens customer information as More */
+.apex-topbar .menu{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1!important}
+.apex-topbar .menu .menu-more-label{display:block;font-size:9px;line-height:1.1;font-weight:800;letter-spacing:0;color:inherit}
+</style>
 </head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="القائمة" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">☰</button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="المزيد" title="المزيد — معلومات العميل" onclick="openCustomerProfile()">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
 <section class="hero apex-hero"><div class="hero-content"><div class="eyebrow"><span class="hero-live-dot"></span> APEX · SHOPPING, REIMAGINED</div><h1>تسوّق أذكى.<br><em>اختر الأفضل.</em></h1><p>اكتشف تشكيلات مختارة، تفاصيل واضحة، وتجربة شراء مصممة لتجعل كل خطوة أسهل.</p><div class="hero-actions"><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات ←</button><button class="hero-secondary" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">تصفح الأقسام</button></div><div class="hero-proof"><span>✦ تشكيلة متجددة</span><span>✦ تسوق من مكان واحد</span><span>✦ متابعة طلباتك بسهولة</span></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-monogram">A<span>✦</span></div><div class="hero-visual-caption">THE APEX EDITION <b>01 / 26</b></div></div></section>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
 <section class="apex-value-strip" aria-label="مميزات تجربة APEX">
