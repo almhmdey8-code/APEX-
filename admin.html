@@ -585,7 +585,7 @@ async function ensureAdminMfa(){
   if(removeError)throw new Error('تعذر إعادة تجهيز ربط Google Authenticator السابق: '+removeError.message);
  }
  const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({
-  factorType:'totp',friendlyName:'APEX Admin — Google Authenticator',issuer:'APEX'
+  factorType:'totp',friendlyName:'APEX Admin Google Authenticator '+Date.now(),issuer:'APEX'
  });
  if(enrollError)throw enrollError;
  adminMfaFactorId=enrolled.id;
@@ -622,7 +622,9 @@ $('adm_mfa_verify').addEventListener('click',async()=>{
    const {error:removeError}=await supabase.auth.mfa.unenroll({factorId:adminMfaFactorId});
    if(removeError)throw new Error('تم التحقق من الرمز القديم لكن تعذر إزالته: '+removeError.message);
    adminMfaFactorId=null;
-   const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({factorType:'totp',friendlyName:'APEX Admin — Google Authenticator',issuer:'APEX'});
+   const {error:refreshError}=await supabase.auth.refreshSession();
+   if(refreshError)throw new Error('تم حذف الربط القديم، لكن تعذر تحديث جلسة الأمان: '+refreshError.message);
+   const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({factorType:'totp',friendlyName:'APEX Admin Google Authenticator '+Date.now(),issuer:'APEX'});
    if(enrollError)throw enrollError;
    adminMfaFactorId=enrolled.id;
    const totp=enrolled.totp||{};
