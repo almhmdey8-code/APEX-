@@ -451,6 +451,18 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 </head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button><p id="adm_who" class="muted admin-login-status" aria-live="polite"></p></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" placeholder="بريد المدير المعتمد" autocomplete="username" value=""><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn" type="button">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
+<section id="adm_mfa" class="panel apex-admin-hidden" aria-live="polite">
+ <h2 id="adm_mfa_title">حماية المدير — Google Authenticator</h2>
+ <p id="adm_mfa_help" class="muted">أدخل رمز الأمان المكوّن من 6 أرقام من تطبيق Google Authenticator.</p>
+ <div id="adm_mfa_qr_wrap" class="apex-mfa-qr apex-admin-hidden">
+  <img id="adm_mfa_qr" alt="رمز ربط APEX مع تطبيق المصادقة" />
+  <p class="muted">امسح الرمز من تطبيق Google Authenticator، ثم أدخل الرمز الذي يظهر في التطبيق.</p>
+  <p id="adm_mfa_secret_wrap" class="muted apex-admin-hidden">مفتاح الربط اليدوي: <code id="adm_mfa_secret"></code></p>
+ </div>
+ <input id="adm_mfa_code" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="رمز الأمان — 6 أرقام" />
+ <div class="row"><button id="adm_mfa_verify" class="btn" type="button">تأكيد رمز الأمان</button><button id="adm_mfa_cancel" class="btn2" type="button">إلغاء وتسجيل الخروج</button></div>
+ <p id="adm_mfa_msg" class="status" role="status"></p>
+</section>
 <section id="adm_dashboard" class="apex-admin-hidden"><div id="adm_admin_security_alert" class="item" hidden role="alert" style="margin:10px 0;border:1px solid #b98a32;background:linear-gradient(110deg,#211a0c,#12150f);color:#ffe5a1"><b>🛡️ تنبيه أمني — لوحة المدير</b><p id="adm_admin_security_alert_text" style="margin:6px 0 0;font-size:13px"></p></div>
 <div class="panel row dashboard-hero"><div style="display:flex;align-items:center;gap:20px;position:relative;z-index:1"><div><h1 class="dashboard-title">لوحة المدير</h1></div></div><button id="adm_logout" class="btn2" style="position:relative;z-index:1">تسجيل الخروج</button></div>
 <div class="kpis"><div class="kpi"><span>إجمالي المنتجات</span><b id="adm_kProducts">—</b></div><div class="kpi"><span>الطلبات الكلية</span><b id="adm_kOrders">—</b></div><div class="kpi"><span>طلبات جديدة</span><b id="adm_kNew">—</b></div><div class="kpi"><span>المنتجات النشطة</span><b id="adm_kActive">—</b></div></div><section class="admin-overview"><h2>نظرة عامة على المتجر</h2><div class="admin-metrics"><article><span>المبيعات المدفوعة</span><b id="adm_metric_revenue">—</b></article><article><span>طلبات مدفوعة</span><b id="adm_metric_paid">—</b></article><article><span>مخزون منخفض</span><b id="adm_metric_stock">—</b></article><article><span>طلبات ملغاة</span><b id="adm_metric_cancelled">—</b></article></div><div class="admin-overview-bottom"><div><h3>آخر الطلبات</h3><div id="adm_recent_orders">بانتظار البيانات</div></div><div><h3>تنبيهات المخزون</h3><div id="adm_stock_alerts">بانتظار البيانات</div></div></div><p id="adm_overview_updated" class="muted">يتم تحديث المؤشرات تلقائياً</p></section><div class="panel"><div class="dash-tools"><input id="adm_adminSearch" class="field" style="margin:0" placeholder="ابحث في المنتجات أو الطلبات"><button id="adm_refreshAll" class="btn2" type="button">↻ تحديث البيانات</button></div><div class="tabs"><button class="btn2" data-tab="products" aria-pressed="true" aria-current="page">المنتجات والأسعار</button><button class="btn2" data-tab="banners">البنرات</button><button class="btn2" data-tab="payments">طرق الدفع</button><button class="btn2" data-tab="orders">الطلبات</button><button class="btn2" data-tab="returns">إرجاع المنتجات</button><button class="btn2" data-tab="customers">حسابات العملاء</button><button class="btn2" data-tab="currency">تغيير العملة</button><button class="btn2" data-tab="wallet_topups">شحن المحفظة</button><button class="btn2" data-tab="shipping">شركات الشحن</button><button class="btn2" data-tab="marketing">✉️ البريد والعروض</button><button class="btn2" data-tab="security">🛡️ الحماية الذكية</button></div>
@@ -536,6 +548,69 @@ if(adminLoginButton){
   }
  });
 }
+
+let adminMfaFactorId=null,adminMfaMode='challenge';
+function showAdminMfa(mode,title,help,qrCode='',secret=''){
+ adminMfaMode=mode;
+ $('adm_login').classList.add('apex-admin-hidden');
+ $('adm_dashboard').classList.add('apex-admin-hidden');
+ $('adm_mfa').classList.remove('apex-admin-hidden');
+ $('adm_mfa_title').textContent=title;
+ $('adm_mfa_help').textContent=help;
+ $('adm_mfa_qr_wrap').classList.toggle('apex-admin-hidden',!qrCode);
+ $('adm_mfa_secret_wrap').classList.toggle('apex-admin-hidden',!secret);
+ if(qrCode)$('adm_mfa_qr').src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(qrCode);
+ if(secret)$('adm_mfa_secret').textContent=secret;
+ $('adm_mfa_code').value='';
+ $('adm_mfa_msg').textContent='';
+}
+async function ensureAdminMfa(){
+ const {data:aal,error:aalError}=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+ if(aalError)throw aalError;
+ if(aal?.currentLevel==='aal2')return true;
+ const {data:factorData,error:listError}=await supabase.auth.mfa.listFactors();
+ if(listError)throw listError;
+ const factors=factorData?.totp||[];
+ const verified=factors.find(f=>f.status==='verified');
+ if(verified){
+  adminMfaFactorId=verified.id;
+  showAdminMfa('challenge','تحقق أمان المدير','افتح Google Authenticator وأدخل الرمز الحالي المكوّن من 6 أرقام.');
+  return false;
+ }
+ for(const pending of factors.filter(f=>f.status!=='verified')){
+  try{await supabase.auth.mfa.unenroll({factorId:pending.id});}catch(e){console.warn('Could not clear pending MFA factor:',e?.message||e);}
+ }
+ const {data:enrolled,error:enrollError}=await supabase.auth.mfa.enroll({
+  factorType:'totp',friendlyName:'APEX Admin — Google Authenticator',issuer:'APEX'
+ });
+ if(enrollError)throw enrollError;
+ adminMfaFactorId=enrolled.id;
+ const totp=enrolled.totp||{};
+ if(!totp.qr_code)throw new Error('تعذر إنشاء رمز QR للمصادقة.');
+ showAdminMfa('enroll','ربط Google Authenticator بحساب المدير','امسح رمز QR في تطبيق Google Authenticator، ثم أدخل الرمز المكوّن من 6 أرقام لإكمال الربط.',totp.qr_code,totp.secret||'');
+ return false;
+}
+$('adm_mfa_verify').addEventListener('click',async()=>{
+ const button=$('adm_mfa_verify'),code=$('adm_mfa_code').value.replace(/\D/g,'');
+ if(!/^\d{6}$/.test(code)){$('adm_mfa_msg').textContent='أدخل رمزًا صحيحًا من 6 أرقام.';return;}
+ if(!adminMfaFactorId){$('adm_mfa_msg').textContent='تعذر تحديد عامل الأمان. أعد تحميل الصفحة وسجّل الدخول مجددًا.';return;}
+ button.disabled=true;button.textContent='جارٍ التحقق...';$('adm_mfa_msg').textContent='جارٍ التحقق من رمز Google Authenticator...';
+ try{
+  const {data:challenge,error:challengeError}=await supabase.auth.mfa.challenge({factorId:adminMfaFactorId});
+  if(challengeError)throw challengeError;
+  const {error:verifyError}=await supabase.auth.mfa.verify({factorId:adminMfaFactorId,challengeId:challenge.id,code});
+  if(verifyError)throw verifyError;
+  $('adm_mfa_msg').textContent='تم تأكيد رمز الأمان. جارٍ فتح لوحة المدير...';
+  await checkSession();
+ }catch(error){$('adm_mfa_msg').textContent='لم يتم قبول الرمز: '+(error?.message||'تحقق من الرمز وحاول مجددًا.');}
+ finally{button.disabled=false;button.textContent='تأكيد رمز الأمان';}
+});
+$('adm_mfa_cancel').addEventListener('click',async()=>{
+ await supabase.auth.signOut();adminMfaFactorId=null;
+ $('adm_mfa').classList.add('apex-admin-hidden');$('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');
+ $('adm_loginmsg').textContent='تم تسجيل الخروج من جلسة المدير.';
+});
+
 let editing=null,editingBanner=null,editingPayment=null;
 function updateKpis(ps,os){$('adm_kProducts').textContent=ps.length;$('adm_kActive').textContent=ps.filter(p=>p.active).length;$('adm_kOrders').textContent=os.length;$('adm_kNew').textContent=os.filter(o=>o.status==='new').length;renderAdminOverview(ps,os)}
 function renderAdminOverview(ps,os){
@@ -630,25 +705,21 @@ async function checkSession(){
   if(sessionError)throw sessionError;
   const session=data.session;
   if(!session){
-   $('adm_login').classList.remove('apex-admin-hidden');
-   $('adm_dashboard').classList.add('apex-admin-hidden');
-   return;
+   $('adm_login').classList.remove('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_dashboard').classList.add('apex-admin-hidden');return;
   }
   const {data:admin,error}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();
   if(error)throw error;
   if(!admin){
-   $('adm_dashboard').classList.add('apex-admin-hidden');
-   $('adm_login').classList.remove('apex-admin-hidden');
-   message('adm_loginmsg','هذا الحساب غير موجود في قائمة المديرين.');
-   return;
+   $('adm_dashboard').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');
+   message('adm_loginmsg','هذا الحساب غير موجود في قائمة المديرين.');return;
   }
-  $('adm_login').classList.add('apex-admin-hidden');
-  $('adm_dashboard').classList.remove('apex-admin-hidden');
-  $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email;
+  const mfaVerified=await ensureAdminMfa();
+  if(!mfaVerified)return;
+  $('adm_login').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_dashboard').classList.remove('apex-admin-hidden');
+  $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email+' · محمي بالمصادقة الثنائية';
   await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders(),loadSecurityEvents()]);
  }catch(error){
-  $('adm_dashboard').classList.add('apex-admin-hidden');
-  $('adm_login').classList.remove('apex-admin-hidden');
+  $('adm_dashboard').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');
   message('adm_loginmsg','تعذر التحقق من جلسة المدير: '+(error?.message||'خطأ غير معروف'));
  }finally{checkingAdminSession=false}
 }
@@ -1468,6 +1539,14 @@ body{background:radial-gradient(ellipse at 50% 0%,#5a421b 0%,#211a0d 48%,#100e09
 }
 </style>
 </body></html>
+<style id="apex-admin-mfa-styles">
+#adm_mfa{max-width:520px;margin:7vh auto;text-align:center;border:1px solid #c39a49!important;background:linear-gradient(145deg,#15120b,#080b09)!important}
+#adm_mfa .apex-mfa-qr{padding:14px;background:#fff;border-radius:14px;display:inline-block;margin:12px auto}
+#adm_mfa .apex-mfa-qr img{display:block;width:min(240px,65vw);height:auto}
+#adm_mfa code{display:block;direction:ltr;word-break:break-all;color:#ffe6a0;padding:10px}
+#adm_mfa .row{justify-content:center}
+#adm_mfa input{text-align:center;letter-spacing:8px;font-size:22px!important}
+</style>
 
 
 <style id="apex-admin-all-panels-white">
