@@ -27,11 +27,12 @@ Deno.serve(async (req: Request) => {
     const name = String(body.customer_name || "").trim();
     const phone = String(body.phone || "").trim();
     const address = String(body.address || "").trim();
+    const deliveryCountry = String(body.delivery_country || "").trim().toUpperCase();
     const notes = String(body.notes || "").slice(0, 1000);
     const shipping = String(body.shipping_method || "توصيل إلى المنزل").slice(0, 100);
     const requestId = String(body.request_id || "");
     const rawItems = Array.isArray(body.items) ? body.items : [];
-    if (!name || !phone || rawItems.length < 1 || rawItems.length > 40 || !/^[0-9a-f-]{36}$/i.test(requestId)) {
+    if (!name || !phone || !["SA", "YE"].includes(deliveryCountry) || rawItems.length < 1 || rawItems.length > 40 || !/^[0-9a-f-]{36}$/i.test(requestId)) {
       return new Response(JSON.stringify({ error: "بيانات الطلب غير مكتملة" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
     }
     const items = rawItems.map((x: any) => ({ id: Number(x.id ?? x.product_id), quantity: Number(x.quantity) }));
@@ -41,11 +42,12 @@ Deno.serve(async (req: Request) => {
     }
 
     const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
-    const { data: orderId, error } = await admin.rpc("apex_wallet_checkout_backend", {
+    const { data: orderId, error } = await admin.rpc("apex_wallet_checkout_backend_v2", {
       p_user_id: userData.user.id,
       p_customer_name: name,
       p_phone: phone,
       p_address: address,
+      p_delivery_country: deliveryCountry,
       p_notes: notes,
       p_items: items,
       p_shipping_method: shipping,
