@@ -455,7 +455,38 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 #adm_security_kpis .adm-security-filter small{font-size:10px;opacity:.75}
 #adm_security_kpis .adm-security-filter:hover,#adm_security_kpis .adm-security-filter[aria-pressed="true"]{background:linear-gradient(135deg,#b58a3830,#e9ca7730);outline:1px solid #c5a04d}
 #adm_security .btn:disabled,#adm_security .btn2:disabled{opacity:.6;cursor:wait}
-</style></head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
+</style>
+<style id="apex-admin-real-option-thumbnails">
+/* صور فوتوغرافية مصغرة بدل الرموز النصية في خيارات لوحة المدير */
+#adminWorkspace .tabs button[data-tab]{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:7px!important;white-space:nowrap!important;
+}
+#adminWorkspace .tabs button[data-tab]:before{
+  content:""!important;display:inline-block!important;flex:0 0 27px!important;
+  width:27px!important;height:27px!important;border-radius:7px!important;
+  background-size:cover!important;background-position:center!important;
+  background-repeat:no-repeat!important;border:1px solid #c49a4b!important;
+  box-shadow:0 2px 7px #0005!important;vertical-align:middle!important;
+}
+#adminWorkspace .tabs button[data-tab="products"]:before{background-image:url("https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="banners"]:before{background-image:url("https://images.unsplash.com/photo-1531058020387-3be344556be6?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="payments"]:before{background-image:url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="orders"]:before{background-image:url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="returns"]:before{background-image:url("https://images.unsplash.com/photo-1607082349566-187342175e2f?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="customers"]:before{background-image:url("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="currency"]:before{background-image:url("https://images.unsplash.com/photo-1610375461246-83df859d849d?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="wallet_topups"]:before{background-image:url("https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="shipping"]:before{background-image:url("https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="marketing"]:before{background-image:url("https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=96&h=96&fit=crop")}
+#adminWorkspace .tabs button[data-tab="security"]:before{background-image:url("https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=96&h=96&fit=crop")}
+@media(max-width:700px){
+ #adminWorkspace .tabs button[data-tab]{gap:5px!important;padding:7px 5px!important;font-size:11px!important}
+ #adminWorkspace .tabs button[data-tab]:before{flex-basis:23px!important;width:23px!important;height:23px!important}
+}
+</style>
+
+</head><body><section id="adminWorkspace" aria-label="إدارة المتجر"><div class="wrap">
 <header class="head"><div class="brand">APEX</div><button type="button" class="btn2" onclick="location.href='./'">إغلاق لوحة المدير</button><p id="adm_who" class="muted admin-login-status" aria-live="polite"></p></header>
 <section id="adm_login" class="panel"><h1>دخول المدير</h1><p class="muted">أدخل بريد المدير وكلمة المرور المعتمدة.</p><input id="adm_email" class="field" type="email" placeholder="بريد المدير المعتمد" autocomplete="username" value=""><input id="adm_password" class="field" type="password" placeholder="كلمة مرور المدير" autocomplete="current-password"><button id="adm_send" class="btn" type="button">تسجيل الدخول</button><p id="adm_loginmsg" class="status" role="status"></p></section>
 <section id="adm_mfa" class="panel apex-admin-hidden" aria-live="polite">
