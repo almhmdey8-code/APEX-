@@ -1609,7 +1609,7 @@ async function refreshCustomer(session){
 }
 async function openCustomerProfile(){$('accountpanel').classList.remove('apex-ai-fullscreen');$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session){$('accountForm').hidden=true;$('accountData').hidden=false;showAccountSection('profile')}else{$('accountForm').hidden=false;$('accountData').hidden=true}}
 function openAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
-async function openMoreAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session){showAccountSection('orders');$('accountSection-orders').scrollIntoView({behavior:'smooth',block:'start'})}}
+function openMoreAccount(){openCustomerProfile()}
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode','apex-ai-fullscreen')}
  async function customerSignIn(){
   const email=$('accountEmail').value.trim().toLowerCase(),password=$('accountPassword').value,button=$('accountAuthAction'),msg=$('accountMsg');
