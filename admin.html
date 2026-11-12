@@ -597,7 +597,12 @@ if(adminLoginButton){
   showLoginStatus('جارٍ التحقق من بيانات المدير...');
   try{
    const {error}=await supabase.auth.signInWithPassword({email,password});
-   if(error){showLoginStatus('فشل تسجيل الدخول: '+error.message);return}
+   if(error){
+    showLoginStatus('فشل تسجيل الدخول: '+error.message);
+    try{await supabase.functions.invoke('apex-ai-guard',{body:{event_type:'login_failed',email,source:'admin_panel',details:{screen:'admin_login',method:'password',outcome:'password_rejected',reason:'auth_rejected'}}});}
+    catch(securityError){console.warn('APEX failed-login event could not be recorded:',securityError?.message||securityError)}
+    return;
+   }
    try{await supabase.functions.invoke('apex-ai-guard',{body:{event_type:'admin_login_attempt',email,source:'admin_panel',details:{screen:'admin_login',method:'password',attempt:'admin_panel_login',outcome:'password_accepted'}}});}catch(securityError){console.warn('APEX security event could not be recorded:',securityError?.message||securityError)}
    showLoginStatus('تم التحقق من كلمة المرور. جارٍ فتح لوحة الإدارة...');
    await checkSession();
