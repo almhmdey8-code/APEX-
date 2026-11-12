@@ -130,21 +130,31 @@ Deno.serve(async (req: Request) => {
 
   const country = String(user.user_metadata?.country || "SA").toUpperCase().includes("YE") ||
     String(user.user_metadata?.country || "").includes("اليمن") ? "YE" : "SA";
+  const latestQuestion = String(messages.filter((m) => m.role === "user").at(-1)?.content || "").toLowerCase();
+  const orderId = extractOrderId(messages);
+  const needsProducts = /منتج|المنتجات|متوفر|المخزون|كتالوج|السعر|أسعار|مواصفات|جوال|هاتف|سماعة|ساعة/.test(latestQuestion);
+  const needsPayments = /دفع|الدفع|تحويل|وسيلة الدفع|طرق الدفع|مدى|فيزا|كريمي|جي|ون كاش|العمري/.test(latestQuestion);
+  const needsCurrency = /سعر الصرف|تحويل العملة|بالريال اليمني|بالدولار|كم يساوي/.test(latestQuestion);
 
+  // Fetch only the store data needed for this question; all independent reads run together.
   const [productsResult, settingsResult, paymentResult] = await Promise.all([
-    supabase.from("apex_products")
-      .select("id,name,category,description,price,stock,active")
-      .eq("active", true).order("created_at", { ascending: false }).limit(24),
-    supabase.from("apex_store_settings").select("exchange_rate,base_currency,local_currency")
-      .eq("setting_key", "currency").maybeSingle(),
-    supabase.from("apex_payment_methods")
-      .select("name,instructions,method_type,country_code,enabled,orders_enabled")
-      .eq("enabled", true).eq("orders_enabled", true).in("country_code", [country, "ALL"])
-      .order("sort_order", { ascending: true }),
+    needsProducts && !orderId
+      ? supabase.from("apex_products").select("name,category,description,price,stock")
+          .eq("active", true).order("created_at", { ascending: false }).limit(12)
+      : Promise.resolve({ data: [] as any[] }),
+    needsCurrency
+      ? supabase.from("apex_store_settings").select("exchange_rate,base_currency,local_currency")
+          .eq("setting_key", "currency").maybeSingle()
+      : Promise.resolve({ data: null }),
+    needsPayments
+      ? supabase.from("apex_payment_methods").select("name,method_type,country_code")
+          .eq("enabled", true).eq("orders_enabled", true).in("country_code", [country, "ALL"])
+          .order("sort_order", { ascending: true })
+      : Promise.resolve({ data: [] as any[] }),
   ]);
 
   const products = (productsResult.data || []).map((p: any) => ({
-    name: p.name, category: p.category, description: String(p.description || "").slice(0, 240),
+    name: p.name, category: p.category, description: String(p.description || "").slice(0, 160),
     price_sar: p.price, stock: p.stock, availability: Number(p.stock || 0) > 0 ? "متوفر" : "غير متوفر",
   }));
   const paymentMethods = (paymentResult.data || []).map((m: any) => ({
@@ -153,7 +163,6 @@ Deno.serve(async (req: Request) => {
   const settings = settingsResult.data || { exchange_rate: null, base_currency: "SAR", local_currency: "YER" };
 
   let orderContext: any = null;
-  const orderId = extractOrderId(messages);
   if (orderId) {
     const numericId = Number(orderId);
     if (Number.isSafeInteger(numericId) && numericId > 0) {
@@ -188,6 +197,7 @@ Deno.serve(async (req: Request) => {
     "النطاق المسموح حصراً: منتجات APEX وأسعارها ومخزونها، اختيار المنتجات، أقسام المتجر، إنشاء الحساب وتسجيل الدخول وإعداداته، السلة والشراء والدفع، الشحن والتوصيل، سياسات المتجر، ومتابعة طلبات العميل ومشكلاتها.",
     "إذا كان السؤال خارج نطاق متجر APEX، أجب فقط: عذراً، ليس لدي معلومات عن هذا الموضوع. أنا مساعد APEX المخصص لمساعدتك في استخدام المتجر وحل مشكلاته فقط.",
     "استخدم بيانات الكتالوج والطلب والدفع المرفقة فقط. لا تخترع منتجاً أو سعراً أو مخزوناً أو طريقة دفع أو سياسة أو حالة طلب أو رقم تتبع أو شركة شحن.",
+    "إذا كانت products_loaded أو payment_methods_loaded أو currency_loaded تساوي false، فهذا يعني أن البيانات لم تُطلب لتلك الرسالة وليس أنها فارغة؛ اطلب توضيحاً أو وجّه العميل للقسم المناسب ولا تستنتج عدم وجود بيانات.",
     "إذا كان سعر المنتج null أو غير متوفر، قل إن السعر غير محدد في بيانات المتجر ووجّه العميل لخدمة العملاء. لا تخترع أسعاراً.",
     "المخزون صفر يعني غير متوفر حالياً. لا تعد العميل بتوفر قريب.",
     "الأسعار الأساسية بالريال السعودي. لا تحوّل العملة إلا إذا كانت قيمة سعر الصرف موجودة في بيانات المتجر، واذكر أنها قيمة المتجر المسجلة.",
@@ -205,7 +215,8 @@ Deno.serve(async (req: Request) => {
   const context = [
     "بيانات المتجر الحالية (JSON): " + JSON.stringify({
       country, currency: settings.base_currency || "SAR", exchange_rate: settings.exchange_rate,
-      products, payment_methods: paymentMethods,
+      products_loaded: needsProducts, products, payment_methods_loaded: needsPayments,
+      payment_methods: paymentMethods, currency_loaded: needsCurrency,
       order: orderContext,
     }),
     "معلومات الدعم: apex.1.shopping@gmail.com",
@@ -235,7 +246,7 @@ Deno.serve(async (req: Request) => {
     parts: [{ text: redact(m.content) }],
   }));
 
-  // Fast failover: try the primary briefly, then race both backups together.
+  // Keep one economical primary attempt; if it fails, return the first successful backup without waiting for the slower backup.
   const modelCandidates = ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.8-flash"];
   type ModelAttempt = { ok: boolean; model: string; data?: any; reason?: string };
   const requestModel = async (model: string, timeoutMs: number): Promise<ModelAttempt> => {
@@ -280,17 +291,19 @@ Deno.serve(async (req: Request) => {
   if (!winner.ok) {
     lastFailure = winner.reason || lastFailure;
     console.warn("APEX_ASSISTANT_MODEL_FAILOVER", winner.model, lastFailure);
-    attempts = 2;
-    const backups = await Promise.all(modelCandidates.slice(1).map((model) => requestModel(model, 3500)));
-    const successfulBackup = backups.find((result) => result.ok);
-    if (successfulBackup) {
-      winner = successfulBackup;
-    } else {
-      attempts = 3;
-      lastFailure = backups.map((result) => result.reason || "unknown_failure").join("|");
-      for (const result of backups) {
-        console.warn("APEX_ASSISTANT_MODEL_FAILOVER", result.model, result.reason || "failed");
-      }
+    attempts = 3;
+    const backupAttempts = modelCandidates.slice(1).map((model) =>
+      requestModel(model, 2800).then((result) => {
+        if (!result.ok) throw new Error(model + ":" + (result.reason || "unknown_failure"));
+        return result;
+      })
+    );
+    try {
+      winner = await Promise.any(backupAttempts);
+    } catch (error) {
+      const failures = error instanceof AggregateError ? error.errors.map((item) => String(item)) : [String(error)];
+      lastFailure = failures.join("|").slice(0, 500) || lastFailure;
+      console.warn("APEX_ASSISTANT_BACKUPS_FAILED", { attempts, reason: lastFailure });
     }
   }
 
@@ -316,6 +329,6 @@ Deno.serve(async (req: Request) => {
   }
   const handoff = reply.includes("[[APEX_HANDOFF]]");
   reply = reply.replace(/\s*\[\[APEX_HANDOFF\]\]\s*/g, "").trim();
-  console.info("APEX_ASSISTANT_SUCCESS", { model: selectedModel, output_chars: reply.length, handoff, attempts });
-  return json({ reply, handoff, model: selectedModel, fallback: false, attempts });
+  console.info("APEX_ASSISTANT_SUCCESS", { model: selectedModel, output_chars: reply.length, handoff, attempts, elapsed_ms: elapsedMs });
+  return json({ reply, handoff, model: selectedModel, fallback: false, attempts, elapsed_ms: elapsedMs });
 });
