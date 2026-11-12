@@ -2421,3 +2421,31 @@ input,select,textarea{
  color:#171717!important;
 }
 </style>
+
+
+<style id="apex-customer-apex-thumbnail-square-products">
+/* استبدال تاج قسم عن APEX بصورة مصغرة تحمل اسم العلامة */
+#accountpanel button[onclick*="showAccountSection('about')"]>b:after{
+ content:"APEX"!important;
+ width:35px!important;height:35px!important;min-width:35px!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ box-sizing:border-box!important;border:1px solid #c7a04d!important;border-radius:9px!important;
+ background:linear-gradient(145deg,#17130b 0%,#050605 100%)!important;
+ color:#f1d27e!important;-webkit-text-fill-color:#f1d27e!important;
+ font:900 9px/1 Georgia,serif!important;letter-spacing:.35px!important;
+ text-shadow:0 0 7px #d2a64b66!important;
+ box-shadow:inset 0 1px #fff3,0 3px 9px #0007!important;
+}
+/* صور أكبر بإطار مربع متناسق على جميع أحجام الشاشات */
+.products .product img{
+ display:block!important;width:100%!important;height:auto!important;
+ aspect-ratio:1/1!important;object-fit:contain!important;
+ border-radius:15px!important;padding:7px!important;
+ background:linear-gradient(145deg,#fff8e8,#e8d8b5)!important;
+}
+.products .product{display:flex!important;flex-direction:column!important;min-width:0!important}
+.products .product .product-card-info{min-width:0!important}
+@media(max-width:800px){
+ .products .product img{padding:5px!important;border-radius:13px!important}
+}
+</style>
