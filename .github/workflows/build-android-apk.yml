@@ -39,7 +39,7 @@ jobs:
           AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)"
           "$APKSIGNER" verify --verbose "$APK"
           "$AAPT" dump badging "$APK" | grep -E "package: name='com.apex.store'|application-label:'APEX'"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: APEX-Standalone-Android-APK
           path: android/app/build/outputs/apk/release/app-release.apk
