@@ -577,7 +577,8 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 </div></section><script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 import QRCode from 'https://esm.sh/qrcode@1.5.4';
-const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'}});
+const apexDeviceHeader=(()=>{const key='apex_admin_device_id_v1';let id=localStorage.getItem(key);if(!/^[0-9a-f-]{36}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem(key,id);}return id;})();
+const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'},global:{headers:{'x-apex-device-id':apexDeviceHeader}}});
 const $=id=>document.getElementById(id);
 /* Bind admin login immediately so unrelated dashboard initialization cannot leave the button inactive. */
 const adminLoginButton=$('adm_send');
