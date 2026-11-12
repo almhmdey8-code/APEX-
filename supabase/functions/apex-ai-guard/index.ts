@@ -1,6 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
-const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info,x-apex-cron-secret","Access-Control-Allow-Methods":"POST,OPTIONS"};
+const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info,x-apex-cron-secret,x-apex-device-id","Access-Control-Allow-Methods":"POST,OPTIONS"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json"}});
 const ADMIN_EMAIL="apex.1.shopping@gmail.com";
 const publicEvents=new Set(["login_success","login_failed","signup_attempt"]);
@@ -39,6 +39,15 @@ Deno.serve(async(req:Request)=>{
     if(!actor||(actor.email||"").toLowerCase()!==ADMIN_EMAIL)return json({error:"غير مصرح"},403);
     const {data:adminRow,error:adminError}=await db.from("apex_admins").select("user_id").eq("user_id",actor.id).maybeSingle();
     if(adminError||!adminRow)return json({error:"غير مصرح"},403);
+    const jwtPayload=(()=>{try{return JSON.parse(atob(token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));}catch{return null;}})();
+    if(jwtPayload?.aal!=="aal2")return json({error:"يلزم تأكيد MFA AAL2 لإرسال التقرير الأمني."},403);
+    const deviceId=req.headers.get("x-apex-device-id")||"";
+    if(!/^[0-9a-f-]{36}$/i.test(deviceId))return json({error:"هذا الجهاز غير معتمد."},403);
+    const {data:trustedDevice,error:deviceError}=await db.from("apex_admin_trusted_devices").select("device_id").eq("user_id",actor.id).eq("device_id",deviceId).maybeSingle();
+    if(deviceError)throw deviceError;
+    if(!trustedDevice)return json({error:"هذا الجهاز غير موجود ضمن أجهزة APEX الموثوقة."},403);
+    const {error:touchError}=await db.from("apex_admin_trusted_devices").update({last_seen_at:new Date().toISOString()}).eq("user_id",actor.id).eq("device_id",deviceId);
+    if(touchError)throw touchError;
    }
    const hours=Math.min(168,Math.max(1,Number(body.hours)||24)),since=new Date(Date.now()-hours*3600000).toISOString();
    const {data:events,error}=await db.from("apex_security_events").select("event_type,severity,source,created_at,details").gte("created_at",since).order("created_at",{ascending:false}).limit(500);
