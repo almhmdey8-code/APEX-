@@ -1962,3 +1962,57 @@ body{background:radial-gradient(ellipse at 50% 0%,#5a421b 0%,#211a0d 48%,#100e09
 #adminWorkspace .tabs button[data-tab="security"]:before{content:"🛡️"!important}
 @media(max-width:700px){#adminWorkspace .tabs button:before{width:35px!important;height:29px!important;flex-basis:29px!important;font-size:20px!important}}
 </style>
+
+
+<style id="apex-admin-copy-protection">
+/* منع تحديد ونسخ نصوص لوحة المدير، مع إبقاء حقول الإدخال قابلة للتحرير والنسخ */
+#adminWorkspace, #adminWorkspace *{
+ -webkit-user-select:none!important;user-select:none!important;
+ -webkit-touch-callout:none!important;
+}
+#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select,
+#adminWorkspace input *,#adminWorkspace textarea *,#adminWorkspace select *,
+#adminWorkspace [contenteditable="true"],#adminWorkspace [contenteditable="true"] *{
+ -webkit-user-select:text!important;user-select:text!important;
+ -webkit-touch-callout:default!important;
+}
+#adminWorkspace button,#adminWorkspace a{-webkit-user-drag:none!important}
+</style>
+<script id="apex-admin-navigation-reliability">
+(()=>{
+ const panels={products:'adm_products',banners:'adm_banners',payments:'adm_payments',orders:'adm_orders',returns:'adm_returns',customers:'adm_customers',currency:'adm_currency',wallet_topups:'adm_wallet_topups',shipping:'adm_shipping',marketing:'adm_marketing',security:'adm_security'};
+ function activate(tab){
+  const id=panels[tab];if(!id)return false;
+  const target=document.getElementById(id);if(!target)return false;
+  Object.entries(panels).forEach(([key,panelId])=>{
+   const el=document.getElementById(panelId);
+   if(el)el.classList.toggle('apex-admin-hidden',key!==tab);
+  });
+  document.querySelectorAll('#adminWorkspace .tabs [data-tab]').forEach(button=>{
+   const active=button.dataset.tab===tab;
+   button.setAttribute('aria-pressed',active?'true':'false');
+   if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
+  });
+  try{history.replaceState(null,'',location.pathname+location.search+'#'+tab)}catch(_){}
+  return true;
+ }
+ document.addEventListener('click',event=>{
+  const button=event.target.closest('#adminWorkspace .tabs [data-tab]');
+  if(!button)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  if(!activate(button.dataset.tab)){
+   const status=document.getElementById('adm_loginmsg');
+   if(status)status.textContent='تعذر فتح القسم؛ حدّث الصفحة وحاول مرة أخرى.';
+  }
+ },true);
+ document.addEventListener('contextmenu',event=>{
+  if(event.target.closest('#adminWorkspace')&&!event.target.closest('#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select'))event.preventDefault();
+ });
+ document.addEventListener('copy',event=>{
+  if(event.target.closest('#adminWorkspace')&&!event.target.closest('#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select'))event.preventDefault();
+ });
+ document.addEventListener('cut',event=>{
+  if(event.target.closest('#adminWorkspace')&&!event.target.closest('#adminWorkspace input,#adminWorkspace textarea,#adminWorkspace select'))event.preventDefault();
+ });
+})();
+</script>
