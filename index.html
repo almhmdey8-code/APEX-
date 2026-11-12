@@ -1628,9 +1628,13 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
    await refreshCustomer(data.session);
    if(!customerSession?.user?.id)throw new Error('لم يتم تثبيت جلسة الحساب بعد تسجيل الدخول.');
    if(!$('accountData').hidden){
-    $('accountForm').hidden=true;$('storefrontAuth').hidden=true;showAccountHome();
-    const accountHub=document.querySelector('#accountData .user-hub');
-    if(accountHub)accountHub.scrollIntoView({behavior:'smooth',block:'start'});
+    $('accountAuth').hidden=true;
+    $('accountForm').hidden=true;
+    $('storefrontAuth').hidden=true;
+    $('accountData').hidden=false;
+    showAccountSection('profile');
+    const profile=document.querySelector('#accountSection-profile');
+    if(profile)profile.scrollIntoView({behavior:'smooth',block:'start'});
    }
   }catch(error){
    console.error('APEX LOGIN ERROR:',error);
