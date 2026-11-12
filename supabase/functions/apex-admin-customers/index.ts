@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-apex-device-id",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 const json = (body: unknown, status = 200) =>
@@ -20,7 +20,10 @@ Deno.serve(async (req: Request) => {
     const service = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const auth = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
     const { data: authData, error: authError } = await auth.auth.getUser(token);
-    if (authError || !authData.user) return json({ error: "جلسة الدخول غير صالحة" }, 401);
+    
+    const jwtPayload = (() => { try { return JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))); } catch { return null; } })();
+    if (jwtPayload?.aal !== "aal2") return json({ error: "يلزم تأكيد رمز Google Authenticator قبل استخدام صلاحيات المدير" }, 403);
+if (authError || !authData.user) return json({ error: "جلسة الدخول غير صالحة" }, 401);
 
     const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
     const { data: adminRow, error: adminError } = await admin
@@ -29,6 +32,18 @@ Deno.serve(async (req: Request) => {
     if (!adminRow || (authData.user.email || "").toLowerCase() !== "apex.1.shopping@gmail.com") {
       return json({ error: "غير مصرح بعرض حسابات العملاء" }, 403);
     }
+
+    const deviceId = req.headers.get("x-apex-device-id") || "";
+    if (!/^[0-9a-f-]{36}$/i.test(deviceId)) return json({ error: "هذا الجهاز غير معتمد. امسح رمز QR صالحاً من جهاز مدير موثوق." }, 403);
+    const { data: trustedDevice, error: deviceError } = await admin
+      .from("apex_admin_trusted_devices").select("device_id")
+      .eq("user_id", authData.user.id).eq("device_id", deviceId).maybeSingle();
+    if (deviceError) throw deviceError;
+    if (!trustedDevice) return json({ error: "هذا الجهاز غير موجود ضمن أجهزة APEX الموثوقة." }, 403);
+    const { error: touchError } = await admin.from("apex_admin_trusted_devices")
+      .update({ last_seen_at: new Date().toISOString() })
+      .eq("user_id", authData.user.id).eq("device_id", deviceId);
+    if (touchError) throw touchError;
 
     const users: any[] = [];
     for (let page = 1; page <= 20; page++) {
