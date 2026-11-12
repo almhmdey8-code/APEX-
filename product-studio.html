@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080705"><title>APEX Product Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--g:#f1cf79;--g2:#ffeab0;--bg:#080705;--p:#15120c;--line:#8d6b2e}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#44300e,#080705 60%);color:#f8f1df;font-family:Cairo,Tahoma,Arial}header{padding:20px;text-align:center;border-bottom:1px solid var(--line);background:#090805}header b{font:900 42px Georgia;color:var(--g2);letter-spacing:4px;text-shadow:0 0 22px #b98529}header p{margin:4px;color:#c8b88f}.wrap{max-width:1050px;margin:22px auto;padding:0 14px 50px}.panel{background:linear-gradient(145deg,#1b180f,#0d0c08);border:1px solid var(--line);border-radius:20px;padding:20px;margin:16px 0;box-shadow:0 12px 35px #0008}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;color:var(--g2);font-weight:700;margin:10px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #765a2a;border-radius:11px;background:#090906;color:#fff;font:inherit}textarea{min-height:110px;resize:vertical}.gold{background:linear-gradient(110deg,#986516,#ffe7a0,#b47b1d);color:#171006;border:1px solid #ffe8a6;border-radius:24px;padding:12px 22px;font:800 15px Cairo;cursor:pointer}.ghost{background:#0a0906;color:var(--g2);border:1px solid var(--line);border-radius:22px;padding:10px 17px;font:700 14px Cairo;cursor:pointer}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.muted{color:#bdb49e;font-size:13px;line-height:1.8}.status{min-height:24px;color:var(--g2);margin-top:10px}.chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.chip{padding:10px;border:1px solid #725a30;border-radius:10px;color:#e8d8ac;background:#100e09;text-align:center;font-size:12px}.preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:9px;margin-top:12px}.preview img{width:100%;height:110px;object-fit:cover;border-radius:10px;border:1px solid #8d6b2e}.note{padding:12px;border:1px dashed #8d6b2e;border-radius:12px;color:#cfc3a5;font-size:13px;line-height:1.8}#studio{display:none}#studio.ready{display:block}@media(max-width:650px){.row{grid-template-columns:1fr}.chips{grid-template-columns:repeat(2,minmax(0,1fr))}header b{font-size:34px}.panel{padding:14px}}
+</style></head>
+<body>
+<header><b>APEX</b><div style="color:#f3d78d;font-weight:800">PRODUCT STUDIO · استوديو تجهيز المنتجات</div><p>أداة المدير لتجهيز المنتج ومراجعته قبل نشره في المتجر</p></header>
+<div class="wrap">
+<section class="panel" id="authBox"><h2 style="color:var(--g2);margin-top:0">التحقق من حساب المدير</h2><p class="muted">افتح لوحة المدير وسجّل الدخول وأكمل التحقق الثنائي، ثم ارجع إلى هذه الصفحة.</p><div class="actions"><button class="gold" onclick="location.href='admin.html'">فتح لوحة المدير</button><button class="ghost" onclick="checkAdmin()">إعادة التحقق</button></div><div class="status" id="authStatus">جارٍ التحقق من جلسة المدير…</div></section>
+<main id="studio">
+<section class="panel"><h2 style="color:var(--g2);margin-top:0">1) اختر نوع المنتج — 20 قالباً</h2><p class="muted">كل قالب يغيّر طريقة صياغة الاسم والوصف والمواصفات المقترحة.</p><div class="chips" id="typeChips"></div>
+<div class="row"><div><label>نوع المنتج</label><select id="kind"></select></div><div><label>قسم المتجر</label><select id="category"><option>الجوالات والإلكترونيات وملحقاتها</option><option>الساعات والسماعات</option><option>المنزل والمطبخ والإضاءة</option><option>الملابس والحقائب والأزياء</option><option>العناية والجمال</option><option>السيارات والرياضة والرحلات</option><option>الأطفال والألعاب</option><option>الحيوانات والمكتب والإكسسوارات</option></select></div></div></section>
+<section class="panel"><h2 style="color:var(--g2);margin-top:0">2) الصور ومعلومات المنتج</h2><label>صور المنتج (حتى 5 صور)</label><input id="photos" type="file" accept="image/*" multiple><div class="preview" id="preview"></div>
+<div class="row"><div><label>اسم المنتج (اختياري — يمكن توليده)</label><input id="name" placeholder="مثال: سماعة لاسلكية بتقنية عزل الضوضاء"></div><div><label>العلامة التجارية (اختياري)</label><input id="brand" placeholder="اسم العلامة إن كان مؤكداً"></div></div>
+<div class="row"><div><label>الموديل / رقم الإصدار</label><input id="model" placeholder="اكتب الموديل أو اتركه فارغاً"></div><div><label>اللون أو المقاس أو السعة</label><input id="variant" placeholder="مثال: أسود، 256GB، مقاس L"></div></div>
+<label>المواصفات المؤكدة من المورد</label><textarea id="specs" placeholder="اكتب المواصفات كما وردت من المورد. لا تكتب معلومة غير متأكد منها."></textarea>
+<label>رابط صفحة المورد</label><input id="source" type="url" placeholder="https://...">
+</section>
+<section class="panel"><h2 style="color:var(--g2);margin-top:0">3) السعر والمراجعة</h2><div class="row"><div><label>تكلفة المنتج بالريال السعودي</label><input id="cost" type="number" min="0" step="0.01" placeholder="أدخل تكلفة المورد بالريال"></div><div><label>سعر البيع المقترح</label><input id="sale" readonly placeholder="يُحسب تلقائياً: التكلفة + 50 ريال"></div></div><p class="muted">يضاف 50 ريالاً إلى تكلفة المنتج كربح APEX. الشحن والجمارك غير مشمولين ويُحسبان منفصلين بالتكلفة الفعلية.</p>
+<label>الوصف التسويقي المقترح</label><textarea id="description" placeholder="اضغط توليد الوصف بعد إدخال المعلومات المؤكدة."></textarea>
+<div class="note">مهم: النسخة المجانية لا تستخدم خدمة ذكاء اصطناعي مدفوعة ولا تدّعي فهم الصورة تلقائياً. القوالب تساعد على صياغة وصف من البيانات التي تدخلها، والصور تحفظ كما رفعتها. راجع المواصفات والصور والسعر قبل حفظ المسودة.</div>
+<div class="actions"><button class="gold" id="generate">توليد الاسم والوصف</button><button class="ghost" id="save">حفظ كمسودة في منتجات APEX</button><button class="ghost" onclick="location.href='admin.html'">العودة للوحة المدير</button></div><div class="status" id="status"></div></section>
+</main></div>
+<script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'}});
+const $=id=>document.getElementById(id);
+const kinds=[
+['هاتف ذكي','الجوالات والإلكترونيات وملحقاتها','يركز على الشاشة والمعالج والذاكرة والكاميرات والبطارية.'],
+['جهاز لوحي','الجوالات والإلكترونيات وملحقاتها','يركز على حجم الشاشة والأداء والذاكرة والاتصال.'],
+['حاسوب محمول','الجوالات والإلكترونيات وملحقاتها','يركز على المعالج والذاكرة والتخزين والشاشة.'],
+['ملحقات الهاتف','الجوالات والإلكترونيات وملحقاتها','يركز على التوافق والحماية وسهولة الاستخدام.'],
+['شاحن وكابل','الجوالات والإلكترونيات وملحقاتها','يركز على القدرة والسرعة والمنافذ والتوافق.'],
+['سماعة لاسلكية','الساعات والسماعات','يركز على الاتصال والبطارية والميكروفون وجودة الصوت.'],
+['ساعة ذكية','الساعات والسماعات','يركز على الشاشة والاتصال والوظائف وعمر البطارية.'],
+['كاميرا وإكسسواراتها','الجوالات والإلكترونيات وملحقاتها','يركز على الدقة والعدسة والتسجيل والملحقات.'],
+['إضاءة منزلية','المنزل والمطبخ والإضاءة','يركز على نوع الإضاءة والطاقة والاستخدام والتركيب.'],
+['أداة مطبخ','المنزل والمطبخ والإضاءة','يركز على الخامة والسعة وطريقة التنظيف والاستخدام.'],
+['أثاث وتنظيم المنزل','المنزل والمطبخ والإضاءة','يركز على الأبعاد والخامة والتخزين والتركيب.'],
+['ملابس','الملابس والحقائب والأزياء','يركز على الخامة والمقاس والقصّة والعناية.'],
+['حقيبة ومحفظة','الملابس والحقائب والأزياء','يركز على الخامة والأبعاد والسعة والجيوب.'],
+['حذاء','الملابس والحقائب والأزياء','يركز على المقاس والخامة والنعل والاستخدام.'],
+['عناية بالبشرة','العناية والجمال','يركز على الحجم والمكونات وطريقة الاستخدام والتحذيرات.'],
+['أداة تجميل','العناية والجمال','يركز على الوظيفة والخامة وطريقة الاستخدام والتنظيف.'],
+['إكسسوارات سيارة','السيارات والرياضة والرحلات','يركز على التوافق والخامة والتركيب والاستخدام.'],
+['معدات رياضية ورحلات','السيارات والرياضة والرحلات','يركز على المقاس والوزن والتحمل وطريقة الاستخدام.'],
+['منتج أطفال ولعبة','الأطفال والألعاب','يركز على العمر المناسب والخامة والقطع وتعليمات السلامة.'],
+['مستلزمات حيوان أو مكتب','الحيوانات والمكتب والإكسسوارات','يركز على المقاس والخامة والوظيفة وسهولة التنظيف.']
+];
+for(const [name,cat] of kinds){const o=document.createElement('option');o.value=name;o.textContent=name;$('kind').append(o)}
+$('typeChips').innerHTML=kinds.map((x,i)=>'<div class="chip">'+(i+1)+'. '+x[0]+'</div>').join('');
+$('kind').addEventListener('change',()=>{const k=kinds.find(x=>x[0]===$('kind').value);if(k)$('category').value=k[1]});
+let files=[];
+$('photos').addEventListener('change',e=>{files=Array.from(e.target.files||[]).slice(0,5);$('preview').innerHTML='';for(const f of files){const im=document.createElement('img');im.src=URL.createObjectURL(f);$('preview').append(im)}});
+$('cost').addEventListener('input',()=>{const n=Number($('cost').value);$('sale').value=$('cost').value!==''&&n>=0?(n+50).toFixed(2)+' SAR':''});
+function makeName(){const k=$('kind').value,b=$('brand').value.trim(),m=$('model').value.trim(),v=$('variant').value.trim();return [b,k,m,v].filter(Boolean).join(' — ')}
+function makeDescription(){const k=kinds.find(x=>x[0]===$('kind').value);const parts=[];parts.push(makeName()||'منتج '+$('kind').value);if(k)parts.push(k[2]);if($('specs').value.trim())parts.push('المواصفات المذكورة: '+$('specs').value.trim());if($('variant').value.trim())parts.push('الخيارات/الإصدار: '+$('variant').value.trim());parts.push('يرجى مراجعة تفاصيل التوافق والمقاس والمواصفات قبل إتمام الطلب.');return parts.join('\n\n')}
+$('generate').addEventListener('click',()=>{if(!$('name').value.trim())$('name').value=makeName();$('description').value=makeDescription();$('status').textContent='تم إعداد مسودة الاسم والوصف من المعلومات المدخلة. راجعها قبل الحفظ.'});
+async function checkAdmin(){const s=$('authStatus');try{const {data,error}=await supabase.auth.getSession();if(error)throw error;if(!data.session){s.textContent='لا توجد جلسة مدير. افتح لوحة المدير وسجّل الدخول أولاً.';return}const {data:admin,error:ae}=await supabase.from('apex_admins').select('user_id').eq('user_id',data.session.user.id).maybeSingle();if(ae)throw ae;if(!admin){s.textContent='هذا الحساب غير مخول كمدير.';return}const {data:level,error:le}=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();if(le)throw le;if(level?.currentLevel!=='aal2'){s.textContent='أكمل التحقق الثنائي من لوحة المدير ثم ارجع إلى هنا.';return}$('authBox').style.display='none';$('studio').classList.add('ready');s.textContent='تم التحقق من حساب المدير.'}catch(e){s.textContent='تعذر التحقق: '+(e.message||e)}}
+window.checkAdmin=checkAdmin;await checkAdmin();
+$('save').addEventListener('click',async()=>{const status=$('status'),btn=$('save');btn.disabled=true;try{const {data:{session}}=await supabase.auth.getSession();if(!session)throw Error('انتهت جلسة المدير. أعد تسجيل الدخول.');const {data:admin,error:ae}=await supabase.from('apex_admins').select('user_id').eq('user_id',session.user.id).maybeSingle();if(ae||!admin)throw Error('تعذر تأكيد صلاحية المدير.');const {data:level}=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();if(level?.currentLevel!=='aal2')throw Error('التحقق الثنائي غير مكتمل.');const name=$('name').value.trim()||makeName();if(!name)throw Error('أدخل اسم المنتج أو ولّده أولاً.');if(!$('cost').value||Number($('cost').value)<0)throw Error('أدخل تكلفة المنتج بالريال السعودي.');if(!$('description').value.trim())$('description').value=makeDescription();let urls=[];for(let i=0;i<files.length;i++){const f=files[i];const ext=(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';const path='product-studio/'+Date.now()+'-'+i+'-'+crypto.randomUUID()+'.'+ext;const {error}=await supabase.storage.from('apex-store').upload(path,f,{cacheControl:'3600',upsert:false,contentType:f.type});if(error)throw error;const {data}=supabase.storage.from('apex-store').getPublicUrl(path);urls.push(data.publicUrl)}
+const cost=Number($('cost').value);const row={name,category:$('category').value,description:$('description').value.trim(),image_url:urls[0]||null,image_urls:urls,price:Number((cost+50).toFixed(2)),active:false,stock:0,supplier_source_url:$('source').value.trim()||null,supplier_price_usd:null,supplier_name:'يدوي — Product Studio',sourcing_status:'manual',shipping_allowance_sar:0,target_profit_sar:50};const {data,error}=await supabase.from('apex_products').insert(row).select('id,name').single();if(error)throw error;status.textContent='تم حفظ المنتج كمسودة غير منشورة. رقم المنتج: '+data.id+' — '+data.name;files=[];$('photos').value='';$('preview').innerHTML='';}catch(e){status.textContent='تعذر الحفظ: '+(e.message||e)}finally{btn.disabled=false}});
+</script></body></html>
