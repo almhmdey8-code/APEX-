@@ -1283,14 +1283,24 @@ function renderApexAssistantMessages(){
   const welcome=document.createElement('div');welcome.className='apex-ai-welcome';
   const title=document.createElement('b');title.textContent='مرحباً بك في APEX 👑';
   const body=document.createElement('span');body.textContent='اسألني عن المنتجات أو الحساب أو الطلبات والشحن والدفع.';
-  welcome.append(title,body);box.append(welcome);return;
+  welcome.append(title,body);box.append(welcome);
+ }else{
+  apexAssistantMessages.forEach(m=>{
+   const row=document.createElement('div');row.className='apex-ai-message '+(m.role==='user'?'apex-ai-user':'apex-ai-bot');
+   const label=document.createElement('small');label.textContent=m.role==='user'?'أنت':'APEX AI';
+   const text=document.createElement('div');text.textContent=m.content;
+   row.append(label,text);box.append(row);
+  });
  }
- apexAssistantMessages.forEach(m=>{
-  const row=document.createElement('div');row.className='apex-ai-message '+(m.role==='user'?'apex-ai-user':'apex-ai-bot');
-  const label=document.createElement('small');label.textContent=m.role==='user'?'أنت':'APEX AI';
-  const text=document.createElement('div');text.textContent=m.content;
-  row.append(label,text);box.append(row);
- });
+ if(apexAssistantBusy){
+  const thinking=document.createElement('div');thinking.className='apex-ai-message apex-ai-bot apex-ai-thinking';thinking.setAttribute('aria-label','جاري التفكير');
+  const label=document.createElement('small');label.textContent='APEX AI';
+  const line=document.createElement('div');line.className='apex-ai-thinking-line';
+  const caption=document.createElement('span');caption.textContent='جاري التفكير';
+  const dots=document.createElement('span');dots.className='apex-ai-thinking-dots';dots.setAttribute('aria-hidden','true');
+  for(let i=0;i<3;i++){const dot=document.createElement('i');dots.append(dot)}
+  line.append(caption,dots);thinking.append(label,line);box.append(thinking);
+ }
  box.scrollTop=box.scrollHeight;
 }
 function initApexAssistant(){
@@ -2324,6 +2334,66 @@ input,select,textarea{
 }
 </style>
 
+
+<style id="apex-ai-fullscreen-thinking-and-hero-line">
+/* APEX AI: نافذة مساعدة كاملة الشاشة ومؤشر تفكير واضح */
+#accountpanel.apex-ai-fullscreen{
+ position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;
+ max-height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;
+ display:flex!important;align-items:stretch!important;justify-content:stretch!important;
+ border:0!important;border-radius:0!important;z-index:10040!important;
+}
+#accountpanel.apex-ai-fullscreen>.account-shell{
+ display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;
+ height:100%!important;max-height:100%!important;min-height:0!important;margin:0!important;
+ border:0!important;border-radius:0!important;overflow:hidden!important;
+}
+#accountpanel.apex-ai-fullscreen .account-head{
+ flex:0 0 58px!important;min-height:58px!important;margin:0!important;
+}
+#accountpanel.apex-ai-fullscreen .account-content{
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+ min-height:0!important;height:auto!important;overflow:hidden!important;
+ padding:8px 10px max(8px,env(safe-area-inset-bottom))!important;
+}
+#accountpanel.apex-ai-fullscreen #accountData{
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+ min-height:0!important;overflow:hidden!important;
+}
+#accountpanel.apex-ai-fullscreen .user-hub{display:none!important}
+#accountpanel.apex-ai-fullscreen #accountSection-support{
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+ min-height:0!important;height:100%!important;margin:0!important;padding:10px!important;
+ overflow:hidden!important;box-sizing:border-box!important;
+}
+#accountpanel.apex-ai-fullscreen #accountSection-support>.account-section-heading{flex:0 0 auto!important}
+#accountpanel.apex-ai-fullscreen #apexAiMessages{
+ flex:1 1 0!important;height:auto!important;min-height:0!important;max-height:none!important;
+ overflow-y:auto!important;overscroll-behavior:contain!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-quick{flex:0 0 auto!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose{flex:0 0 auto!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-footer,
+#accountpanel.apex-ai-fullscreen .apex-ai-status{flex:0 0 auto!important}
+.apex-ai-thinking{border-color:#c6a35b!important;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.apex-ai-thinking-line{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800}
+.apex-ai-thinking-dots{display:inline-flex;align-items:center;gap:4px}
+.apex-ai-thinking-dots i{display:block;width:6px;height:6px;border-radius:50%;background:#b58a37;animation:apexAiThinkingPulse 1s infinite ease-in-out}
+.apex-ai-thinking-dots i:nth-child(2){animation-delay:.16s}
+.apex-ai-thinking-dots i:nth-child(3){animation-delay:.32s}
+@keyframes apexAiThinkingPulse{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-4px)}}
+/* إطار مقدمة المتجر: أبيض أوضح مع بقاء اللمعة ناعمة */
+.apex-hero:before{
+ border-color:rgba(255,255,255,.97)!important;
+ box-shadow:0 0 14px rgba(255,255,255,.22),inset 0 0 4px rgba(255,255,255,.08)!important;
+}
+@media(max-width:560px){
+ #accountpanel.apex-ai-fullscreen .account-head{flex-basis:56px!important;min-height:56px!important}
+ #accountpanel.apex-ai-fullscreen #accountSection-support{padding:8px!important}
+ #accountpanel.apex-ai-fullscreen .apex-ai-intro{font-size:11px!important;line-height:1.55!important;margin:4px 0 7px!important}
+ #accountpanel.apex-ai-fullscreen .apex-ai-footer{font-size:9px!important}
+}
+</style>
 </body></html>
 
 <style id="apex-wallet-card-qr-layout-fix">
