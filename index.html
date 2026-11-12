@@ -1618,18 +1618,20 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
   let authenticated=false;
   try{
    const {data,error}=await supabase.auth.signInWithPassword({email,password});
-   if(error){await apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:'email'});console.error('APEX LOGIN AUTH ERROR:',error);msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
+   if(error){void apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:'email'});console.error('APEX LOGIN AUTH ERROR:',error);msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
    authenticated=true;
-   await apexSecurityEvent('login_success',{method:'email'});
-   msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';
-   await refreshCustomer(data.session);
-   $('accountForm').hidden=true;
-   $('accountData').hidden=false;
-   $('storefrontAuth').hidden=true;
+   // تسجيل الحدث الأمني لا يعطل عملية الدخول إذا تأخرت الخدمة.
+   void apexSecurityEvent('login_success',{method:'email'});
    $('accountpanel').classList.add('show');
-   showAccountHome();
-   const accountHub=document.querySelector('#accountData .user-hub');
-   if(accountHub) accountHub.scrollIntoView({behavior:'smooth',block:'start'});
+   button.disabled=false;button.textContent='تسجيل الدخول';
+   msg.textContent='تم تسجيل الدخول بنجاح، جارٍ تحميل بيانات الحساب...';msg.style.color='#7ee0a1';
+   await refreshCustomer(data.session);
+   if(!customerSession?.user?.id)throw new Error('لم يتم تثبيت جلسة الحساب بعد تسجيل الدخول.');
+   if(!$('accountData').hidden){
+    $('accountForm').hidden=true;$('storefrontAuth').hidden=true;showAccountHome();
+    const accountHub=document.querySelector('#accountData .user-hub');
+    if(accountHub)accountHub.scrollIntoView({behavior:'smooth',block:'start'});
+   }
   }catch(error){
    console.error('APEX LOGIN ERROR:',error);
    const reason=error?.message||String(error);
@@ -1637,6 +1639,7 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
    msg.style.color='#ff7777';
   }finally{button.disabled=false;button.textContent='تسجيل الدخول'}
  }
+
 let signupEmailVerified='',signupLat=null,signupLng=null;
 function showStoreLogin(){$('accountForm').hidden=false;$('authLoginFields').hidden=false;$('authSignupFields').hidden=true;$('accountMsg').textContent=''}
 function showStoreSignup(){$('accountForm').hidden=false;$('authLoginFields').hidden=true;$('authSignupFields').hidden=false;$('signupStep1').hidden=false;$('signupStep2').hidden=true;$('signupStep3').hidden=true;$('signupEmail').value='';$('signupCode').value='';$('signupReferralCode').value=localStorage.getItem('apex_pending_referral_code')||'';signupEmailVerified='';signupLat=signupLng=null;$('accountMsg').textContent=''}
