@@ -1060,7 +1060,7 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 <button class="add" type="button" onclick="requestWalletTopup()">إرسال طلب الشحن</button><p id="walletTopupMessage" style="color:#e9bd55"></p><p style="color:#aaa;font-size:11px;line-height:1.8">لن يُضاف الرصيد إلا بعد مراجعة المدير وتأكيد استلام المبلغ.</p></div>
 <h4 style="color:#f4d98a;margin-top:18px">طلبات الشحن</h4><div id="walletTopupHistory">لا توجد طلبات شحن.</div><h4 style="color:#f4d98a;margin-top:18px">طلبات إرجاع المنتجات</h4><div id="walletReturnHistory">لا توجد طلبات إرجاع.</div>
 <h4 style="color:#f4d98a;margin-top:18px">سجل المحفظة</h4><div id="walletTransactions">لا توجد عمليات بعد.</div></section>
-<section id="accountSection-support" hidden class="account-panel-card apex-ai-card"><div class="account-section-heading"><h3 class="account-section-title">✦ المساعد المباشر APEX AI</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p class="apex-ai-intro">مساعدك العربي لفهم المنتجات والأسعار والمخزون والطلبات والشحن والدفع واستخدام المتجر.</p><div id="apexAiMessages" class="apex-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"><div class="apex-ai-welcome"><b>مرحباً بك في APEX 👑</b><span>اسألني عن منتجات المتجر أو حسابك أو طلباتك، وسأساعدك بالمعلومات الفعلية المتاحة.</span></div></div><div class="apex-ai-quick"><button type="button" onclick="askApexAssistantQuick('كيف أنشئ حساباً جديداً في المتجر؟')">إنشاء حساب</button><button type="button" onclick="askApexAssistantQuick('كيف أتابع طلبي؟')">متابعة طلب</button><button type="button" onclick="askApexAssistantQuick('ما المنتجات المتوفرة حالياً؟')">المنتجات المتوفرة</button><button type="button" onclick="askApexAssistantQuick('ما طرق الدفع المتاحة؟')">طرق الدفع</button></div><div class="apex-ai-compose"><textarea id="apexAiInput" rows="2" maxlength="1500" placeholder="اكتب سؤالك عن متجر APEX..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendApexAssistantMessage()}"></textarea><button id="apexAiSend" type="button" class="goldbtn" onclick="sendApexAssistantMessage()">إرسال</button></div><div class="apex-ai-footer"><span>المساعد مخصص لمتجر APEX فقط. لا ترسل كلمات المرور أو بيانات البطاقات.</span><button type="button" onclick="clearApexAssistantSession()">محادثة جديدة</button></div><div id="apexAiHandoff" class="apex-ai-handoff" hidden><p>يمكن لفريق خدمة العملاء متابعة طلبك مباشرة.</p><p>سيتم توفير قناة تواصل مباشرة مع فريق خدمة العملاء من داخل المتجر.</p></div><p id="apexAiStatus" class="apex-ai-status" aria-live="polite"></p></section>
+<section id="accountSection-support" hidden class="account-panel-card apex-ai-card"><div class="account-section-heading"><h3 class="account-section-title">✦ المساعد المباشر APEX AI</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p class="apex-ai-intro">مساعدك العربي لفهم المنتجات والأسعار والمخزون والطلبات والشحن والدفع واستخدام المتجر.</p><div id="apexAiMessages" class="apex-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"><div class="apex-ai-welcome"><b>مرحباً بك في APEX 👑</b><span>اسألني عن منتجات المتجر أو حسابك أو طلباتك، وسأساعدك بالمعلومات الفعلية المتاحة.</span></div></div><div class="apex-ai-quick"><button type="button" onclick="askApexAssistantQuick('كيف أنشئ حساباً جديداً في المتجر؟')">إنشاء حساب</button><button type="button" onclick="askApexAssistantQuick('كيف أتابع طلبي؟')">متابعة طلب</button><button type="button" onclick="askApexAssistantQuick('ما المنتجات المتوفرة حالياً؟')">المنتجات المتوفرة</button><button type="button" onclick="askApexAssistantQuick('ما طرق الدفع المتاحة؟')">طرق الدفع</button></div><p id="apexAiStatus" class="apex-ai-status" aria-live="polite"></p><div class="apex-ai-compose"><textarea id="apexAiInput" rows="2" maxlength="1500" placeholder="اكتب سؤالك عن متجر APEX..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendApexAssistantMessage()}"></textarea><button id="apexAiSend" type="button" class="goldbtn" onclick="sendApexAssistantMessage()">إرسال</button></div><div class="apex-ai-footer"><span>المساعد مخصص لمتجر APEX فقط. لا ترسل كلمات المرور أو بيانات البطاقات.</span><button type="button" onclick="clearApexAssistantSession()">محادثة جديدة</button></div><div id="apexAiHandoff" class="apex-ai-handoff" hidden><p>يمكن لفريق خدمة العملاء متابعة طلبك مباشرة.</p><p>سيتم توفير قناة تواصل مباشرة مع فريق خدمة العملاء من داخل المتجر.</p></div></section>
 <section id="accountSection-policies" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">سياسات المتجر</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><div style="color:#ded8c9;line-height:2"><h3 style="color:var(--gold)">طريقة الطلب</h3><p>اختر المنتجات وأضفها إلى السلة، ثم أدخل اسمك ورقم جوالك وعنوانك. سيتم إرسال تفاصيل طلبك إلى إدارة المتجر للتواصل معك وتأكيد التوفر والسعر قبل اعتماد الطلب.</p><h3 style="color:var(--gold)">الأسعار والدفع</h3><p>تظهر أسعار المنتجات بالريال السعودي على صفحات المتجر. يتم توضيح تكاليف التوصيل وأي رسوم إضافية للعميل قبل تأكيد الطلب. لا يتم تحصيل أي مبلغ من خلال الموقع حاليًا، ولا تعتبر رسالة البريد تأكيدًا نهائيًا للشراء.</p><h3 style="color:var(--gold)">الشحن والتوصيل</h3><p>يتم تحديد شركة الشحن والمدة والرسوم حسب المدينة وطبيعة المنتج، وإبلاغ العميل بها قبل تأكيد الطلب.</p><h3 style="color:var(--gold)">الاستبدال والاسترجاع</h3><p>يتم توضيح شروط الاستبدال والاسترجاع للعميل قبل إتمام الشراء، وفق الأنظمة المعمول بها في المملكة العربية السعودية.</p><h3 style="color:var(--gold)">الخصوصية</h3><p>تُستخدم بيانات الاسم ورقم الجوال والعنوان لغرض متابعة الطلب والتواصل بشأنه فقط. يُرجى عدم إرسال بيانات البطاقات البنكية أو كلمات المرور عبر البريد أو نموذج الطلب.</p><p style="font-size:12px;color:#aaa">هذه صياغة أولية للمعلومات والسياسات، ويجب مراجعتها واعتماد تفاصيلها التجارية والقانونية قبل بدء البيع الفعلي.</p></div></section>
 <section id="accountSection-management" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">مساعدة المتجر</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><p>لإدارة طلباتك وبيانات حسابك، استخدم أقسام حساب العميل. لا تُعرض أدوات الإدارة في حسابات العملاء.</p></section>
 <section id="accountSection-about" hidden class="account-panel-card"><div class="account-section-heading"><h3 class="account-section-title">عن APEX 👑</h3><button type="button" class="account-back-button" onclick="showAccountHome()">→ رجوع</button></div><div class="apex-about-full" dir="rtl">
@@ -1292,15 +1292,6 @@ function renderApexAssistantMessages(){
    row.append(label,text);box.append(row);
   });
  }
- if(apexAssistantBusy){
-  const thinking=document.createElement('div');thinking.className='apex-ai-message apex-ai-bot apex-ai-thinking';thinking.setAttribute('aria-label','جاري التفكير');
-  const label=document.createElement('small');label.textContent='APEX AI';
-  const line=document.createElement('div');line.className='apex-ai-thinking-line';
-  const caption=document.createElement('span');caption.textContent='جاري التفكير';
-  const dots=document.createElement('span');dots.className='apex-ai-thinking-dots';dots.setAttribute('aria-hidden','true');
-  for(let i=0;i<3;i++){const dot=document.createElement('i');dots.append(dot)}
-  line.append(caption,dots);thinking.append(label,line);box.append(thinking);
- }
  box.scrollTop=box.scrollHeight;
 }
 function initApexAssistant(){
@@ -1333,7 +1324,7 @@ async function sendApexAssistantMessage(){
  const requestUserId=customerSession.user.id;
  apexAssistantMessages.push({role:'user',content:message});
  input.value='';apexAssistantBusy=true;button.disabled=true;button.textContent='إرسال';
- $('apexAiHandoff').hidden=true;status.textContent='جاري التفكير... يراجع المساعد سؤالك ومعلومات المتجر.';renderApexAssistantMessages();
+ $('apexAiHandoff').hidden=true;status.textContent='جاري التفكير';renderApexAssistantMessages();
  try{
   const {data,error}=await supabase.functions.invoke('apex-store-assistant',{body:{messages:apexAssistantMessages.slice(-12)}});
   if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
@@ -2613,4 +2604,26 @@ input,select,textarea{
  #accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{font-size:14px!important;min-height:46px!important}
  #accountpanel.apex-ai-fullscreen #apexAiSend{flex-basis:64px!important;min-width:64px!important}
 }
+</style>
+
+<style id="apex-ai-thinking-above-input">
+/* مؤشر التفكير الصغير يظهر مباشرة فوق مربع الكتابة */
+#accountpanel.apex-ai-fullscreen #apexAiStatus{
+ display:block!important;flex:0 0 auto!important;align-self:stretch!important;
+ min-height:0!important;margin:5px 4px 0!important;padding:0 8px 2px!important;
+ color:#76551b!important;font-size:11px!important;font-weight:700!important;
+ line-height:1.4!important;text-align:right!important;
+}
+#accountpanel.apex-ai-fullscreen #apexAiStatus:empty{display:none!important}
+#accountpanel.apex-ai-fullscreen #apexAiStatus:not(:empty)::after{
+ content:"";display:inline-block;width:4px;height:4px;margin-right:5px;
+ vertical-align:middle;border-radius:50%;background:#b58a37;
+ box-shadow:7px 0 #b58a37,14px 0 #b58a37;
+ animation:apexAiTinyThinking 1s infinite ease-in-out;
+}
+@keyframes apexAiTinyThinking{
+ 0%,100%{opacity:.35;transform:translateY(0)}
+ 50%{opacity:1;transform:translateY(-2px)}
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose{margin-top:0!important}
 </style>
