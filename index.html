@@ -1037,7 +1037,7 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 <button onclick="showAccountSection('notifications');loadCustomerNotifications()"><b>♧</b><span>الإشعارات</span><small>آخر التحديثات</small></button>
 <button onclick="showAccountSection('support')"><b>✉</b><span>المساعد المباشر APEX AI</span><small>تواصل مع خدمة العملاء</small></button>
 <button onclick="showAccountSection('policies')"><b>▤</b><span>سياسات المتجر</span><small>الطلب والشحن والخصوصية</small></button>
-<button onclick="showAccountSection('about')"><b>✦</b><span>عن APEX</span><small>تعرف على APEX ورؤيتها</small></button>
+<button onclick="showAccountSection('about')"><b class="apex-about-mark">APEX</b><span>عن APEX</span><small>تعرف على APEX ورؤيتها</small></button>
 <button onclick="showAccountSection('profile')"><b>♙</b><span>تعديل بياناتك</span><small>الاسم والجوال والعنوان والبريد</small></button>
 
 </div>
@@ -2476,5 +2476,48 @@ input,select,textarea{
  font:900 9px/1 Georgia,serif!important;letter-spacing:.35px!important;
  text-shadow:none!important;box-shadow:inset 0 1px #fff3!important;
  filter:none!important;opacity:1!important;
+}
+</style>
+
+<style id="apex-customer-thumbnail-and-square-product-fix">
+/* شعار عن APEX: علامة نصية نظيفة، بلا تاج أو ظل قديم */
+#accountpanel .user-services button[onclick*="showAccountSection('about')"]>.apex-about-mark{
+  position:relative!important;isolation:isolate!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:35px!important;height:35px!important;min-width:35px!important;flex:0 0 35px!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  border:1px solid #c7a04d!important;border-radius:9px!important;
+  background:linear-gradient(145deg,#17130b,#050605)!important;
+  color:#f1d27e!important;-webkit-text-fill-color:#f1d27e!important;
+  font:900 9px/1 Georgia,serif!important;letter-spacing:.35px!important;
+  text-shadow:none!important;box-shadow:inset 0 1px #fff3!important;
+  filter:none!important;transform:none!important;
+}
+#accountpanel .user-services button[onclick*="showAccountSection('about')"]>.apex-about-mark:before,
+#accountpanel .user-services button[onclick*="showAccountSection('about')"]>.apex-about-mark:after{
+  content:none!important;display:none!important;background:none!important;
+  box-shadow:none!important;filter:none!important;
+}
+/* صورة المنتج مربعة وثابتة؛ لا تمدد صور المعاينة المصغرة */
+.products .product-card-media{width:100%!important;aspect-ratio:1/1!important;overflow:hidden!important;background:#11150f!important}
+.products .product-gallery{width:100%!important;height:100%!important;margin:0!important;display:block!important}
+.products .product .product-main-image{
+  display:block!important;width:100%!important;height:100%!important;aspect-ratio:1/1!important;
+  object-fit:contain!important;padding:8px!important;border-radius:0!important;
+  background:linear-gradient(145deg,#fff8e8,#e8d8b5)!important;
+}
+.products .product .product-thumbs{bottom:7px!important;right:7px!important;z-index:2!important}
+.products .product .product-thumb{width:27px!important;height:27px!important;flex:0 0 27px!important;padding:1px!important}
+.products .product .product-thumb img{
+  display:block!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;
+  object-fit:cover!important;padding:0!important;border-radius:3px!important;background:transparent!important;
+}
+.products .product-card-info{min-width:0!important;padding:8px!important}
+.products .product-card-info h3{display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:0!important}
+.products .product-description{min-height:0!important;-webkit-line-clamp:2!important;margin-bottom:6px!important}
+.products .product .add-to-cart-wide{margin-top:6px!important}
+@media(max-width:600px){
+  .products .product .product-main-image{padding:5px!important}
+  .products .product-card-info{padding:7px!important}
 }
 </style>
