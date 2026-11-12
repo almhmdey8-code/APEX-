@@ -1613,29 +1613,27 @@ function openMoreAccount(){openCustomerProfile()}
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode','apex-ai-fullscreen')}
  async function customerSignIn(){
   const email=$('accountEmail').value.trim().toLowerCase(),password=$('accountPassword').value,button=$('accountAuthAction'),msg=$('accountMsg');
-  if(!email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!password){msg.textContent='أدخل بريداً إلكترونياً صحيحاً وكلمة المرور.';msg.style.color='#ff7777';return}
+  if(!email||!/^\S+@\S+\.\S+$/.test(email)||!password){msg.textContent='أدخل بريداً إلكترونياً صحيحاً وكلمة المرور.';msg.style.color='#ff7777';return}
   button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';msg.textContent='جارٍ التحقق من بياناتك...';msg.style.color='#e9bd55';
+  let authenticated=false;
   try{
-   const authResult=await Promise.race([
-    supabase.auth.signInWithPassword({email,password}),
-    new Promise((_,reject)=>setTimeout(()=>reject(new Error('انتهت مهلة الاتصال. تحقق من الإنترنت ثم حاول مرة أخرى.')),20000))
-   ]);
-   const {data,error}=authResult;
-   if(error){void apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:'email'});msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
-   if(!data?.session)throw new Error('لم يتم إنشاء جلسة دخول. حاول مرة أخرى.');
-   customerSession=data.session;
-   void apexSecurityEvent('login_success',{method:'email'});
-   $('accountForm').hidden=true;$('accountData').hidden=false;$('storefrontAuth').hidden=true;
-   $('showFavorites').dataset.only='0';
-   document.querySelector('.cat.active')?.classList.remove('active');
-   document.querySelector('.cat[data-cat="الكل"]')?.classList.add('active');
-   closeAccount();filterProducts();
+   const {data,error}=await supabase.auth.signInWithPassword({email,password});
+   if(error){await apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:'email'});console.error('APEX LOGIN AUTH ERROR:',error);msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
+   authenticated=true;
+   await apexSecurityEvent('login_success',{method:'email'});
    msg.textContent='تم تسجيل الدخول بنجاح.';msg.style.color='#7ee0a1';
-   $('products').scrollIntoView({behavior:'smooth',block:'start'});
-   refreshCustomer(data.session).catch(error=>console.error('APEX CUSTOMER REFRESH ERROR:',error));
+   await refreshCustomer(data.session);
+   $('accountForm').hidden=true;
+   $('accountData').hidden=false;
+   $('storefrontAuth').hidden=true;
+   $('accountpanel').classList.add('show');
+   showAccountHome();
+   const accountHub=document.querySelector('#accountData .user-hub');
+   if(accountHub) accountHub.scrollIntoView({behavior:'smooth',block:'start'});
   }catch(error){
    console.error('APEX LOGIN ERROR:',error);
-   msg.textContent='تعذر تسجيل الدخول: '+(error?.message||String(error));
+   const reason=error?.message||String(error);
+   msg.textContent=authenticated?'تم تسجيل الدخول، لكن تعذر تحميل بيانات الحساب: '+reason:'تعذر تسجيل الدخول: '+reason;
    msg.style.color='#ff7777';
   }finally{button.disabled=false;button.textContent='تسجيل الدخول'}
  }
