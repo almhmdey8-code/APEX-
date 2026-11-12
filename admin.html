@@ -1936,3 +1936,29 @@ body{background:radial-gradient(ellipse at 50% 0%,#5a421b 0%,#211a0d 48%,#100e09
 (()=>{const a=document.createElement('a');a.href='product-studio.html';a.textContent='✦ استوديو تجهيز المنتجات';a.setAttribute('aria-label','فتح استوديو تجهيز المنتجات');a.style.cssText='position:fixed;bottom:16px;left:16px;z-index:9998;padding:11px 16px;border:1px solid #d8b45d;border-radius:24px;background:linear-gradient(120deg,#8e5f15,#ffe7a0,#b77b1d);color:#171006;font:800 14px Tahoma,Arial;text-decoration:none;box-shadow:0 5px 20px #0009';document.body.appendChild(a)})();
 </script>
 </body></html>
+
+
+<style id="apex-admin-section-thumbnails-semantic-v2">
+/* صور/رموز مصغرة ثابتة ومطابقة لاسم كل قسم */
+#adminWorkspace .tabs button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important}
+#adminWorkspace .tabs button:before{
+ content:"✦"!important;display:grid!important;place-items:center!important;
+ width:42px!important;height:34px!important;flex:0 0 34px!important;
+ border-radius:9px!important;border:1px solid #c6a45b!important;
+ background:linear-gradient(145deg,#fff4d6,#dfbd70)!important;
+ color:#39270b!important;font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif!important;
+ font-size:23px!important;line-height:1!important;box-shadow:0 2px 7px #0002!important
+}
+#adminWorkspace .tabs button[data-tab="products"]:before{content:"🛍️"!important}
+#adminWorkspace .tabs button[data-tab="banners"]:before{content:"🖼️"!important}
+#adminWorkspace .tabs button[data-tab="payments"]:before{content:"💳"!important}
+#adminWorkspace .tabs button[data-tab="orders"]:before{content:"📦"!important}
+#adminWorkspace .tabs button[data-tab="returns"]:before{content:"↩️"!important}
+#adminWorkspace .tabs button[data-tab="customers"]:before{content:"👥"!important}
+#adminWorkspace .tabs button[data-tab="currency"]:before{content:"💱"!important}
+#adminWorkspace .tabs button[data-tab="wallet_topups"]:before{content:"👛"!important}
+#adminWorkspace .tabs button[data-tab="shipping"]:before{content:"🚚"!important}
+#adminWorkspace .tabs button[data-tab="marketing"]:before{content:"📣"!important}
+#adminWorkspace .tabs button[data-tab="security"]:before{content:"🛡️"!important}
+@media(max-width:700px){#adminWorkspace .tabs button:before{width:35px!important;height:29px!important;flex-basis:29px!important;font-size:20px!important}}
+</style>
