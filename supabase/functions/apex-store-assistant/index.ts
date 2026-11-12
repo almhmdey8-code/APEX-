@@ -134,7 +134,7 @@ Deno.serve(async (req: Request) => {
   const [productsResult, settingsResult, paymentResult] = await Promise.all([
     supabase.from("apex_products")
       .select("id,name,category,description,price,stock,active")
-      .eq("active", true).order("created_at", { ascending: false }).limit(40),
+      .eq("active", true).order("created_at", { ascending: false }).limit(24),
     supabase.from("apex_store_settings").select("exchange_rate,base_currency,local_currency")
       .eq("setting_key", "currency").maybeSingle(),
     supabase.from("apex_payment_methods")
@@ -214,7 +214,7 @@ Deno.serve(async (req: Request) => {
 
   const input = [
     { role: "developer", content: systemPrompt + "\n\n" + context },
-    ...messages.slice(-8).map((m) => ({ role: m.role, content: m.content })),
+    ...messages.slice(-6).map((m) => ({ role: m.role, content: m.content })),
   ];
 
   const fallbackReply = () => localStoreFallback(messages, products, paymentMethods, orderContext);
@@ -230,73 +230,60 @@ Deno.serve(async (req: Request) => {
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[بريد محجوب]")
     .replace(/\+?\d[\d\s().-]{7,}\d/g, "[رقم محجوب]")
     .replace(/\b\d{8,}\b/g, "[رقم محجوب]");
-  const geminiContents = messages.slice(-8).map((m) => ({
+  const geminiContents = messages.slice(-6).map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: redact(m.content) }],
   }));
 
-  // Bounded retry/backoff and multi-model failover for transient Gemini outages.
+  // Fast bounded failover: one short attempt per model, no long retry sleeps.
   const modelCandidates = ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.8-flash"];
   let geminiData: any = {};
   let selectedModel = "";
   let lastFailure = "provider_unavailable";
   let attempts = 0;
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-  const retryable = (status: number) =>
-    [408, 425, 429, 500, 502, 503, 504].includes(status);
 
   for (const model of modelCandidates) {
-    let succeeded = false;
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      attempts++;
-      try {
-        const response = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
-            signal: AbortSignal.timeout(8000),
-            body: JSON.stringify({
-              systemInstruction: { parts: [{ text: systemPrompt + "\n\n" + context }] },
-              contents: geminiContents,
-              generationConfig: { temperature: 0.25, maxOutputTokens: 600 },
-            }),
-          },
-        );
-        const data = await response.json().catch(() => ({}));
-        if (response.ok) {
-          const candidateText = (data?.candidates?.[0]?.content?.parts || [])
-            .map((part: any) => typeof part.text === "string" ? part.text : "")
-            .join("\n").trim();
-          if (candidateText) {
-            geminiData = data;
-            selectedModel = model;
-            succeeded = true;
-            break;
-          }
-          lastFailure = "empty_response_" + model;
-          console.warn("APEX_ASSISTANT_MODEL_RETRY", model, lastFailure);
-        } else {
-          const status = response.status;
-          lastFailure = status === 429 ? "quota_or_rate_limit_" + model
-            : [502, 503, 504].includes(status) ? "provider_busy_" + model
-            : status === 401 || status === 403 ? "gemini_key_rejected"
-            : "gemini_http_" + status;
-          console.warn("APEX_ASSISTANT_MODEL_RETRY", model, lastFailure);
-          if (!retryable(status)) break;
-          if (attempt < 2) {
-            const retryAfter = Number(response.headers.get("retry-after") || 0);
-            await sleep(Math.min(1000, Math.max(300, retryAfter * 1000 || 400 * attempt)));
-          }
+    attempts++;
+    try {
+      const response = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
+          signal: AbortSignal.timeout(4000),
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt + "\n\n" + context }] },
+            contents: geminiContents,
+            generationConfig: { temperature: 0.2, maxOutputTokens: 450 },
+          }),
+        },
+      );
+      const data = await response.json().catch(() => ({}));
+      if (response.ok) {
+        const candidateText = (data?.candidates?.[0]?.content?.parts || [])
+          .map((part: any) => typeof part.text === "string" ? part.text : "")
+          .join("\n").trim();
+        if (candidateText) {
+          geminiData = data;
+          selectedModel = model;
+          break;
         }
-      } catch (error) {
-        lastFailure = error instanceof Error && error.name === "TimeoutError"
-          ? "timeout_" + model : "network_failure_" + model;
-        console.warn("APEX_ASSISTANT_MODEL_RETRY", model, lastFailure);
-        if (attempt < 2) await sleep(350 * attempt);
+        lastFailure = "empty_response_" + model;
+      } else {
+        const status = response.status;
+        lastFailure = status === 429 ? "quota_or_rate_limit_" + model
+          : [502, 503, 504].includes(status) ? "provider_busy_" + model
+          : status === 401 || status === 403 ? "gemini_key_rejected"
+          : "gemini_http_" + status;
+        // A rejected key or malformed request will not improve by trying another model.
+        if (status === 401 || status === 403 || status === 400) break;
       }
+      console.warn("APEX_ASSISTANT_MODEL_FAILOVER", model, lastFailure);
+    } catch (error) {
+      lastFailure = error instanceof Error && error.name === "TimeoutError"
+        ? "timeout_" + model : "network_failure_" + model;
+      console.warn("APEX_ASSISTANT_MODEL_FAILOVER", model, lastFailure);
     }
-    if (succeeded) break;
   }
 
   if (!selectedModel) {
