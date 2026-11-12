@@ -2561,3 +2561,56 @@ input,select,textarea{
  filter:none!important;opacity:1!important;
 }
 </style>
+
+<style id="apex-ai-input-visibility-hotfix">
+/* إصلاح ظهور نافذة الرد وحقل الكتابة داخل مساعد APEX */
+#accountpanel.apex-ai-fullscreen #accountData[hidden],
+#accountpanel.apex-ai-fullscreen #accountSection-support[hidden]{
+ display:none!important;
+}
+#accountpanel.apex-ai-fullscreen #accountData:not([hidden]){
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+ width:100%!important;min-height:0!important;overflow:hidden!important;
+}
+#accountpanel.apex-ai-fullscreen #accountSection-support:not([hidden]){
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+ width:100%!important;min-height:0!important;height:auto!important;
+ overflow:hidden!important;box-sizing:border-box!important;
+}
+#accountpanel.apex-ai-fullscreen #apexAiMessages{
+ display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+ width:100%!important;min-height:90px!important;max-height:none!important;
+ overflow-y:auto!important;visibility:visible!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose{
+ display:flex!important;flex:0 0 auto!important;align-items:stretch!important;
+ gap:8px!important;width:100%!important;margin-top:8px!important;
+ padding:8px!important;border:1px solid #c6a35b!important;border-radius:14px!important;
+ background:linear-gradient(135deg,#fff,#f4f0e7)!important;
+ box-sizing:border-box!important;visibility:visible!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{
+ display:block!important;flex:1 1 auto!important;width:0!important;min-width:0!important;
+ min-height:48px!important;max-height:120px!important;resize:vertical!important;
+ padding:12px!important;border:1px solid #b99a5d!important;border-radius:10px!important;
+ background:#fff!important;color:#171717!important;font-size:15px!important;
+ line-height:1.6!important;visibility:visible!important;opacity:1!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose textarea::placeholder{
+ color:#777!important;opacity:1!important;
+}
+#accountpanel.apex-ai-fullscreen #apexAiSend{
+ display:inline-flex!important;flex:0 0 76px!important;min-width:76px!important;
+ min-height:48px!important;align-items:center!important;justify-content:center!important;
+ visibility:visible!important;opacity:1!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-footer,
+#accountpanel.apex-ai-fullscreen #apexAiStatus{
+ display:flex!important;flex:0 0 auto!important;visibility:visible!important;
+}
+@media(max-width:560px){
+ #accountpanel.apex-ai-fullscreen .apex-ai-compose{gap:6px!important;padding:6px!important}
+ #accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{font-size:14px!important;min-height:46px!important}
+ #accountpanel.apex-ai-fullscreen #apexAiSend{flex-basis:64px!important;min-width:64px!important}
+}
+</style>
