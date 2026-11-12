@@ -937,39 +937,59 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 </style>
 
 <style id="apex-customer-real-option-thumbnails">
-/* Each customer option gets a photo that matches its meaning */
+/* صور فوتوغرافية مطابقة لمعنى كل خيار — ربط مباشر بزر القسم لا بترتيبه */
 #accountpanel .user-shortcuts button>b,
 #accountpanel .user-services button>b{
-  display:block!important;flex:0 0 42px;width:42px;height:42px;min-width:42px;
-  border:1px solid #d7b65f;border-radius:11px;overflow:hidden;
-  background-size:cover;background-position:center;background-repeat:no-repeat;
-  box-shadow:0 3px 12px #000b,inset 0 0 0 1px #fff3;
-  color:transparent!important;font-size:0!important;line-height:0!important;text-shadow:none!important;
+ display:block!important;flex:0 0 42px!important;width:42px!important;height:42px!important;min-width:42px!important;
+ border:1px solid #d7b65f!important;border-radius:10px!important;overflow:hidden!important;
+ background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
+ box-shadow:0 3px 12px #000b,inset 0 0 0 1px #fff3!important;
+ color:transparent!important;-webkit-text-fill-color:transparent!important;font-size:0!important;line-height:0!important;
 }
-/* بيانات حسابي — صورة شخصية */
-#accountpanel .user-shortcuts button:nth-child(1)>b{background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=85')}
-/* طلباتي — طرود وتسوق */
-#accountpanel .user-shortcuts button:nth-child(2)>b{background-image:url('https://images.unsplash.com/photo-1607082348824-0a96f2aee64b?auto=format&fit=crop&w=120&h=120&q=85')}
-/* بطاقة الامتياز — بطاقة دفع */
-#accountpanel .user-shortcuts button:nth-child(3)>b{background-image:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=120&h=120&q=85')}
-/* دعوة الأصدقاء — مجموعة أصدقاء */
-#accountpanel .user-shortcuts button:nth-child(4)>b{background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=120&h=120&q=85')}
-/* طلبات الشحن — صناديق شحن */
-#accountpanel .user-services button:nth-child(1)>b{background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=120&h=120&q=85')}
-/* قيد الشحن — شاحنة توصيل */
-#accountpanel .user-services button:nth-child(2)>b{background-image:url('https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=120&h=120&q=85')}
-/* الإشعارات — هاتف وتنبيهات */
-#accountpanel .user-services button:nth-child(3)>b{background-image:url('https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=120&h=120&q=85')}
-/* المساعد المباشر — دعم العملاء بسماعة */
-#accountpanel .user-services button:nth-child(4)>b{background-image:url('https://images.unsplash.com/photo-1560264280-88b68371db39?auto=format&fit=crop&w=120&h=120&q=85')}
-/* سياسات المتجر — مستندات */
-#accountpanel .user-services button:nth-child(5)>b{background-image:url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=120&h=120&q=85')}
-/* عن APEX — متجر وواجهة بيع */
-#accountpanel .user-services button:nth-child(6)>b{background-image:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=120&h=120&q=85')}
-/* تعديل بياناتك — صورة شخصية */
-#accountpanel .user-services button:nth-child(7)>b{background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=85')}
+/* صورة حساب شخص حقيقية */
+#accountpanel button[onclick*="showAccountSection('profile')"]>b{
+ background-image:url('https://images.unsplash.com/photo-1638105179350-39fa9a8b03d4?auto=format&fit=crop&w=160&h=160&q=85')!important;
+}
+/* طلباتي: مستودع طرود وكراتين */
+#accountpanel button[onclick*="showAccountSection('orders')"]>b{
+ background-image:url('https://static.toiimg.com/thumb/msid-126071267,width-1280,height-720,resizemode-4/126071267.jpg')!important;
+}
+/* بطاقة الامتياز: بطاقة مصرفية على جهاز دفع */
+#accountpanel button[onclick*="showAccountSection('wallet')"]>b{
+ background-image:url('https://images.unsplash.com/photo-1718010571964-bac048b9ded0?auto=format&fit=crop&w=160&h=160&q=85')!important;
+}
+/* دعوة الأصدقاء: مجموعة أصدقاء */
+#accountpanel button[onclick*="showAccountSection('referrals')"]>b{
+ background-image:url('https://images.unsplash.com/photo-1758272134177-b3abae858214?auto=format&fit=crop&w=160&h=160&q=85')!important;
+}
+/* طلبات الشحن: طرود جاهزة للتوزيع */
+#accountpanel button[onclick*="showAccountSection('shipping')"]>b{
+ background-image:url('https://contenu.nyc3.digitaloceanspaces.com/journalist/f94080e3-4621-44b8-be94-3ea83db130a0/thumbnail.jpeg')!important;
+}
+/* قيد الشحن: سيارة توصيل ومندوب */
+#accountpanel button[onclick*="showAccountSection('transit')"]>b{
+ background-image:url('https://www.startrescue.co.uk/media/5fa5815f-3145-4e57-bafe-bd96cbd01a4a.png')!important;
+}
+/* الإشعارات: هاتف تظهر عليه التنبيهات */
+#accountpanel button[onclick*="showAccountSection('notifications')"]>b{
+ background-image:url('https://images.unsplash.com/photo-1596018653491-d65730d20e2b?auto=format&fit=crop&w=160&h=160&q=85')!important;
+}
+/* المساعد المباشر: موظفو خدمة العملاء بسماعات */
+#accountpanel button[onclick*="showAccountSection('support')"]>b{
+ background-image:url('https://www.mandarhitech.com/call-center-agents-with-headsets.jpg')!important;
+}
+/* السياسات: مستندات وأوراق رسمية */
+#accountpanel button[onclick*="showAccountSection('policies')"]>b{
+ background-image:url('https://koala.sh/api/image/v2-f5wdd-zmo7m.jpg?dream=&height=832&width=1216')!important;
+}
+/* عن APEX: متجر فعلي من الداخل */
+#accountpanel button[onclick*="showAccountSection('about')"]>b{
+ background-image:url('https://www.emerce.nl/content/uploads/2022/06/Hugo-Boss-in-store-1536x1024-1.jpg')!important;
+}
 @media(max-width:600px){
- #accountpanel .user-shortcuts button>b,#accountpanel .user-services button>b{width:35px;height:35px;min-width:35px;flex-basis:35px;border-radius:9px}
+ #accountpanel .user-shortcuts button>b,#accountpanel .user-services button>b{
+  width:35px!important;height:35px!important;min-width:35px!important;flex-basis:35px!important;border-radius:9px!important;
+ }
 }
 </style>
 
