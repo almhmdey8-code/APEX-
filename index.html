@@ -2779,4 +2779,38 @@ input,select,textarea{
 }
 </style>
 
+
+<style id="apex-ai-send-button-visible-final">
+/* زر الإرسال: مظهر ذهبي واضح وثابت على الهاتف */
+#accountpanel.apex-ai-fullscreen .apex-ai-compose{
+  display:flex!important;flex-direction:row!important;align-items:stretch!important;
+  gap:8px!important;min-height:58px!important;overflow:visible!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose #apexAiSend{
+  -webkit-appearance:none!important;appearance:none!important;
+  display:inline-flex!important;flex:0 0 72px!important;
+  width:72px!important;min-width:72px!important;max-width:72px!important;
+  height:48px!important;min-height:48px!important;max-height:48px!important;
+  margin:0!important;padding:0 8px!important;
+  align-items:center!important;justify-content:center!important;
+  border:2px solid #8a5a12!important;border-radius:12px!important;
+  background:linear-gradient(135deg,#8b5b12 0%,#e4bd62 35%,#fff0b4 52%,#bd8627 100%)!important;
+  color:#211505!important;-webkit-text-fill-color:#211505!important;
+  font-size:13px!important;font-weight:900!important;line-height:1!important;
+  text-shadow:0 1px 0 #fff8!important;
+  box-shadow:0 3px 12px #8a641d66,inset 0 1px 0 #fff!important;
+  opacity:1!important;visibility:visible!important;position:relative!important;
+  z-index:20!important;white-space:nowrap!important;cursor:pointer!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose #apexAiSend:disabled{
+  opacity:.75!important;filter:none!important;
+}
+@media(max-width:560px){
+ #accountpanel.apex-ai-fullscreen .apex-ai-compose #apexAiSend{
+  flex-basis:68px!important;width:68px!important;min-width:68px!important;max-width:68px!important;
+  height:46px!important;min-height:46px!important;font-size:12px!important;
+ }
+}
+</style>
+
 </body></html>
