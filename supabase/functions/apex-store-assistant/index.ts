@@ -235,57 +235,68 @@ Deno.serve(async (req: Request) => {
     parts: [{ text: redact(m.content) }],
   }));
 
-  // Fast bounded failover: one short attempt per model, no long retry sleeps.
+  // Fast failover: try the primary briefly, then race both backups together.
   const modelCandidates = ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.8-flash"];
-  let geminiData: any = {};
-  let selectedModel = "";
-  let lastFailure = "provider_unavailable";
-  let attempts = 0;
-
-  for (const model of modelCandidates) {
-    attempts++;
+  type ModelAttempt = { ok: boolean; model: string; data?: any; reason?: string };
+  const requestModel = async (model: string, timeoutMs: number): Promise<ModelAttempt> => {
     try {
       const response = await fetch(
         "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent",
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
-          signal: AbortSignal.timeout(4000),
+          signal: AbortSignal.timeout(timeoutMs),
           body: JSON.stringify({
             systemInstruction: { parts: [{ text: systemPrompt + "\n\n" + context }] },
             contents: geminiContents,
-            generationConfig: { temperature: 0.2, maxOutputTokens: 450 },
+            generationConfig: { temperature: 0.2, maxOutputTokens: 350 },
           }),
         },
       );
       const data = await response.json().catch(() => ({}));
-      if (response.ok) {
-        const candidateText = (data?.candidates?.[0]?.content?.parts || [])
-          .map((part: any) => typeof part.text === "string" ? part.text : "")
-          .join("\n").trim();
-        if (candidateText) {
-          geminiData = data;
-          selectedModel = model;
-          break;
-        }
-        lastFailure = "empty_response_" + model;
-      } else {
+      if (!response.ok) {
         const status = response.status;
-        lastFailure = status === 429 ? "quota_or_rate_limit_" + model
+        const reason = status === 429 ? "quota_or_rate_limit_" + model
           : [502, 503, 504].includes(status) ? "provider_busy_" + model
           : status === 401 || status === 403 ? "gemini_key_rejected"
           : "gemini_http_" + status;
-        // A rejected key or malformed request will not improve by trying another model.
-        if (status === 401 || status === 403 || status === 400) break;
+        return { ok: false, model, reason };
       }
-      console.warn("APEX_ASSISTANT_MODEL_FAILOVER", model, lastFailure);
+      const text = (data?.candidates?.[0]?.content?.parts || [])
+        .map((part: any) => typeof part.text === "string" ? part.text : "")
+        .join("\n").trim();
+      return text ? { ok: true, model, data } : { ok: false, model, reason: "empty_response_" + model };
     } catch (error) {
-      lastFailure = error instanceof Error && error.name === "TimeoutError"
+      const reason = error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")
         ? "timeout_" + model : "network_failure_" + model;
-      console.warn("APEX_ASSISTANT_MODEL_FAILOVER", model, lastFailure);
+      return { ok: false, model, reason };
+    }
+  };
+
+  const assistantStartedAt = Date.now();
+  let attempts = 1;
+  let lastFailure = "provider_unavailable";
+  let winner = await requestModel(modelCandidates[0], 2600);
+  if (!winner.ok) {
+    lastFailure = winner.reason || lastFailure;
+    console.warn("APEX_ASSISTANT_MODEL_FAILOVER", winner.model, lastFailure);
+    attempts = 2;
+    const backups = await Promise.all(modelCandidates.slice(1).map((model) => requestModel(model, 3500)));
+    const successfulBackup = backups.find((result) => result.ok);
+    if (successfulBackup) {
+      winner = successfulBackup;
+    } else {
+      attempts = 3;
+      lastFailure = backups.map((result) => result.reason || "unknown_failure").join("|");
+      for (const result of backups) {
+        console.warn("APEX_ASSISTANT_MODEL_FAILOVER", result.model, result.reason || "failed");
+      }
     }
   }
 
+  const selectedModel = winner.ok ? winner.model : "";
+  const geminiData: any = winner.ok ? winner.data : {};
+  const elapsedMs = Date.now() - assistantStartedAt;
   if (!selectedModel) {
     console.warn("APEX_ASSISTANT_FALLBACK", lastFailure, { attempts });
     return json({
