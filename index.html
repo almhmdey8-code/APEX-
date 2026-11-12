@@ -2840,8 +2840,8 @@ input,select,textarea{
 }
 #accountpanel.apex-ai-fullscreen #accountData .user-hub{display:none!important}
 #accountpanel.apex-ai-fullscreen #accountSection-support:not([hidden]){
- display:grid!important;grid-template-rows:auto auto minmax(0,1fr) auto auto auto auto!important;
- flex:1 1 auto!important;width:100%!important;height:100%!important;min-height:0!important;
+ display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+ width:100%!important;height:100%!important;min-height:0!important;min-width:0!important;
  margin:0!important;padding:8px!important;gap:5px!important;
  overflow:hidden!important;box-sizing:border-box!important;
 }
@@ -2853,9 +2853,9 @@ input,select,textarea{
  margin:0!important;font-size:11px!important;line-height:1.45!important;
 }
 #accountpanel.apex-ai-fullscreen #apexAiMessages{
- display:flex!important;flex-direction:column!important;
- width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
- flex:initial!important;overflow-y:auto!important;overflow-x:hidden!important;
+ display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+ width:100%!important;height:1px!important;min-height:0!important;max-height:none!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
  overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;
 }
 #accountpanel.apex-ai-fullscreen .apex-ai-quick{
