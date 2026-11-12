@@ -713,7 +713,8 @@ async function registerOrClaimAdminDevice(){
  const {data:known,error:listError}=await supabase.rpc('apex_admin_list_trusted_devices');
  if(listError)throw listError;
  if((known||[]).some(d=>d.device_id===deviceId)){
-  await supabase.rpc('apex_admin_register_device',{p_device_id:deviceId,p_device_label:label});
+  const {error:touchError}=await supabase.rpc('apex_admin_register_device',{p_device_id:deviceId,p_device_label:label});
+  if(touchError)throw touchError;
   return;
  }
  if(!(known||[]).length){
