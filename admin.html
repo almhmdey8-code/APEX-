@@ -515,6 +515,8 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 <div id="adm_security" class="apex-admin-hidden">
  <h2>🛡️ APEX AI GUARD — مركز الحماية</h2>
  <p class="muted">مراقبة محاولات الدخول وإنشاء الحسابات والأنشطة المشبوهة. لا تُعرض كلمات المرور أو بيانات الدفع الحساسة في هذا السجل.</p>
+ <div class="row"><button id="adm_security_refresh" class="btn2" type="button">تحديث السجل</button><button id="adm_security_email" class="btn" type="button">إرسال التقرير إلى بريد المدير</button></div>
+ <p id="adm_security_msg" class="status" role="status"></p>
  <div class="item" style="margin:14px 0;padding:14px;border:1px solid #9d7c42;border-radius:14px">
   <h3 style="margin:0 0 8px">🔐 أجهزة المدير المعتمدة</h3>
   <p class="muted">جلسة هذا المتصفح محفوظة تلقائياً. اعتماد الجهاز يسجل هذا المتصفح بعد كلمة المرور والتحقق الثنائي، ولا يلغي طلب المصادقة الثنائية عند تسجيل الدخول من جديد.</p>
@@ -531,8 +533,6 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
   </div>
   <div id="adm_device_list" style="margin-top:10px"><p class="muted">سيتم تحميل الأجهزة بعد التحقق الأمني.</p></div>
  </div>
- <div class="row"><button id="adm_security_refresh" class="btn2" type="button">تحديث السجل</button><button id="adm_security_email" class="btn" type="button">إرسال التقرير إلى بريد المدير</button></div>
- <p id="adm_security_msg" class="status" role="status"></p>
  <div class="kpis" id="adm_security_kpis">
   <div class="kpi"><button type="button" class="adm-security-filter" data-filter="all"><span>إجمالي الأحداث — آخر 7 أيام</span><b id="adm_sec_total">—</b><small>اضغط لعرض الكل</small></button></div>
   <div class="kpi"><button type="button" class="adm-security-filter" data-filter="failed"><span>محاولات الدخول الفاشلة</span><b id="adm_sec_failed">—</b><small>اضغط لعرض المحاولات</small></button></div>
