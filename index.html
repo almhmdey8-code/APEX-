@@ -2732,4 +2732,51 @@ input,select,textarea{
 }
 </style>
 
+
+<style id="apex-ai-chat-input-final-fix">
+/* Final correction: keep the textarea in the flex row with a real width */
+#accountpanel.apex-ai-fullscreen .apex-ai-compose{
+ display:flex!important;
+ flex-direction:row!important;
+ align-items:stretch!important;
+ gap:7px!important;
+ width:100%!important;
+ flex:0 0 auto!important;
+ min-height:58px!important;
+ padding:6px!important;
+ box-sizing:border-box!important;
+ visibility:visible!important;
+}
+#accountpanel.apex-ai-fullscreen #apexAiInput{
+ display:block!important;
+ flex:1 1 0%!important;
+ width:1px!important;
+ min-width:0!important;
+ max-width:none!important;
+ height:48px!important;
+ min-height:48px!important;
+ margin:0!important;
+ box-sizing:border-box!important;
+ visibility:visible!important;
+ opacity:1!important;
+}
+#accountpanel.apex-ai-fullscreen #apexAiSend{
+ display:flex!important;
+ flex:0 0 68px!important;
+ width:68px!important;
+ min-width:68px!important;
+ min-height:48px!important;
+ align-items:center!important;
+ justify-content:center!important;
+}
+@media(max-width:560px){
+ #accountpanel.apex-ai-fullscreen .account-shell{
+  width:96vw!important;height:86dvh!important;max-height:86dvh!important;
+ }
+ #accountpanel.apex-ai-fullscreen .apex-ai-compose{gap:6px!important;padding:5px!important}
+ #accountpanel.apex-ai-fullscreen #apexAiInput{height:46px!important;min-height:46px!important;font-size:14px!important}
+ #accountpanel.apex-ai-fullscreen #apexAiSend{flex-basis:62px!important;width:62px!important;min-width:62px!important}
+}
+</style>
+
 </body></html>
