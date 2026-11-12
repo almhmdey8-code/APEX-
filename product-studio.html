@@ -32,7 +32,8 @@
 </main></div>
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.57.0';
-const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'}});
+const apexDeviceHeader=(()=>{const key='apex_admin_device_id_v1';let id=localStorage.getItem(key);if(!/^[0-9a-f-]{36}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem(key,id);}return id;})();
+const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'},global:{fetch:async(input,init={})=>{const requestUrl=typeof input==='string'?input:input instanceof URL?input.href:input.url;const headers=new Headers(init.headers||(input instanceof Request?input.headers:undefined));const path=new URL(requestUrl).pathname;if(path.includes('/rest/v1/rpc/')||path.includes('/functions/v1/'))headers.set('x-apex-device-id',apexDeviceHeader);return fetch(input,{...init,headers});}}});
 const $=id=>document.getElementById(id);
 const kinds=[
 ['هاتف ذكي','الجوالات والإلكترونيات وملحقاتها','يركز على الشاشة والمعالج والذاكرة والكاميرات والبطارية.'],
