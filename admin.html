@@ -515,6 +515,21 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 <div id="adm_security" class="apex-admin-hidden">
  <h2>🛡️ APEX AI GUARD — مركز الحماية</h2>
  <p class="muted">مراقبة محاولات الدخول وإنشاء الحسابات والأنشطة المشبوهة. لا تُعرض كلمات المرور أو بيانات الدفع الحساسة في هذا السجل.</p>
+ <div class="item" style="margin:14px 0;padding:14px;border:1px solid #9d7c42;border-radius:14px">
+  <h3 style="margin:0 0 8px">🔐 أجهزة المدير المعتمدة</h3>
+  <p class="muted">جلسة هذا المتصفح محفوظة تلقائياً. اعتماد الجهاز يسجل هذا المتصفح بعد كلمة المرور والتحقق الثنائي، ولا يلغي طلب المصادقة الثنائية عند تسجيل الدخول من جديد.</p>
+  <div class="row" style="gap:8px;flex-wrap:wrap">
+   <button id="adm_device_register" class="btn2" type="button">اعتماد هذا الجهاز</button>
+   <button id="adm_device_generate" class="btn" type="button">إنشاء QR لجهاز آخر</button>
+  </div>
+  <p id="adm_device_msg" class="status" role="status"></p>
+  <div id="adm_device_qr_wrap" hidden style="text-align:center;margin:12px auto">
+   <img id="adm_device_qr" alt="رمز QR لمرة واحدة لاعتماد جهاز مدير جديد" style="width:220px;height:220px;max-width:100%;background:#fff;padding:8px;border-radius:12px">
+   <p id="adm_device_qr_expiry" class="muted"></p>
+   <p class="muted">امسح الرمز من الجهاز الجديد، ثم سجّل الدخول بالبريد وكلمة المرور وأكمل Google Authenticator. الرمز صالح 10 دقائق ولمرة واحدة.</p>
+  </div>
+  <div id="adm_device_list" style="margin-top:10px"><p class="muted">سيتم تحميل الأجهزة بعد التحقق الأمني.</p></div>
+ </div>
  <div class="row"><button id="adm_security_refresh" class="btn2" type="button">تحديث السجل</button><button id="adm_security_email" class="btn" type="button">إرسال التقرير إلى بريد المدير</button></div>
  <p id="adm_security_msg" class="status" role="status"></p>
  <div class="kpis" id="adm_security_kpis">
@@ -529,6 +544,7 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
 </section>
 </div></section><script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+import QRCode from 'https://esm.sh/qrcode@1.5.4';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-admin-auth-token'}});
 const $=id=>document.getElementById(id);
 /* Bind admin login immediately so unrelated dashboard initialization cannot leave the button inactive. */
@@ -668,6 +684,72 @@ window.apexProducts=[];window.apexOrders=[];
 $('adm_refreshAll').onclick=()=>{loadProducts();loadOrders();loadBanners();loadPayments();loadWalletTopups();loadReturns();message('adm_reset_msg','');};
 $('adm_adminSearch').addEventListener('input',()=>{const q=$('adm_adminSearch').value.trim().toLowerCase();document.querySelectorAll('#adm_productlist .item,#adm_orderlist .item').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'':'none');});
 function message(id,text){const el=$(id)||$('adm_'+id);if(el)el.textContent=text}
+
+const APEX_DEVICE_ID_KEY='apex_admin_device_id_v1';
+function getApexAdminDeviceId(){
+ let id=localStorage.getItem(APEX_DEVICE_ID_KEY);
+ if(!/^[0-9a-f-]{36}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem(APEX_DEVICE_ID_KEY,id);}
+ return id;
+}
+function getApexAdminDeviceLabel(){
+ const ua=navigator.userAgent||'';
+ const platform=/Android/i.test(ua)?'Android':/iPhone|iPad/i.test(ua)?'iOS':/Windows/i.test(ua)?'Windows':/Macintosh/i.test(ua)?'macOS':'متصفح آخر';
+ const browser=/SamsungBrowser/i.test(ua)?'Samsung Internet':/Edg\//i.test(ua)?'Edge':/Firefox\//i.test(ua)?'Firefox':/Chrome\//i.test(ua)?'Chrome':/Safari\//i.test(ua)?'Safari':'متصفح';
+ return (platform+' — '+browser).slice(0,80);
+}
+async function registerOrClaimAdminDevice(){
+ const deviceId=getApexAdminDeviceId(),label=getApexAdminDeviceLabel();
+ const params=new URLSearchParams(location.search),invite=params.get('device_invite');
+ if(invite){
+  const {error}=await supabase.rpc('apex_admin_claim_device_invite',{p_token:invite,p_device_id:deviceId,p_device_label:label});
+  if(error)throw error;
+  params.delete('device_invite');
+  const cleanUrl=location.pathname+(params.toString()?'?'+params.toString():'')+location.hash;
+  history.replaceState({},document.title,cleanUrl);
+  message('adm_device_msg','تم اعتماد هذا الجهاز الجديد بنجاح بعد التحقق الثنائي.');
+  return;
+ }
+ const {error}=await supabase.rpc('apex_admin_register_device',{p_device_id:deviceId,p_device_label:label});
+ if(error)throw error;
+}
+async function loadTrustedDevices(){
+ const box=$('adm_device_list');if(!box)return;
+ const {data,error}=await supabase.rpc('apex_admin_list_trusted_devices');
+ if(error){box.textContent='تعذر تحميل قائمة الأجهزة: '+error.message;return;}
+ const rows=data||[];
+ box.replaceChildren();
+ if(!rows.length){box.textContent='لا توجد أجهزة مسجلة بعد.';return;}
+ rows.forEach(d=>{
+  const item=document.createElement('div');item.className='item';item.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;margin:7px 0;flex-wrap:wrap';
+  const info=document.createElement('div'),name=document.createElement('b'),meta=document.createElement('small');
+  name.textContent=d.device_label||'جهاز المدير';
+  meta.textContent='آخر تسجيل: '+new Date(d.last_seen_at).toLocaleString('ar-SA');
+  info.append(name,document.createElement('br'),meta);
+  const revoke=document.createElement('button');revoke.type='button';revoke.className='btn2';revoke.textContent='إلغاء اعتماد الجهاز';
+  revoke.addEventListener('click',async()=>{if(!confirm('هل تريد إلغاء اعتماد هذا الجهاز؟'))return;revoke.disabled=true;const {error:revokeError}=await supabase.rpc('apex_admin_revoke_trusted_device',{p_device_row_id:d.id});if(revokeError){message('adm_device_msg','تعذر إلغاء الاعتماد: '+revokeError.message);revoke.disabled=false;return;}message('adm_device_msg','تم إلغاء اعتماد الجهاز.');await loadTrustedDevices();});
+  item.append(info,revoke);box.append(item);
+ });
+}
+$('adm_device_register')?.addEventListener('click',async()=>{
+ const b=$('adm_device_register');b.disabled=true;
+ try{await registerOrClaimAdminDevice();await loadTrustedDevices();message('adm_device_msg','هذا المتصفح مسجل كجهاز مدير.');}
+ catch(e){message('adm_device_msg','تعذر اعتماد الجهاز: '+(e?.message||e));}
+ finally{b.disabled=false;}
+});
+$('adm_device_generate')?.addEventListener('click',async()=>{
+ const b=$('adm_device_generate'),wrap=$('adm_device_qr_wrap');b.disabled=true;b.textContent='جارٍ إنشاء الرمز...';
+ try{
+  const {data,error}=await supabase.rpc('apex_admin_create_device_invite',{p_device_label:'جهاز مدير جديد'});
+  if(error)throw error;
+  const url=new URL(location.href);url.searchParams.set('device_invite',data.token);
+  const qr=await QRCode.toDataURL(url.toString(),{width:440,margin:2,errorCorrectionLevel:'M'});
+  $('adm_device_qr').src=qr;wrap.hidden=false;
+  $('adm_device_qr_expiry').textContent='ينتهي الرمز في '+new Date(data.expires_at).toLocaleString('ar-SA');
+  message('adm_device_msg','تم إنشاء رمز QR خاص ولمرة واحدة. لا تشاركه إلا مع جهازك الجديد.');
+ }catch(e){wrap.hidden=true;message('adm_device_msg','تعذر إنشاء رمز QR: '+(e?.message||e));}
+ finally{b.disabled=false;b.textContent='إنشاء QR لجهاز آخر';}
+});
+
 let admSecurityRows=[],admSecurityFilter='all';
 function renderSecurityEvents(){
  const box=$('adm_security_list');if(!box)return;
@@ -802,9 +884,10 @@ async function checkSession(){
   adminSessionConfirmed=true;
   const mfaVerified=await ensureAdminMfa();
   if(!mfaVerified)return;
+  try{await registerOrClaimAdminDevice();}catch(deviceError){console.warn('APEX trusted-device registration:',deviceError?.message||deviceError);message('adm_device_msg','تعذر تسجيل الجهاز: '+(deviceError?.message||deviceError));}
   $('adm_login').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_dashboard').classList.remove('apex-admin-hidden');
   $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email+' · محمي بالمصادقة الثنائية';
-  await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders(),loadSecurityEvents()]);
+  await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders(),loadSecurityEvents(),loadTrustedDevices()]);
  }catch(error){
   $('adm_dashboard').classList.add('apex-admin-hidden');
   if(adminSessionConfirmed){
