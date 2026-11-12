@@ -937,59 +937,33 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 </style>
 
 <style id="apex-customer-real-option-thumbnails">
-/* صور فوتوغرافية مطابقة لمعنى كل خيار — ربط مباشر بزر القسم لا بترتيبه */
-#accountpanel .user-shortcuts button>b,
-#accountpanel .user-services button>b{
- display:block!important;flex:0 0 42px!important;width:42px!important;height:42px!important;min-width:42px!important;
- border:1px solid #d7b65f!important;border-radius:10px!important;overflow:hidden!important;
- background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
- box-shadow:0 3px 12px #000b,inset 0 0 0 1px #fff3!important;
- color:transparent!important;-webkit-text-fill-color:transparent!important;font-size:0!important;line-height:0!important;
+/* رموز مصوّرة واضحة وثابتة لكل قسم — لا صور خارجية عشوائية */
+#accountpanel .user-shortcuts button>b,#accountpanel .user-services button>b{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ flex:0 0 42px!important;width:42px!important;height:42px!important;min-width:42px!important;
+ border:1px solid #d7b65f!important;border-radius:10px!important;
+ background:linear-gradient(145deg,#252018,#090909)!important;
+ box-shadow:0 3px 12px #000b,inset 0 0 0 1px #fff2!important;
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ font-size:0!important;line-height:0!important;position:relative!important;
 }
-/* صورة حساب شخص حقيقية */
-#accountpanel button[onclick*="showAccountSection('profile')"]>b{
- background-image:url('https://images.unsplash.com/photo-1638105179350-39fa9a8b03d4?auto=format&fit=crop&w=160&h=160&q=85')!important;
+#accountpanel .user-shortcuts button>b:after,#accountpanel .user-services button>b:after{
+ display:block!important;font-size:24px!important;line-height:1!important;
+ color:#e5c36a!important;-webkit-text-fill-color:#e5c36a!important;
 }
-/* طلباتي: مستودع طرود وكراتين */
-#accountpanel button[onclick*="showAccountSection('orders')"]>b{
- background-image:url('https://static.toiimg.com/thumb/msid-126071267,width-1280,height-720,resizemode-4/126071267.jpg')!important;
-}
-/* بطاقة الامتياز: بطاقة مصرفية على جهاز دفع */
-#accountpanel button[onclick*="showAccountSection('wallet')"]>b{
- background-image:url('https://images.unsplash.com/photo-1718010571964-bac048b9ded0?auto=format&fit=crop&w=160&h=160&q=85')!important;
-}
-/* دعوة الأصدقاء: مجموعة أصدقاء */
-#accountpanel button[onclick*="showAccountSection('referrals')"]>b{
- background-image:url('https://images.unsplash.com/photo-1758272134177-b3abae858214?auto=format&fit=crop&w=160&h=160&q=85')!important;
-}
-/* طلبات الشحن: طرود جاهزة للتوزيع */
-#accountpanel button[onclick*="showAccountSection('shipping')"]>b{
- background-image:url('https://contenu.nyc3.digitaloceanspaces.com/journalist/f94080e3-4621-44b8-be94-3ea83db130a0/thumbnail.jpeg')!important;
-}
-/* قيد الشحن: سيارة توصيل ومندوب */
-#accountpanel button[onclick*="showAccountSection('transit')"]>b{
- background-image:url('https://www.startrescue.co.uk/media/5fa5815f-3145-4e57-bafe-bd96cbd01a4a.png')!important;
-}
-/* الإشعارات: هاتف تظهر عليه التنبيهات */
-#accountpanel button[onclick*="showAccountSection('notifications')"]>b{
- background-image:url('https://images.unsplash.com/photo-1596018653491-d65730d20e2b?auto=format&fit=crop&w=160&h=160&q=85')!important;
-}
-/* المساعد المباشر: موظفو خدمة العملاء بسماعات */
-#accountpanel button[onclick*="showAccountSection('support')"]>b{
- background-image:url('https://www.mandarhitech.com/call-center-agents-with-headsets.jpg')!important;
-}
-/* السياسات: مستندات وأوراق رسمية */
-#accountpanel button[onclick*="showAccountSection('policies')"]>b{
- background-image:url('https://koala.sh/api/image/v2-f5wdd-zmo7m.jpg?dream=&height=832&width=1216')!important;
-}
-/* عن APEX: متجر فعلي من الداخل */
-#accountpanel button[onclick*="showAccountSection('about')"]>b{
- background-image:url('https://www.emerce.nl/content/uploads/2022/06/Hugo-Boss-in-store-1536x1024-1.jpg')!important;
-}
+#accountpanel button[onclick*="showAccountSection('profile')"]>b:after{content:"👤"}
+#accountpanel button[onclick*="showAccountSection('orders')"]>b:after{content:"📦"}
+#accountpanel button[onclick*="showAccountSection('wallet')"]>b:after{content:"💳"}
+#accountpanel button[onclick*="showAccountSection('referrals')"]>b:after{content:"🤝"}
+#accountpanel button[onclick*="showAccountSection('shipping')"]>b:after{content:"🚚"}
+#accountpanel button[onclick*="showAccountSection('transit')"]>b:after{content:"🚛"}
+#accountpanel button[onclick*="showAccountSection('notifications')"]>b:after{content:"🔔"}
+#accountpanel button[onclick*="showAccountSection('support')"]>b:after{content:"🎧"}
+#accountpanel button[onclick*="showAccountSection('policies')"]>b:after{content:"📋"}
+#accountpanel button[onclick*="showAccountSection('about')"]>b:after{content:"👑"}
 @media(max-width:600px){
- #accountpanel .user-shortcuts button>b,#accountpanel .user-services button>b{
-  width:35px!important;height:35px!important;min-width:35px!important;flex-basis:35px!important;border-radius:9px!important;
- }
+ #accountpanel .user-shortcuts button>b,#accountpanel .user-services button>b{width:35px!important;height:35px!important;min-width:35px!important;flex-basis:35px!important;border-radius:9px!important}
+ #accountpanel .user-shortcuts button>b:after,#accountpanel .user-services button>b:after{font-size:21px!important}
 }
 </style>
 
