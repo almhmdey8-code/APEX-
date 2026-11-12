@@ -1611,11 +1611,13 @@ async function openCustomerProfile(){const panel=$('accountpanel');panel.classLi
 function openAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
 async function openMoreAccount(){await openCustomerProfile();if(customerSession?.user?.id&&!$('accountData').hidden){showAccountSection('profile');const profile=$('accountSection-profile');if(profile)profile.scrollIntoView({behavior:'smooth',block:'start'})}}
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode','apex-ai-fullscreen')}
+ let apexLoginInProgress=false;
  async function customerSignIn(){
   const email=$('accountEmail').value.trim().toLowerCase(),password=$('accountPassword').value,button=$('accountAuthAction'),msg=$('accountMsg');
   if(!email||!/^\S+@\S+\.\S+$/.test(email)||!password){msg.textContent='أدخل بريداً إلكترونياً صحيحاً وكلمة المرور.';msg.style.color='#ff7777';return}
   button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';msg.textContent='جارٍ التحقق من بياناتك...';msg.style.color='#e9bd55';
   let authenticated=false;
+  apexLoginInProgress=true;
   try{
    const {data,error}=await supabase.auth.signInWithPassword({email,password});
    if(error){void apexSecurityEvent('login_failed',{reason:error.message||'auth_failed',method:'email'});console.error('APEX LOGIN AUTH ERROR:',error);msg.textContent='فشل تسجيل الدخول: '+(error.message||'تعذر التحقق من البيانات');msg.style.color='#ff7777';return}
@@ -1641,7 +1643,7 @@ function closeAccount(){$('accountpanel').classList.remove('show','customer-prof
    const reason=error?.message||String(error);
    msg.textContent=authenticated?'تم تسجيل الدخول، لكن تعذر تحميل بيانات الحساب: '+reason:'تعذر تسجيل الدخول: '+reason;
    msg.style.color='#ff7777';
-  }finally{button.disabled=false;button.textContent='تسجيل الدخول'}
+  }finally{apexLoginInProgress=false;button.disabled=false;button.textContent='تسجيل الدخول'}
  }
 
 let signupEmailVerified='',signupLat=null,signupLng=null;
@@ -1662,7 +1664,7 @@ async function saveProfile(){const meta=customerSession?.user?.user_metadata||{}
 async function saveProfileEmail(){const email=$('profileEmailNew').value.trim(),msg=$('profileEmailMsg'),button=$('accountSection-profile').querySelector('button[onclick="saveProfileEmail()"]');if(!email||!email.includes('@')){msg.textContent='أدخل بريداً إلكترونياً صحيحاً.';return}if(email.toLowerCase()===String(customerSession?.user?.email||'').toLowerCase()){msg.textContent='هذا هو بريدك الحالي بالفعل.';return}button.disabled=true;button.textContent='جارٍ إرسال الرمز…';try{const {error}=await supabase.auth.updateUser({email});if(error)throw error;msg.textContent='تم إرسال رمز التحقق إلى البريد الجديد.';openApexOtp('email_change',email,'أدخل رمز التحقق المكوّن من 6 أرقام المرسل إلى بريدك الجديد.')}catch(e){msg.textContent='تعذر إرسال رمز التغيير: '+(e.message||'خطأ')}finally{button.disabled=false;button.textContent='تحديث البريد الإلكتروني'}}
 async function customerSignOut(){const {error}=await supabase.auth.signOut({scope:'local'});if(error){$('accountMsg').textContent='تعذر تسجيل الخروج: '+error.message;return}await refreshCustomer(null);$('accountForm').hidden=false;$('accountData').hidden=true;$('storefrontAuth').hidden=false;$('accountMsg').textContent='تم تسجيل الخروج.'}
 supabase.auth.getSession().then(({data})=>refreshCustomer(data.session));
-supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){$('passwordRecovery').hidden=false;$('accountpanel').classList.add('show')}queueMicrotask(()=>refreshCustomer(session))});window.addEventListener('pageshow',async()=>{const {data,error}=await supabase.auth.getSession();if(!error)refreshCustomer(data.session)});
+supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){$('passwordRecovery').hidden=false;$('accountpanel').classList.add('show')}if(event==='SIGNED_IN'&&apexLoginInProgress)return;queueMicrotask(()=>refreshCustomer(session))});window.addEventListener('pageshow',async()=>{const {data,error}=await supabase.auth.getSession();if(!error)refreshCustomer(data.session)});
 let deliveryCoords=null;
 let deliveryMap=null,deliveryMarker=null,pendingDeliveryCoords=null;
 function closeDeliveryMap(){$('deliveryMapModal').classList.remove('show')}
