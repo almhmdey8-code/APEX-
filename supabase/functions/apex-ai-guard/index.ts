@@ -67,6 +67,16 @@ Deno.serve(async(req:Request)=>{
    if(!actor||(actor.email||"").toLowerCase()!==ADMIN_EMAIL)return json({error:"يلزم إثبات هوية المدير لتسجيل هذا الحدث"},401);
    const {data:adminRow,error:adminError}=await db.from("apex_admins").select("user_id").eq("user_id",actor.id).maybeSingle();
    if(adminError||!adminRow)return json({error:"حساب المدير غير معتمد"},403);
+   let jwtPayload:any=null;
+   try{const part=token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");jwtPayload=JSON.parse(atob(part.padEnd(Math.ceil(part.length/4)*4,"=")));}catch{/* invalid token */}
+   if(jwtPayload?.aal!=="aal2")return json({error:"يلزم إكمال التحقق الثنائي AAL2 للمدير."},403);
+   const deviceId=req.headers.get("x-apex-device-id")||"";
+   if(!/^[0-9a-f-]{36}$/i.test(deviceId))return json({error:"هذا الجهاز غير معتمد."},403);
+   const {data:trustedDevice,error:deviceError}=await db.from("apex_admin_trusted_devices").select("device_id").eq("user_id",actor.id).eq("device_id",deviceId).maybeSingle();
+   if(deviceError)throw deviceError;
+   if(!trustedDevice)return json({error:"هذا الجهاز غير موجود ضمن أجهزة APEX الموثوقة."},403);
+   const {error:touchError}=await db.from("apex_admin_trusted_devices").update({last_seen_at:new Date().toISOString()}).eq("user_id",actor.id).eq("device_id",deviceId);
+   if(touchError)throw touchError;
   }
   const ip=req.headers.get("cf-connecting-ip")||req.headers.get("x-real-ip")||req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()||"unknown";
   const maskIp=(value:string)=>{
