@@ -935,6 +935,34 @@ footer strong{color:#9a702e!important;text-shadow:0 1px #fff!important}
 .apex-topbar .menu{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1!important}
 .apex-topbar .menu .menu-more-label{display:block;font-size:9px;line-height:1.1;font-weight:800;letter-spacing:0;color:inherit}
 </style>
+
+<style id="apex-customer-real-option-thumbnails">
+/* Real photo thumbnails for customer account shortcuts and services */
+#accountpanel .user-shortcuts button>b,
+#accountpanel .user-services button>b{
+  display:block!important;flex:0 0 42px;width:42px;height:42px;min-width:42px;
+  border:1px solid #d7b65f;border-radius:11px;overflow:hidden;
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+  box-shadow:0 3px 12px #000b,inset 0 0 0 1px #fff3;
+  color:transparent!important;font-size:0!important;line-height:0!important;
+  text-shadow:none!important;
+}
+#accountpanel .user-shortcuts button:nth-child(1)>b{background-image:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-shortcuts button:nth-child(2)>b{background-image:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-shortcuts button:nth-child(3)>b{background-image:url('https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-shortcuts button:nth-child(4)>b{background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(1)>b{background-image:url('https://images.unsplash.com/photo-158652б?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(2)>b{background-image:url('https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(3)>b{background-image:url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(4)>b{background-image:url('https://images.unsplash.com/photo-1534536281715-e28d76689b4d?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(5)>b{background-image:url('https://images.unsplash.com/photo-1455390582262-044cavoid?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(6)>b{background-image:url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=120&h=120&q=80')}
+#accountpanel .user-services button:nth-child(7)>b{background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80')}
+@media(max-width:600px){
+ #accountpanel .user-shortcuts button>b,#accountpanel .user-services button>b{width:35px;height:35px;min-width:35px;flex-basis:35px;border-radius:9px}
+}
+</style>
+
 </head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="المزيد" title="المزيد — معلومات العميل" onclick="openCustomerProfile()">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
