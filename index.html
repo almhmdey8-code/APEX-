@@ -2421,3 +2421,60 @@ input,select,textarea{
  color:#171717!important;
 }
 </style>
+
+
+<style id="apex-customer-apex-thumbnail-square-products">
+/* استبدال تاج قسم عن APEX بصورة مصغرة تحمل اسم العلامة */
+#accountpanel button[onclick*="showAccountSection('about')"]>b:after{
+ content:"APEX"!important;
+ width:35px!important;height:35px!important;min-width:35px!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ box-sizing:border-box!important;border:1px solid #c7a04d!important;border-radius:9px!important;
+ background:linear-gradient(145deg,#17130b 0%,#050605 100%)!important;
+ color:#f1d27e!important;-webkit-text-fill-color:#f1d27e!important;
+ font:900 9px/1 Georgia,serif!important;letter-spacing:.35px!important;
+ text-shadow:0 0 7px #d2a64b66!important;
+ box-shadow:inset 0 1px #fff3,0 3px 9px #0007!important;
+}
+/* صور أكبر بإطار مربع متناسق على جميع أحجام الشاشات */
+.products .product img{
+ display:block!important;width:100%!important;height:auto!important;
+ aspect-ratio:1/1!important;object-fit:contain!important;
+ border-radius:15px!important;padding:7px!important;
+ background:linear-gradient(145deg,#fff8e8,#e8d8b5)!important;
+}
+.products .product{display:flex!important;flex-direction:column!important;min-width:0!important}
+.products .product .product-card-info{min-width:0!important}
+@media(max-width:800px){
+ .products .product img{padding:5px!important;border-radius:13px!important}
+}
+</style>
+
+
+<style id="apex-about-thumbnail-remove-old-icon-shadow">
+/* إزالة الرمز القديم خلف شعار APEX المصغّر في حساب العميل */
+#accountpanel .user-services button[onclick*="showAccountSection('about')"]>b{
+ position:relative!important;display:block!important;
+ width:35px!important;height:35px!important;min-width:35px!important;
+ flex:0 0 35px!important;margin:0!important;padding:0!important;
+ font-size:0!important;line-height:0!important;
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ text-shadow:none!important;background:transparent!important;
+ border:0!important;box-shadow:none!important;filter:none!important;
+}
+#accountpanel .user-services button[onclick*="showAccountSection('about')"]>b:before{
+ content:none!important;display:none!important;background:none!important;
+ box-shadow:none!important;filter:none!important;
+}
+#accountpanel .user-services button[onclick*="showAccountSection('about')"]>b:after{
+ content:"APEX"!important;position:absolute!important;inset:0!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:35px!important;height:35px!important;margin:0!important;padding:0!important;
+ border:1px solid #c7a04d!important;border-radius:9px!important;
+ background:linear-gradient(145deg,#17130b 0%,#050605 100%)!important;
+ color:#f1d27e!important;-webkit-text-fill-color:#f1d27e!important;
+ font:900 9px/1 Georgia,serif!important;letter-spacing:.35px!important;
+ text-shadow:none!important;box-shadow:inset 0 1px #fff3!important;
+ filter:none!important;opacity:1!important;
+}
+</style>
