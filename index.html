@@ -2627,4 +2627,109 @@ input,select,textarea{
 }
 #accountpanel.apex-ai-fullscreen .apex-ai-compose{margin-top:0!important}
 </style>
+
+<style id="apex-ai-chat-fix-20261113">
+/* إصلاح ظهور خانة الكتابة وتصغير نافذة محادثة APEX AI */
+#accountpanel.apex-ai-fullscreen{
+  padding:3vh 3vw!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+#accountpanel.apex-ai-fullscreen .account-shell{
+  width:min(94vw,760px)!important;
+  max-width:760px!important;
+  height:min(88dvh,780px)!important;
+  max-height:88dvh!important;
+  margin:auto!important;
+  border:1px solid #b58b3d!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#accountpanel.apex-ai-fullscreen .account-content{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  padding:9px 11px max(9px,env(safe-area-inset-bottom))!important;
+}
+#accountpanel.apex-ai-fullscreen #accountData{
+  display:flex!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+#accountpanel.apex-ai-fullscreen #accountSection-support{
+  display:flex!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  flex-direction:column!important;
+  gap:5px!important;
+  padding:10px!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-messages{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:110px!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  min-height:54px!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:relative!important;
+  z-index:5!important;
+  padding-top:4px!important;
+  background:transparent!important;
+}
+#accountpanel.apex-ai-fullscreen #apexAiInput{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:48px!important;
+  height:48px!important;
+  max-height:90px!important;
+  resize:vertical!important;
+  color:#fff!important;
+  background:#11130f!important;
+  border:1px solid #b58b3d!important;
+  border-radius:11px!important;
+  padding:10px!important;
+  font-size:14px!important;
+  z-index:6!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose .goldbtn{
+  display:block!important;
+  visibility:visible!important;
+  min-height:44px!important;
+}
+#accountpanel.apex-ai-fullscreen .apex-ai-status,
+#accountpanel.apex-ai-fullscreen .apex-ai-footer{flex:0 0 auto!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-quick{flex:0 0 auto!important;margin:4px 0!important}
+@media(max-width:560px){
+ #accountpanel.apex-ai-fullscreen{padding:2vh 2vw!important}
+ #accountpanel.apex-ai-fullscreen .account-shell{
+  width:96vw!important;height:88dvh!important;max-height:88dvh!important;
+  border-radius:16px!important;margin:auto!important
+ }
+ #accountpanel.apex-ai-fullscreen .account-content{padding:6px 7px max(7px,env(safe-area-inset-bottom))!important}
+ #accountpanel.apex-ai-fullscreen #accountSection-support{padding:7px!important}
+ #accountpanel.apex-ai-fullscreen .apex-ai-intro{font-size:11px!important;margin:0!important}
+ #accountpanel.apex-ai-fullscreen .apex-ai-messages{min-height:100px!important;padding:8px!important}
+ #accountpanel.apex-ai-fullscreen #apexAiInput{font-size:14px!important;min-height:46px!important;height:46px!important}
+ #accountpanel.apex-ai-fullscreen .apex-ai-quick button{font-size:10px!important;padding:5px 8px!important}
+}
+</style>
+
 </body></html>
