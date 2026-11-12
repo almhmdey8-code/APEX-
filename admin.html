@@ -521,6 +521,7 @@ body{background-image:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.98),tr
   <div class="row" style="gap:8px;flex-wrap:wrap">
    <button id="adm_device_register" class="btn2" type="button">اعتماد هذا الجهاز</button>
    <button id="adm_device_generate" class="btn" type="button">إنشاء QR لجهاز آخر</button>
+   <button id="adm_device_qr_download" class="btn2" type="button" hidden>تنزيل QR</button>
   </div>
   <p id="adm_device_msg" class="status" role="status"></p>
   <div id="adm_device_qr_wrap" hidden style="text-align:center;margin:12px auto">
@@ -709,8 +710,19 @@ async function registerOrClaimAdminDevice(){
   message('adm_device_msg','تم اعتماد هذا الجهاز الجديد بنجاح بعد التحقق الثنائي.');
   return;
  }
- const {error}=await supabase.rpc('apex_admin_register_device',{p_device_id:deviceId,p_device_label:label});
- if(error)throw error;
+ const {data:known,error:listError}=await supabase.rpc('apex_admin_list_trusted_devices');
+ if(listError)throw listError;
+ if((known||[]).some(d=>d.device_id===deviceId)){
+  await supabase.rpc('apex_admin_register_device',{p_device_id:deviceId,p_device_label:label});
+  return;
+ }
+ if(!(known||[]).length){
+  const {error}=await supabase.rpc('apex_admin_register_device',{p_device_id:deviceId,p_device_label:label});
+  if(error)throw error;
+  message('adm_device_msg','تم اعتماد هذا الجهاز الأول تلقائياً بعد التحقق الثنائي.');
+  return;
+ }
+ throw new Error('هذا الجهاز غير معتمد. افتح رابط QR صالحاً من جهاز مدير معتمد، ثم سجّل الدخول وأكمل Google Authenticator.');
 }
 async function loadTrustedDevices(){
  const box=$('adm_device_list');if(!box)return;
@@ -736,6 +748,10 @@ $('adm_device_register')?.addEventListener('click',async()=>{
  catch(e){message('adm_device_msg','تعذر اعتماد الجهاز: '+(e?.message||e));}
  finally{b.disabled=false;}
 });
+$('adm_device_qr_download')?.addEventListener('click',()=>{
+ const img=$('adm_device_qr');if(!img?.src)return;
+ const a=document.createElement('a');a.href=img.src;a.download='APEX-admin-device-QR.png';document.body.appendChild(a);a.click();a.remove();
+});
 $('adm_device_generate')?.addEventListener('click',async()=>{
  const b=$('adm_device_generate'),wrap=$('adm_device_qr_wrap');b.disabled=true;b.textContent='جارٍ إنشاء الرمز...';
  try{
@@ -743,7 +759,7 @@ $('adm_device_generate')?.addEventListener('click',async()=>{
   if(error)throw error;
   const url=new URL(location.href);url.searchParams.set('device_invite',data.token);
   const qr=await QRCode.toDataURL(url.toString(),{width:440,margin:2,errorCorrectionLevel:'M'});
-  $('adm_device_qr').src=qr;wrap.hidden=false;
+  $('adm_device_qr').src=qr;wrap.hidden=false;$('adm_device_qr_download').hidden=false;
   $('adm_device_qr_expiry').textContent='ينتهي الرمز في '+new Date(data.expires_at).toLocaleString('ar-SA');
   message('adm_device_msg','تم إنشاء رمز QR خاص ولمرة واحدة. لا تشاركه إلا مع جهازك الجديد.');
  }catch(e){wrap.hidden=true;message('adm_device_msg','تعذر إنشاء رمز QR: '+(e?.message||e));}
@@ -884,7 +900,13 @@ async function checkSession(){
   adminSessionConfirmed=true;
   const mfaVerified=await ensureAdminMfa();
   if(!mfaVerified)return;
-  try{await registerOrClaimAdminDevice();}catch(deviceError){console.warn('APEX trusted-device registration:',deviceError?.message||deviceError);message('adm_device_msg','تعذر تسجيل الجهاز: '+(deviceError?.message||deviceError));}
+  try{await registerOrClaimAdminDevice();}catch(deviceError){
+   console.warn('APEX trusted-device registration:',deviceError?.message||deviceError);
+   await supabase.auth.signOut({scope:'local'});
+   $('adm_dashboard').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_login').classList.remove('apex-admin-hidden');
+   message('adm_loginmsg',deviceError?.message||'هذا الجهاز غير معتمد. امسح QR من جهاز مدير معتمد.');
+   return;
+  }
   $('adm_login').classList.add('apex-admin-hidden');$('adm_mfa').classList.add('apex-admin-hidden');$('adm_dashboard').classList.remove('apex-admin-hidden');
   $('adm_who').textContent='تم تسجيل الدخول: '+session.user.email+' · محمي بالمصادقة الثنائية';
   await Promise.all([loadProducts(),loadOrders(),loadBanners(),loadPayments(),loadCurrencySettings(),loadWalletTopups(),loadCustomers(),loadShippingProviders(),loadSecurityEvents(),loadTrustedDevices()]);
