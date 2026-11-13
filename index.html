@@ -1348,7 +1348,7 @@ async function sendApexAssistantMessage(){
  const requestUserId=customerSession.user.id;
  apexAssistantMessages.push({role:'user',content:message});
  input.value='';apexAssistantBusy=true;button.disabled=true;button.textContent='إرسال';
- $('apexAiHandoff').hidden=true;status.textContent='جاري التفكير';renderApexAssistantMessages();
+ $('apexAiHandoff').hidden=true;status.innerHTML='<span class="apex-ai-thinking">جاري تجهيز الرد <i></i><i></i><i></i></span>';renderApexAssistantMessages();
  try{
   const {data,error}=await supabase.functions.invoke('apex-store-assistant',{body:{messages:apexAssistantMessages.slice(-12)}});
   if(requestVersion!==apexAssistantSessionVersion||customerSession?.user?.id!==requestUserId)return;
