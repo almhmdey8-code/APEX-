@@ -2588,4 +2588,53 @@ input,select,textarea{
 
 
 
+
+<style id="apex-header-cart-hitbox-fix">
+/* إصلاح تداخل مناطق اللمس بين زر المزيد والسلة على الجوال */
+.topbar.apex-topbar{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:8px!important;direction:rtl!important;position:sticky!important;isolation:isolate!important;
+}
+.topbar.apex-topbar>.apex-head-actions{
+ position:relative!important;z-index:35!important;display:flex!important;
+ flex:0 0 auto!important;align-items:center!important;pointer-events:auto!important;
+}
+.topbar.apex-topbar>.apex-head-actions .iconbtn{
+ position:relative!important;z-index:36!important;flex:0 0 auto!important;
+ pointer-events:auto!important;touch-action:manipulation!important;
+}
+.topbar.apex-topbar>.brand{
+ position:relative!important;z-index:1!important;flex:1 1 auto!important;
+ min-width:0!important;margin-inline:auto!important;justify-content:center!important;
+ pointer-events:auto!important;
+}
+.topbar.apex-topbar>.apex-cart-button{
+ position:relative!important;z-index:30!important;flex:0 0 42px!important;
+ pointer-events:auto!important;touch-action:manipulation!important;
+}
+@media(max-width:800px){
+ .topbar.apex-topbar{padding-inline:9px!important;gap:5px!important}
+ .topbar.apex-topbar>.apex-head-actions{gap:5px!important}
+ .topbar.apex-topbar>.brand{font-size:clamp(20px,6vw,25px)!important;letter-spacing:1px!important}
+}
+</style>
+<script id="apex-header-cart-click-fix">
+(function(){
+ const more=document.querySelector('.topbar.apex-topbar .apex-head-actions .menu');
+ const cartButton=document.querySelector('.topbar.apex-topbar .apex-cart-button');
+ if(more){
+  more.onclick=function(event){
+   event.preventDefault();event.stopPropagation();
+   if(typeof window.toggleApexMoreMenu==='function')window.toggleApexMoreMenu(event);
+  };
+ }
+ if(cartButton){
+  cartButton.onclick=function(event){
+   event.preventDefault();event.stopPropagation();
+   if(typeof window.openCart==='function')window.openCart(event);
+  };
+ }
+})();
+</script>
+
 </body></html>
