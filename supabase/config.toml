@@ -16,3 +16,6 @@ verify_jwt = true
 
 [functions.apex-store-assistant]
 verify_jwt = true
+
+[functions.apex-product-analyze]
+verify_jwt = true
