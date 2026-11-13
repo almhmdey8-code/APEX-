@@ -356,8 +356,8 @@ Deno.serve(async (req: Request) => {
     parts: [{ text: redact(m.content) }],
   }));
 
-  // Keep one economical primary attempt; if it fails, return the first successful backup without waiting for the slower backup.
-  const modelCandidates = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-3.7-flash"];
+  // Start with the model that recent production logs show succeeds fastest; slower providers remain isolated failovers.
+  const modelCandidates = ["gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-3.7-flash"];
   type ModelAttempt = { ok: boolean; model: string; data?: any; reason?: string };
   const requestModel = async (model: string, timeoutMs: number): Promise<ModelAttempt> => {
     try {
