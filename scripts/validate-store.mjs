@@ -59,6 +59,12 @@ try {
     }
 
     if (file === 'index.html') {
+      if (!html.includes("runStoreService('banners',loadStoreBanners)") ||
+          !html.includes("runStoreService('payment-methods',loadPaymentMethods)") ||
+          !html.includes("runStoreService('catalog',loadStoreCurrency)")) {
+        fail('index.html: storefront startup services must be isolated from each other');
+      }
+
       const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=/g)].map(match => match[1]));
       const handlers = [...html.matchAll(/\bonclick\s*=\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
       for (const handler of handlers) {
@@ -77,6 +83,13 @@ try {
     }
 
     if (file === 'admin.html') {
+      if (/apex-admin-navigation-reliability[\s\S]*?stopImmediatePropagation\s*\(/.test(html)) {
+        fail('admin.html: navigation reliability layer must not block the original service loaders');
+      }
+      if (!html.includes('async function runAdminService(name,task)')) {
+        fail('admin.html: independent admin service error boundary is missing');
+      }
+
       if (!html.includes('apex_admins')) fail('admin.html: server-side admin membership check is missing');
       const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=/g)].map(match => match[1]));
       const handlers = [...html.matchAll(/\bonclick\s*=\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
