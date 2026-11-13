@@ -739,7 +739,7 @@ function renderAdminOverview(ps,os){
  $('adm_overview_updated').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar-SA');
 }
 window.apexProducts=[];window.apexOrders=[];
-$('adm_refreshAll').onclick=()=>{loadProducts();loadOrders();loadBanners();loadPayments();loadWalletTopups();loadReturns();message('adm_reset_msg','');};
+$('adm_refreshAll').onclick=()=>{[['products',loadProducts],['orders',loadOrders],['banners',loadBanners],['payments',loadPayments],['wallet_topups',loadWalletTopups],['returns',loadReturns]].forEach(([name,task])=>runAdminService(name,task));message('adm_reset_msg','');};
 $('adm_adminSearch').addEventListener('input',()=>{const q=$('adm_adminSearch').value.trim().toLowerCase();document.querySelectorAll('#adm_productlist .item,#adm_orderlist .item').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'':'none');});
 function message(id,text){const el=$(id)||$('adm_'+id);if(el)el.textContent=text}
 
@@ -1003,7 +1003,19 @@ async function loadShippingProviders(){
 }
 $('adm_saveship').onclick=async()=>{const row={name:$('adm_shipname').value.trim(),provider_code:$('adm_shipcode').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,''),country_code:$('adm_shipcountry').value,integration_mode:$('adm_shipmode').value,tracking_url_template:$('adm_shiptracking').value.trim()||null,enabled:$('adm_shipenabled').checked,updated_at:new Date().toISOString()};if(!row.name||!row.provider_code){message('adm_shipmsg','أدخل اسم الشركة ورمزاً لاتينياً صحيحاً.');return}const id=$('adm_saveship').dataset.edit;const q=id?supabase.from('apex_shipping_providers').update(row).eq('id',id):supabase.from('apex_shipping_providers').insert(row);const {error}=await q;message('adm_shipmsg',error?'فشل الحفظ: '+error.message:'تم حفظ شركة الشحن');if(!error){delete $('adm_saveship').dataset.edit;$('adm_shipname').value='';$('adm_shipcode').value='';$('adm_shiptracking').value='';$('adm_shipenabled').checked=false;loadShippingProviders();}};
 
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;const panels={products:'adm_products',banners:'adm_banners',payments:'adm_payments',orders:'adm_orders',returns:'adm_returns',customers:'adm_customers',currency:'adm_currency',wallet_topups:'adm_wallet_topups',shipping:'adm_shipping',marketing:'adm_marketing',security:'adm_security'};Object.entries(panels).forEach(([key,id])=>$(id).classList.toggle('apex-admin-hidden',key!==p));if(p!=='payments'&&p!=='returns')buildAdminSectionCards(panels[p]);document.querySelectorAll('[data-tab]').forEach(x=>{x.setAttribute('aria-pressed',String(x===b));x.setAttribute('aria-current',x===b?'page':'false')});if(p==='products')loadProducts();if(p==='banners')loadBanners();if(p==='payments')loadPayments();if(p==='orders')loadOrders();if(p==='returns')loadReturns();if(p==='customers')loadCustomers();if(p==='currency')loadCurrencySettings();if(p==='wallet_topups')loadWalletTopups();if(p==='shipping')loadShippingProviders();if(p==='security')loadSecurityEvents();if(p==='marketing')loadEmailSettings()});
+const adminPanelByService={products:'adm_products',banners:'adm_banners',payments:'adm_payments',orders:'adm_orders',returns:'adm_returns',customers:'adm_customers',currency:'adm_currency',wallet_topups:'adm_wallet_topups',shipping:'adm_shipping',marketing:'adm_marketing',security:'adm_security'};
+async function runAdminService(name,task){
+ try{await task()}
+ catch(error){
+  console.error('APEX admin service failed:',name,error);
+  const panel=document.getElementById(adminPanelByService[name]);
+  if(!panel)return;
+  let notice=panel.querySelector('.apex-service-error');
+  if(!notice){notice=document.createElement('p');notice.className='apex-service-error';notice.setAttribute('role','status');notice.style.cssText='padding:10px;border:1px solid #b66;border-radius:10px;color:#a22;background:#fff4f4';panel.prepend(notice)}
+  notice.textContent='تعذر تحميل هذا القسم مؤقتاً. بقية خدمات لوحة APEX تعمل بشكل مستقل. '+(error?.message||'يرجى المحاولة مرة أخرى.');
+ }
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const p=b.dataset.tab;const panels={products:'adm_products',banners:'adm_banners',payments:'adm_payments',orders:'adm_orders',returns:'adm_returns',customers:'adm_customers',currency:'adm_currency',wallet_topups:'adm_wallet_topups',shipping:'adm_shipping',marketing:'adm_marketing',security:'adm_security'};Object.entries(panels).forEach(([key,id])=>$(id).classList.toggle('apex-admin-hidden',key!==p));if(p!=='payments'&&p!=='returns')buildAdminSectionCards(panels[p]);document.querySelectorAll('[data-tab]').forEach(x=>{x.setAttribute('aria-pressed',String(x===b));x.setAttribute('aria-current',x===b?'page':'false')});if(p==='products')runAdminService('products',loadProducts);if(p==='banners')runAdminService('banners',loadBanners);if(p==='payments')runAdminService('payments',loadPayments);if(p==='orders')runAdminService('orders',loadOrders);if(p==='returns')runAdminService('returns',loadReturns);if(p==='customers')runAdminService('customers',loadCustomers);if(p==='currency')runAdminService('currency',loadCurrencySettings);if(p==='wallet_topups')runAdminService('wallet_topups',loadWalletTopups);if(p==='shipping')runAdminService('shipping',loadShippingProviders);if(p==='security')runAdminService('security',loadSecurityEvents);if(p==='marketing')runAdminService('marketing',loadEmailSettings)});
 async function loadProducts(){const {data,error}=await supabase.from('apex_products').select('*').order('created_at',{ascending:false});if(error){message('pmsg','تعذر تحميل المنتجات: '+error.message);return}window.apexProducts=data||[];updateKpis(window.apexProducts,window.apexOrders);$('adm_productlist').innerHTML=(data||[]).map(p=>'<div class="item row"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.category||'')+' · مخزون: '+(p.stock??0)+' · '+(p.price??'بدون سعر')+' ر.س · '+(p.active?'نشط':'مخفي')+'</small></div><div><button class="btn2" data-edit="'+p.id+'">تعديل</button> <button class="btn2" data-delete="'+p.id+'">حذف</button> <button class="btn2" data-toggle="'+p.id+'" data-active="'+p.active+'">'+(p.active?'إخفاء':'تفعيل')+'</button></div></div>').join('')||'<p class="muted">لا توجد منتجات في قاعدة البيانات بعد.</p>';
  $('adm_productlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProduct(data.find(p=>p.id==b.dataset.edit)));$('adm_productlist').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.delete));$('adm_productlist').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle,b.dataset.active==='true'))}
 async function loadWalletTopups(){
@@ -1999,7 +2011,7 @@ body{background:radial-gradient(ellipse at 50% 0%,#5a421b 0%,#211a0d 48%,#100e09
  document.addEventListener('click',event=>{
   const button=event.target.closest('#adminWorkspace .tabs [data-tab]');
   if(!button)return;
-  event.preventDefault();event.stopImmediatePropagation();
+  event.preventDefault();
   if(!activate(button.dataset.tab)){
    const status=document.getElementById('adm_loginmsg');
    if(status)status.textContent='تعذر فتح القسم؛ حدّث الصفحة وحاول مرة أخرى.';
