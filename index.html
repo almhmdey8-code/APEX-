@@ -75,6 +75,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#3b2b0d 0%,#11100b 34%,#0506
 .apex-about-full{text-align:right;color:#e8e2d2;line-height:1.95;font-size:14px}.apex-about-full h2{color:#ffe8a0;font-size:16px;text-align:center;line-height:1.5;margin:7px 0 11px}.apex-about-full h3{color:#f3cf72;font-size:17px;margin:23px 0 8px;padding-bottom:6px;border-bottom:1px solid #8e6d2e}.apex-about-full p{color:#d8d2c4;margin:9px 0}.apex-about-full ul{padding-right:23px;margin:8px 0}.apex-about-full li{padding:3px 0;color:#e8e2d2}.apex-about-full .apex-about-signoff{text-align:center;color:#ffe8a0;font-size:13px;line-height:1.6;margin-top:20px;padding:13px 8px;border:1px solid #8e6d2e;border-radius:12px;background:linear-gradient(120deg,#211707,#090908)}.apex-about-full .apex-about-signoff strong{font-size:13px}
  
 /* APEX flagship storefront refresh */
+#apexMoreMenu{position:fixed;top:78px;left:12px;z-index:10030;width:min(260px,calc(100vw - 24px));padding:9px;border:1px solid #c9a451;border-radius:16px;background:linear-gradient(145deg,#fff4d4,#e5c477 55%,#c99b43);box-shadow:0 16px 38px #0009;display:grid;gap:6px}#apexMoreMenu[hidden]{display:none!important}#apexMoreMenu button,#apexMoreMenu a{display:block;width:100%;padding:11px 13px;border:1px solid #b38a3b;border-radius:10px;background:#fffaf0;color:#2a1c08;text-align:right;text-decoration:none;font:800 13px Tahoma,Arial;cursor:pointer}#apexMoreMenu button:active,#apexMoreMenu a:active{background:#f0d58f}@media(max-width:800px){#apexMoreMenu{top:70px}}
 .topbar.apex-topbar{height:78px;padding-inline:clamp(12px,3.5vw,52px);background:linear-gradient(180deg,rgba(10,10,8,.98),rgba(5,6,5,.91));border-bottom:1px solid rgba(245,211,125,.5);box-shadow:0 10px 35px #0008}
 .topbar .brand{font-family:Georgia,serif;font-size:clamp(27px,4.5vw,43px);letter-spacing:4px}
 .topbar .brand small{display:block;font:700 8px/1.4 Tahoma,Arial;letter-spacing:3px;text-align:center;color:#c9aa61}
@@ -1020,7 +1021,8 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 </style>
 </head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="المزيد" title="المزيد — معلومات العميل" onclick="openMoreAccount()">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button type="button" class="outline apex-cart-button" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button type="button" class="iconbtn menu" aria-label="المزيد" title="المزيد" aria-expanded="false" aria-controls="apexMoreMenu" onclick="toggleApexMoreMenu(event)">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button type="button" class="outline apex-cart-button" aria-label="السلة" title="السلة" onclick="openCart(event)"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
+<nav id="apexMoreMenu" class="apex-more-menu" aria-label="قائمة المزيد" hidden><button type="button" onclick="closeApexMoreMenu();openCustomerProfile()">♙ بيانات حسابي</button><button type="button" onclick="closeApexMoreMenu();showCustomerOrdersFromMore()">▣ طلباتي</button><button type="button" onclick="closeApexMoreMenu();customerNavFavorites()">♡ المنتجات المفضلة</button><a href="privacy.html">سياسة الخصوصية</a><button type="button" onclick="closeApexMoreMenu();openApexAboutFromMore()">✦ عن APEX</button></nav>
 <section class="hero apex-hero"><div class="hero-content"><div class="eyebrow"><span class="hero-live-dot"></span> APEX · SHOPPING, REIMAGINED</div><h1>تسوّق أذكى.<br><em>اختر الأفضل.</em></h1><p>اكتشف تشكيلات مختارة، تفاصيل واضحة، وتجربة شراء مصممة لتجعل كل خطوة أسهل.</p><div class="hero-actions"><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات ←</button><button class="hero-secondary" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">تصفح الأقسام</button></div><div class="hero-proof"><span>✦ تشكيلة متجددة</span><span>✦ تسوق من مكان واحد</span><span>✦ متابعة طلباتك بسهولة</span></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-monogram">A<span>✦</span></div><div class="hero-visual-caption">THE APEX EDITION <b>01 / 26</b></div></div></section>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
 <section class="apex-value-strip" aria-label="مميزات تجربة APEX">
@@ -1321,7 +1323,8 @@ $('cartitems')?.addEventListener('click',event=>{
  else if(action==='continue')closeCart();
 });
 syncCartCount();
-function openCart(){
+function openCart(event){
+ event?.stopPropagation?.();closeApexMoreMenu?.();
  const panel=document.getElementById('cartpanel');
  if(!panel){console.error('APEX: cartpanel element is missing');return}
  renderCart();
@@ -1685,7 +1688,11 @@ async function refreshCustomer(session){
 }
 async function openCustomerProfile(){$('accountpanel').classList.remove('apex-ai-fullscreen');$('accountpanel').classList.add('show');const {data,error}=await supabase.auth.getSession();if(error){refreshCustomer(null);return}await refreshCustomer(data.session);if(data.session){$('accountForm').hidden=true;$('accountData').hidden=false;showAccountSection('profile')}else{$('accountForm').hidden=false;$('accountData').hidden=true}}
 function openAccount(){$('accountpanel').classList.remove('customer-profile-card-mode');$('accountpanel').classList.add('show');supabase.auth.getSession().then(({data})=>refreshCustomer(data.session))}
-function openMoreAccount(){openCustomerProfile()}
+function closeApexMoreMenu(){const menu=$('apexMoreMenu');if(menu)menu.hidden=true;document.querySelector('.apex-head-actions .menu')?.setAttribute('aria-expanded','false')}
+ function toggleApexMoreMenu(event){event?.stopPropagation();const menu=$('apexMoreMenu');if(!menu)return;const opening=menu.hidden;menu.hidden=!opening;document.querySelector('.apex-head-actions .menu')?.setAttribute('aria-expanded',String(opening))}
+ async function showCustomerOrdersFromMore(){await openCustomerProfile();showAccountSection('orders')}
+ async function openApexAboutFromMore(){await openCustomerProfile();showAccountSection('about')}
+ function openMoreAccount(){toggleApexMoreMenu()}
 function closeAccount(){$('accountpanel').classList.remove('show','customer-profile-card-mode','apex-ai-fullscreen')}
  async function customerSignIn(){
   const email=$('accountEmail').value.trim().toLowerCase(),password=$('accountPassword').value,button=$('accountAuthAction'),msg=$('accountMsg');
@@ -1743,6 +1750,7 @@ async function saveProfileEmail(){const email=$('profileEmailNew').value.trim(),
 async function customerSignOut(){const {error}=await supabase.auth.signOut({scope:'local'});if(error){$('accountMsg').textContent='تعذر تسجيل الخروج: '+error.message;return}await refreshCustomer(null);$('accountForm').hidden=false;$('accountData').hidden=true;$('storefrontAuth').hidden=false;$('accountMsg').textContent='تم تسجيل الخروج.'}
 supabase.auth.getSession().then(({data})=>refreshCustomer(data.session));
 supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){$('passwordRecovery').hidden=false;$('accountpanel').classList.add('show')}queueMicrotask(()=>refreshCustomer(session))});window.addEventListener('pageshow',async()=>{const {data,error}=await supabase.auth.getSession();if(!error)refreshCustomer(data.session)});
+document.addEventListener('click',event=>{if(!event.target.closest('#apexMoreMenu')&&!event.target.closest('.apex-head-actions .menu'))closeApexMoreMenu()});
 let deliveryCoords=null;
 let deliveryMap=null,deliveryMarker=null,pendingDeliveryCoords=null;
 function closeDeliveryMap(){$('deliveryMapModal').classList.remove('show')}
