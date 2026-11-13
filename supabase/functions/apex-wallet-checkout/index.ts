@@ -38,7 +38,7 @@ Deno.serve(async (req: Request) => {
       }
       const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
       // Stable machine-readable marker for APEX apps/admin and fulfillment workflows.
-      notes = (notes + "\\nAPEX_GEO_V1=" + JSON.stringify({ lat, lng, maps_url: mapsUrl })).slice(0, 1000);
+      notes = (notes + "\nAPEX_GEO_V1=" + JSON.stringify({ lat, lng, maps_url: mapsUrl })).slice(0, 1000);
     }
     const shipping = String(body.shipping_method || "توصيل إلى المنزل").slice(0, 100);
     const requestId = String(body.request_id || "");
