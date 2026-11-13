@@ -1920,7 +1920,20 @@ function closeProductDetail(){$('productDetailModal').classList.remove('open');d
 window.closeProductDetail=closeProductDetail;
 window.resetCatalogFilters=resetCatalogFilters;
 function filterCategory(name){const button=[...document.querySelectorAll('.cat')].find(x=>x.dataset.cat===name);if(button)button.click();else{document.querySelector('.cat[data-cat="الكل"]')?.click();toast('هذا القسم غير متاح حالياً');}$('products').scrollIntoView({behavior:'smooth',block:'start'})}
-loadStoreBanners();loadPaymentMethods();loadStoreCurrency();
+function runStoreService(name,task){
+ try{
+  Promise.resolve().then(task).catch(error=>{
+   console.error('APEX storefront service failed:',name,error);
+   document.dispatchEvent(new CustomEvent('apex:service-error',{detail:{service:name,message:String(error?.message||error)}}));
+  });
+ }catch(error){
+  console.error('APEX storefront service failed:',name,error);
+  document.dispatchEvent(new CustomEvent('apex:service-error',{detail:{service:name,message:String(error?.message||error)}}));
+ }
+}
+runStoreService('banners',loadStoreBanners);
+runStoreService('payment-methods',loadPaymentMethods);
+runStoreService('catalog',loadStoreCurrency);
 
 window.scanApexCardQr=scanApexCardQr;
 window.transferApexWallet=transferApexWallet;
