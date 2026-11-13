@@ -287,13 +287,13 @@ Deno.serve(async (req: Request) => {
   const assistantStartedAt = Date.now();
   let attempts = 1;
   let lastFailure = "provider_unavailable";
-  let winner = await requestModel(modelCandidates[0], 2600);
+  let winner = await requestModel(modelCandidates[0], 1800);
   if (!winner.ok) {
     lastFailure = winner.reason || lastFailure;
     console.warn("APEX_ASSISTANT_MODEL_FAILOVER", winner.model, lastFailure);
     attempts = 3;
     const backupAttempts = modelCandidates.slice(1).map((model) =>
-      requestModel(model, 2800).then((result) => {
+      requestModel(model, 2100).then((result) => {
         if (!result.ok) throw new Error(model + ":" + (result.reason || "unknown_failure"));
         return result;
       })
