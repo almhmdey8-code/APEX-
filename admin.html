@@ -1072,7 +1072,18 @@ async function loadCustomers(){
 }
 $('adm_customer_refresh').onclick=loadCustomers;
 $('adm_customer_search').addEventListener('input',renderCustomers);
+function getAdminOrderDeliveryLocation(o){
+ const loc=o?.delivery_location;
+ if(!loc||typeof loc!=='object')return null;
+ const lat=Number(loc.latitude),lng=Number(loc.longitude);
+ if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)return null;
+ return {lat,lng,url:'https://www.google.com/maps?q='+lat+','+lng};
+}
 function renderAdminOrderCard(o){
+ const deliveryLocation=getAdminOrderDeliveryLocation(o);
+ const deliveryLocationHtml=deliveryLocation
+  ?'<br><b>موقع العميل المحدد:</b> '+deliveryLocation.lat.toFixed(6)+', '+deliveryLocation.lng.toFixed(6)+' · <a target="_blank" rel="noopener noreferrer" href="'+deliveryLocation.url+'" style="color:#f0cf77;text-decoration:underline">فتح موقع العميل على الخريطة</a>'
+  :'<br><b>موقع الخريطة:</b> لم يحدد العميل موقعاً محفوظاً لهذا الطلب';
  const isPaid=['paid','succeeded','completed','verified'].includes(String(o.payment_status||'').toLowerCase());
  const isManual=o.payment_method!=='wallet';
  const isPickup=String(o.notes||'').includes('استلام بالتنسيق مع المتجر');
@@ -1081,7 +1092,7 @@ function renderAdminOrderCard(o){
  const canShip=isPaid&&o.status==='processing';
  const canDeliver=isPaid&&(o.status==='shipped'||(isPickup&&o.status==='processing'));
  const paymentAction=!isPaid&&isManual?'<button class="btn" data-verify-payment="'+o.id+'">تأكيد الدفع بعد التحقق من الحوالة</button>':(isPaid?'<p class="muted" style="color:#8fe0a7">تم اعتماد الدفع</p>':'');
- return '<div class="item"><div class="row"><b>طلب #'+o.id+' — '+esc(o.customer_name)+'</b><small>'+new Date(o.created_at).toLocaleString('ar-SA')+'</small></div><p class="muted">الجوال: '+esc(o.phone)+'<br>العنوان: '+esc(o.address)+'<br>المنتجات: '+esc(JSON.stringify(o.items))+'<br>الإجمالي: '+(o.total_sar==null?'غير محدد':Number(o.total_sar).toFixed(2)+' ر.س')+'<br>الدفع: '+esc(o.payment_method||'غير محدد')+' · '+esc(o.payment_status||'pending')+'<br>ملاحظات: '+esc(o.notes)+'</p>'+paymentAction+'<div class="grid"><select class="field" id="st'+o.id+'"><option value="new">تم استلام الطلب</option><option value="confirmed" '+(!canConfirm?'disabled':'')+'>مؤكد</option><option value="processing" '+(!canProcess?'disabled':'')+'>قيد التجهيز</option><option value="shipped" '+(!canShip?'disabled':'')+'>تم تسليمه لشركة الشحن</option><option value="delivered" '+(!canDeliver?'disabled':'')+'>تم التسليم</option><option value="cancelled" '+(isPaid?'disabled':'')+'>ملغي</option></select><input class="field" id="tr'+o.id+'" placeholder="رقم التتبع" value="'+esc(o.aramex_tracking_number||'')+'"><input class="field" id="ca'+o.id+'" placeholder="شركة الشحن" value="'+esc(o.carrier||'')+'"></div><button class="btn2" data-order="'+o.id+'">حفظ تحديث الطلب</button>'+'</div>';
+ return '<div class="item"><div class="row"><b>طلب #'+o.id+' — '+esc(o.customer_name)+'</b><small>'+new Date(o.created_at).toLocaleString('ar-SA')+'</small></div><p class="muted">الجوال: '+esc(o.phone)+'<br>العنوان: '+esc(o.address)+deliveryLocationHtml+'<br>المنتجات: '+esc(JSON.stringify(o.items))+'<br>الإجمالي: '+(o.total_sar==null?'غير محدد':Number(o.total_sar).toFixed(2)+' ر.س')+'<br>الدفع: '+esc(o.payment_method||'غير محدد')+' · '+esc(o.payment_status||'pending')+'<br>ملاحظات: '+esc(o.notes)+'</p>'+paymentAction+'<div class="grid"><select class="field" id="st'+o.id+'"><option value="new">تم استلام الطلب</option><option value="confirmed" '+(!canConfirm?'disabled':'')+'>مؤكد</option><option value="processing" '+(!canProcess?'disabled':'')+'>قيد التجهيز</option><option value="shipped" '+(!canShip?'disabled':'')+'>تم تسليمه لشركة الشحن</option><option value="delivered" '+(!canDeliver?'disabled':'')+'>تم التسليم</option><option value="cancelled" '+(isPaid?'disabled':'')+'>ملغي</option></select><input class="field" id="tr'+o.id+'" placeholder="رقم التتبع" value="'+esc(o.aramex_tracking_number||'')+'"><input class="field" id="ca'+o.id+'" placeholder="شركة الشحن" value="'+esc(o.carrier||'')+'"></div><button class="btn2" data-order="'+o.id+'">حفظ تحديث الطلب</button>'+'</div>';
 }
 async function loadReturns(){
  const box=$('adm_returns_list');if(!box)return;
