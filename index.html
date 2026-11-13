@@ -544,6 +544,30 @@ document.addEventListener('contextmenu',function(e){
 .apex-ai-status{min-height:20px;color:#d7bd75;font-size:11px}
 @media(max-width:560px){.apex-ai-messages{height:43vh;min-height:220px;padding:9px}.apex-ai-message,.apex-ai-welcome{max-width:94%}.apex-ai-compose .goldbtn{padding:10px 12px}.apex-ai-footer{align-items:flex-start;flex-direction:column}}
 
+/* APEX AI — clean white workspace */
+#accountpanel.apex-ai-fullscreen{background:#fff!important;color:#171717!important}
+#accountpanel.apex-ai-fullscreen .account-content,
+#accountpanel.apex-ai-fullscreen .account-body{background:#fff!important}
+#accountpanel.apex-ai-fullscreen #accountSection-support{background:#fff!important;color:#171717!important;border:1px solid #e5d8b7!important;box-shadow:0 8px 28px rgba(0,0,0,.08)!important}
+#accountpanel.apex-ai-fullscreen #accountSection-support .account-section-heading{border-color:#e4d4aa!important}
+#accountpanel.apex-ai-fullscreen #accountSection-support .account-section-title,
+#accountpanel.apex-ai-fullscreen #accountSection-support h3,
+#accountpanel.apex-ai-fullscreen #accountSection-support .apex-ai-intro{color:#29251d!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-messages{background:#fff!important;border:1px solid #e5d8b7!important;box-shadow:inset 0 1px 5px rgba(0,0,0,.04)}
+#accountpanel.apex-ai-fullscreen .apex-ai-welcome,
+#accountpanel.apex-ai-fullscreen .apex-ai-bot{background:#f5f5f3!important;color:#252525!important;border:1px solid #e5e1d7!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-welcome span{color:#555!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-user{background:#f7edcf!important;color:#292116!important;border:1px solid #dfc27a!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{background:#fff!important;color:#171717!important;border:1px solid #d9c28a!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-footer{color:#666!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-quick button{background:#fff!important;color:#6d5017!important;border:1px solid #d8bd7b!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-status{color:#80621f!important}
+#accountpanel.apex-ai-fullscreen .apex-ai-handoff{background:#fff9e9!important;color:#4a3916!important}
+.apex-ai-thinking{display:inline-flex;align-items:center;gap:5px}
+.apex-ai-thinking i{width:5px;height:5px;border-radius:50%;background:#b58a36;animation:apexAiPulse .9s infinite ease-in-out}
+.apex-ai-thinking i:nth-child(2){animation-delay:.15s}.apex-ai-thinking i:nth-child(3){animation-delay:.3s}
+@keyframes apexAiPulse{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+
 </style>
 <style id="apex-compact-premium">
 /* APEX compact premium UI — smaller type, tighter cards, consistent spacing */
