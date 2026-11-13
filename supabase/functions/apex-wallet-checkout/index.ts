@@ -28,17 +28,15 @@ Deno.serve(async (req: Request) => {
     const phone = String(body.phone || "").trim();
     const address = String(body.address || "").trim();
     const deliveryCountry = String(body.delivery_country || "").trim().toUpperCase();
-    let notes = String(body.notes || "").slice(0, 700);
-    const location = body.delivery_location;
-    if (location != null) {
-      const lat = Number(location.latitude);
-      const lng = Number(location.longitude);
+    const notes = String(body.notes || "").slice(0, 1000);
+    let deliveryLocation: { version: number; latitude: number; longitude: number; maps_url: string } | null = null;
+    if (body.delivery_location != null) {
+      const lat = Number(body.delivery_location.latitude);
+      const lng = Number(body.delivery_location.longitude);
       if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
         return new Response(JSON.stringify({ error: "إحداثيات موقع التوصيل غير صالحة" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
       }
-      const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-      // Stable machine-readable marker for APEX apps/admin and fulfillment workflows.
-      notes = (notes + "\nAPEX_GEO_V1=" + JSON.stringify({ lat, lng, maps_url: mapsUrl })).slice(0, 1000);
+      deliveryLocation = { version: 1, latitude: lat, longitude: lng, maps_url: `https://www.google.com/maps?q=${lat},${lng}` };
     }
     const shipping = String(body.shipping_method || "توصيل إلى المنزل").slice(0, 100);
     const requestId = String(body.request_id || "");
@@ -65,6 +63,10 @@ Deno.serve(async (req: Request) => {
       p_request_id: requestId,
     });
     if (error) throw error;
+    if (deliveryLocation) {
+      const { error: locationError } = await admin.from("apex_orders").update({ delivery_location: deliveryLocation }).eq("id", orderId);
+      if (locationError) throw locationError;
+    }
     return new Response(JSON.stringify({ success: true, order_id: orderId }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
   } catch (error) {
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "تعذر إتمام الشراء" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
