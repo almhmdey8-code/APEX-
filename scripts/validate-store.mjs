@@ -4,7 +4,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
-const pages = ['index.html', 'admin.html'];
+const pages = ['index.html', 'admin.html', 'product-studio.html'];
 const failures = [];
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'apex-validation-'));
 
@@ -87,12 +87,27 @@ try {
       }
     }
   }
-  const functionSlugs = ['apex-wallet-checkout','apex-create-order','apex-admin-customers','apex-ai-guard','apex-email-campaign','apex-store-assistant'];
+
+  const functionSlugs = [
+    'apex-wallet-checkout',
+    'apex-create-order',
+    'apex-admin-customers',
+    'apex-ai-guard',
+    'apex-email-campaign',
+    'apex-store-assistant',
+    'apex-product-analyze',
+  ];
   for (const slug of functionSlugs) {
     if (!fs.existsSync(path.join(root, 'supabase', 'functions', slug, 'index.ts'))) {
       fail('Supabase Edge Function source is missing: ' + slug);
     }
   }
+
+  const configPath = path.join(root, 'supabase', 'config.toml');
+  if (!fs.existsSync(configPath) || !/\[functions\.apex-product-analyze\][\s\S]*?verify_jwt\s*=\s*true/.test(fs.readFileSync(configPath, 'utf8'))) {
+    fail('Supabase JWT configuration for apex-product-analyze is missing');
+  }
+
   const countryMigration = path.join(root, 'supabase', 'migrations', '20261111225028_enforce_customer_country_payment_scope.sql');
   if (!fs.existsSync(countryMigration)) {
     fail('Supabase payment country-scope migration is missing');
@@ -102,6 +117,11 @@ try {
       fail('Supabase order and wallet top-up must both enforce payment country scope');
     }
   }
+
+  const trustedDeviceMigration = path.join(root, 'supabase', 'migrations', '20261112000445_apex_admin_trusted_device_registration.sql');
+  if (!fs.existsSync(trustedDeviceMigration)) fail('Applied trusted-device migration archive is missing');
+  const shippingRouteMigration = path.join(root, 'supabase', 'migrations', '20261112125538_apex_country_aware_shipping_routes.sql');
+  if (!fs.existsSync(shippingRouteMigration)) fail('Applied country-aware shipping migration archive is missing');
   if (fs.existsSync(path.join(root, 'firebase', 'otp.js'))) fail('obsolete Firebase OTP source must not be restored');
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });
@@ -111,4 +131,4 @@ if (failures.length) {
   console.error(failures.map(message => 'FAIL: ' + message).join('\n'));
   process.exit(1);
 }
-console.log('APEX storefront validation passed: pages, IDs, JavaScript syntax, local links, public-key boundary, handlers, country-scoped checkout and six Supabase function sources.');
+console.log('APEX storefront validation passed: customer/admin/product-studio pages, IDs, JavaScript syntax, local links, public-key boundary, handlers, payment country scope and all seven Supabase Edge Function sources.');
