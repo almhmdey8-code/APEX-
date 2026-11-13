@@ -3,7 +3,7 @@
 ## Production architecture
 
 - Repository: `almhmdey8-code/APEX-`, default branch `main`.
-- Customer storefront: https://almhmdey8-code.github.io/APEX/
+- Customer storefront: https://almhmdey8-code.github.io/APEX-/
 - Administrator console: https://almhmdey8-code.github.io/APEX-/admin.html
 - Product Studio: https://almhmdey8-code.github.io/APEX-/product-studio.html (requires an authenticated administrator session and MFA AAL2).
 - Privacy policy: https://almhmdey8-code.github.io/APEX-/privacy.html
