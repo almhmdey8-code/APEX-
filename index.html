@@ -1020,7 +1020,7 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 </style>
 </head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="المزيد" title="المزيد — معلومات العميل" onclick="openMoreAccount()">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button class="outline apex-cart-button" onclick="openCart()" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button class="iconbtn menu" aria-label="المزيد" title="المزيد — معلومات العميل" onclick="openMoreAccount()">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button type="button" class="outline apex-cart-button" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
 <section class="hero apex-hero"><div class="hero-content"><div class="eyebrow"><span class="hero-live-dot"></span> APEX · SHOPPING, REIMAGINED</div><h1>تسوّق أذكى.<br><em>اختر الأفضل.</em></h1><p>اكتشف تشكيلات مختارة، تفاصيل واضحة، وتجربة شراء مصممة لتجعل كل خطوة أسهل.</p><div class="hero-actions"><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات ←</button><button class="hero-secondary" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">تصفح الأقسام</button></div><div class="hero-proof"><span>✦ تشكيلة متجددة</span><span>✦ تسوق من مكان واحد</span><span>✦ متابعة طلباتك بسهولة</span></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-monogram">A<span>✦</span></div><div class="hero-visual-caption">THE APEX EDITION <b>01 / 26</b></div></div></section>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
 <section class="apex-value-strip" aria-label="مميزات تجربة APEX">
@@ -1876,6 +1876,43 @@ window.scanApexCardQr=scanApexCardQr;
 window.transferApexWallet=transferApexWallet;
 </script>
 
+<script id="apex-cart-button-reliable-binding">
+/* ربط زر السلة مباشرة بعد تحميل الصفحة، مع مسار احتياطي إذا تعطل سكربت المتجر */
+(function(){
+  function showCartFallback(){
+    var panel=document.getElementById('cartpanel');
+    if(!panel)return false;
+    panel.hidden=false;
+    panel.removeAttribute('hidden');
+    panel.classList.add('show');
+    panel.style.setProperty('display','flex','important');
+    panel.style.visibility='visible';
+    panel.style.opacity='1';
+    panel.style.zIndex='10020';
+    panel.setAttribute('role','dialog');
+    panel.setAttribute('aria-modal','true');
+    document.body.classList.add('modal-open');
+    return true;
+  }
+  document.addEventListener('click',function(event){
+    var button=event.target.closest('.apex-cart-button');
+    if(!button)return;
+    event.preventDefault();
+    try{
+      if(typeof window.openCart==='function')window.openCart();
+      else showCartFallback();
+    }catch(error){
+      console.error('APEX cart open failed:',error);
+      showCartFallback();
+    }
+  });
+})();
+</script>
+
+<style id="apex-cart-button-visible-state">
+#cartpanel.show{display:flex!important;visibility:visible!important;opacity:1!important;z-index:10020!important}
+.apex-cart-button{position:relative;z-index:25;pointer-events:auto;touch-action:manipulation}
+</style>
 
 <style id="apex-interface-upgrade-nov2026">
 /* APEX storefront experience refinement */
