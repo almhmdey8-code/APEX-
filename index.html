@@ -541,7 +541,7 @@ document.addEventListener('contextmenu',function(e){
 .apex-ai-handoff{margin-top:12px;padding:12px;border:1px solid #8e6d2e;border-radius:12px;background:#15130d;color:#f2d37d}
 .apex-ai-handoff p{margin:0 0 8px}
 .apex-ai-handoff a{display:inline-block;color:#fff0b8;text-decoration:underline;font-weight:800}
-.apex-ai-status{min-height:20px;color:#f5d987;font-size:12px;font-weight:800}\n/* Full-screen APEX AI support workspace */\n#accountpanel.apex-ai-fullscreen{padding:0!important;align-items:stretch!important;justify-content:stretch!important}\n#accountpanel.apex-ai-fullscreen .account-shell{width:100vw!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;display:flex!important;flex-direction:column!important}\n#accountpanel.apex-ai-fullscreen .account-content{flex:1;min-height:0;overflow:hidden!important;display:flex;flex-direction:column;padding:10px 12px max(10px,env(safe-area-inset-bottom))!important}\n#accountpanel.apex-ai-fullscreen #accountData{flex:1;min-height:0;display:flex;flex-direction:column}\n#accountpanel.apex-ai-fullscreen .user-hub{display:none!important}\n#accountpanel.apex-ai-fullscreen #accountSection-support{display:flex!important;flex:1;min-height:0;flex-direction:column;margin:0;padding:12px!important}\n#accountpanel.apex-ai-fullscreen .apex-ai-intro{margin:0 0 7px;font-size:12px}\n#accountpanel.apex-ai-fullscreen .apex-ai-messages{flex:1;height:auto!important;min-height:0!important;max-height:none!important}\n#accountpanel.apex-ai-fullscreen .apex-ai-quick{margin:7px 0;gap:5px}\n#accountpanel.apex-ai-fullscreen .apex-ai-quick button{padding:6px 9px}\n#accountpanel.apex-ai-fullscreen .apex-ai-compose{flex:0 0 auto}\n#accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{max-height:110px}\n#accountpanel.apex-ai-fullscreen .apex-ai-footer{flex:0 0 auto}\n#accountpanel.apex-ai-fullscreen .apex-ai-status{flex:0 0 auto}\n@media(max-width:560px){#accountpanel.apex-ai-fullscreen .account-head{flex:0 0 58px}#accountpanel.apex-ai-fullscreen .account-content{padding:7px 8px max(8px,env(safe-area-inset-bottom))!important}#accountpanel.apex-ai-fullscreen #accountSection-support{padding:9px!important}}
+.apex-ai-status{min-height:20px;color:#d7bd75;font-size:11px}
 @media(max-width:560px){.apex-ai-messages{height:43vh;min-height:220px;padding:9px}.apex-ai-message,.apex-ai-welcome{max-width:94%}.apex-ai-compose .goldbtn{padding:10px 12px}.apex-ai-footer{align-items:flex-start;flex-direction:column}}
 
 </style>
@@ -2238,153 +2238,19 @@ input,select,textarea{
 }
 </style>
 
-<style id="apex-orders-ai-white-glass">
-/* طلباتي ومحادثة APEX AI — زجاج أبيض فاتح مع تباين واضح */
-#accountpanel #accountSection-orders.account-panel-card,
-#accountpanel #accountSection-support.apex-ai-card{
-  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(245,247,250,.88) 52%,rgba(231,237,245,.84))!important;
-  color:#171717!important;
-  border:1px solid rgba(255,255,255,.98)!important;
-  box-shadow:0 16px 38px rgba(0,0,0,.18),inset 0 1px 0 #fff!important;
-  -webkit-backdrop-filter:blur(24px) saturate(165%)!important;
-  backdrop-filter:blur(24px) saturate(165%)!important;
-}
-#accountpanel #accountSection-orders .account-section-heading,
-#accountpanel #accountSection-support .account-section-heading{
-  border-bottom:1px solid rgba(151,115,48,.35)!important;
-}
-#accountpanel #accountSection-orders .account-section-heading h3,
-#accountpanel #accountSection-support .account-section-heading h3,
-#accountpanel #accountSection-orders #myOrders,
-#accountpanel #accountSection-orders #myOrders p,
-#accountpanel #accountSection-orders #myOrders small,
-#accountpanel #accountSection-orders #myOrders strong,
-#accountpanel #accountSection-support .apex-ai-intro,
-#accountpanel #accountSection-support .apex-ai-footer,
-#accountpanel #accountSection-support .apex-ai-footer span{
-  color:#171717!important;text-shadow:none!important;
-}
-#accountpanel #accountSection-orders #myOrders>div,
-#accountpanel #accountSection-orders #myOrders article,
-#accountpanel #accountSection-orders #myOrders .item,
-#accountpanel #accountSection-orders #myOrders [class*="order"]{
-  background:rgba(255,255,255,.78)!important;
-  color:#171717!important;
-  border:1px solid rgba(164,129,65,.35)!important;
-  border-radius:14px!important;
-  box-shadow:0 5px 16px rgba(40,35,25,.07),inset 0 1px #fff!important;
-}
+<style id="apex-orders-white-glass">
+/* Keep the customer orders panel unchanged; restore assistant's original black-and-gold styling */
+#accountpanel #accountSection-orders.account-panel-card{background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(245,247,250,.88) 52%,rgba(231,237,245,.84))!important;color:#171717!important;border:1px solid rgba(255,255,255,.98)!important;box-shadow:0 16px 38px rgba(0,0,0,.18),inset 0 1px 0 #fff!important;-webkit-backdrop-filter:blur(24px) saturate(165%)!important;backdrop-filter:blur(24px) saturate(165%)!important}
+#accountpanel #accountSection-orders .account-section-heading{border-bottom:1px solid rgba(151,115,48,.35)!important}
+#accountpanel #accountSection-orders .account-section-heading h3,#accountpanel #accountSection-orders #myOrders,#accountpanel #accountSection-orders #myOrders p,#accountpanel #accountSection-orders #myOrders small,#accountpanel #accountSection-orders #myOrders strong{color:#171717!important;text-shadow:none!important}
+#accountpanel #accountSection-orders #myOrders>div,#accountpanel #accountSection-orders #myOrders article,#accountpanel #accountSection-orders #myOrders .item,#accountpanel #accountSection-orders #myOrders [class*="order"]{background:rgba(255,255,255,.78)!important;color:#171717!important;border:1px solid rgba(164,129,65,.35)!important;border-radius:14px!important;box-shadow:0 5px 16px rgba(40,35,25,.07),inset 0 1px #fff!important}
 #accountpanel #accountSection-orders #myOrders *{text-shadow:none!important}
-#accountpanel #accountSection-orders .account-back-button,
-#accountpanel #accountSection-support .account-back-button{
-  color:#211605!important;
-}
-#accountpanel #accountSection-support .apex-ai-messages{
-  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(239,243,248,.92))!important;
-  border:1px solid rgba(177,145,86,.42)!important;
-  box-shadow:inset 0 2px 10px rgba(30,40,55,.06)!important;
-}
-#accountpanel #accountSection-support .apex-ai-welcome{
-  background:linear-gradient(135deg,#fff,#f2f5f9)!important;
-  color:#171717!important;border:1px solid #d7dce4!important;
-  box-shadow:0 4px 12px #1c27320d!important;
-}
-#accountpanel #accountSection-support .apex-ai-welcome span,
-#accountpanel #accountSection-support .apex-ai-message,
-#accountpanel #accountSection-support .apex-ai-message small{
-  color:#171717!important;
-}
-#accountpanel #accountSection-support .apex-ai-user{
-  background:linear-gradient(135deg,#f7e8c3,#ead39b)!important;
-  color:#211605!important;border:1px solid #d7b86f!important;
-}
-#accountpanel #accountSection-support .apex-ai-bot{
-  background:linear-gradient(135deg,#fff,#f0f3f7)!important;
-  color:#171717!important;border:1px solid #d7dce4!important;
-}
-#accountpanel #accountSection-support .apex-ai-quick button,
-#accountpanel #accountSection-support .apex-ai-footer button{
-  background:linear-gradient(135deg,#fff,#f3ead6)!important;
-  color:#493515!important;border:1px solid #c7a765!important;
-}
-#accountpanel #accountSection-support .apex-ai-compose textarea{
-  background:rgba(255,255,255,.96)!important;color:#171717!important;
-  border:1px solid #b99a5d!important;box-shadow:inset 0 2px 7px #0000000a!important;
-}
-#accountpanel #accountSection-support .apex-ai-compose textarea::placeholder{color:#777!important;opacity:1}
-#accountpanel #accountSection-support .apex-ai-status{color:#59451f!important}
-#accountpanel #accountSection-support .apex-ai-handoff{
-  background:linear-gradient(135deg,#fff8e7,#f4e7c8)!important;
-  color:#211605!important;border:1px solid #c8a45b!important;
-}
-#accountpanel #accountSection-support .apex-ai-handoff p{color:#211605!important}
-@media(max-width:560px){
- #accountpanel #accountSection-orders.account-panel-card,
- #accountpanel #accountSection-support.apex-ai-card{border-radius:18px!important}
- #accountpanel #accountSection-support .apex-ai-messages{min-height:220px}
-}
+#accountpanel #accountSection-orders .account-back-button{color:#211605!important}
+@media(max-width:560px){#accountpanel #accountSection-orders.account-panel-card{border-radius:18px!important}}
 </style>
 
 
-<style id="apex-ai-fullscreen-thinking-and-hero-line">
-/* APEX AI: نافذة مساعدة كاملة الشاشة ومؤشر تفكير واضح */
-#accountpanel.apex-ai-fullscreen{
- position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;
- max-height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;
- display:flex!important;align-items:stretch!important;justify-content:stretch!important;
- border:0!important;border-radius:0!important;z-index:10040!important;
-}
-#accountpanel.apex-ai-fullscreen>.account-shell{
- display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;
- height:100%!important;max-height:100%!important;min-height:0!important;margin:0!important;
- border:0!important;border-radius:0!important;overflow:hidden!important;
-}
-#accountpanel.apex-ai-fullscreen .account-head{
- flex:0 0 58px!important;min-height:58px!important;margin:0!important;
-}
-#accountpanel.apex-ai-fullscreen .account-content{
- display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
- min-height:0!important;height:auto!important;overflow:hidden!important;
- padding:8px 10px max(8px,env(safe-area-inset-bottom))!important;
-}
-#accountpanel.apex-ai-fullscreen #accountData{
- display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
- min-height:0!important;overflow:hidden!important;
-}
-#accountpanel.apex-ai-fullscreen .user-hub{display:none!important}
-#accountpanel.apex-ai-fullscreen #accountSection-support{
- display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
- min-height:0!important;height:100%!important;margin:0!important;padding:10px!important;
- overflow:hidden!important;box-sizing:border-box!important;
-}
-#accountpanel.apex-ai-fullscreen #accountSection-support>.account-section-heading{flex:0 0 auto!important}
-#accountpanel.apex-ai-fullscreen #apexAiMessages{
- flex:1 1 0!important;height:auto!important;min-height:0!important;max-height:none!important;
- overflow-y:auto!important;overscroll-behavior:contain!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-quick{flex:0 0 auto!important}
-#accountpanel.apex-ai-fullscreen .apex-ai-compose{flex:0 0 auto!important}
-#accountpanel.apex-ai-fullscreen .apex-ai-footer,
-#accountpanel.apex-ai-fullscreen .apex-ai-status{flex:0 0 auto!important}
-.apex-ai-thinking{border-color:#c6a35b!important;box-shadow:0 4px 14px rgba(0,0,0,.08)}
-.apex-ai-thinking-line{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800}
-.apex-ai-thinking-dots{display:inline-flex;align-items:center;gap:4px}
-.apex-ai-thinking-dots i{display:block;width:6px;height:6px;border-radius:50%;background:#b58a37;animation:apexAiThinkingPulse 1s infinite ease-in-out}
-.apex-ai-thinking-dots i:nth-child(2){animation-delay:.16s}
-.apex-ai-thinking-dots i:nth-child(3){animation-delay:.32s}
-@keyframes apexAiThinkingPulse{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-4px)}}
-/* إطار مقدمة المتجر: أبيض أوضح مع بقاء اللمعة ناعمة */
-.apex-hero:before{
- border-color:rgba(255,255,255,.97)!important;
- box-shadow:0 0 14px rgba(255,255,255,.22),inset 0 0 4px rgba(255,255,255,.08)!important;
-}
-@media(max-width:560px){
- #accountpanel.apex-ai-fullscreen .account-head{flex-basis:56px!important;min-height:56px!important}
- #accountpanel.apex-ai-fullscreen #accountSection-support{padding:8px!important}
- #accountpanel.apex-ai-fullscreen .apex-ai-intro{font-size:11px!important;line-height:1.55!important;margin:4px 0 7px!important}
- #accountpanel.apex-ai-fullscreen .apex-ai-footer{font-size:9px!important}
-}
-</style>
+
 
 
 <style id="apex-wallet-card-qr-layout-fix">
@@ -2553,141 +2419,10 @@ input,select,textarea{
 }
 </style>
 
-<style id="apex-ai-input-visibility-hotfix">
-/* إصلاح ظهور نافذة الرد وحقل الكتابة داخل مساعد APEX */
-#accountpanel.apex-ai-fullscreen #accountData[hidden],
-#accountpanel.apex-ai-fullscreen #accountSection-support[hidden]{
- display:none!important;
-}
-#accountpanel.apex-ai-fullscreen #accountData:not([hidden]){
- display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
- width:100%!important;min-height:0!important;overflow:hidden!important;
-}
-#accountpanel.apex-ai-fullscreen #accountSection-support:not([hidden]){
- display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
- width:100%!important;min-height:0!important;height:auto!important;
- overflow:hidden!important;box-sizing:border-box!important;
-}
-#accountpanel.apex-ai-fullscreen #apexAiMessages{
- display:flex!important;flex:1 1 0!important;flex-direction:column!important;
- width:100%!important;min-height:90px!important;max-height:none!important;
- overflow-y:auto!important;visibility:visible!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-compose{
- display:flex!important;flex:0 0 auto!important;align-items:stretch!important;
- gap:8px!important;width:100%!important;margin-top:8px!important;
- padding:8px!important;border:1px solid #c6a35b!important;border-radius:14px!important;
- background:linear-gradient(135deg,#fff,#f4f0e7)!important;
- box-sizing:border-box!important;visibility:visible!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{
- display:block!important;flex:1 1 auto!important;width:0!important;min-width:0!important;
- min-height:48px!important;max-height:120px!important;resize:vertical!important;
- padding:12px!important;border:1px solid #b99a5d!important;border-radius:10px!important;
- background:#fff!important;color:#171717!important;font-size:15px!important;
- line-height:1.6!important;visibility:visible!important;opacity:1!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-compose textarea::placeholder{
- color:#777!important;opacity:1!important;
-}
-#accountpanel.apex-ai-fullscreen #apexAiSend{
- display:inline-flex!important;flex:0 0 76px!important;min-width:76px!important;
- min-height:48px!important;align-items:center!important;justify-content:center!important;
- visibility:visible!important;opacity:1!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-footer,
-#accountpanel.apex-ai-fullscreen #apexAiStatus{
- display:flex!important;flex:0 0 auto!important;visibility:visible!important;
-}
-@media(max-width:560px){
- #accountpanel.apex-ai-fullscreen .apex-ai-compose{gap:6px!important;padding:6px!important}
- #accountpanel.apex-ai-fullscreen .apex-ai-compose textarea{font-size:14px!important;min-height:46px!important}
- #accountpanel.apex-ai-fullscreen #apexAiSend{flex-basis:64px!important;min-width:64px!important}
-}
-</style>
 
-<style id="apex-ai-thinking-above-input">
-/* مؤشر التفكير الصغير يظهر مباشرة فوق مربع الكتابة */
-#accountpanel.apex-ai-fullscreen #apexAiStatus{
- display:block!important;flex:0 0 auto!important;align-self:stretch!important;
- min-height:0!important;margin:5px 4px 0!important;padding:0 8px 2px!important;
- color:#76551b!important;font-size:11px!important;font-weight:700!important;
- line-height:1.4!important;text-align:right!important;
-}
-#accountpanel.apex-ai-fullscreen #apexAiStatus:empty{display:none!important}
-#accountpanel.apex-ai-fullscreen #apexAiStatus:not(:empty)::after{
- content:"";display:inline-block;width:4px;height:4px;margin-right:5px;
- vertical-align:middle;border-radius:50%;background:#b58a37;
- box-shadow:7px 0 #b58a37,14px 0 #b58a37;
- animation:apexAiTinyThinking 1s infinite ease-in-out;
-}
-@keyframes apexAiTinyThinking{
- 0%,100%{opacity:.35;transform:translateY(0)}
- 50%{opacity:1;transform:translateY(-2px)}
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-compose{margin-top:0!important}
-</style>
 
-<style id="apex-ai-send-anchor-fix-20261113">
-/* تثبيت شريط الإرسال داخل نافذة المساعد بعيداً عن تضارب تخطيطات الشبكة القديمة */
-#accountpanel.apex-ai-fullscreen #accountSection-support:not([hidden]){
- display:flex!important;flex-direction:column!important;position:relative!important;
- height:100%!important;min-height:0!important;overflow:hidden!important;
- padding:8px 8px 108px!important;gap:5px!important;box-sizing:border-box!important;
-}
-#accountpanel.apex-ai-fullscreen #apexAiMessages{
- flex:1 1 0!important;min-height:0!important;height:auto!important;
- max-height:none!important;overflow-y:auto!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-compose{
- display:flex!important;position:absolute!important;
- left:8px!important;right:8px!important;bottom:34px!important;
- width:auto!important;min-height:52px!important;height:auto!important;
- flex:0 0 auto!important;z-index:100!important;
- align-items:center!important;gap:7px!important;
- margin:0!important;padding:5px!important;
- border:1px solid #b99a5d!important;border-radius:13px!important;
- background:#fff!important;box-shadow:0 4px 18px #0002!important;
- visibility:visible!important;opacity:1!important;
-}
-#accountpanel.apex-ai-fullscreen #apexAiInput{
- display:block!important;flex:1 1 0!important;width:1px!important;min-width:0!important;
- height:44px!important;min-height:44px!important;max-height:44px!important;
- margin:0!important;padding:8px 10px!important;background:#fff!important;
- color:#171717!important;box-sizing:border-box!important;
-}
-#accountpanel.apex-ai-fullscreen #apexAiSend{
- display:flex!important;position:relative!important;z-index:101!important;
- flex:0 0 72px!important;width:72px!important;min-width:72px!important;max-width:72px!important;
- height:44px!important;min-height:44px!important;max-height:44px!important;
- align-items:center!important;justify-content:center!important;
- visibility:visible!important;opacity:1!important;
- background:linear-gradient(135deg,#8b5b12,#e4bd62,#fff0b4,#bd8627)!important;
- color:#211505!important;-webkit-text-fill-color:#211505!important;
- border:1px solid #8a5a12!important;border-radius:10px!important;
- font-weight:900!important;font-size:12px!important;
-}
-#accountpanel.apex-ai-fullscreen .apex-ai-footer{
- position:absolute!important;left:8px!important;right:8px!important;bottom:3px!important;
- display:flex!important;min-height:24px!important;z-index:2!important;
-}
-@media(max-width:560px){
- #accountpanel.apex-ai-fullscreen #accountSection-support:not([hidden]){
-  padding:6px 6px 104px!important;
- }
- #accountpanel.apex-ai-fullscreen .apex-ai-compose{
-  left:6px!important;right:6px!important;bottom:32px!important;
-  min-height:50px!important;padding:4px!important;
- }
- #accountpanel.apex-ai-fullscreen #apexAiInput{
-  height:42px!important;min-height:42px!important;max-height:42px!important;font-size:13px!important;
- }
- #accountpanel.apex-ai-fullscreen #apexAiSend{
-  flex-basis:68px!important;width:68px!important;min-width:68px!important;max-width:68px!important;
-  height:42px!important;min-height:42px!important;font-size:11px!important;
- }
- #accountpanel.apex-ai-fullscreen .apex-ai-footer{font-size:8px!important}
-}
-</style>
+
+
+
 
 </body></html>
