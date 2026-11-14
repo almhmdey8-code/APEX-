@@ -1021,7 +1021,7 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 </style>
 </head>
 <body>
-<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button type="button" class="iconbtn menu" aria-label="المزيد" title="المزيد" aria-expanded="false" aria-controls="apexMoreMenu" onclick="toggleApexMoreMenu(event)">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" aria-label="حسابي" title="حسابي" onclick="openCustomerProfile()">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button type="button" class="outline apex-cart-button" aria-label="السلة" title="السلة" onclick="openCart(event)"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
+<header class="topbar apex-topbar"><div class="actions apex-head-actions"><button type="button" class="iconbtn menu" aria-label="المزيد" title="المزيد" aria-expanded="false" aria-controls="apexMoreMenu" onclick="toggleApexMoreMenu(event)">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" type="button" data-apex-header-action="account" aria-label="حسابي" title="حسابي">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button type="button" class="outline apex-cart-button" data-apex-header-action="cart" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
 <nav id="apexMoreMenu" class="apex-more-menu" aria-label="قائمة المزيد" hidden><button type="button" onclick="closeApexMoreMenu();openCustomerProfile()">♙ بيانات حسابي</button><button type="button" onclick="closeApexMoreMenu();showCustomerOrdersFromMore()">▣ طلباتي</button><button type="button" onclick="closeApexMoreMenu();customerNavFavorites()">♡ المنتجات المفضلة</button><a href="privacy.html">سياسة الخصوصية</a><button type="button" onclick="closeApexMoreMenu();openApexAboutFromMore()">✦ عن APEX</button></nav>
 <section class="hero apex-hero"><div class="hero-content"><div class="eyebrow"><span class="hero-live-dot"></span> APEX · SHOPPING, REIMAGINED</div><h1>تسوّق أذكى.<br><em>اختر الأفضل.</em></h1><p>اكتشف تشكيلات مختارة، تفاصيل واضحة، وتجربة شراء مصممة لتجعل كل خطوة أسهل.</p><div class="hero-actions"><button class="goldbtn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات ←</button><button class="hero-secondary" onclick="document.getElementById('storeCategories').scrollIntoView({behavior:'smooth'})">تصفح الأقسام</button></div><div class="hero-proof"><span>✦ تشكيلة متجددة</span><span>✦ تسوق من مكان واحد</span><span>✦ متابعة طلباتك بسهولة</span></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-monogram">A<span>✦</span></div><div class="hero-visual-caption">THE APEX EDITION <b>01 / 26</b></div></div></section>
 <section id="storeBanners" class="banner-strip" aria-label="عروض المتجر"></section>
@@ -2624,18 +2624,29 @@ input,select,textarea{
  .topbar.apex-topbar>.apex-cart-button{min-width:48px!important;min-height:52px!important;padding:5px 8px!important}
 }
 </style>
-<script id="apex-header-cart-click-fix">
+<script id="apex-header-action-routing">
+/* توجيه مستقل لأزرار الهيدر: الحساب للحساب فقط، والسلة للسلة فقط. */
 (function(){
- const more=document.querySelector('.topbar.apex-topbar .apex-head-actions .menu');
- const cartButton=document.querySelector('.topbar.apex-topbar .apex-cart-button');
- if(more) more.addEventListener('click',function(event){
-  event.preventDefault();event.stopImmediatePropagation();
-  if(typeof window.toggleApexMoreMenu==='function')window.toggleApexMoreMenu(event);
- },{capture:true});
- if(cartButton) cartButton.addEventListener('click',function(event){
-  event.preventDefault();event.stopImmediatePropagation();
-  if(typeof window.openCart==='function')window.openCart(event);
- },{capture:true});
+ const accountButton=document.querySelector('[data-apex-header-action="account"]');
+ const cartButton=document.querySelector('[data-apex-header-action="cart"]');
+ function bind(button,action){
+  if(!button)return;
+  button.addEventListener('click',function(event){
+   event.preventDefault();
+   event.stopPropagation();
+   event.stopImmediatePropagation();
+   if(action==='account'){
+    if(typeof window.closeApexMoreMenu==='function')window.closeApexMoreMenu();
+    if(typeof window.openCustomerProfile==='function')window.openCustomerProfile();
+    else console.error('APEX: account action is not available');
+   }else{
+    if(typeof window.openCart==='function')window.openCart(event);
+    else console.error('APEX: cart action is not available');
+   }
+  },true);
+ }
+ bind(accountButton,'account');
+ bind(cartButton,'cart');
 })();
 </script>
 
