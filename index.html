@@ -1019,6 +1019,59 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 @media(max-width:800px){.hero:before{inset:7px}.feature,.product{backdrop-filter:blur(15px) saturate(145%)!important}}
 @media(prefers-reduced-motion:no-preference){.brand{animation:apxGlow 5s ease-in-out infinite alternate}@keyframes apxGlow{from{filter:drop-shadow(0 0 7px #d4a34444)}to{filter:drop-shadow(0 0 17px #f5d88988)}}}
 </style>
+
+<style id="apex-cart-new-system">
+/* APEX cart rebuilt: isolated overlay, responsive product list and checkout */
+#cartpanel.apex-cart-overlay{display:none!important;position:fixed!important;inset:0!important;z-index:10060!important;align-items:center!important;justify-content:center!important;padding:clamp(8px,2vw,24px)!important;background:rgba(3,5,4,.78)!important;backdrop-filter:blur(13px) saturate(125%)!important;-webkit-backdrop-filter:blur(13px) saturate(125%)!important;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}
+#cartpanel.apex-cart-overlay.is-open{display:flex!important;opacity:1!important;visibility:visible!important}
+body.apex-cart-is-open{overflow:hidden!important}
+#cartpanel .apex-cart-dialog{width:min(960px,100%)!important;max-height:min(92dvh,900px)!important;overflow:auto!important;overscroll-behavior:contain!important;border:1px solid #d9b967!important;border-radius:25px!important;background:linear-gradient(145deg,#fffdf7 0%,#f4eedf 52%,#fff 100%)!important;color:#211b10!important;box-shadow:0 28px 90px #000b,inset 0 1px #fff!important;scrollbar-width:thin}
+#cartpanel .apex-cart-top{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 22px;background:linear-gradient(110deg,#18140b,#30230e 55%,#14120c)!important;border-bottom:1px solid #c8a75c}
+#cartpanel .apex-cart-top small{color:#e6ca81;font:800 9px/1.4 Tahoma,Arial;letter-spacing:2px}
+#cartpanel .apex-cart-top h2{margin:3px 0;color:#fff0bd!important;font-size:25px}
+#cartpanel .apex-cart-top p{margin:0;color:#d6c69d;font-size:12px}
+#cartpanel .apex-cart-close{width:42px;height:42px;border:1px solid #e2c477;border-radius:13px;background:#fff2;color:#ffe9aa;font-size:29px;line-height:1}
+#cartpanel .apex-cart-content{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:18px;padding:18px}
+#cartpanel .apex-cart-products-section,#cartpanel .apex-checkout-section{min-width:0;border:1px solid #dfd1ad;border-radius:18px;background:#fff;padding:15px;box-shadow:0 8px 24px #55411b0d}
+#cartpanel .apex-checkout-section{background:linear-gradient(160deg,#fffdf7,#f6f0e2)}
+#cartpanel .apex-cart-list-heading{display:flex;align-items:center;gap:10px;padding:2px 0 12px;border-bottom:1px solid #e8dfca;color:#292115}
+#cartpanel .apex-cart-list-heading span{margin-inline-start:auto;color:#8a6828;font-size:12px}
+#cartpanel .apex-cart-list-heading button{border:0;background:transparent;color:#a34d35;font-size:12px;font-weight:800}
+#cartpanel .apex-cart-product{display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #eee8db}
+#cartpanel .apex-cart-product-image{width:76px;height:76px;display:grid;place-items:center;overflow:hidden;border:1px solid #e7d8b3;border-radius:13px;background:#faf6eb;color:#b38b3b;font-size:28px}
+#cartpanel .apex-cart-product-image img{width:100%;height:100%;object-fit:contain}
+#cartpanel .apex-cart-product-data{display:grid;gap:5px;min-width:0}
+#cartpanel .apex-cart-product-data b{color:#211b10;font-size:13px;line-height:1.6}
+#cartpanel .apex-cart-product-data strong{color:#90671f;font-size:14px}
+#cartpanel .apex-cart-quantity{display:flex;align-items:center;gap:9px;width:max-content;border:1px solid #e0d2b3;border-radius:10px;padding:2px;background:#fffdf8}
+#cartpanel .apex-cart-quantity button{width:27px;height:27px;border:0;border-radius:7px;background:#f0e4c8;color:#3a2b11;font-size:18px}
+#cartpanel .apex-cart-quantity output{min-width:18px;text-align:center;color:#20190f;font-weight:800}
+#cartpanel .apex-cart-delete{border:0;background:transparent;color:#a34d35;font-size:11px;font-weight:800}
+#cartpanel .apex-cart-total-card{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:14px;padding:14px;border:1px solid #e2d2aa;border-radius:13px;background:#fbf7ed;color:#41341e}
+#cartpanel .apex-cart-total-card strong{color:#815b19;font-size:20px}
+#cartpanel .apex-cart-total-card small{grid-column:1/-1;color:#837966;font-size:10px;line-height:1.7}
+#cartpanel .apex-cart-empty-new{min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;color:#241d11}
+#cartpanel .apex-cart-empty-new>span{font-size:45px}
+#cartpanel .apex-cart-empty-new b{font-size:17px}
+#cartpanel .apex-cart-empty-new small{color:#81755f;font-size:12px}
+#cartpanel .apex-cart-empty-new button{margin-top:8px;padding:10px 17px;border:1px solid #b58b39;border-radius:11px;background:linear-gradient(120deg,#a87824,#f3d88e);color:#211606;font-weight:900}
+#cartpanel .apex-checkout-heading{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e6dcc7}
+#cartpanel .apex-checkout-heading>span{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#2a210f;color:#f2d78f;font-weight:900}
+#cartpanel .apex-checkout-heading h3{margin:0;color:#302411;font-size:17px}
+#cartpanel .apex-checkout-heading small{color:#897b62;font-size:11px}
+#cartpanel .apex-checkout-section>label,#cartpanel .apex-checkout-two label{display:block;margin:9px 0 5px;color:#534324;font-size:12px;font-weight:800}
+#cartpanel .apex-checkout-section input,#cartpanel .apex-checkout-section textarea,#cartpanel .apex-checkout-section select{display:block;width:100%;min-height:42px;margin-top:5px;padding:10px 12px;border:1px solid #d8c69b;border-radius:10px;background:#fff!important;color:#211b10!important;-webkit-text-fill-color:#211b10!important;font:inherit;font-size:13px}
+#cartpanel .apex-checkout-section textarea{resize:vertical}
+#cartpanel .apex-checkout-two{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#cartpanel .apex-location-button{width:100%;margin-top:9px;padding:11px;border:1px solid #c6a35b;border-radius:11px;background:#fff9e9;color:#72531b;font-weight:900}
+#cartpanel .apex-location-status{margin:7px 0;color:#81755f;font-size:11px;line-height:1.6}
+#cartpanel .apex-payment-choices{margin:14px 0}
+#cartpanel .apex-payment-choices>p{color:#76551b;font-weight:900}
+#cartpanel .apex-submit-order{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;padding:14px;border:1px solid #f0d88f;border-radius:13px;background:linear-gradient(110deg,#8a5c17,#f3d88b 48%,#a87521);color:#211606;font-size:15px;font-weight:900;box-shadow:0 8px 20px #9d74252a}
+#cartpanel .apex-checkout-footnote{margin:8px 0 0;color:#827762;font-size:10px;line-height:1.6;text-align:center}
+@media(max-width:720px){#cartpanel.apex-cart-overlay{align-items:flex-start!important;padding:7px!important}#cartpanel .apex-cart-dialog{max-height:96dvh!important;border-radius:17px!important}#cartpanel .apex-cart-top{padding:13px 15px}#cartpanel .apex-cart-top h2{font-size:21px}#cartpanel .apex-cart-content{grid-template-columns:1fr;gap:11px;padding:10px}#cartpanel .apex-cart-products-section,#cartpanel .apex-checkout-section{padding:12px;border-radius:14px}#cartpanel .apex-cart-product{grid-template-columns:62px minmax(0,1fr) auto;gap:8px;padding:10px 0}#cartpanel .apex-cart-product-image{width:62px;height:62px}#cartpanel .apex-checkout-two{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){#cartpanel .apex-checkout-two{grid-template-columns:1fr}#cartpanel .apex-cart-product-data b{font-size:12px}}
+</style>
 </head>
 <body>
 <header class="topbar apex-topbar"><div class="actions apex-head-actions"><button type="button" class="iconbtn menu" aria-label="المزيد" title="المزيد" aria-expanded="false" aria-controls="apexMoreMenu" onclick="toggleApexMoreMenu(event)">☰<span class="menu-more-label">المزيد</span></button><button class="iconbtn" aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="account-entry" class="iconbtn account-entry" type="button" data-apex-header-action="account" aria-label="حسابي" title="حسابي">♙</button></div><a class="brand" href="#" aria-label="APEX الرئيسية"><span class="crown">👑</span><span>APEX<small>PREMIUM COLLECTION</small></span></a><button type="button" class="outline apex-cart-button" data-apex-header-action="cart" aria-label="السلة" title="السلة"><span aria-hidden="true">🛒</span><b id="count">0</b></button></header>
@@ -1129,7 +1182,38 @@ footer{background:rgba(3,7,5,.7);backdrop-filter:blur(18px);border-top:1px solid
 <div style="border:1px solid #8e6d2e;border-radius:14px;padding:14px;text-align:center;background:#0b0b08"><small style="color:#c9a34d">كود الدعوة الخاص بك</small><div id="myReferralCode" style="font-size:27px;color:#f2d37d;font-weight:900;letter-spacing:2px">جارٍ التحميل...</div><div id="myReferralLink" dir="ltr" style="font-size:11px;color:#b8b8b8;overflow-wrap:anywhere;margin:8px 0"></div><button class="add" type="button" onclick="copyMyReferralLink()">نسخ رابط الدعوة</button></div><p id="referralVisitStats" style="font-size:12px;color:#c9a34d;margin:12px 0">جارٍ تحميل إحصائيات الرابط...</p><div style="border:1px solid #65522b;border-radius:12px;padding:12px;margin:12px 0;background:#10100d"><b style="color:#f2d37d">تحليل أداء الدعوات</b><p id="referralAiInsight" style="font-size:12px;color:#ddd;margin:7px 0 0">جارٍ تحليل أداء رابطك...</p></div>
 <div style="margin-top:16px;display:flex;justify-content:space-between;gap:8px"><b>تقدمك نحو المكافأة</b><strong id="referralProgressText">0 / 5</strong></div><div style="height:9px;background:#29251a;border-radius:20px;overflow:hidden;margin:9px 0"><div id="referralProgressBar" style="height:100%;width:0;background:linear-gradient(90deg,#987022,#f5d879);border-radius:20px"></div></div><h3 id="referralRemaining" style="color:#f2d37d">تبقى 5 أشخاص</h3><p id="referralRewardStatus" style="color:#aaa;font-size:12px"></p><div id="referralHistory"></div></section>
 
-</div></div></div></div><div id="deliveryMapModal" role="dialog" aria-modal="true" aria-labelledby="deliveryMapTitle"><div class="delivery-map-card"><h3 id="deliveryMapTitle" style="margin:2px 0;color:#f2d37d">تحديد موقع التوصيل</h3><p id="deliveryMapMessage" style="font-size:13px;color:#ddd;margin:6px 0">جارٍ تحديد موقعك تلقائياً…</p><div id="deliveryMap"></div><p style="font-size:12px;color:#bbb">يمكنك تحريك العلامة إلى موقع المنزل بدقة، ثم اضغط «موافقة» لاعتماد الموقع.</p><div class="delivery-map-actions"><button type="button" onclick="confirmDeliveryLocation()">موافقة واعتماد الموقع</button><button type="button" class="secondary" onclick="closeDeliveryMap()">إلغاء</button></div></div></div><div class="cartpanel" id="cartpanel" onclick="if(event.target===this)closeCart()"><div class="cartbox"><button class="close" onclick="closeCart()">×</button><h2>سلة مشترياتك</h2><div id="cartitems">السلة فارغة</div><h3>إتمام الطلب</h3><label for="orderCountry" style="display:block;color:var(--gold);margin:10px 0 5px">دولة التوصيل</label><select id="orderCountry" required style="width:100%;padding:12px;border:1px solid var(--gold);border-radius:10px;background:#101612;color:#fff;margin-bottom:10px"><option value="SA">السعودية</option><option value="YE">اليمن</option></select><input id="customer" placeholder="الاسم الكامل"><input id="phone" placeholder="رقم الجوال"><label for="shippingMethod" style="display:block;color:var(--gold);margin:10px 0 5px">طريقة الشحن</label><select id="shippingMethod" style="width:100%;padding:12px;border:1px solid var(--gold);border-radius:10px;background:#101612;color:#fff;margin-bottom:10px"><option value="توصيل إلى المنزل">توصيل إلى المنزل</option><option value="استلام بالتنسيق مع المتجر">استلام بالتنسيق مع المتجر</option></select><textarea id="notes" rows="3" placeholder="المدينة والحي والشارع أو ملاحظات إضافية (اختياري)"></textarea><button type="button" class="goldbtn" style="width:100%;margin:5px 0" onclick="selectDeliveryLocation()">📍 تحديد موقع التوصيل على الخريطة</button><p id="locationStatus" style="font-size:12px;color:#aaa">حدد موقعك لإرساله مع الطلب، أو اكتب عنوانك في الحقل أعلاه.</p><span id="locationMapLink" hidden></span><div id="paymentChoices"><p style="color:#e9bd55">طرق الدفع المتاحة</p><p style="color:#aaa">جارٍ تحميل طرق الدفع...</p></div><button class="goldbtn" style="width:100%" onclick="sendOrder()">إرسال الطلب</button><p style="color:#aaa;font-size:12px">سيتم إرسال تفاصيل طلبك عبر البريد الإلكتروني للتواصل معك وتأكيده.</p></div></div>
+</div></div></div></div><div id="deliveryMapModal" role="dialog" aria-modal="true" aria-labelledby="deliveryMapTitle"><div class="delivery-map-card"><h3 id="deliveryMapTitle" style="margin:2px 0;color:#f2d37d">تحديد موقع التوصيل</h3><p id="deliveryMapMessage" style="font-size:13px;color:#ddd;margin:6px 0">جارٍ تحديد موقعك تلقائياً…</p><div id="deliveryMap"></div><p style="font-size:12px;color:#bbb">يمكنك تحريك العلامة إلى موقع المنزل بدقة، ثم اضغط «موافقة» لاعتماد الموقع.</p><div class="delivery-map-actions"><button type="button" onclick="confirmDeliveryLocation()">موافقة واعتماد الموقع</button><button type="button" class="secondary" onclick="closeDeliveryMap()">إلغاء</button></div></div></div><div class="apex-cart-overlay" id="cartpanel" aria-hidden="true" onclick="if(event.target===this)closeCart()">
+ <section class="apex-cart-dialog" role="dialog" aria-modal="true" aria-labelledby="apexCartTitle">
+  <header class="apex-cart-top">
+   <div><small>APEX · SHOPPING BAG</small><h2 id="apexCartTitle">سلة مشترياتك</h2><p>كل اختياراتك في مكان واحد</p></div>
+   <button type="button" class="apex-cart-close" onclick="closeCart()" aria-label="إغلاق السلة">×</button>
+  </header>
+  <div class="apex-cart-content">
+   <section class="apex-cart-products-section" aria-label="المنتجات المختارة">
+    <div id="cartitems" aria-live="polite">السلة فارغة</div>
+   </section>
+   <section class="apex-checkout-section" aria-labelledby="apexCheckoutTitle">
+    <div class="apex-checkout-heading"><span>02</span><div><h3 id="apexCheckoutTitle">إتمام الطلب</h3><small>بيانات التوصيل والدفع</small></div></div>
+    <label for="orderCountry">دولة التوصيل</label>
+    <select id="orderCountry" required><option value="SA">السعودية</option><option value="YE">اليمن</option></select>
+    <div class="apex-checkout-two">
+     <label>الاسم الكامل<input id="customer" autocomplete="name" placeholder="الاسم كما في الهوية"></label>
+     <label>رقم الجوال<input id="phone" autocomplete="tel" inputmode="tel" placeholder="05xxxxxxxx"></label>
+    </div>
+    <label for="shippingMethod">طريقة الشحن</label>
+    <select id="shippingMethod"><option value="توصيل إلى المنزل">توصيل إلى المنزل</option><option value="استلام بالتنسيق مع المتجر">استلام بالتنسيق مع المتجر</option></select>
+    <label for="notes">العنوان وملاحظات التوصيل</label>
+    <textarea id="notes" rows="3" placeholder="المدينة والحي والشارع أو ملاحظات إضافية (اختياري)"></textarea>
+    <button type="button" class="apex-location-button" onclick="selectDeliveryLocation()">⌖ تحديد موقع التوصيل على الخريطة</button>
+    <p id="locationStatus" class="apex-location-status">يمكنك تحديد موقعك أو كتابة العنوان أعلاه.</p>
+    <span id="locationMapLink" hidden></span>
+    <div id="paymentChoices" class="apex-payment-choices"><p>طرق الدفع المتاحة</p><small>جارٍ تحميل طرق الدفع...</small></div>
+    <button type="button" class="apex-submit-order" onclick="sendOrder()">تأكيد وإرسال الطلب <span>←</span></button>
+    <p class="apex-checkout-footnote">لن يُعد الطلب مدفوعاً حتى يتم التحقق من الدفع فعلياً.</p>
+   </section>
+  </div>
+ </section>
+</div>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}});
@@ -1160,135 +1244,30 @@ function loadApexCart(){
   if(!Array.isArray(raw))return [];
   return raw.filter(x=>x&&x.id!=null&&String(x.name||'').trim()&&Number.isFinite(Number(x.price))&&Number(x.price)>0)
    .map(x=>({id:x.id,name:String(x.name).slice(0,180),price:Number(x.price),quantity:Math.max(1,Math.min(99,Math.floor(Number(x.quantity)||1)))}));
- }catch(e){return []}
+ }catch(error){console.warn('APEX cart data could not be read:',error);return []}
 }
 let cart=loadApexCart(),selectedPayment='',customerSession=null,storeCurrencyCountry='SA',storeExchangeRate=137,storeProducts=[];
-window.openCart=openCart;window.closeCart=closeCart;window.add=add;
-let apexAssistantMessages=[],apexAssistantBusy=false,apexAssistantInitialized=false,apexAssistantSessionVersion=0;
-const favorites=new Set(JSON.parse(localStorage.getItem('apex_favorites')||'[]'));
-function saveFavorites(){localStorage.setItem('apex_favorites',JSON.stringify([...favorites]));$('favCount').textContent=favorites.size;}
-function toast(msg){const n=document.createElement('div');n.className='luxury-toast';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
-const $=id=>document.getElementById(id);
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function formatStorePrice(amount){const n=Number(amount||0);return storeCurrencyCountry==='YE'?(n*storeExchangeRate).toLocaleString('ar-YE',{maximumFractionDigits:0})+' ر.ي':n.toFixed(2)+' ر.س'}
-async function loadStoreCurrency(){const {data,error}=await supabase.from('apex_store_settings').select('exchange_rate').eq('setting_key','currency').maybeSingle();if(!error&&data?.exchange_rate>0)storeExchangeRate=Number(data.exchange_rate);await loadStoreProducts()}
-async function loadStoreProducts(){
- const box=$('products');if(!box)return;
- const {data,error}=await supabase.from('apex_products').select('id,name,category,description,price,image_url,image_urls,active').eq('active',true).order('created_at',{ascending:false});
- if(error){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#f99">تعذر تحميل المنتجات. يرجى المحاولة لاحقاً.</p>';console.error(error);return}
- const products=data||[];storeProducts=products;
- renderCompareUI();renderRecentlyViewed();
- if(!products.length){box.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#c9bd9a;padding:35px">لا توجد منتجات متاحة حالياً. نعمل على إضافة منتجات جديدة قريباً.</p>';return}
- box.innerHTML=products.map(p=>{
-  const images=[...new Set([...(Array.isArray(p.image_urls)?p.image_urls:[]),p.image_url].filter(x=>/^https:\/\//i.test(x||'')))].slice(0,5);
-  const image=images[0]||'';
-  const gallery=image?'<div class="product-gallery"><img class="product-main-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(p.name)+'">'+(images.length>1?'<div class="product-thumbs">'+images.map((src,n)=>'<button type="button" class="product-thumb '+(n===0?'active':'')+'" data-product-image="'+esc(src)+'" aria-label="عرض الصورة '+(n+1)+'"><img loading="lazy" src="'+esc(src)+'" alt=""></button>').join('')+'</div>':'')+'</div>':'<div style="height:190px;display:grid;place-items:center;color:#b89a50;font-size:55px">💎</div>';
-  const demo=p.price===null||p.price===undefined;
-  const description=String(p.description||'').trim();
-  return '<article class="product" data-cat="'+esc(p.category||'')+'" data-name="'+esc(p.name)+'" data-search="'+esc([p.name,p.category,description].join(' ').toLowerCase())+'" data-price="'+Number(p.price||0)+'"><div class="product-card-media">'+gallery+'<button class="fav '+(favorites.has(String(p.id))?'on':'')+'" data-fav="'+esc(p.id)+'" type="button" aria-label="إضافة إلى المفضلة">♡</button><button class="compare-product '+(compareProductIds.includes(String(p.id))?'selected':'')+'" data-compare="'+esc(p.id)+'" type="button" aria-label="إضافة للمقارنة">⇄ مقارنة</button><span class="product-label">'+(demo?'قريباً':'متاح للطلب')+'</span></div><div class="product-card-info"><span class="product-category">'+esc(p.category||'APEX SELECT')+'</span><h3>'+esc(p.name)+'</h3><p class="product-description">'+esc(description||'اكتشف تفاصيل هذا المنتج ومواصفاته في APEX.')+'</p><div class="product-card-bottom"><strong class="product-price">'+(demo?'السعر غير محدد':formatStorePrice(p.price))+'</strong><button class="detail-trigger" type="button" data-detail-id="'+esc(p.id)+'">التفاصيل ←</button></div><button class="add-to-cart-wide" type="button" '+(demo?'disabled':'data-add-id="'+esc(p.id)+'" data-add-name="'+esc(p.name)+'" data-add-price="'+Number(p.price)+'"')+'>'+(demo?'سيُتاح قريباً':'أضف إلى السلة ＋')+'</button></div></article>';
- }).join('');
- box.querySelectorAll('[data-add-id]').forEach(b=>b.addEventListener('click',()=>add(Number(b.dataset.addId),b.dataset.addName,Number(b.dataset.addPrice))));
- box.querySelectorAll('[data-detail-id]').forEach(b=>b.addEventListener('click',()=>openProductDetail(b.dataset.detailId)));
- box.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=String(b.dataset.fav);favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();b.classList.toggle('on',favorites.has(id));toast(favorites.has(id)?'أضيف إلى المفضلة':'أزيل من المفضلة');if($('showFavorites')?.dataset.only==='1')filterProducts();}));
- box.querySelectorAll('[data-compare]').forEach(b=>b.addEventListener('click',()=>toggleProductCompare(b.dataset.compare)));
- box.querySelectorAll('[data-product-image]').forEach(b=>b.addEventListener('click',()=>{
-  const gallery=b.closest('.product-gallery'),main=gallery?.querySelector('.product-main-image');if(!main)return;
-  main.src=b.dataset.productImage;gallery.querySelectorAll('.product-thumb').forEach(x=>x.classList.toggle('active',x===b));
- }));
- saveFavorites();
- const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
- const catbox=document.querySelector('.categories');
- catbox.innerHTML='<button class="cat active" data-cat="الكل">الكل</button>'+cats.map(x=>'<button class="cat" data-cat="'+esc(x)+'">'+esc(x)+'</button>').join('');
- bindCategoryFilters();
- filterProducts();
+let apexCartFocusBeforeOpen=null;
+function saveApexCart(){
+ try{localStorage.setItem('apex_cart_v1',JSON.stringify(cart))}
+ catch(error){console.warn('APEX cart persistence unavailable:',error)}
 }
-function bindCategoryFilters(){
- document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelector('.cat.active')?.classList.remove('active');b.classList.add('active');filterProducts();
- }));
-}
-async function loadStoreBanners(){
- const box=$('storeBanners');if(!box)return;
- const {data,error}=await supabase.from('apex_banners').select('id,title,subtitle,image_url,link_url').eq('active',true).order('sort_order',{ascending:true});
- if(error){box.hidden=true;console.warn('تعذر تحميل البنرات',error.message);return}
- box.innerHTML=(data||[]).filter(x=>x.image_url).map(x=>{
-  const inner='<img src="'+esc(x.image_url)+'" alt="'+esc(x.title)+'" loading="lazy"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle)+'</p></div>';
-  return x.link_url?'<a class="store-banner" href="'+esc(x.link_url)+'" target="_blank" rel="noopener">'+inner+'</a>':'<article class="store-banner">'+inner+'</article>';
- }).join('');
- if(!box.children.length)box.hidden=true;
-}
-function showCheckoutPaymentCard(methods,value){
- const card=$('checkoutPaymentCard'),body=$('checkoutPaymentDetails'),title=$('checkoutPaymentTitle'),ref=$('checkoutPaymentReference'),transfer=$('checkoutTransferFields');if(!card||!body)return;
- if(value==='wallet'){card.hidden=false;title.textContent='محفظة APEX';body.innerHTML='<p>سيتم خصم قيمة الطلب من رصيد محفظتك بعد التحقق من كفايته.</p>';if(transfer)transfer.hidden=true;return}
- const m=methods.find(x=>String(x.id)===String(value));if(!m){card.hidden=true;return}title.textContent=m.name;ref.hidden=false;if(transfer)transfer.hidden=false;
- const accounts=m.method_code==='alkuraimi_bank'?(m.public_config?.accounts_by_currency||{}):{};
- if(m.method_code==='alkuraimi_bank'&&Object.keys(accounts).length){
-  const order=['YER','SAR','USD'];
-  body.innerHTML='<p class="checkout-payment-note">اختر الحساب المطابق للعملة التي ستحوّل بها، ثم انسخ رقمه.</p>'+order.filter(code=>accounts[code]?.account_number).map(code=>'<div class="checkout-payment-detail"><small>'+esc(accounts[code].label||code)+'</small><b dir="ltr">'+esc(accounts[code].account_number)+'</b><button type="button" class="copy-payment-number" data-copy-payment="'+esc(accounts[code].account_number)+'">نسخ رقم الحساب</button></div>').join('');
- }else{
-  const currencyLabel=({ye_yer:'الريال اليمني',ye_kas:'الريال السعودي',ye_usd:'الدولار الأمريكي',alkuraimi_bank:'حساب الكريمي',jeeb:'محفظة جيب',one_cash:'محفظة ون كاش',alamri_cash:'محفظة عامري كاش'})[m.method_code]||'';
-  const rows=[['العملة',currencyLabel],['اسم صاحب الحساب',m.account_holder],['رقم الحساب',m.account_number],['رقم الآيبان',m.account_iban],['تعليمات الدفع',m.instructions]].filter(x=>x[1]);
-  body.innerHTML=rows.length?rows.map(([k,v])=>'<div class="checkout-payment-detail"><small>'+esc(k)+'</small><b>'+esc(v)+'</b>'+(k==='رقم الحساب'||k==='رقم الآيبان'?'<button type="button" class="copy-payment-number" data-copy-payment="'+esc(v)+'">نسخ الرقم</button>':'')+'</div>').join(''):'<p>لا توجد تفاصيل إضافية لهذه الوسيلة.</p>';
- }
- body.querySelectorAll('[data-copy-payment]').forEach(btn=>btn.addEventListener('click',async()=>{const value=btn.dataset.copyPayment||'';try{await navigator.clipboard.writeText(value);btn.textContent='تم النسخ ✓'}catch(e){const t=document.createElement('textarea');t.value=value;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();btn.textContent='تم النسخ ✓'}setTimeout(()=>btn.textContent='نسخ الرقم',1800)}));
- card.hidden=false;card.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-async function loadPaymentMethods(){
- const box=$('paymentChoices');if(!box)return;
- const wantedCountry=String(storeCurrencyCountry||'SA').trim().toUpperCase();
- const {data,error}=await supabase.from('apex_payment_methods')
-  .select('id,name,method_code,instructions,method_type,country_code,account_holder,account_number,account_iban,public_config,sort_order,enabled,orders_enabled')
-  .order('sort_order',{ascending:true});
- if(error){box.innerHTML='<p style="color:#f99">تعذر تحميل طرق الدفع حالياً.</p>';return}
- const yeCodes=['alkuraimi_bank','jeeb','one_cash','alamri_cash'];
- const methods=(data||[]).filter(m=>{
-  const country=String(m.country_code||'').trim().toUpperCase();
-  return (country===wantedCountry||country==='ALL')&&(
-   ['mada','visa','google_pay'].includes(m.method_code)||
-   yeCodes.includes(m.method_code)
-  );
- });
- const paymentBrandLogo=(name)=>{
-  const n=String(name||'').toLowerCase();
-  if(n.includes('الكريمي')||n.includes('كريمي'))return 'https://play-lh.googleusercontent.com/6IZttTeyjm-9x0Do0AMsmTzFOIAYnLGO08ykQRkZfwd4d5YcTFyJFhsn6wNIToHBvHrK17wz--r3kmPwpR1tSw=w240-h480';
-  if(n.includes('جيب')||n.includes('jaib')||n.includes('jeeb'))return 'https://play-lh.googleusercontent.com/DD6sJ8x9gQZ0uu84r5xD7-yUR2Ckc8CotMJmAhTrTM5pl8NEUdZA0rqBtXUqOyzoSzWC0OfuMvyvoDRRO6EpjQ=w240-h480';
-  if(n.includes('ون كاش')||n.includes('one cash')||n.includes('onecash'))return 'https://play-lh.googleusercontent.com/WqrsU_pFeqT63UuvAH8vavDeee22oJWtrp6TuVyqbWddB8EtkSToVwPUzp-arwD_3em6VnzDHF-8STWhujko1Q=w240-h480';
-  if(n.includes('عامري')||n.includes('alameri')||n.includes('amiri'))return 'https://graph.facebook.com/415075535267248/picture?type=large';
-  return '';
- };
- const isReady=m=>Boolean(m.enabled&&m.orders_enabled&&(String(m.account_number||'').trim()||String(m.account_iban||'').trim())&&String(m.method_type||'manual').toLowerCase()!=='gateway');
- const renderMethod=(m)=>{
-  const logo=paymentBrandLogo(m.name);
-  const image=logo?'<img class="paybrand-logo" src="'+logo+'" alt="شعار '+esc(m.name)+'" loading="lazy" referrerpolicy="no-referrer">':'';
-  const ready=isReady(m);
-  const gateway=String(m.method_type||'').toLowerCase()==='gateway';
-  const status=ready?'متاح للدفع':(gateway?'غير مفعّل حالياً — بانتظار ربط بوابة الدفع':(m.method_code==='alkuraimi_bank'?'بانتظار اكتمال بيانات الحساب':'موقوف مؤقتاً'));
-  const content='<span class="paybrand-copy"><b>'+esc(m.name)+'</b><small>'+status+'</small></span>';
-  return ready
-   ?'<label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="'+m.id+'">'+image+content+'</label>'
-   :'<div class="paychoice checkout-payment-tile" aria-disabled="true" style="opacity:.62;cursor:not-allowed">'+image+content+'</div>';
- };
- const saMethods=methods.filter(m=>['SA','ALL'].includes(String(m.country_code||'').toUpperCase()));
- const yeMethods=methods.filter(m=>['YE','ALL'].includes(String(m.country_code||'').toUpperCase()));
- const group=(title,list)=>list.length?'<div class="checkout-payment-country"><b class="checkout-payment-country-title">'+title+'</b><div class="checkout-payment-grid">'+list.map(renderMethod).join('')+'</div></div>':'';
- const manual=group('طرق الدفع في السعودية',saMethods)+group('طرق الدفع في اليمن',yeMethods);
- const wallet='<div class="checkout-payment-country"><b class="checkout-payment-country-title">الدفع من رصيد APEX</b><div class="checkout-payment-grid"><label class="paychoice checkout-payment-tile"><input type="radio" name="paymentMethod" value="wallet"><span class="paybrand-copy"><b>محفظة APEX</b><small>الدفع من رصيد محفظتك بعد التحقق من كفايته.</small></span></label></div></div>';
- const disabledNotice='<p style="color:#bdb18e;font-size:11px">تظهر وسائل الدفع الخاصة بالسعودية واليمن بشكل منفصل. الوسيلة غير المفعّلة لا يمكن اختيارها حتى يكتمل إعدادها.</p>';
- box.innerHTML='<p class="checkout-pay-heading">اختر طريقة الدفع</p><div class="checkout-payment-grid">'+wallet+manual+'</div>'+disabledNotice+'<section id="checkoutPaymentCard" class="checkout-payment-card" hidden><header class="checkout-payment-card-head"><span class="checkout-card-chip">✦</span><div><b id="checkoutPaymentTitle">بيانات الدفع</b><small>تفاصيل الدفع الخاصة بطلبك</small></div><strong>APEX</strong></header><div id="checkoutPaymentDetails" class="checkout-payment-card-body"></div><div id="checkoutTransferFields"><label class="checkout-reference-label" for="checkoutPayerName">اسم الشخص المحوِّل كما يظهر في الحوالة</label><input id="checkoutPayerName" class="checkout-reference-input" maxlength="120" placeholder="اكتب اسم المحوِّل"><label class="checkout-reference-label" for="checkoutPaymentReference">رقم الحوالة / مرجع الدفع</label><input id="checkoutPaymentReference" class="checkout-reference-input" maxlength="160" placeholder="أدخل رقم العملية بعد التحويل"></div><p class="checkout-payment-note">سيظل الطلب بانتظار تأكيد الإدارة حتى التحقق من استلام المبلغ.</p></section>';
- box.querySelectorAll('input[name="paymentMethod"]:not(:disabled)').forEach(input=>input.addEventListener('change',()=>showCheckoutPaymentCard(methods,input.value)));
-}
-function saveApexCart(){try{localStorage.setItem('apex_cart_v1',JSON.stringify(cart))}catch(e){console.warn('APEX cart persistence unavailable',e)}}
+function cartQuantity(){return cart.reduce((sum,item)=>sum+item.quantity,0)}
+function cartTotal(){return cart.reduce((sum,item)=>sum+item.price*item.quantity,0)}
 function syncCartCount(){
- const n=cart.reduce((sum,x)=>sum+x.quantity,0);
- const count=$('count'),dock=$('dockCount');if(count)count.textContent=n;if(dock)dock.textContent=n;
- const badge=document.querySelector('.apex-cart-button');if(badge){badge.setAttribute('aria-label','السلة، '+n+' منتجات');badge.dataset.cartCount=String(n)}
+ const count=cartQuantity();
+ document.querySelectorAll('#count,#dockCount,[data-apex-cart-count]').forEach(node=>node.textContent=String(count));
+ const trigger=document.querySelector('[data-apex-header-action="cart"]');
+ if(trigger){trigger.setAttribute('aria-label','السلة، '+count+' منتجات');trigger.dataset.cartCount=String(count)}
 }
 function add(id,name,price){
  const numericPrice=Number(price);
- if(!Number.isFinite(numericPrice)||numericPrice<=0){toast('هذا المنتج غير متاح للطلب حالياً');return}
- const found=cart.find(x=>String(x.id)===String(id));
- if(found){if(found.quantity>=99){toast('وصلت للحد الأقصى للكمية');return}found.quantity+=1}
- else cart.push({id,name:String(name||'منتج APEX'),price:numericPrice,quantity:1});
+ if(id==null||!Number.isFinite(numericPrice)||numericPrice<=0){toast('هذا المنتج غير متاح للطلب حالياً');return}
+ const found=cart.find(item=>String(item.id)===String(id));
+ if(found){
+  if(found.quantity>=99){toast('وصلت للحد الأقصى للكمية');return}
+  found.quantity+=1;
+ }else cart.push({id,name:String(name||'منتج APEX').slice(0,180),price:numericPrice,quantity:1});
  saveApexCart();renderCart();syncCartCount();toast('أُضيف المنتج إلى سلتك');
 }
 function changeCartQuantity(index,delta){
@@ -1297,59 +1276,59 @@ function changeCartQuantity(index,delta){
  if(item.quantity===0)cart.splice(index,1);
  saveApexCart();renderCart();syncCartCount();
 }
-function removeItem(i){if(!Number.isInteger(i)||!cart[i])return;cart.splice(i,1);saveApexCart();renderCart();syncCartCount();toast('تم حذف المنتج من السلة')}
+function removeItem(index){
+ if(!Number.isInteger(index)||!cart[index])return;
+ cart.splice(index,1);saveApexCart();renderCart();syncCartCount();toast('تم حذف المنتج من السلة');
+}
 function renderCart(){
  const box=$('cartitems');if(!box)return;
- const count=cart.reduce((n,x)=>n+x.quantity,0);
- const total=cart.reduce((n,x)=>n+x.price*x.quantity,0);
+ const count=cartQuantity(),total=cartTotal();
  if(!cart.length){
-  box.innerHTML='<div class="apex-cart-empty"><span>🛍️</span><b>سلتك بانتظار اختياراتك</b><small>أضف المنتجات التي أعجبتك وسيتم حفظها هنا.</small><button type="button" class="apex-cart-continue" data-cart-action="continue">متابعة التسوق</button></div>';
+  box.innerHTML='<div class="apex-cart-empty-new"><span>🛍️</span><b>سلتك فارغة حالياً</b><small>تصفح منتجات APEX وأضف ما يناسبك.</small><button type="button" data-cart-action="continue">العودة إلى المنتجات</button></div>';
   return;
  }
- const rows=cart.map((x,i)=>{
-  const product=storeProducts.find(p=>String(p.id)===String(x.id));
+ const rows=cart.map((item,index)=>{
+  const product=storeProducts.find(entry=>String(entry.id)===String(item.id));
   const image=product?.image_url||product?.image_urls?.[0]||'';
-  return '<article class="apex-cart-item"><div class="apex-cart-thumb">'+(image?'<img src="'+esc(image)+'" alt="'+esc(x.name)+'" loading="lazy">':'<span>✦</span>')+'</div><div class="apex-cart-item-info"><b>'+esc(x.name)+'</b><strong>'+formatStorePrice(x.price*x.quantity)+'</strong><div class="apex-cart-qty"><button type="button" data-cart-action="minus" data-index="'+i+'" aria-label="تقليل الكمية">−</button><span>'+x.quantity+'</span><button type="button" data-cart-action="plus" data-index="'+i+'" aria-label="زيادة الكمية">＋</button></div></div><button type="button" class="apex-cart-remove" data-cart-action="remove" data-index="'+i+'" aria-label="حذف '+esc(x.name)+'">حذف</button></article>';
+  return '<article class="apex-cart-product"><div class="apex-cart-product-image">'+(image?'<img src="'+esc(image)+'" alt="'+esc(item.name)+'" loading="lazy">':'<span>✦</span>')+'</div><div class="apex-cart-product-data"><b>'+esc(item.name)+'</b><strong>'+formatStorePrice(item.price*item.quantity)+'</strong><div class="apex-cart-quantity"><button type="button" data-cart-action="minus" data-index="'+index+'" aria-label="تقليل الكمية">−</button><output>'+item.quantity+'</output><button type="button" data-cart-action="plus" data-index="'+index+'" aria-label="زيادة الكمية">＋</button></div></div><button type="button" class="apex-cart-delete" data-cart-action="remove" data-index="'+index+'">حذف</button></article>';
  }).join('');
- box.innerHTML='<div class="apex-cart-headline"><span>'+count+' قطعة في سلتك</span><button type="button" data-cart-action="clear">إفراغ السلة</button></div><div class="apex-cart-list">'+rows+'</div><div class="apex-cart-summary"><div><span>عدد القطع</span><b>'+count+'</b></div><div class="apex-cart-total"><span>الإجمالي التقريبي</span><strong>'+formatStorePrice(total)+'</strong></div><small>لا يشمل هذا المبلغ رسوم الشحن أو أي رسوم إضافية قد تُحدد عند تأكيد الطلب.</small></div>';
+ box.innerHTML='<div class="apex-cart-list-heading"><b>المنتجات المختارة</b><span>'+count+' قطعة</span><button type="button" data-cart-action="clear">إفراغ</button></div><div class="apex-cart-product-list">'+rows+'</div><div class="apex-cart-total-card"><span>الإجمالي التقريبي</span><strong>'+formatStorePrice(total)+'</strong><small>رسوم الشحن وأي رسوم إضافية تُحدد عند تأكيد الطلب.</small></div>';
 }
-$('cartitems')?.addEventListener('click',event=>{
+function handleCartAction(event){
  const button=event.target.closest('[data-cart-action]');if(!button)return;
  const action=button.dataset.cartAction,index=Number(button.dataset.index);
  if(action==='plus')changeCartQuantity(index,1);
  else if(action==='minus')changeCartQuantity(index,-1);
  else if(action==='remove')removeItem(index);
- else if(action==='clear'&&confirm('هل تريد إفراغ سلة المشتريات بالكامل؟')){cart=[];saveApexCart();renderCart();syncCartCount();toast('تم إفراغ السلة')}
- else if(action==='continue')closeCart();
-});
-syncCartCount();
+ else if(action==='clear'){
+  if(!confirm('هل تريد إفراغ سلة المشتريات بالكامل؟'))return;
+  cart=[];saveApexCart();renderCart();syncCartCount();toast('تم إفراغ السلة');
+ }else if(action==='continue'){closeCart();document.getElementById('products')?.scrollIntoView({behavior:'smooth',block:'start'})}
+}
 function openCart(event){
- event?.stopPropagation?.();closeApexMoreMenu?.();
- const panel=document.getElementById('cartpanel');
- if(!panel){console.error('APEX: cartpanel element is missing');return}
- renderCart();
- panel.hidden=false;
- panel.removeAttribute('hidden');
- panel.classList.add('show');
- panel.style.setProperty('display','flex','important');
- panel.style.visibility='visible';
- panel.style.opacity='1';
- panel.style.zIndex='10020';
- panel.setAttribute('role','dialog');
- panel.setAttribute('aria-modal','true');
- document.body.classList.add('modal-open');
- const close=panel.querySelector('.close');
- if(close)close.focus({preventScroll:true});
+ event?.preventDefault?.();event?.stopPropagation?.();
+ if(typeof window.closeApexMoreMenu==='function')window.closeApexMoreMenu();
+ const panel=$('cartpanel');if(!panel){console.error('APEX: new cart panel is missing');return}
+ apexCartFocusBeforeOpen=document.activeElement;
+ renderCart();syncCartCount();
+ panel.hidden=false;panel.setAttribute('aria-hidden','false');panel.classList.add('is-open');
+ document.body.classList.add('apex-cart-is-open');
+ const close=panel.querySelector('.apex-cart-close');if(close)close.focus({preventScroll:true});
 }
 function closeCart(){
- const panel=document.getElementById('cartpanel');if(!panel)return;
- panel.classList.remove('show');
- panel.style.removeProperty('display');
- panel.style.visibility='';
- panel.style.opacity='';
- panel.removeAttribute('aria-modal');
- document.body.classList.remove('modal-open');
+ const panel=$('cartpanel');if(!panel)return;
+ panel.classList.remove('is-open');panel.setAttribute('aria-hidden','true');
+ document.body.classList.remove('apex-cart-is-open');
+ if(apexCartFocusBeforeOpen&&typeof apexCartFocusBeforeOpen.focus==='function')apexCartFocusBeforeOpen.focus({preventScroll:true});
 }
+document.addEventListener('click',event=>{
+ const cartArea=event.target.closest('#cartitems');
+ if(cartArea)handleCartAction(event);
+});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&$('cartpanel')?.classList.contains('is-open'))closeCart();
+});
+syncCartCount();
 window.openCart=openCart;window.closeCart=closeCart;window.add=add;
 
 function renderApexAssistantMessages(){
