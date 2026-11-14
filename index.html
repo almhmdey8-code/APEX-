@@ -1809,30 +1809,73 @@ async function sendOrder(){
  }
  cart=[];saveApexCart();syncCartCount();renderCart();closeCart();
 }
-window.openCart=openCart;window.closeCart=closeCart;window.add=add;window.filterCategory=filterCategory;window.filterProducts=filterProducts;window.selectDeliveryLocation=selectDeliveryLocation;window.closeDeliveryMap=closeDeliveryMap;window.confirmDeliveryLocation=confirmDeliveryLocation;window.showAccountSection=showAccountSection;window.showAccountHome=showAccountHome;window.customerNavAccount=customerNavAccount;window.customerNavFavorites=customerNavFavorites;window.customerNavCart=customerNavCart;window.customerNavProducts=customerNavProducts;window.customerNavHome=customerNavHome;window.walletMethodChanged=walletMethodChanged;window.requestWalletTopup=requestWalletTopup;window.toggleWalletTopup=toggleWalletTopup;window.copyMyReferralCode=copyMyReferralCode;window.copyMyReferralLink=copyMyReferralLink;window.loadCustomerNotifications=loadCustomerNotifications;window.askApexAssistantQuick=askApexAssistantQuick;window.sendApexAssistantMessage=sendApexAssistantMessage;window.clearApexAssistantSession=clearApexAssistantSession;window.add=add;window.openCart=openCart;window.closeCart=closeCart;window.sendOrder=sendOrder;window.openAccount=openAccount;window.openMoreAccount=openMoreAccount;window.toggleApexMoreMenu=toggleApexMoreMenu;window.closeApexMoreMenu=closeApexMoreMenu;window.showCustomerOrdersFromMore=showCustomerOrdersFromMore;window.openApexAboutFromMore=openApexAboutFromMore;window.openCustomerProfile=openCustomerProfile;window.closeAccount=closeAccount;window.showStoreLogin=showStoreLogin;window.showStoreSignup=showStoreSignup;window.sendSignupCode=sendSignupCode;window.verifySignupCode=verifySignupCode;window.pickSignupLocation=pickSignupLocation;window.finishSignup=finishSignup;window.customerSignIn=customerSignIn;
-// خدمة تسجيل الدخول مستقلة: لا تعتمد على أحداث الهيدر أو السلة أو قائمة المزيد.
-const apexLoginButton=$('accountAuthAction');
-if(apexLoginButton){
- apexLoginButton.addEventListener('click',event=>{
-  event.preventDefault();event.stopPropagation();
-  if(apexLoginButton.disabled)return;
-  Promise.resolve(window.customerSignIn()).catch(error=>{
-   console.error('APEX isolated login handler failed:',error);
-   const message=$('accountMsg');
-   if(message){message.textContent='تعذر إكمال تسجيل الدخول. حاول مرة أخرى.';message.style.color='#ff7777'}
-  });
- });
+function exposeStoreAction(name,getter){
+ try{const action=getter();if(typeof action==='function')window[name]=action}
+ catch(error){console.error('APEX action export failed:',name,error)}
 }
-['accountEmail','accountPassword'].forEach(id=>{
- const field=$(id);
- field?.addEventListener('keydown',event=>{
-  if(event.key==='Enter'){event.preventDefault();apexLoginButton?.click()}
- });
-});window.customerSignUp=customerSignUp;window.customerReset=customerReset;window.openApexOtp=openApexOtp;window.closeApexOtp=closeApexOtp;window.submitApexOtp=submitApexOtp;window.saveNewPassword=saveNewPassword;window.saveProfile=saveProfile;window.saveProfileEmail=saveProfileEmail;window.customerSignOut=customerSignOut;
-bindCategoryFilters();
-$('search').addEventListener('input',filterProducts);
-$('sortProducts').addEventListener('change',()=>{const cards=[...$('products').querySelectorAll('.product')];cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});cards.forEach(x=>$('products').appendChild(x));});
-$('showFavorites').addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();});
+exposeStoreAction('openCart',()=>openCart);
+exposeStoreAction('closeCart',()=>closeCart);
+exposeStoreAction('add',()=>add);
+exposeStoreAction('filterCategory',()=>filterCategory);
+exposeStoreAction('filterProducts',()=>filterProducts);
+exposeStoreAction('selectDeliveryLocation',()=>selectDeliveryLocation);
+exposeStoreAction('closeDeliveryMap',()=>closeDeliveryMap);
+exposeStoreAction('confirmDeliveryLocation',()=>confirmDeliveryLocation);
+exposeStoreAction('showAccountSection',()=>showAccountSection);
+exposeStoreAction('showAccountHome',()=>showAccountHome);
+exposeStoreAction('customerNavAccount',()=>customerNavAccount);
+exposeStoreAction('customerNavFavorites',()=>customerNavFavorites);
+exposeStoreAction('customerNavCart',()=>customerNavCart);
+exposeStoreAction('customerNavProducts',()=>customerNavProducts);
+exposeStoreAction('customerNavHome',()=>customerNavHome);
+exposeStoreAction('walletMethodChanged',()=>walletMethodChanged);
+exposeStoreAction('requestWalletTopup',()=>requestWalletTopup);
+exposeStoreAction('toggleWalletTopup',()=>toggleWalletTopup);
+exposeStoreAction('copyMyReferralCode',()=>copyMyReferralCode);
+exposeStoreAction('copyMyReferralLink',()=>copyMyReferralLink);
+exposeStoreAction('loadCustomerNotifications',()=>loadCustomerNotifications);
+exposeStoreAction('askApexAssistantQuick',()=>askApexAssistantQuick);
+exposeStoreAction('sendApexAssistantMessage',()=>sendApexAssistantMessage);
+exposeStoreAction('clearApexAssistantSession',()=>clearApexAssistantSession);
+exposeStoreAction('sendOrder',()=>sendOrder);
+exposeStoreAction('openAccount',()=>openAccount);
+exposeStoreAction('openMoreAccount',()=>openMoreAccount);
+exposeStoreAction('toggleApexMoreMenu',()=>toggleApexMoreMenu);
+exposeStoreAction('closeApexMoreMenu',()=>closeApexMoreMenu);
+exposeStoreAction('showCustomerOrdersFromMore',()=>showCustomerOrdersFromMore);
+exposeStoreAction('openApexAboutFromMore',()=>openApexAboutFromMore);
+exposeStoreAction('openCustomerProfile',()=>openCustomerProfile);
+exposeStoreAction('closeAccount',()=>closeAccount);
+exposeStoreAction('showStoreLogin',()=>showStoreLogin);
+exposeStoreAction('showStoreSignup',()=>showStoreSignup);
+exposeStoreAction('sendSignupCode',()=>sendSignupCode);
+exposeStoreAction('verifySignupCode',()=>verifySignupCode);
+exposeStoreAction('pickSignupLocation',()=>pickSignupLocation);
+exposeStoreAction('finishSignup',()=>finishSignup);
+exposeStoreAction('customerSignIn',()=>customerSignIn);
+exposeStoreAction('customerSignUp',()=>customerSignUp);
+exposeStoreAction('customerReset',()=>customerReset);
+exposeStoreAction('openApexOtp',()=>openApexOtp);
+exposeStoreAction('closeApexOtp',()=>closeApexOtp);
+exposeStoreAction('submitApexOtp',()=>submitApexOtp);
+exposeStoreAction('saveNewPassword',()=>saveNewPassword);
+exposeStoreAction('saveProfile',()=>saveProfile);
+exposeStoreAction('saveProfileEmail',()=>saveProfileEmail);
+exposeStoreAction('customerSignOut',()=>customerSignOut);
+function bindStoreControl(name,binder){
+ try{binder()}catch(error){
+  console.error('APEX control binding failed:',name,error);
+  document.dispatchEvent(new CustomEvent('apex:control-error',{detail:{control:name,message:String(error?.message||error)}}));
+ }
+}
+bindStoreControl('category-filters',()=>bindCategoryFilters());
+bindStoreControl('search',()=>{$('search')?.addEventListener('input',filterProducts)});
+bindStoreControl('product-sort',()=>{$('sortProducts')?.addEventListener('change',()=>{
+ const cards=[...$('products').querySelectorAll('.product')];
+ cards.sort((x,y)=>{const mode=$('sortProducts').value;if(mode==='az')return x.dataset.name.localeCompare(y.dataset.name,'ar');const px=Number(x.dataset.price||0),py=Number(y.dataset.price||0);if(mode==='price-low')return px-py;if(mode==='price-high')return py-px;return 0;});
+ cards.forEach(x=>$('products').appendChild(x));
+})});
+bindStoreControl('favorites',()=>{$('showFavorites')?.addEventListener('click',()=>{const b=$('showFavorites');b.dataset.only=b.dataset.only==='1'?'0':'1';filterProducts();})});
 
 let compareProductIds=(()=>{try{return JSON.parse(localStorage.getItem('apex_compare_products')||'[]').map(String).slice(0,4)}catch{return []}})();
 let recentlyViewedIds=(()=>{try{return JSON.parse(localStorage.getItem('apex_recently_viewed')||'[]').map(String).slice(0,8)}catch{return []}})();
@@ -1959,12 +2002,48 @@ function runStoreService(name,task){
   document.dispatchEvent(new CustomEvent('apex:service-error',{detail:{service:name,message:String(error?.message||error)}}));
  }
 }
-runStoreService('banners',loadStoreBanners);
-runStoreService('payment-methods',loadPaymentMethods);
-runStoreService('catalog',loadStoreCurrency);
+runStoreService('banners',()=>loadStoreBanners());
+runStoreService('payment-methods',()=>loadPaymentMethods());
+runStoreService('catalog',()=>loadStoreCurrency());
 
-window.scanApexCardQr=scanApexCardQr;
-window.transferApexWallet=transferApexWallet;
+if(typeof scanApexCardQr==='function')window.scanApexCardQr=scanApexCardQr;
+if(typeof transferApexWallet==='function')window.transferApexWallet=transferApexWallet;
+</script>
+
+<script id="apex-login-independent-handler">
+/* تسجيل الدخول لا يعتمد على وحدة المتجر أو السلة أو الهيدر. */
+(function(){
+ const button=document.getElementById('accountAuthAction');
+ if(!button)return;
+ button.removeAttribute('onclick');
+ const submit=async()=>{
+  if(button.disabled)return;
+  const email=(document.getElementById('accountEmail')?.value||'').trim().toLowerCase();
+  const password=document.getElementById('accountPassword')?.value||'';
+  const message=document.getElementById('accountMsg');
+  const show=(text,color)=>{if(message){message.textContent=text;message.style.color=color||'#ff7777'}};
+  if(!/^\\S+@\\S+\\.\\S+$/.test(email)||!password){show('أدخل بريداً إلكترونياً صحيحاً وكلمة المرور.');return}
+  button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';show('جارٍ التحقق من بياناتك...','#e9bd55');
+  try{
+   const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.0');
+   const client=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}});
+   const result=await Promise.race([
+    client.auth.signInWithPassword({email,password}),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('انتهت مهلة الاتصال. تحقق من الإنترنت ثم حاول مرة أخرى.')),20000))
+   ]);
+   if(result.error)throw result.error;
+   if(!result.data?.session)throw new Error('لم يتم إنشاء جلسة دخول. حاول مرة أخرى.');
+   show('تم تسجيل الدخول بنجاح. جارٍ فتح المتجر...','#7ee0a1');
+   window.location.replace('./');
+  }catch(error){
+   console.error('APEX independent login error:',error);
+   show('تعذر تسجيل الدخول: '+(error?.message||'تحقق من الاتصال وحاول مرة أخرى.'));
+   button.disabled=false;button.textContent='تسجيل الدخول';
+  }
+ };
+ button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();void submit()});
+ ['accountEmail','accountPassword'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();void submit()}}));
+})();
 </script>
 
 <script id="apex-cart-button-reliable-binding">
