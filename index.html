@@ -2629,11 +2629,11 @@ input,select,textarea{
  const more=document.querySelector('.topbar.apex-topbar .apex-head-actions .menu');
  const cartButton=document.querySelector('.topbar.apex-topbar .apex-cart-button');
  if(more) more.addEventListener('click',function(event){
-  event.preventDefault();event.stopPropagation();
+  event.preventDefault();event.stopImmediatePropagation();
   if(typeof window.toggleApexMoreMenu==='function')window.toggleApexMoreMenu(event);
  },{capture:true});
  if(cartButton) cartButton.addEventListener('click',function(event){
-  event.preventDefault();event.stopPropagation();
+  event.preventDefault();event.stopImmediatePropagation();
   if(typeof window.openCart==='function')window.openCart(event);
  },{capture:true});
 })();
