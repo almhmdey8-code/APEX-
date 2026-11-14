@@ -59,13 +59,19 @@ try {
     }
 
     if (file === 'index.html') {
+      if (!html.includes('apex-login-independent-handler') || /id=["']accountAuthAction["'][^>]*onclick=/i.test(html)) {
+        fail('index.html: customer login must use its own independent click handler');
+      }
+      if (!html.includes('function bindStoreControl(name,binder)') || !html.includes("bindStoreControl('favorites'")) {
+        fail('index.html: storefront control bindings must have independent error boundaries');
+      }
       if (!html.includes("runStoreService('banners',loadStoreBanners)") ||
           !html.includes("runStoreService('payment-methods',loadPaymentMethods)") ||
           !html.includes("runStoreService('catalog',loadStoreCurrency)")) {
         fail('index.html: storefront startup services must be isolated from each other');
       }
 
-      const exports = new Set([...html.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=/g)].map(match => match[1]));
+      const exports = new Set([...[...html.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=/g)].map(match => match[1]), ...[...html.matchAll(/exposeStoreAction\(\s*['\"]([^'\"]+)['\"]/g)].map(match => match[1])]);
       const handlers = [...html.matchAll(/\bonclick\s*=\s*["']([^"']+)["']/gi)].map(match => match[1].trim());
       for (const handler of handlers) {
         if (/^(?:if\s*\(|document\.)/.test(handler)) continue;
