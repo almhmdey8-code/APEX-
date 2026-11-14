@@ -1,0 +1,1 @@
+export const theme = { colors: { background: '#090909', surface: '#151515', gold: '#D6B46A', goldLight: '#F1D99B', text: '#F7F3E9', muted: '#A9A398', border: 'rgba(214,180,106,0.24)' }, radius: { card: 22, control: 14 } };
