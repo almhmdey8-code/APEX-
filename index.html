@@ -1604,7 +1604,7 @@ async function refreshCustomer(session){
   : {data:null};
  const isStoreAdmin=!!storeAdminRecord;
  if(isStoreAdmin){
-  $('accountAuth').hidden=false;$('accountData').hidden=true;$('storefrontAuth').hidden=false;$('account-entry').hidden=false;
+  $('accountAuth').hidden=false;$('accountData').hidden=true;$('storefrontAuth').hidden=false;if($('account-entry'))$('account-entry').hidden=false;
   $('accountForm').hidden=false;$('authLoginFields').hidden=true;$('authSignupFields').hidden=true;
   $('accountMsg').textContent='هذا حساب إدارة المتجر، ولا يُستخدم كحساب عميل. سجّل الدخول ببريد العميل لعرض بياناته وطلباته.';
   $('accountDisplayEmail').textContent='';$('profileCurrentEmail').textContent='';
@@ -1615,7 +1615,7 @@ async function refreshCustomer(session){
  }
  $('accountAuth').hidden=!!session;$('accountData').hidden=!session;
  $('storefrontAuth').hidden=!!session;
- $('account-entry').hidden=!session;
+ if($('account-entry'))$('account-entry').hidden=!session;
  if(!session){
   $('accountForm').hidden=false;
   $('authLoginFields').hidden=false;
