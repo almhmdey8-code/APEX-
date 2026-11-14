@@ -2023,7 +2023,25 @@ if(typeof transferApexWallet==='function')window.transferApexWallet=transferApex
   const email=(document.getElementById('accountEmail')?.value||'').trim().toLowerCase();
   const password=document.getElementById('accountPassword')?.value||'';
   const message=document.getElementById('accountMsg');
-  const show=(text,color)=>{if(message){message.textContent=text;message.style.color=color||'#ff7777'}};
+  function openAccountFallback(){
+  const panel=document.getElementById('accountpanel');
+  if(!panel)return false;
+  panel.classList.add('show');panel.classList.remove('customer-profile-card-mode');
+  document.body.classList.add('modal-open');
+  const auth=document.getElementById('accountAuth'),form=document.getElementById('accountForm');
+  if(auth)auth.hidden=false;if(form)form.hidden=false;
+  const login=document.getElementById('authLoginFields'),signup=document.getElementById('authSignupFields');
+  if(login)login.hidden=false;if(signup)signup.hidden=true;
+  return true;
+ }
+ function closeAccountFallback(){
+  const panel=document.getElementById('accountpanel');if(!panel)return false;
+  panel.classList.remove('show','customer-profile-card-mode');document.body.classList.remove('modal-open');return true;
+ }
+ if(typeof window.openCustomerProfile!=='function')window.openCustomerProfile=openAccountFallback;
+ if(typeof window.openAccount!=='function')window.openAccount=openAccountFallback;
+ if(typeof window.closeAccount!=='function')window.closeAccount=closeAccountFallback;
+ const show=(text,color)=>{if(message){message.textContent=text;message.style.color=color||'#ff7777'}};
   if(!/^\\S+@\\S+\\.\\S+$/.test(email)||!password){show('أدخل بريداً إلكترونياً صحيحاً وكلمة المرور.');return}
   button.disabled=true;button.textContent='جارٍ تسجيل الدخول...';show('جارٍ التحقق من بياناتك...','#e9bd55');
   try{
@@ -2043,6 +2061,7 @@ if(typeof transferApexWallet==='function')window.transferApexWallet=transferApex
    button.disabled=false;button.textContent='تسجيل الدخول';
   }
  };
+ if(typeof window.customerSignIn!=='function')window.customerSignIn=submit;
  button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();void submit()});
  ['accountEmail','accountPassword'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();void submit()}}));
 })();
@@ -2066,6 +2085,16 @@ if(typeof transferApexWallet==='function')window.transferApexWallet=transferApex
     document.body.classList.add('modal-open');
     return true;
   }
+  function closeCartFallback(){
+    var panel=document.getElementById('apexCartV2');
+    if(!panel)return false;
+    panel.hidden=true;panel.classList.remove('show','is-open');
+    panel.style.removeProperty('display');panel.style.visibility='';panel.style.opacity='';
+    document.body.classList.remove('modal-open');
+    return true;
+  }
+  if(typeof window.openCart!=='function')window.openCart=showCartFallback;
+  if(typeof window.closeCart!=='function')window.closeCart=closeCartFallback;
   document.addEventListener('click',function(event){
     var button=event.target.closest('.apex-cart-v2-button');
     if(!button)return;
