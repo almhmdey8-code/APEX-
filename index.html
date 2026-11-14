@@ -1217,6 +1217,9 @@ body.apex-cart-is-open{overflow:hidden!important}
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const supabase=createClient('https://ulzxdvtzziydhuvennzw.supabase.co','sb_publishable_5POQR9mqS0amHeZbCEO4dQ_py8SJWVR',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'sb-ulzxdvtzziydhuvennzw-auth-token'}});
+// Bind customer login before the rest of the storefront initializes, so a later optional service error cannot leave the login button inert.
+const apexLoginButton=document.getElementById('accountAuthAction');
+if(apexLoginButton){apexLoginButton.removeAttribute('onclick');apexLoginButton.addEventListener('click',()=>{void customerSignIn().catch(error=>{console.error('APEX LOGIN CLICK ERROR:',error);const message=document.getElementById('accountMsg');if(message){message.textContent='تعذر تشغيل تسجيل الدخول: '+(error?.message||'يرجى إعادة تحميل الصفحة والمحاولة مجدداً');message.style.color='#ff7777';}})});}
 function buildReferralLink(code){return location.origin+location.pathname+'?ref='+encodeURIComponent(code)}
 function getReferralVisitorId(){
  let id=localStorage.getItem('apex_referral_visitor_id');
