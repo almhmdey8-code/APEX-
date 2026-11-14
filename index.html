@@ -2590,50 +2590,52 @@ input,select,textarea{
 
 
 <style id="apex-header-cart-hitbox-fix">
-/* إصلاح تداخل مناطق اللمس بين زر المزيد والسلة على الجوال */
+/* إصلاح نهائي لتداخل أزرار الهيدر على الجوال */
 .topbar.apex-topbar{
- display:flex!important;align-items:center!important;justify-content:space-between!important;
- gap:8px!important;direction:rtl!important;position:sticky!important;isolation:isolate!important;
+ display:grid!important;
+ grid-template-columns:auto minmax(0,1fr) auto!important;
+ grid-template-areas:"actions brand cart"!important;
+ direction:rtl!important;align-items:center!important;
+ gap:8px!important;position:sticky!important;isolation:isolate!important;
 }
 .topbar.apex-topbar>.apex-head-actions{
- position:relative!important;z-index:35!important;display:flex!important;
- flex:0 0 auto!important;align-items:center!important;pointer-events:auto!important;
-}
-.topbar.apex-topbar>.apex-head-actions .iconbtn{
- position:relative!important;z-index:36!important;flex:0 0 auto!important;
- pointer-events:auto!important;touch-action:manipulation!important;
+ grid-area:actions!important;position:relative!important;z-index:100!important;
+ display:flex!important;flex:0 0 auto!important;align-items:center!important;
+ pointer-events:auto!important;gap:6px!important;min-width:0!important;
 }
 .topbar.apex-topbar>.brand{
- position:relative!important;z-index:1!important;flex:1 1 auto!important;
- min-width:0!important;margin-inline:auto!important;justify-content:center!important;
- pointer-events:auto!important;
+ grid-area:brand!important;position:relative!important;z-index:1!important;
+ min-width:0!important;justify-self:center!important;pointer-events:none!important;
 }
 .topbar.apex-topbar>.apex-cart-button{
- position:relative!important;z-index:30!important;flex:0 0 42px!important;
+ grid-area:cart!important;position:relative!important;z-index:100!important;
+ justify-self:end!important;flex:0 0 auto!important;min-width:52px!important;
  pointer-events:auto!important;touch-action:manipulation!important;
 }
+.topbar.apex-topbar .apex-head-actions .menu,
+.topbar.apex-topbar .apex-head-actions .iconbtn{
+ position:relative!important;z-index:101!important;pointer-events:auto!important;
+ touch-action:manipulation!important;
+}
 @media(max-width:800px){
- .topbar.apex-topbar{padding-inline:9px!important;gap:5px!important}
- .topbar.apex-topbar>.apex-head-actions{gap:5px!important}
- .topbar.apex-topbar>.brand{font-size:clamp(20px,6vw,25px)!important;letter-spacing:1px!important}
+ .topbar.apex-topbar{height:70px!important;padding-inline:8px!important;gap:4px!important}
+ .topbar.apex-topbar>.apex-head-actions{gap:4px!important}
+ .topbar.apex-topbar>.brand{font-size:clamp(19px,5.4vw,24px)!important;letter-spacing:1px!important}
+ .topbar.apex-topbar>.apex-cart-button{min-width:48px!important;min-height:52px!important;padding:5px 8px!important}
 }
 </style>
 <script id="apex-header-cart-click-fix">
 (function(){
  const more=document.querySelector('.topbar.apex-topbar .apex-head-actions .menu');
  const cartButton=document.querySelector('.topbar.apex-topbar .apex-cart-button');
- if(more){
-  more.onclick=function(event){
-   event.preventDefault();event.stopPropagation();
-   if(typeof window.toggleApexMoreMenu==='function')window.toggleApexMoreMenu(event);
-  };
- }
- if(cartButton){
-  cartButton.onclick=function(event){
-   event.preventDefault();event.stopPropagation();
-   if(typeof window.openCart==='function')window.openCart(event);
-  };
- }
+ if(more) more.addEventListener('click',function(event){
+  event.preventDefault();event.stopPropagation();
+  if(typeof window.toggleApexMoreMenu==='function')window.toggleApexMoreMenu(event);
+ },{capture:true});
+ if(cartButton) cartButton.addEventListener('click',function(event){
+  event.preventDefault();event.stopPropagation();
+  if(typeof window.openCart==='function')window.openCart(event);
+ },{capture:true});
 })();
 </script>
 
