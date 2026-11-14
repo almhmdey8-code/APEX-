@@ -65,9 +65,9 @@ try {
       if (!html.includes('function bindStoreControl(name,binder)') || !html.includes("bindStoreControl('favorites'")) {
         fail('index.html: storefront control bindings must have independent error boundaries');
       }
-      if (!html.includes("runStoreService('banners',loadStoreBanners)") ||
-          !html.includes("runStoreService('payment-methods',loadPaymentMethods)") ||
-          !html.includes("runStoreService('catalog',loadStoreCurrency)")) {
+      if (!html.includes("runStoreService('banners',()=>loadStoreBanners())") ||
+          !html.includes("runStoreService('payment-methods',()=>loadPaymentMethods())") ||
+          !html.includes("runStoreService('catalog',()=>loadStoreCurrency())")) {
         fail('index.html: storefront startup services must be isolated from each other');
       }
 
