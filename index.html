@@ -2754,26 +2754,29 @@ input,select,textarea{
 }
 </style>
 <script id="apex-header-action-routing">
-/* توجيه مستقل لأزرار الهيدر: الحساب للحساب فقط، والسلة للسلة فقط. */
+/* زر السلة مستقل: افتح نافذة السلة مباشرة حتى لو تعطل سكربت آخر في المتجر. لا نغيّر قائمة المزيد. */
 (function(){
  const cartButton=document.querySelector('[data-apex-header-action="cart"]');
- function bind(button,action){
-  if(!button)return;
-  button.addEventListener('click',function(event){
-   event.preventDefault();
-   event.stopPropagation();
-   event.stopImmediatePropagation();
-   if(action==='account'){
-    if(typeof window.closeApexMoreMenu==='function')window.closeApexMoreMenu();
-    if(typeof window.openCustomerProfile==='function')window.openCustomerProfile();
-    else console.error('APEX: account action is not available');
-   }else{
-    if(typeof window.openCart==='function')window.openCart(event);
-    else console.error('APEX: cart action is not available');
-   }
-  },true);
- }
- bind(cartButton,'cart');
+ if(!cartButton)return;
+ cartButton.addEventListener('click',function(event){
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  const panel=document.getElementById('apexCartV2');
+  if(!panel){console.error('APEX: cart panel #apexCartV2 is missing');return;}
+  try{
+   if(typeof window.openCart==='function')window.openCart(event);
+  }catch(error){
+   console.error('APEX cart renderer failed; opening the cart panel directly:',error);
+  }
+  /* تأكيد إظهار النافذة مباشرة، دون الاعتماد على مستمعات أخرى أو قائمة المزيد. */
+  panel.hidden=false;
+  panel.removeAttribute('hidden');
+  panel.classList.add('is-open');
+  document.body.classList.add('modal-open');
+  const close=panel.querySelector('.apex-cart-v2-close, .close');
+  if(close)close.focus({preventScroll:true});
+ },true);
 })();
 </script>
 
