@@ -46,6 +46,18 @@ try {
       }
     });
 
+    const classicScripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)]
+      .filter(match => !/\bsrc\s*=/.test(match[1]) && !/\btype\s*=\s*["']module["']/i.test(match[1]) && match[2].trim());
+    classicScripts.forEach((match, index) => {
+      const tempFile = path.join(tempDir, file.replace('.html', '') + '-classic-' + index + '.js');
+      fs.writeFileSync(tempFile, match[2], 'utf8');
+      const checked = spawnSync(process.execPath, ['--check', tempFile], { encoding: 'utf8' });
+      if (checked.status !== 0) {
+        const detail = (checked.stderr || checked.stdout || 'unknown syntax error').trim();
+        fail(file + ': JavaScript classic-script syntax error (' + detail + ')');
+      }
+    });
+
     const localRefs = [...new Set([...html.matchAll(/(?:href|src)\s*=\s*["']([^"'#?]+)(?:[?#][^"']*)?["']/gi)]
       .map(match => match[1])
       .filter(ref => !/^(?:[a-z]+:|\/\/|data:|javascript:)/i.test(ref) && ref !== '#' && !ref.startsWith('mailto:')))];
@@ -59,6 +71,9 @@ try {
     }
 
     if (file === 'index.html') {
+      if (!html.includes('id="apexCartV2"') || !html.includes("event.target.closest('.apex-cart-v2-button')")) {
+        fail('index.html: cart v2 button and fallback must target the same isolated cart panel');
+      }
       if (!html.includes('apex-login-independent-handler') || /id=["']accountAuthAction["'][^>]*onclick=/i.test(html)) {
         fail('index.html: customer login must use its own independent click handler');
       }
