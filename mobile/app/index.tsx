@@ -239,7 +239,7 @@ export default function HomeScreen(){
  </SafeAreaView>;
 }
 
-function ProductImage({uri}:{uri:string}){const [failed,setFailed]=useState(false);return failed?<View style={styles.imageFallback}><Text style={styles.productGem}>◇</Text></View>:<Image source={{uri}} style={StyleSheet.absoluteFillObject} resizeMode="contain" onError={()=>setFailed(true)}/ >}
+function ProductImage({uri}:{uri:string}){const [failed,setFailed]=useState(false);return failed?<View style={styles.imageFallback}><Text style={styles.productGem}>◇</Text></View>:<Image source={{uri}} style={StyleSheet.absoluteFillObject} resizeMode="contain" onError={()=>setFailed(true)}/>}
 function Empty({title,desc,action,onAction}:any){return <View style={styles.empty}><Text style={styles.emptyGem}>◇</Text><Text style={styles.emptyTitle}>{title}</Text><Text style={styles.emptyDesc}>{desc}</Text>{action?<Button title={action} onPress={onAction}/>:null}</View>}
 function Chip({title,active,onPress}:any){return <Pressable onPress={onPress} style={[styles.chip,active&&styles.chipActive]}><Text style={[styles.chipText,active&&styles.chipTextActive]}>{title}</Text></Pressable>}
 function makeRequestId(){return 'apex-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12)}
