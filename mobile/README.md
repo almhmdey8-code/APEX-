@@ -35,3 +35,6 @@ The APK is debug-signed by Android's generated debug keystore. It can be install
 Android package: `com.apex.store`
 Version: `1.0.1`
 Version code: `7`
+
+
+Automated CI runs on every app change and on pull requests targeting `main`.
