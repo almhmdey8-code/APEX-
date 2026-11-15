@@ -1,1 +1,27 @@
-{"expo":{"name":"APEX","slug":"apex-native","scheme":"apex","version":"1.0.0","orientation":"portrait","userInterfaceStyle":"dark","newArchEnabled":true,"ios":{"supportsTablet":true,"bundleIdentifier":"com.apex.store"},"android":{"package":"com.apex.store","versionCode":1,"softwareKeyboardLayoutMode":"pan"},"plugins":["expo-router","expo-secure-store"],"experiments":{"typedRoutes":true}}}
+{
+  "expo": {
+    "name": "APEX",
+    "slug": "apex-native",
+    "scheme": "apex",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.apex.store"
+    },
+    "android": {
+      "package": "com.apex.store",
+      "versionCode": 7,
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
