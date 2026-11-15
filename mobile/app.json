@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "APEX",
+    "slug": "apex-native",
+    "scheme": "apex",
+    "version": "1.0.2",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.apex.store"
+    },
+    "android": {
+      "package": "com.apex.store",
+      "versionCode": 8,
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
