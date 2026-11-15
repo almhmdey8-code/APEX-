@@ -3,7 +3,7 @@
     "name": "APEX",
     "slug": "apex-native",
     "scheme": "apex",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "com.apex.store",
-      "versionCode": 7,
+      "versionCode": 8,
       "softwareKeyboardLayoutMode": "pan"
     },
     "plugins": [
