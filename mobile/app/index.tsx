@@ -40,12 +40,94 @@ const features = [
   { icon: '✧', title: 'مساعد APEX الذكي', desc: 'مساعدة في المنتجات والطلبات', tone: 'silver' },
 ];
 
+function SecondaryScreen({ page, navigate }: { page: string; navigate: (name: string) => void }) {
+  const descriptions: Record<string, string> = {
+    'السلة': 'المنتجات التي تختارها ستظهر هنا قبل إتمام الطلب.',
+    'الطلبات': 'ستظهر طلباتك وحالات تجهيزها وشحنها في هذا القسم.',
+    'الأقسام': 'اختر القسم الذي تريد استكشافه.',
+    'المزيد': 'خدمات حسابك ومساعدة APEX في مكان واحد.',
+    'حسابي': 'إدارة حسابك وبياناتك الشخصية بأمان.',
+    'المساعد الذكي': 'مساعد APEX لمساندتك في المنتجات والطلبات.',
+    'تتبع الشحنات': 'تابع تحديثات الشحن لكل طلب بعد تأكيده.',
+    'البحث': 'ابحث عن المنتجات والأقسام في متجر APEX.',
+    'طرق دفع متعددة': 'خيارات الدفع السعودية واليمنية ستظهر عند تجهيز الدفع.',
+    'العروض الحصرية': 'العروض المتاحة من متجر APEX.',
+  };
+  const tiles = page === 'المزيد'
+    ? [
+        ['♙', 'حسابي', 'تسجيل الدخول وإدارة الحساب'],
+        ['✧', 'المساعد الذكي', 'اسأل مساعد APEX'],
+        ['♧', 'تتبع الشحنات', 'متابعة حالة الطلب'],
+        ['◈', 'طرق دفع متعددة', 'خيارات الدفع حسب بلدك'],
+      ]
+    : page === 'الأقسام' || categories.some((item) => item.title === page)
+      ? categories.map((item) => [item.icon, item.title, item.hint])
+      : [];
+  const emptyTitle = page === 'السلة' ? 'سلتك فارغة حالياً' : page === 'الطلبات' ? 'لا توجد طلبات حتى الآن' : 'الخدمة قيد التجهيز';
+  const emptyDesc = page === 'السلة'
+    ? 'ابدأ التسوق وأضف المنتجات التي تعجبك.'
+    : page === 'الطلبات'
+      ? 'عندما تنشئ طلباً سيظهر هنا مع تفاصيله.'
+      : 'سيتم ربط هذه الخدمة ببيانات المتجر الحالية بعد استكمال التكامل الآمن.';
+  return (
+    <View style={styles.secondaryWrap}>
+      <View style={styles.secondaryHeading}>
+        <Text style={styles.secondaryKicker}>APEX  /  ROYAL SERVICES</Text>
+        <Text style={styles.secondaryTitle}>{page}</Text>
+        <Text style={styles.secondaryDesc}>{descriptions[page] ?? 'خدمات متجر APEX وتجربة تسوق ملكية.'}</Text>
+      </View>
+      {tiles.length > 0 ? (
+        <View style={styles.secondaryTiles}>
+          {tiles.map(([icon, title, subtitle]) => (
+            <Pressable key={title} style={styles.secondaryTile} onPress={() => navigate(title)}>
+              <Text style={styles.secondaryTileIcon}>{icon}</Text>
+              <View style={styles.secondaryTileCopy}>
+                <Text style={styles.secondaryTileTitle}>{title}</Text>
+                <Text style={styles.secondaryTileDesc}>{subtitle}</Text>
+              </View>
+              <Text style={styles.featureArrow}>‹</Text>
+            </Pressable>
+          ))}
+        </View>
+      ) : (
+        <View style={styles.emptyPanel}>
+          <View style={styles.emptyIconRing}><Text style={styles.emptyIcon}>{page === 'السلة' ? '▣' : page === 'الطلبات' ? '▤' : '✧'}</Text></View>
+          <Text style={styles.emptyTitle}>{emptyTitle}</Text>
+          <Text style={styles.emptyDesc}>{emptyDesc}</Text>
+          <Pressable style={styles.secondaryButton} onPress={() => navigate('الأقسام')}>
+            <Text style={styles.secondaryButtonText}>استكشف الأقسام</Text>
+          </Pressable>
+        </View>
+      )}
+      {page === 'حسابي' && (
+        <View style={styles.accountNote}>
+          <Text style={styles.accountNoteTitle}>حساب APEX</Text>
+          <Text style={styles.accountNoteText}>واجهة الحساب جاهزة للتصميم. تسجيل الدخول بالبريد ورمز التحقق سيُربط بخدمة المصادقة الحالية بعد مراجعة إعدادات المشروع.</Text>
+        </View>
+      )}
+      <Text style={styles.footer}>APEX  •  SHOP SMART · LIVE LUXURY</Text>
+    </View>
+  );
+}
+
 export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState('الرئيسية');
+  const [activePage, setActivePage] = useState<string | null>(null);
 
   const openService = (name: string) => {
-    if (name === 'الرئيسية') return;
-    Alert.alert(name, 'سيتم ربط هذه الخدمة بوظائف APEX الحالية ضمن مراحل التطوير، دون تغيير بيانات المتجر.');
+    const value = name.replace('\\n', ' ');
+    if (value === 'الرئيسية') { setActiveTab('الرئيسية'); setActivePage(null); return; }
+    if (value.includes('السلة')) { setActiveTab('السلة'); setActivePage(null); return; }
+    if (value.includes('الطلبات')) { setActiveTab('الطلبات'); setActivePage(null); return; }
+    if (value.includes('حسابي')) { setActivePage('حسابي'); return; }
+    if (value.includes('المساعد')) { setActivePage('المساعد الذكي'); return; }
+    if (value.includes('الشحن') || value.includes('التتبع')) { setActivePage('تتبع الشحنات'); return; }
+    if (value === 'القائمة' || value === 'المزيد') { setActiveTab('المزيد'); setActivePage(null); return; }
+    if (value === 'البحث') { setActiveTab('الأقسام'); setActivePage('البحث'); return; }
+    if (value.includes('الإلكترونيات') || value.includes('الإكسسوارات') || value.includes('الساعات') || value.includes('الحقائب') || value.includes('تسوّق') || value.includes('العروض')) {
+      setActiveTab('الأقسام'); setActivePage(value); return;
+    }
+    setActivePage(value);
   };
 
   return (
@@ -74,6 +156,7 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        {activeTab === 'الرئيسية' && !activePage ? <>
         <View style={styles.hero}>
           <View style={styles.heroBlueOrb} />
           <View style={styles.heroBlueOrbSmall} />
@@ -183,6 +266,7 @@ export default function HomeScreen() {
         </View>
 
         <Text style={styles.footer}>APEX  •  SHOP SMART · LIVE LUXURY</Text>
+        </> : <SecondaryScreen page={activePage ?? activeTab} navigate={openService} />}
       </ScrollView>
 
       <View style={styles.bottomNav}>
@@ -194,7 +278,7 @@ export default function HomeScreen() {
               accessibilityRole="button"
               accessibilityState={{ selected: active }}
               style={[styles.tab, active && styles.activeTab]}
-              onPress={() => { setActiveTab(tab.label); openService(tab.label); }}
+              onPress={() => { setActiveTab(tab.label); setActivePage(null); }}
             >
               <Text style={[styles.tabIcon, active && styles.activeTabIcon]}>{tab.icon}</Text>
               <Text style={[styles.tabLabel, active && styles.activeTabLabel]}>{tab.label}</Text>
@@ -208,6 +292,27 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: C.background },
+  secondaryWrap: { flex: 1, minHeight: 540, paddingTop: 12 },
+  secondaryHeading: { backgroundColor: 'rgba(14,25,43,0.88)', borderWidth: 1, borderColor: 'rgba(214,180,106,0.35)', borderRadius: 20, padding: 18, marginBottom: 16 },
+  secondaryKicker: { color: '#8BC8FF', fontSize: 8, letterSpacing: 1.6, textAlign: 'right' },
+  secondaryTitle: { color: C.goldLight, fontSize: 25, fontWeight: '900', textAlign: 'right', marginTop: 7 },
+  secondaryDesc: { color: '#C5CDDA', fontSize: 12, textAlign: 'right', lineHeight: 21, marginTop: 7 },
+  secondaryTiles: { gap: 10 },
+  secondaryTile: { minHeight: 76, borderRadius: 17, borderWidth: 1, borderColor: 'rgba(214,180,106,0.3)', backgroundColor: 'rgba(255,255,255,0.055)', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 12 },
+  secondaryTileIcon: { color: C.goldLight, fontSize: 25, width: 34, textAlign: 'center' },
+  secondaryTileCopy: { flex: 1, alignItems: 'flex-end' },
+  secondaryTileTitle: { color: C.white, fontSize: 14, fontWeight: '900' },
+  secondaryTileDesc: { color: '#AEB9CB', fontSize: 10, marginTop: 4 },
+  emptyPanel: { minHeight: 300, borderRadius: 22, borderWidth: 1, borderColor: 'rgba(214,180,106,0.3)', backgroundColor: 'rgba(255,255,255,0.045)', alignItems: 'center', justifyContent: 'center', padding: 24 },
+  emptyIconRing: { width: 76, height: 76, borderRadius: 26, borderWidth: 1, borderColor: 'rgba(115,185,255,0.48)', backgroundColor: 'rgba(23,107,203,0.16)', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  emptyIcon: { color: C.goldLight, fontSize: 34 },
+  emptyTitle: { color: C.white, fontSize: 18, fontWeight: '900', textAlign: 'center' },
+  emptyDesc: { color: '#AEB9CB', fontSize: 12, lineHeight: 21, textAlign: 'center', marginTop: 9, maxWidth: 280 },
+  secondaryButton: { backgroundColor: C.goldLight, borderRadius: 20, paddingHorizontal: 20, paddingVertical: 11, marginTop: 19 },
+  secondaryButtonText: { color: '#17130A', fontSize: 12, fontWeight: '900' },
+  accountNote: { borderRadius: 17, padding: 15, marginTop: 15, borderWidth: 1, borderColor: 'rgba(115,185,255,0.25)', backgroundColor: 'rgba(23,107,203,0.1)' },
+  accountNoteTitle: { color: '#9CCBFA', fontSize: 13, fontWeight: '900', textAlign: 'right' },
+  accountNoteText: { color: '#C5CDDA', fontSize: 11, lineHeight: 20, textAlign: 'right', marginTop: 7 },
   topBar: {
     minHeight: 100, paddingHorizontal: 17, flexDirection: 'row', alignItems: 'center',
     justifyContent: 'space-between', backgroundColor: '#080C15',
