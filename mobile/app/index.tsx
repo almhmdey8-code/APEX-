@@ -186,7 +186,7 @@ export default function HomeScreen(){
  const productCard=({item}: {item:Product})=><View style={styles.productCard}>
   <Pressable onPress={()=>setDetail(item)} style={styles.productImageWrap}>
    {item.image_url?<Text style={styles.imageHint}>صورة المنتج</Text>:<Text style={styles.productGem}>◇</Text>}
-   {item.image_url?<ProductImage uri={item.image_url}/>:null}
+   {(item.image_url||item.image_urls?.[0])?<ProductImage uri={(item.image_url||item.image_urls?.[0]) as string}/>:null}
   </Pressable>
   <Pressable onPress={()=>toggleFavorite(item.id)} style={styles.fav}><Text style={{color:favorites.includes(String(item.id))?C.goldLight:C.muted,fontSize:20}}>{favorites.includes(String(item.id))?'♥':'♡'}</Text></Pressable>
   <Text style={styles.productCategory}>{item.category||'APEX SELECT'}</Text>
