@@ -38,3 +38,5 @@ Version code: `7`
 
 
 Automated CI runs on every app change and on pull requests targeting `main`.
+
+Android build workflow uses the installed platform-tools SDK component and runs typecheck before generating the native Android project.
