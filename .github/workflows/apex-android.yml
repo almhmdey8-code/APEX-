@@ -48,6 +48,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: TypeScript check
         run: npx tsc --noEmit
+      - name: Expo dependency and configuration check
+        run: npx expo-doctor
       - name: Generate Android project
         run: npx expo prebuild --platform android --no-install --clean
       - name: Build APK
