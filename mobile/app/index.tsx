@@ -33,6 +33,7 @@ export default function HomeScreen(){
  const [banners,setBanners]=useState<any[]>([]);
  const [cart,setCart]=useState<CartLine[]>([]);
  const [favorites,setFavorites]=useState<string[]>([]);
+ const [storageReady,setStorageReady]=useState(false);
  const [categories,setCategories]=useState<string[]>([]);
  const [category,setCategory]=useState('الكل');
  const [query,setQuery]=useState('');
@@ -79,9 +80,6 @@ export default function HomeScreen(){
   const list=(p.data||[]) as Product[];setProducts(list);setCategories([...new Set(list.map(x=>x.category).filter(Boolean) as string[])]);
   setBanners((b.data||[]).filter((x:any)=>x.image_url));
   if(c.data && Number(c.data.exchange_rate)>0)setRate(Number(c.data.exchange_rate));
-  const [storedCart,storedFav]=await Promise.all([SecureStore.getItemAsync(CART_KEY),SecureStore.getItemAsync(FAV_KEY)]);
-  if(storedCart){try{setCart(JSON.parse(storedCart))}catch{setCart([])}}
-  if(storedFav){try{setFavorites(JSON.parse(storedFav))}catch{setFavorites([])}}
  },[]);
 
  const loadMethods=useCallback(async(countryCode:string)=>{
@@ -119,8 +117,21 @@ export default function HomeScreen(){
   return()=>{mounted=false;subscription.unsubscribe()};
  },[loadStore,loadMethods,loadCustomer]);
 
- useEffect(()=>{void SecureStore.setItemAsync(CART_KEY,JSON.stringify(cart))},[cart]);
- useEffect(()=>{void SecureStore.setItemAsync(FAV_KEY,JSON.stringify(favorites))},[favorites]);
+ useEffect(()=>{
+  let active=true;
+  (async()=>{
+   try{
+    const [storedCart,storedFav]=await Promise.all([SecureStore.getItemAsync(CART_KEY),SecureStore.getItemAsync(FAV_KEY)]);
+    if(!active)return;
+    if(storedCart){try{const parsed=JSON.parse(storedCart);setCart(Array.isArray(parsed)?parsed:[])}catch{setCart([])}}
+    if(storedFav){try{const parsed=JSON.parse(storedFav);setFavorites(Array.isArray(parsed)?parsed:[])}catch{setFavorites([])}}
+   }catch(e){console.warn('APEX local storage could not be restored',e)}
+   finally{if(active)setStorageReady(true)}
+  })();
+  return()=>{active=false};
+ },[]);
+ useEffect(()=>{if(storageReady)void SecureStore.setItemAsync(CART_KEY,JSON.stringify(cart)).catch(e=>console.warn('APEX cart could not be saved',e))},[cart,storageReady]);
+ useEffect(()=>{if(storageReady)void SecureStore.setItemAsync(FAV_KEY,JSON.stringify(favorites)).catch(e=>console.warn('APEX favorites could not be saved',e))},[favorites,storageReady]);
  useEffect(()=>{void loadMethods(country)},[country,loadMethods]);
 
  const navigate=(to:Screen)=>{setScreen(to);setMessage('')};
